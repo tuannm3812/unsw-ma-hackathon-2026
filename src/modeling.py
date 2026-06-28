@@ -6,8 +6,13 @@ from sklearn.linear_model import Ridge
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
-from data_loader import load_and_prepare_data
-from features import build_features
+try:
+    from src.data_loader import load_and_prepare_data
+    from src.features import build_features
+except ModuleNotFoundError:
+    from data_loader import load_and_prepare_data
+    from features import build_features
+
 
 def run_baseline_model(pkl_path: str):
     """

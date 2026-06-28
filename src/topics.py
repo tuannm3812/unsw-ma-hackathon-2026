@@ -3,7 +3,10 @@ import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import NMF, LatentDirichletAllocation
-from data_loader import load_and_prepare_data
+try:
+    from src.data_loader import load_and_prepare_data
+except ModuleNotFoundError:
+    from data_loader import load_and_prepare_data
 
 def extract_topics_nmf(df: pd.DataFrame, n_topics: int = 5, n_top_words: int = 10):
     """
@@ -23,7 +26,10 @@ def extract_topics_nmf(df: pd.DataFrame, n_topics: int = 5, n_top_words: int = 1
     
     # 1. Clean descriptions
     # We clean html and fillna
-    from features import clean_html
+    try:
+        from src.features import clean_html
+    except ModuleNotFoundError:
+        from features import clean_html
     descriptions = df['description'].apply(clean_html).fillna("")
     
     # 2. Vectorize text using TF-IDF (removing standard English stop words)

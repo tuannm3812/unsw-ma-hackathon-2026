@@ -1,3 +1,4 @@
+import os
 import re
 import pandas as pd
 import numpy as np
@@ -262,8 +263,10 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
 
 if __name__ == "__main__":
     # Test feature builder
-    import os
-    from data_loader import load_and_prepare_data
+    try:
+        from src.data_loader import load_and_prepare_data
+    except ModuleNotFoundError:
+        from data_loader import load_and_prepare_data
     
     default_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "Kiva_Loans_Sample.pkl")
     try:

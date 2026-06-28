@@ -8,8 +8,13 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import xgboost as xgb
 import lightgbm as lgb
 
-from data_loader import load_and_prepare_data
-from features import build_features
+try:
+    from src.data_loader import load_and_prepare_data
+    from src.features import build_features
+except ModuleNotFoundError:
+    from data_loader import load_and_prepare_data
+    from features import build_features
+
 
 def run_advanced_cv_modeling(pkl_path: str):
     """
