@@ -3,6 +3,9 @@ import pandas as pd
 import numpy as np
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.decomposition import NMF
+
 
 # Download VADER lexicon if not already cached
 try:
@@ -196,6 +199,47 @@ def extract_sentiment_features(df: pd.DataFrame) -> pd.DataFrame:
     
     return df
 
+def extract_topic_features(df: pd.DataFrame, n_topics: int = 5) -> pd.DataFrame:
+    """
+    Extracts NMF topic proportions from loan descriptions as features.
+    
+    Hypothesis:
+    Certain request themes (like sanitation/toilets) receive rapid funding,
+    whereas general retail/farm expansion might take longer.
+    """
+    df = df.copy()
+    
+    descriptions = df['clean_description'].fillna("")
+    
+    # Vectorizer
+    vectorizer = TfidfVectorizer(
+        max_df=0.95,
+        min_df=2,
+        stop_words='english',
+        lowercase=True,
+        ngram_range=(1, 2)
+    )
+    
+    try:
+        tfidf = vectorizer.fit_transform(descriptions)
+        nmf = NMF(n_components=n_topics, random_state=42, init='nndsvda', max_iter=1000)
+        nmf_features = nmf.fit_transform(tfidf)
+        
+        # Normalize weights
+        row_sums = nmf_features.sum(axis=1, keepdims=True)
+        row_sums[row_sums == 0] = 1.0
+        nmf_probs = nmf_features / row_sums
+        
+        for i in range(n_topics):
+            df[f'topic_{i}'] = nmf_probs[:, i]
+            
+    except Exception as e:
+        print(f"Warning: Topic extraction failed: {e}")
+        for i in range(n_topics):
+            df[f'topic_{i}'] = 0.0
+            
+    return df
+
 def build_features(df: pd.DataFrame) -> pd.DataFrame:
     """
     Applies all feature engineering functions to the Kiva loans dataset.
@@ -208,6 +252,7 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
     """
     df = extract_text_features(df)
     df = extract_sentiment_features(df)
+    df = extract_topic_features(df)
     df = extract_borrower_features(df)
     df = extract_financial_and_geography_features(df)
     

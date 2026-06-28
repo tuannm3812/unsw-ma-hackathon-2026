@@ -185,6 +185,34 @@ sentiment_corr = df_feat['desc_sentiment_compound'].corr(df_feat['funding_speed_
 print(f"Correlation between Description Sentiment and Funding Speed: {sentiment_corr:.3f}")
 
 # %% [markdown]
+# ### 3.2 Narrative Topic Modeling (NMF)
+# Let's extract hidden themes (topics) from the loan descriptions using Non-Negative Matrix 
+# Factorization (NMF) and see how the theme of the request affects its funding speed.
+
+# %%
+from src.topics import extract_topics_nmf, analyze_topics_speed
+df_topics, topic_keywords = extract_topics_nmf(df, n_topics=5)
+
+# Print topics and keywords
+for idx, words in topic_keywords.items():
+    print(f"Topic {idx} Top Words: {', '.join(words[:6])}")
+
+# Print mean speed per dominant topic
+analyze_topics_speed(df_topics, topic_keywords)
+
+# Boxplot of dominant topic vs funding speed
+plt.figure(figsize=(10, 6))
+# Create labels for boxplot x-axis using the first 3 keywords
+labels = [f"Topic {i}\n({', '.join(words[:3])})" for i, words in topic_keywords.items()]
+sns.boxplot(data=df_topics, x='dominant_topic', y='funding_speed_days', palette='Set3')
+plt.xticks(ticks=range(5), labels=labels, rotation=30, ha='right')
+plt.title('Funding Speed by Dominant Loan Topic')
+plt.xlabel('Dominant Topic')
+plt.ylabel('Funding Speed (Days)')
+plt.tight_layout()
+plt.show()
+
+# %% [markdown]
 # ## 4. Baseline Modeling & Feature Influence
 # Let's run the modeling pipeline to predict funding speed and look at the variables 
 # that are most predictive of speed.
