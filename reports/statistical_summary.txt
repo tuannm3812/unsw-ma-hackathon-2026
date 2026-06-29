@@ -1,0 +1,56 @@
+UNSW Marketing Analytics Hackathon 2026 - Statistical Analysis Report
+========================================================================
+
+Hypotheses Testing on Kiva Funding Speed (raisedDate - fundraisingDate)
+Sample Size: 100 loans
+
+OLS Regression Summary Table:
+-----------------------------
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:     funding_speed_days   R-squared:                       0.433
+Model:                            OLS   Adj. R-squared:                  0.347
+Method:                 Least Squares   F-statistic:                     5.043
+Date:                Mon, 29 Jun 2026   Prob (F-statistic):           1.54e-06
+Time:                        15:02:11   Log-Likelihood:                -351.56
+No. Observations:                 100   AIC:                             731.1
+Df Residuals:                      86   BIC:                             767.6
+Df Model:                          13                                         
+Covariance Type:            nonrobust                                         
+===========================================================================================
+                              coef    std err          t      P>|t|      [0.025      0.975]
+-------------------------------------------------------------------------------------------
+const                     -41.5465     19.877     -2.090      0.040     -81.061      -2.032
+log_loan_amount             6.4381      1.208      5.330      0.000       4.037       8.839
+lenderRepaymentTerm         0.5562      0.241      2.306      0.024       0.077       1.036
+repay_monthly               2.1891      3.234      0.677      0.500      -4.239       8.617
+is_group_loan               4.1715      3.766      1.108      0.271      -3.315      11.658
+female_ratio                2.5706      2.972      0.865      0.389      -3.337       8.478
+log_country_ppp            -1.1153      2.625     -0.425      0.672      -6.334       4.103
+desc_word_count             0.0209      0.028      0.754      0.453      -0.034       0.076
+first_to_third_ratio     -150.2056     99.329     -1.512      0.134    -347.664      47.253
+desc_sentiment_compound     5.4492      3.948      1.380      0.171      -2.399      13.298
+topic_0                     5.8918      4.613      1.277      0.205      -3.278      15.062
+topic_2                     6.0473      7.362      0.821      0.414      -8.589      20.683
+topic_3                     3.0531      4.097      0.745      0.458      -5.092      11.198
+topic_4                     3.4094      4.715      0.723      0.472      -5.964      12.783
+==============================================================================
+Omnibus:                        6.628   Durbin-Watson:                   1.790
+Prob(Omnibus):                  0.036   Jarque-Bera (JB):                6.278
+Skew:                           0.483   Prob(JB):                       0.0433
+Kurtosis:                       3.757   Cond. No.                     1.27e+04
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 1.27e+04. This might indicate that there are
+strong multicollinearity or other numerical problems.
+
+Significant Variables Interpretation:
+-------------------------------------
+- Variable 'log_loan_amount' has a significant effect (p = 0.0000).
+  A unit increase in 'log_loan_amount' changes the funding time by 6.44 days, leading to slower funding (delays).
+
+- Variable 'lenderRepaymentTerm' has a significant effect (p = 0.0235).
+  A unit increase in 'lenderRepaymentTerm' changes the funding time by 0.56 days, leading to slower funding (delays).
+
