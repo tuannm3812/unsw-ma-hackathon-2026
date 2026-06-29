@@ -238,6 +238,19 @@ plt.ylabel('Feature')
 plt.show()
 
 # %% [markdown]
+# ## 5. Statistical Hypothesis Testing (OLS Regression)
+# While machine learning baseline models show feature predictive importance, fitting an OLS 
+# (Ordinary Least Squares) regression allows us to officially calculate p-values and verify 
+# which features have statistically significant effects on funding speed.
+
+# %%
+import statsmodels.api as sm
+from src.statistical_analysis import run_ols_analysis
+
+reports_dir = "../reports"
+results = run_ols_analysis(pkl_path, reports_dir)
+
+# %% [markdown]
 # ## Next Steps for the Hackathon:
 # 1. **Interaction Effects**: Check if the impact of narrative framing (e.g. sentiment or family focus) varies across regions/sectors. For example, does positive sentiment matter more in Africa or Asia?
 # 2. **Topic Modeling**: Use LDA (Latent Dirichlet Allocation) to extract topics from descriptions (e.g. farming, education, emergency) and see how topic mix affects speed.

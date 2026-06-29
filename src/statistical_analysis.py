@@ -2,8 +2,12 @@ import os
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
-from data_loader import load_and_prepare_data
-from features import build_features
+try:
+    from src.data_loader import load_and_prepare_data
+    from src.features import build_features
+except ModuleNotFoundError:
+    from data_loader import load_and_prepare_data
+    from features import build_features
 
 def run_ols_analysis(pkl_path: str, report_dir: str):
     """
