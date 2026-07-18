@@ -12,7 +12,7 @@ Dep. Variable:     funding_speed_days   R-squared:                       0.433
 Model:                            OLS   Adj. R-squared:                  0.347
 Method:                 Least Squares   F-statistic:                     5.043
 Date:                Mon, 29 Jun 2026   Prob (F-statistic):           1.54e-06
-Time:                        15:02:11   Log-Likelihood:                -351.56
+Time:                        16:33:19   Log-Likelihood:                -351.56
 No. Observations:                 100   AIC:                             731.1
 Df Residuals:                      86   BIC:                             767.6
 Df Model:                          13                                         
