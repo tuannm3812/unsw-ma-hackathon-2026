@@ -205,7 +205,32 @@ No response required; Task 3 is approved. Do not begin Task 4 until the Task 2 r
 
 ## Task 4: Introduce Chronological Splits and Leakage-Safe Prediction
 
-Status: `not-started`
+**Claude — Implementation**
+Dispatched via `superpowers:subagent-driven-development` (implementer subagent, model: sonnet — leakage-safety core, requires design judgment).
+- New `src/validation.py`: `chronological_holdout(df, date_col, holdout_start)` — parses dates UTC, rejects missing dates, rejects an empty side, asserts `max(train_date) < min(holdout_date)`.
+- Rewrote `src/modeling.py`: explicit `NUMERIC_PREDICTOR_COLUMNS`/`CATEGORICAL_PREDICTOR_COLUMNS` allowlists (not a blocklist) feeding `build_predictor_frame`; `prepare_chronological_matrices` drops invalid-outcome rows (never imputes), splits chronologically, fits `KivaTopicTransformer` and a `ColumnTransformer` (median-impute+scale numeric, most-frequent-impute+one-hot categorical) on the **training partition only**, transforms holdout without re-fitting; `evaluate_chronological_models` compares a training-median baseline against `Ridge(alpha=1.0, random_state=42)`, converting log-space predictions back to days via `np.expm1` before computing MAE/median-AE. `run_baseline_model` retained as a notebook-compatible wrapper.
+- `gender_classification`/`loan_size_band` (flagged by Task 2's Codex review as previously silently dropped) now flow into the categorical encoder — verified concretely via `get_feature_names_out()`, not just by reading code.
+
+Commit: `96c9b44` — "feat: add leakage-safe chronological evaluation". 17/17 tests passing.
+
+**Internal task-reviewer subagent (Claude, model: sonnet) — spec + quality gate**
+❌ One Important, plan-mandated finding; otherwise ✅. **Task quality: Needs fixes → resolved after human sign-off (see below).**
+Independently traced every `.fit()`/`.fit_transform()` call site (only two exist: `topic_transformer.fit(train_raw[...])` and `column_transformer.fit_transform(train_full)` — holdout only ever sees `.transform()`), reproduced the leakage-trap test's mechanism by hand, and cross-checked the "linear and nonlinear evaluators" phrasing against Task 6's brief (confirmed Task 6, not Task 4, is meant to consume the nonlinear model). **Zero Critical findings** — no leakage path found.
+- **Important (plan-mandated):** `country_name` was dropped from the categorical allowlist as redundant with `country_iso`, but the design spec explicitly listed it as an available predictor (spec line 71 at the time) — a plan/implementation conflict that needed a human decision, not a unilateral resolution.
+- Minor: redundant metric computation (MAE/median-AE recomputed twice instead of once+unpack); no dedicated test proving the `ColumnTransformer`'s learned statistics come from train rows only (correct by tracing, but no regression test analogous to the topic-vocabulary leak check); `modeling.py` now ~345 lines (self-acknowledged, composes rather than duplicates).
+- Also independently verified the implementer's claimed pre-existing NMF `RuntimeWarning` (BLAS/numpy quirk on Apple Silicon, from Task 3's `text_transformer.py`) by reproducing it on unrelated random matrices — confirmed non-correctness-affecting and out of this task's scope.
+
+Files changed: `src/validation.py` (new), `src/modeling.py` (rewritten), `tests/test_validation.py` (new), `tests/test_modeling.py` (new).
+
+**Human decision (asked via AskUserQuestion):** keep `country_name` excluded (redundant one-hot signal with `country_iso` on a ~100-row sample) and amend the spec instead of restoring the column. Spec updated and committed: `05fe5f5` — "docs: amend spec to note country_name is deliberately excluded".
+
+Status: `pending-review` (awaiting external Codex review)
+
+**Codex — Review**
+_(paste Codex findings here)_
+
+**Claude — Response**
+_(pending)_
 
 ---
 
