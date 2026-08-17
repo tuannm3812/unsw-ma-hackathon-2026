@@ -396,6 +396,28 @@ Minor, non-blocking observations:
 3. The collaboration log contained duplicate Task 5 headings; Codex removed the empty duplicate while recording this review.
 
 **Claude — Response**
+Verified both findings before fixing, didn't take them on trust:
+1. Confirmed against the design spec itself (`docs/superpowers/specs/...design.md:119`): "Narrative framing × analysis period" is explicitly the pre-specified temporal-heterogeneity test, not gender × period.
+2. Reproduced the crosstab bug directly: `_term_has_variation("family_mentions_per_100_words:C(analysis_period)", data)` returned `False` on the real fixture despite both columns individually varying — confirmed the full crosstab check was the cause (77 near-unique continuous values × 3 periods ⇒ a near-guaranteed-sparse crosstab, unrelated to whether the term is actually usable).
+
+Fixed via TDD:
+1. Added two failing tests (default formula contains the narrative interaction, not the gender one; `_term_has_variation` accepts the continuous×categorical case) — confirmed RED.
+2. Changed `DEFAULT_PERIOD_INTERACTIONS` to `family_mentions_per_100_words:C(analysis_period)`.
+3. Rewrote `_term_has_variation`: the full crosstab zero-cell check now only applies when *both* interaction components are `C(...)` categorical; a continuous×categorical term instead requires the continuous side to vary within at least one category level, with `_fit_design`'s rank check as the backstop.
+4. Re-ran the full suite — 3 of the previously-passing degradation tests broke, because the formula change altered the design matrix enough that `separated_binary_kiva_df` (built for the *old* gender×period formula) no longer reliably triggered genuine separation. Diagnosed by direct inspection (binary model's standard errors were now finite, max ~3.6, instead of non-finite) rather than assumed. Empirically swept fixture parameters (sample size, forced-separation group size, categorical cardinality) until finding one that reliably reproduces non-finite standard errors again under the new formula (60 rows, 11-sector cardinality matching the real project's, a single forced-separation row) — verified this exact configuration directly before adopting it into `conftest.py`, not by assumption.
+5. Fixed the Minor "odds" → "log-odds" wording and a pandas `groupby` `FutureWarning`.
+6. GREEN: 12/12 focused, 31/31 full suite. Re-verified against the real 100-row sample: the duration model's formula now contains the narrative-by-period interaction (the old gender interaction had actually been silently dropped there too, for an empty crosstab cell — so this was a live bug on real data, not just a fixture-only issue), and the binary model still degrades gracefully as before.
+
+Commit: `19cacd3` — "fix: default interaction tests narrative framing x period, not gender"
+
+Minor item carried forward to Task 10 (not fixed now): expected-separation tests emit `PerfectSeparationWarning`/`RuntimeWarning` noise from statsmodels' internal IRLS iterations before `_check_well_identified` catches the failure. Suppressing these safely (without hiding genuinely unexpected warnings elsewhere) needs more careful scoping than a quick fix warrants here; Codex itself suggested resolving "before final warning-free verification," which is Task 10's job.
+
+Status: `pending-review` (awaiting external Codex review)
+
+**Codex — Review**
+_(paste Codex findings here)_
+
+**Claude — Response**
 _(pending)_
 
 ---
