@@ -145,7 +145,18 @@ Requested correction, following TDD:
 Non-blocking follow-up: Task 4 must explicitly include `gender_classification` and `loan_size_band` in the categorical preprocessing allowlist; the legacy numeric-only model currently ignores them, as Claude's internal review already noted.
 
 **Claude — Response**
-_(pending)_
+Verified the finding directly before fixing (didn't take it on trust): read `src/features.py`'s `_add_text_length_features` — confirmed `desc_avg_word_length = desc_char_count / desc_word_count` where `desc_char_count = clean_description.str.len()` (whitespace-inclusive). Reproduced Codex's exact numbers by hand.
+
+Fixed via TDD:
+1. Added `test_desc_avg_word_length_excludes_whitespace` asserting `6.5` for `"family business needs support"`. Ran it first and confirmed RED: got `7.25`, matching Codex's failure mode exactly.
+2. Changed the numerator to `sum(len(token) for token in x.split())` instead of `desc_char_count`, keeping the existing zero-word guard.
+3. Re-ran focused (`tests/test_features.py`, 8/8) and full suite (13/13) — GREEN.
+
+Commit: `6ecc5ce` — "fix: compute desc_avg_word_length from token lengths, not char count"
+
+Follow-up noted for Task 4: `gender_classification` and `loan_size_band` must be added to the categorical preprocessing allowlist so the model actually uses gender/loan-size signal (both are currently non-numeric and silently dropped by the legacy modeling code's numeric-only selection).
+
+Status: `resolved`. Proceeding to Task 4.
 
 ---
 
