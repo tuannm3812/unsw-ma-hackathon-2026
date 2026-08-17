@@ -412,10 +412,51 @@ Commit: `19cacd3` — "fix: default interaction tests narrative framing x period
 
 Minor item carried forward to Task 10 (not fixed now): expected-separation tests emit `PerfectSeparationWarning`/`RuntimeWarning` noise from statsmodels' internal IRLS iterations before `_check_well_identified` catches the failure. Suppressing these safely (without hiding genuinely unexpected warnings elsewhere) needs more careful scoping than a quick fix warrants here; Codex itself suggested resolving "before final warning-free verification," which is Task 10's job.
 
-Status: `pending-review` (awaiting external Codex review)
+Status: `changes-requested`
 
 **Codex — Review**
-_(paste Codex findings here)_
+Reviewed commit `19cacd3` against the Task 5 round-two findings.
+
+- **Outcome:** One focused change still requested.
+- The default formula now correctly contains `family_mentions_per_100_words:C(analysis_period)` and excludes the old gender-by-period interaction.
+- Continuous narrative × categorical period interactions with normal within-period variation are retained.
+- Binary coefficient text now correctly identifies the log-odds scale.
+- Focused Task 5 tests passed: 12 tests.
+- Complete current suite passed: 31 tests, with 15 warnings carried toward final warning cleanup.
+- Real-sample generated output contains the two narrative-by-period coefficients and retains the duration model while diagnosing the unsupported binary model.
+
+**Important — continuous × categorical guard accepts partially unidentified interactions**
+
+Location: `src/statistical_analysis.py`, `_term_has_variation`, continuous × categorical branch (currently lines 178–184).
+
+The implementation retains an interaction when the continuous narrative measure varies within **at least one** category level:
+
+```python
+if not (within_group_variation >= 2).any():
+    return False
+```
+
+That is insufficient for estimating a separate slope adjustment for every period. If the narrative feature is constant within one period but varies in the others, the corresponding interaction column is collinear with that period's indicator. `_term_has_variation` returns `True`, then `_fit_design` rejects the entire rank-deficient model instead of dropping only the unsupported interaction.
+
+Direct reproduction on `large_synthetic_kiva_df`:
+
+- Forced `family_mentions_per_100_words` to a constant within `pandemic_disruption` only.
+- Within-period unique counts became `{pre_pandemic: 28, pandemic_disruption: 1, post_pandemic: 43}`.
+- `_term_has_variation(...)` incorrectly returned `True`.
+- Patsy's design was rejected at rank 26 for 27 columns.
+
+Requested correction, following TDD:
+
+1. Add a failing test with one constant period and other varying periods, asserting the interaction is rejected/dropped.
+2. Require the continuous measure to have at least two distinct non-null values in **every observed categorical level**, not merely any level.
+3. Retain the current positive test proving a fully supported continuous × categorical interaction is accepted.
+4. Verify that, when the interaction is dropped, the main-effects duration model still fits rather than degrading unnecessarily.
+
+Discussion notes:
+
+1. The real 100-row sample currently has sufficient within-period family-framing variation, so its duration report is valid; this finding protects behavior when the full competition dataset or a filtered segment has a constant period.
+2. The 15 expected numerical warnings remain deferred to Task 10, but the user-facing analysis must ultimately produce clean diagnostics rather than warning noise.
+3. `reports/generated/` is currently untracked. Keep it out of unrelated fix commits; Task 7/10 should decide and document whether generated reports are ignored or intentionally versioned.
 
 **Claude — Response**
 _(pending)_
