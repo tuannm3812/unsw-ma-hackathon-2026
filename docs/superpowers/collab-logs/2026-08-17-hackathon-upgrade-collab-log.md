@@ -304,11 +304,15 @@ Minor items carried forward, not fixed now:
 
 Status: `resolved`. Proceeding to Task 5.
 
----
+**Codex — Follow-up Review**
+Verified commit `760887c` against both requested Task 4 corrections.
 
-## Task 5: Add Robust Explanatory Duration and 24-Hour Models
+- `log_predictions_to_days` clips negative log predictions before `expm1`; focused tests cover negative, zero, and positive inputs.
+- Real-sample minimum Ridge duration is now exactly zero on both partitions.
+- Train and holdout R² are returned for the median baseline and Ridge and are required to be finite by the smoke test.
+- Focused modeling tests passed: 4/4.
 
-Status: `not-started`
+**Outcome:** Task 4 remains `resolved`; no further Task 4 changes requested.
 
 ---
 
@@ -342,10 +346,54 @@ Fixed via TDD:
 
 Commit: `5f528c5` — "fix: degrade gracefully when one explanatory model can't be fit"
 
-Status: `pending-review` (awaiting external Codex review)
+Status: `changes-requested`
 
 **Codex — Review**
-_(paste Codex findings here)_
+Reviewed commits `14a8d53` and `5f528c5` against Task 5 and the approved research design.
+
+- **Outcome:** Changes requested; two Important design/correctness findings.
+- Focused Tasks 4/5 tests passed: 14 tests.
+- Complete current suite passed: 29 tests, with 12 numerical warnings.
+- `python -m compileall -q src tests` and `git diff --check` completed successfully.
+- Robust HC3 covariance, valid-outcome exclusion, per-model graceful degradation, association-only language, per-model coefficient completeness, and report creation were verified.
+- The real sample now preserves and reports the duration model when the binary model is not well identified, which correctly resolves Claude's internal review finding.
+
+**Important 1 — Default interaction does not test the approved evolutionary research question**
+
+Location: `src/statistical_analysis.py`, `DEFAULT_PERIOD_INTERACTIONS` (currently line 106).
+
+The approved design pre-specifies **narrative framing × analysis period** as the temporal heterogeneity test. The implementation instead defaults to `C(analysis_period):C(gender_classification)`. That tests whether gender association changes over time, not whether persuasive narrative drivers evolve over time—the criterion worth 20% of judging.
+
+Requested correction, following TDD:
+
+1. Select one theoretically central, pre-specified narrative measure for the parsimonious default interaction, such as `family_mentions_per_100_words:C(analysis_period)`.
+2. Add a test asserting the default duration and binary formulas contain the chosen narrative-by-period interaction whenever the sample supports it.
+3. Keep other narrative-by-region, loan-size, and sector interactions opt-in through `extra_interactions` to preserve one-week feasibility and avoid overfitting.
+
+**Important 2 — Continuous narrative interactions are incorrectly rejected as sparse categorical tables**
+
+Location: `src/statistical_analysis.py`, `_term_has_variation` (currently lines 119–148).
+
+The function applies a full Cartesian crosstab check to every two-column interaction. For a continuous narrative feature × categorical period, nearly every continuous value naturally occurs in only one period, so the crosstab contains zeros and the interaction is always dropped.
+
+Direct reproduction on `large_synthetic_kiva_df`:
+
+- `_term_has_variation("family_mentions_per_100_words:C(analysis_period)", data)` returned `False`.
+- Passing that term through `extra_interactions` placed it in both models' dropped-term lists.
+- The requested interaction was absent from the resulting formulas despite variation in both underlying columns.
+
+Requested correction, following TDD:
+
+1. Add a failing test showing a varied continuous narrative measure × `C(analysis_period)` is retained.
+2. Apply the complete-cell crosstab rule only when both interaction components are explicitly categorical (`C(...)`).
+3. For continuous × categorical interactions, require overall variation and sufficient within-category variation, then allow Patsy's rank check to validate the resulting design.
+4. Retain the existing protection for genuinely empty categorical × categorical cells.
+
+Minor, non-blocking observations:
+
+1. Binary coefficient lines should say they are associated with **log-odds**, matching the fitted coefficient scale, rather than merely “the odds.”
+2. Expected separation tests currently emit six statsmodels `RuntimeWarning` messages, while NMF tests emit six existing scikit-learn warnings. Graceful degradation should ideally convert expected GLM numerical warnings into the explicit model diagnostic without printing noisy runtime warnings; this must be resolved or explicitly isolated before final warning-free verification.
+3. The collaboration log contained duplicate Task 5 headings; Codex removed the empty duplicate while recording this review.
 
 **Claude — Response**
 _(pending)_
