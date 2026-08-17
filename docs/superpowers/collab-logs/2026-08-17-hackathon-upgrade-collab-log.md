@@ -96,13 +96,99 @@ Status: `resolved`. Proceeding to Task 2.
 
 ## Task 2: Replace Unsupported Features With Deterministic Narrative and Borrower Measures
 
-Status: `not-started`
+**Note on cadence:** Tasks 2 and 3 are batched into a single Codex review round (small, closely related feature-engineering work), per your request to batch small/short tasks instead of reviewing after every single one.
+
+**Claude — Implementation**
+Dispatched via `superpowers:subagent-driven-development` (implementer subagent, model: sonnet — this task required refactor judgment, not just transcription).
+- Removed the module-import-time `nltk.download('vader_lexicon')` call; VADER is now used only if the lexicon is already locally available (`_vader_lexicon_available()` via `nltk.data.find`), with neutral fallback + `sentiment_available = 0` otherwise. Zero network calls on import.
+- Replaced `calculate_female_ratio()` (which defaulted *missing* gender to 100% female) with `classify_gender()` → `female`/`male`/`mixed`/`unknown`, never assuming missing means female. `female_ratio` no longer exists anywhere in the code path.
+- Added the full deterministic feature set: missing-text flags, char/word/sentence counts, avg word/sentence length, number-token/age-pattern/years-in-business counts, per-100-word framing counts for family/basic-needs/business/agency/gratitude/urgency/first-person/third-person, `is_group_loan`, `log_loan_amount`, `loan_size_band` (`<=250`/`251–750`/`>750`).
+- Removed NMF/TF-IDF fitting from `build_features` (Task 3's job to replace it properly).
+- Kept `extract_text_features`/`extract_borrower_features`/`extract_financial_and_geography_features` as compatibility wrappers over new deterministic helpers, per the brief.
+
+Commit: `b6415d4` — "feat: add ethical deterministic narrative features"
+
+**Internal task-reviewer subagent (Claude, model: sonnet) — spec + quality gate**
+✅ Spec compliant. **Task quality: Approved.** No Critical/Important issues.
+Verified every item in the required feature list against file:line references, and independently grepped `src/*.py` for other consumers of removed columns.
+Minor, non-blocking notes:
+- No dedicated test for the `_per_100` zero-word-count guard or missing-text branches (code is correct by inspection).
+- `src/modeling.py`/`src/advanced_modeling.py` still list the now-removed `borrower_gender_clean` in an `exclude_cols` list (harmless — membership check only, not a `.drop()`) — but since `gender_classification`/`loan_size_band` are non-numeric, both scripts currently train with **no gender or loan-size signal** until Task 4 rewrites `modeling.py`. Flagged for whoever does Task 4.
+- Sentiment features currently cover `description` only, not `use`/`whySpecial` — reasonable scope choice, brief was field-agnostic.
+- `src/statistical_analysis.py` still references removed `female_ratio`/`log_country_ppp` — confirmed the only affected file; Task 5 rewrites it entirely, so left untouched by design.
+
+Files changed: `src/features.py`, `tests/test_features.py` (new).
+
+Status: `changes-requested`
+
+**Codex — Review**
+Reviewed commit `b6415d4` against Task 2 of the implementation plan.
+
+- **Outcome:** Changes requested; one Important correctness finding.
+- Focused Task 2 tests passed and the complete current suite passed.
+- Real-sample deterministic feature extraction completed successfully for all 100 rows, removed `female_ratio`, and classified the sample as 86 female and 14 male records.
+- Missing-description guards behaved correctly: missing flag 1, zero words, zero average length, and zero normalized framing counts.
+- No implicit NLTK download occurs in the revised module.
+
+**Important — `desc_avg_word_length` includes spaces and is not average word length**
+
+Location: `src/features.py`, `_add_text_length_features`, assignment to `desc_avg_word_length` (currently lines 147–149).
+
+The implementation divides total cleaned-string character count by word count. `str.len()` includes whitespace, so the feature is systematically inflated and does not match the design's readability measure. For `"family business needs support"`, the implementation reports `29 / 4 = 7.25`; the actual mean word length is `(6 + 8 + 5 + 7) / 4 = 6.5`.
+
+Requested correction, following TDD:
+
+1. Add a failing regression test asserting `desc_avg_word_length == pytest.approx(6.5)` for that exact string.
+2. Compute the numerator from the sum of individual token lengths, not `desc_char_count`.
+3. Retain the existing zero-word guard and rerun the focused and full suites.
+
+Non-blocking follow-up: Task 4 must explicitly include `gender_classification` and `loan_size_band` in the categorical preprocessing allowlist; the legacy numeric-only model currently ignores them, as Claude's internal review already noted.
+
+**Claude — Response**
+_(pending)_
 
 ---
 
 ## Task 3: Add a Training-Fitted Text Topic Transformer
 
-Status: `not-started`
+**Claude — Implementation**
+Dispatched via `superpowers:subagent-driven-development` (implementer subagent, model: haiku — brief contained near-complete class code).
+- New `src/text_transformer.py`: `KivaTopicTransformer(n_topics=5, min_df=2, random_state=42)`, scikit-learn-compatible (`BaseEstimator`, `TransformerMixin`), with `fit`/`transform`/`get_feature_names_out`/`get_topic_terms`. `transform()` only calls `.transform()` on the already-fitted `vectorizer_`/`nmf_` — no re-fitting, so holdout vocabulary cannot leak in. Accepts `pd.Series`, one-column `pd.DataFrame`, or an iterable of strings; preserves the input index; raises clear `ValueError` for `n_topics < 1`, empty training corpora, and `n_topics` exceeding the fitted TF-IDF matrix's dimensions.
+- Updated `src/topics.py` to delegate its TF-IDF+NMF fitting to `KivaTopicTransformer` instead of duplicating it, with an explicit "full-sample exploratory analysis only, not leakage-safe evaluation" docstring. Public signature/return shape preserved; `analyze_topics_speed` and the `__main__` block left unchanged.
+
+Commit: `6d52ff6` — "feat: fit text topics on training data only"
+
+**Internal task-reviewer subagent (Claude, model: sonnet) — spec + quality gate**
+✅ Spec compliant. **Task quality: Approved.** No Critical/Important issues.
+Confirmed by direct code inspection that `transform()` contains no `.fit`/`.fit_transform` calls anywhere, and that `analyze_topics_speed`/`__main__` are byte-identical to before.
+Minor, non-blocking notes:
+- The leakage test asserts the vocabulary *before* calling `transform(holdout)`, so it proves `fit()` never saw holdout data but not that `transform()` leaves the vocabulary unmutated afterward (code is read-only by inspection, so not a real bug — test is copied verbatim from the brief).
+- No dedicated tests for the three `ValueError` paths (brief only mandated the two leakage/index tests).
+- `topics.py`'s exploratory path now calls `fit()` then `transform()` separately, causing NMF to optimize twice instead of once (inherent to the fit/transform-only contract the brief specified, not an implementer choice).
+
+Files changed: `src/text_transformer.py` (new), `src/topics.py`, `tests/test_text_transformer.py` (new).
+
+Status: `resolved`
+
+**Codex — Review**
+Reviewed commit `6d52ff6` against Task 3 of the implementation plan.
+
+- **Outcome:** Approved; no blocking correctness findings.
+- Focused Task 2/3 verification passed: 9 tests.
+- Complete current suite passed: 12 tests.
+- `python -m compileall -q src tests` and `git diff --check` completed successfully.
+- Confirmed after transformation that a holdout-only token does not enter the fitted vocabulary and that the vocabulary remains byte-for-byte equivalent as a mapping.
+- Confirmed supported Series, one-column DataFrame, and list inputs transform successfully; Series/DataFrame indices are preserved.
+- Real-sample exploratory NMF completed for 100 rows. Topic proportions sum to one within floating-point tolerance and all five topics receive dominant assignments.
+
+Minor, non-blocking observations:
+
+1. Add post-transform vocabulary immutability and explicit error-path tests later if the transformer API changes; current behavior is correct by inspection and manual verification.
+2. The real-sample exploratory fit emitted numerical `RuntimeWarning` messages from scikit-learn's randomized SVD while still producing finite normalized outputs. This is not a Task 3 correctness failure, but final verification should aim for warning-free project output and investigate it if it persists in the chronological training pipeline.
+3. An iterable containing `pd.NA` raises a generic input `ValueError`, while a pandas Series containing `pd.NA` is cleaned correctly. This does not violate the documented iterable-of-strings contract.
+
+**Claude — Response**
+No response required; Task 3 is approved. Do not begin Task 4 until the Task 2 requested correction is reviewed and resolved.
 
 ---
 
