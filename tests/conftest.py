@@ -1,3 +1,5 @@
+import random
+
 import pandas as pd
 import pytest
 
@@ -36,5 +38,94 @@ def synthetic_kiva_df():
             "disbursalDate": (posted - pd.Timedelta(days=7)).isoformat(),
             "fundraisingDate": posted.isoformat(),
             "raisedDate": (posted + pd.Timedelta(hours=12 + idx * 8)).isoformat(),
+        })
+    return pd.DataFrame(rows)
+
+
+# --- Task 5: explanatory (statsmodels) fixture -----------------------------
+#
+# The OLS/GLM design matrices in src/statistical_analysis.py use
+# C(gender_classification), C(repaymentInterval), C(sector), C(region),
+# C(analysis_period), and a C(analysis_period):C(gender_classification)
+# interaction. That needs many more rows and much more categorical/text
+# variety than `synthetic_kiva_df` provides, or the design matrix ends up
+# rank-deficient (too many dummy columns relative to rows, or a categorical
+# combination with no observations). `synthetic_kiva_df` is left untouched
+# for Tasks 1-4; this is a separate, independent fixture.
+#
+# Every row gets a positive `raisedDate - fundraisingDate` duration, so the
+# whole fixture is a valid completed outcome (`valid_completed_outcome` is
+# True and `funded_within_24h` is never null for any row) - this lets tests
+# assert `n_duration == n_binary == len(large_synthetic_kiva_df)`.
+_LARGE_FIXTURE_SECTORS = ["Agriculture", "Retail", "Food", "Services", "Education", "Health"]
+_LARGE_FIXTURE_REGIONS = ["Africa", "Asia", "Latin America", "Eastern Europe", "Pacific"]
+_LARGE_FIXTURE_REPAYMENT_INTERVALS = ["monthly", "irregularly", "at_end"]
+_LARGE_FIXTURE_GENDER_TOKENS = ["female", "male", "female, male", None]
+_LARGE_FIXTURE_YEARS = [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]
+_LARGE_FIXTURE_COUNTRIES = [
+    ("KE", "Kenya"), ("PH", "Philippines"), ("UG", "Uganda"), ("PE", "Peru"),
+]
+_LARGE_FIXTURE_THEME_SENTENCES = [
+    "She runs a small retail shop selling vegetables and household goods in her community.",
+    "He supports his wife and children, and hopes to send his daughter to school this year.",
+    "This is an urgent request; the family needs emergency funds immediately for medical care.",
+    "As a hard-working and independent business owner, she manages and controls every aspect of her shop.",
+    "We are deeply grateful and thankful for the support of lenders who believe in our family business.",
+    "The clean water and sanitary toilet facilities will greatly improve the health of the household.",
+    "For the past several years he has been building his farming business, investing in seeds and tools.",
+    "Her mother and father raised five children in this rural village near the market.",
+    "They plan to buy more stock and expand their small store to serve more customers.",
+    "I am responsible for my family and determined to grow this business on my own.",
+]
+_LARGE_FIXTURE_SHORT_HOURS = [3, 6, 10, 14, 20]
+_LARGE_FIXTURE_LONG_HOURS = [30, 48, 72, 96, 130, 168, 220]
+
+
+@pytest.fixture
+def large_synthetic_kiva_df():
+    rng = random.Random(20260817)
+    rows = []
+    n_rows = 120
+    for idx in range(n_rows):
+        year = rng.choice(_LARGE_FIXTURE_YEARS)
+        month = rng.randint(1, 12)
+        day = rng.randint(1, 28)
+        posted = pd.Timestamp(year=year, month=month, day=day, tz="UTC")
+        hours = (
+            rng.choice(_LARGE_FIXTURE_SHORT_HOURS) if rng.random() < 0.4
+            else rng.choice(_LARGE_FIXTURE_LONG_HOURS)
+        )
+        n_sentences = rng.randint(2, 5)
+        description = " ".join(rng.sample(_LARGE_FIXTURE_THEME_SENTENCES, n_sentences))
+        country_iso, country_name = rng.choice(_LARGE_FIXTURE_COUNTRIES)
+
+        rows.append({
+            "id": idx + 1,
+            "status": "funded",
+            "borrowerCount": rng.choice([1, 1, 1, 2, 3]),
+            "name": f"Borrower {idx}",
+            "gender": rng.choice(_LARGE_FIXTURE_GENDER_TOKENS),
+            "loanAmount": float(rng.randint(100, 3000)),
+            "lenderRepaymentTerm": rng.randint(3, 36),
+            "repaymentInterval": rng.choice(_LARGE_FIXTURE_REPAYMENT_INTERVALS),
+            "sector": rng.choice(_LARGE_FIXTURE_SECTORS),
+            "activity": "General",
+            "use": "to buy stock and materials for the business",
+            "city": "Test City",
+            "latitude": 0.0,
+            "longitude": 0.0,
+            "country_iso": country_iso,
+            "country_name": country_name,
+            "region": rng.choice(_LARGE_FIXTURE_REGIONS),
+            "country_ppp": float(rng.randint(1000, 15000)),
+            "fundsLentInCountry": rng.randint(50000, 500000),
+            "country_latitude": 0.0,
+            "country_longitude": 0.0,
+            "description": description,
+            "whySpecial": "It serves an underserved community.",
+            "image_url": "https://example.test/image.webp",
+            "disbursalDate": (posted - pd.Timedelta(days=7)).isoformat(),
+            "fundraisingDate": posted.isoformat(),
+            "raisedDate": (posted + pd.Timedelta(hours=hours)).isoformat(),
         })
     return pd.DataFrame(rows)
