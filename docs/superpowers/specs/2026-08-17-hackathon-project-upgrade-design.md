@@ -68,7 +68,7 @@ Rows with invalid dates, negative duration, or missing outcomes will be flagged 
 - Borrower: `borrowerCount` and the dataset's group-level `gender` classification.
 - Loan structure: `loanAmount`, `lenderRepaymentTerm`, and `repaymentInterval`.
 - Purpose: `sector` and `activity`.
-- Geography and economic context: `country_iso`, `country_name`, `region`, and `country_ppp`.
+- Geography and economic context: `country_iso`, `region`, and `country_ppp`. `country_name` is available but intentionally excluded from the predictor allowlist — it carries the same country identity as `country_iso` at equal cardinality, so including both would one-hot encode the same categorical signal twice for no added information.
 - Time: year, month, and analysis period derived from `fundraisingDate`.
 
 `fundsLentInCountry` will be excluded from predictive models by default until its observation timestamp is verified. It may be used in a sensitivity analysis if it can be shown to be available at posting time.
