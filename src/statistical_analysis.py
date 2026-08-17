@@ -152,10 +152,16 @@ def _term_has_variation(term: str, data: pd.DataFrame) -> bool:
     so a literal crosstab is nearly always sparse-with-zeros by
     construction - not because the interaction is actually unusable. For a
     continuous x categorical term, instead require that the continuous
-    side varies *within* at least one level of the categorical side
-    (catching the pathological case where it is constant in every group);
-    the rank check in `_fit_design` is the authoritative backstop for
-    anything subtler that this heuristic misses.
+    side varies *within every observed level* of the categorical side, not
+    merely at least one. Variation in just one level is not enough: patsy
+    fits a separate interaction column per category level, so if the
+    continuous measure is constant within even a single level, that
+    level's interaction column is exactly collinear with that level's own
+    main-effect indicator - making the *whole* design rank-deficient
+    (`_fit_design` then rejects both models entirely) instead of merely
+    losing one unsupported interaction term. The rank check in
+    `_fit_design` remains the authoritative backstop for anything subtler
+    that this heuristic misses.
     """
     columns = _term_columns(term)
     for col in columns:
@@ -179,7 +185,7 @@ def _term_has_variation(term: str, data: pd.DataFrame) -> bool:
         cat_index = categorical_flags.index(True)
         cat_col, cont_col = columns[cat_index], columns[1 - cat_index]
         within_group_variation = data.groupby(data[cat_col], observed=True)[cont_col].nunique()
-        if not (within_group_variation >= 2).any():
+        if not (within_group_variation >= 2).all():
             return False
         return True
 

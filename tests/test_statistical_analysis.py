@@ -37,6 +37,40 @@ def test_continuous_by_categorical_interaction_is_not_rejected_as_sparse(large_s
     assert _term_has_variation("family_mentions_per_100_words:C(analysis_period)", data)
 
 
+def test_continuous_by_categorical_interaction_requires_variation_in_every_level(large_synthetic_kiva_df):
+    # Variation in *at least one* category level is not enough: if the
+    # continuous measure is constant within even one observed period, that
+    # period's interaction column is collinear with the period's own main-
+    # effect indicator, and the *whole* design becomes rank-deficient
+    # (rejecting both models) instead of just dropping the one unsupported
+    # interaction term.
+    from src.data_loader import prepare_analysis_data
+    from src.features import extract_deterministic_features
+
+    prepared = prepare_analysis_data(large_synthetic_kiva_df)
+    featured = extract_deterministic_features(prepared)
+    data = featured.loc[featured["valid_completed_outcome"]].copy()
+    data.loc[data["analysis_period"] == "pandemic_disruption", "family_mentions_per_100_words"] = 0.0
+
+    assert not _term_has_variation("family_mentions_per_100_words:C(analysis_period)", data)
+
+
+def test_duration_model_still_fits_when_interaction_is_dropped_for_one_constant_period(large_synthetic_kiva_df):
+    frame = large_synthetic_kiva_df.copy()
+    from src.data_loader import prepare_analysis_data
+
+    prepared = prepare_analysis_data(frame)
+    pandemic_mask = prepared["analysis_period"] == "pandemic_disruption"
+    frame.loc[pandemic_mask, "description"] = "to buy stock and materials for the business"
+
+    result = fit_explanatory_models(frame)
+    assert result["duration"] is not None
+    assert "family_mentions_per_100_words:C(analysis_period)" in result["duration_dropped_terms"]
+    # Main effects survive even though the interaction was dropped.
+    assert "C(analysis_period)" in result["duration_formula"]
+    assert "family_mentions_per_100_words" in result["duration_formula"]
+
+
 def test_explanatory_models_use_valid_rows_and_robust_covariance(large_synthetic_kiva_df):
     result = fit_explanatory_models(large_synthetic_kiva_df)
     assert result["duration"].cov_type == "HC3"
