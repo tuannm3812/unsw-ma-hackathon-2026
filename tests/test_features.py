@@ -27,3 +27,10 @@ def test_deterministic_features_do_not_create_unverified_female_ratio(synthetic_
     result = extract_deterministic_features(synthetic_kiva_df)
     assert "female_ratio" not in result.columns
     assert set(result["gender_classification"]) == {"female", "male", "mixed", "unknown"}
+
+
+def test_desc_avg_word_length_excludes_whitespace(synthetic_kiva_df):
+    frame = synthetic_kiva_df.iloc[[0]].copy()
+    frame.loc[frame.index[0], "description"] = "family business needs support"
+    result = extract_deterministic_features(frame)
+    assert result.iloc[0]["desc_avg_word_length"] == pytest.approx(6.5)

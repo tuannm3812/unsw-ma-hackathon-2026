@@ -144,8 +144,11 @@ def _add_text_length_features(df: pd.DataFrame) -> pd.DataFrame:
     df["desc_char_count"] = df["clean_description"].str.len()
     df["desc_word_count"] = df["clean_description"].apply(lambda x: len(x.split()) if x else 0)
     df["desc_sentence_count"] = df["clean_description"].apply(_sentence_count)
+    desc_token_char_total = df["clean_description"].apply(
+        lambda x: sum(len(token) for token in x.split()) if x else 0
+    )
     df["desc_avg_word_length"] = np.where(
-        df["desc_word_count"] > 0, df["desc_char_count"] / df["desc_word_count"], 0.0
+        df["desc_word_count"] > 0, desc_token_char_total / df["desc_word_count"], 0.0
     )
     df["desc_avg_sentence_length"] = np.where(
         df["desc_sentence_count"] > 0, df["desc_word_count"] / df["desc_sentence_count"], 0.0
