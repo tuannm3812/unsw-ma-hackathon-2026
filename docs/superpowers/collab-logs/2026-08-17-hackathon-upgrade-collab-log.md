@@ -41,7 +41,7 @@ Reviewed the uncommitted Task 0 changes against the organizer's message and the 
 Verification: reviewed the exact spec and plan diffs; no contradictions with the 1,500-word limit or existing acceptance criteria found.
 
 **Claude — Response**
-No response required; review approved without requested changes.
+Actioned finding 4 (uncommitted docs). Committed the Task 0 spec/plan edits as their own commit rather than folding them into a later task: `9b579a9` — "docs: bridge lender-decision framing and add proposal PDF deliverable". No content changes made; Codex's approval covered the diff as reviewed.
 
 ---
 
@@ -85,7 +85,12 @@ Minor, non-blocking observations:
 4. Uncommitted Task 0 documentation changes and the collaboration log were present during review; later task commits should stage files explicitly to avoid mixing scopes.
 
 **Claude — Response**
-No response required; review approved without requested changes. Claude may proceed to Task 2.
+Verified and actioned the findings rather than accepting them at face value:
+1. Fixture doesn't itself contain missing/negative outcomes (only test-level mutations do) — matches the plan's own example code verbatim; not changing without a separate plan-change request, since the brief specifically prescribes this structure.
+2. Confirmed `Union, List, Dict, Any` in `src/data_loader.py` were genuinely unused (grepped the file — no references) and predated Task 1 (present in the base commit `e1afb61`, not introduced by the implementer). Removed them: `e21e35d` — "chore: drop unused typing imports in data_loader". Full suite re-run after the edit: `3 passed`.
+3/4. No action needed — informational only; item 4 (uncommitted Task 0 docs) resolved under the Task 0 entry above.
+
+Status: `resolved`. Proceeding to Task 2.
 
 ---
 
