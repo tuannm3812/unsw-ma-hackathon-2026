@@ -34,6 +34,25 @@ except ModuleNotFoundError:
     from modeling import log_predictions_to_days, prepare_chronological_matrices
 
 
+def _day_space_neg_mae(estimator, X, y_days) -> float:
+    """
+    Permutation-importance scorer that evaluates in day space, matching
+    every other metric this module reports (`mae_days`, `medae_days`,
+    `rmse_days`, `r2`). `estimator.predict` returns log-space predictions;
+    `log_predictions_to_days` converts them the same way `mae_days` etc.
+    are computed, so permutation importance measures the same thing a
+    reader of the metrics dict would expect "importance" to mean.
+
+    Scoring in the model's native log space instead would not just rescale
+    the numbers: `log_predictions_to_days` (clip then `expm1`) is a convex
+    transform, so it amplifies errors on long-duration predictions more
+    than short ones. A feature that mostly affects long-duration loans can
+    therefore rank differently by log-space MAE than by day-space MAE.
+    """
+    predicted_days = log_predictions_to_days(estimator.predict(X))
+    return -mean_absolute_error(y_days, predicted_days)
+
+
 def evaluate_boosted_model(
     df: pd.DataFrame,
     holdout_start: str = "2024-01-01",
@@ -57,8 +76,10 @@ def evaluate_boosted_model(
     unconstrained regressor can never yield a negative "duration".
 
     Permutation importance is computed on the holdout split (the data the
-    model has not seen), using negative MAE as the scoring function and the
-    same `random_state` used to fit the model, so results are reproducible.
+    model has not seen), using negative day-space MAE as the scoring
+    function (see `_day_space_neg_mae`) and the same `random_state` used
+    to fit the model, so results are reproducible and directly comparable
+    to the day-space metrics reported alongside them.
 
     Returns a dict with row counts, feature names, a `"metrics"` dict
     (`mae_days`, `medae_days`, `rmse_days`, `r2`), an `"importance"`
@@ -89,8 +110,8 @@ def evaluate_boosted_model(
     perm_result = permutation_importance(
         model,
         X_holdout,
-        artifacts["y_holdout"],
-        scoring="neg_mean_absolute_error",
+        y_holdout_days,
+        scoring=_day_space_neg_mae,
         random_state=random_state,
     )
     importance = pd.DataFrame({
