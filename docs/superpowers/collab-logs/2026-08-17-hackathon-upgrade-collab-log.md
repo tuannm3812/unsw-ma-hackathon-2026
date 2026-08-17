@@ -557,7 +557,41 @@ No response required; Task 6 is approved. Claude may proceed to Task 7.
 
 ## Task 7: Add Reproducible CLI and Generated Reports
 
-Status: `not-started`
+**Claude — Implementation**
+Dispatched via `superpowers:subagent-driven-development` (implementer subagent, model: sonnet — orchestration layer tying together Tasks 4/5/6).
+- New `src/run_analysis.py`: `run_analysis(data_path, output_dir, holdout_start, n_topics) -> dict` loads data, runs the chronological baseline+Ridge (Task 4), robust explanatory models (Task 5), and nonlinear benchmark (Task 6), builds an audit trail (row counts, exclusion reasons, date range, period counts, 24h share, software versions), and writes `analysis_summary.json` + `association_summary.txt` atomically (temp file + `os.replace`) into `output_dir`. CLI via `argparse` (`--data`/`--output-dir`/`--holdout-start`). Paths resolved via `Path(...).resolve()`, verified CWD-independent both by a `monkeypatch.chdir` test and a manual out-of-repo run.
+- Design call beyond the brief's literal text: the brief only asked for graceful degradation on the nonlinear benchmark, but the implementer extended the same catch-and-diagnose pattern to Task 4's baseline+Ridge stage too, after confirming both share the exact same `prepare_chronological_matrices` split logic — a too-small `holdout_start` would otherwise crash the CLI at the earlier Task 4 step regardless of the Task 6 fix.
+- `reports/statistical_summary.txt` replaced with a superseded notice; `reports/generated/` added to `.gitignore`.
+
+Commit: `3ff1935` — "feat: add reproducible analysis reporting". 41/41 tests; real CLI run against `data/Kiva_Loans_Sample.pkl` confirmed exit 0, both reports written, known Task 5 binary-model diagnostic surfaced cleanly.
+
+**Internal task-reviewer subagent (Claude, model: sonnet) — spec + quality gate**
+✅ Spec compliant — independently re-verified the orchestration against Tasks 4/5/6's actual (not assumed) return shapes and confirmed the Task 4/Task 6 split-logic coupling claim directly in `src/modeling.py`/`src/advanced_modeling.py`. **Task quality: Needs fixes → resolved (see below).**
+- **Important:** `_run_baseline_ridge`/`_run_nonlinear_benchmark` caught *any* `ValueError` from their entire call chain, not just the "split too small" case — `build_predictor_frame`'s allowlist-mismatch check (a config/programming bug, unrelated to sample size) would have been silently downgraded into a report diagnostic that looked like "sample too small" instead of failing loudly.
+- **Important:** no test asserted the nonlinear benchmark's *success* path under normal conditions — combined with the broad catch above, a future regression that silently broke `evaluate_boosted_model` on a normal-sized split would have had nothing to catch it in the automated suite.
+- Minor: `.gitignore`'s `reports/generated/` entry may overlap with Task 10's own planned `.gitignore` edit (not a functional conflict, just a heads-up for whoever executes Task 10 — noted for later); `src/statistical_analysis.py`'s own `run_ols_analysis` can still silently overwrite `reports/statistical_summary.txt`'s superseded notice if invoked directly (pre-existing Task 5 behavior, out of this task's scope); `prepare_chronological_matrices` is redundantly re-run by the baseline+Ridge and nonlinear stages (inherent to the two modules' independent contracts, not this task's to fix); minor boilerplate duplication across the three `_run_*` helpers.
+
+Files changed: `src/run_analysis.py` (new), `tests/test_run_analysis.py` (new), `reports/statistical_summary.txt`, `.gitignore`.
+
+**Claude — Response**
+Fixed both Important findings via TDD:
+1. Added `InsufficientDataError(ValueError)` in `src/validation.py` — a `ValueError` subclass, so existing `pytest.raises(ValueError, ...)` assertions in Task 4's tests still pass unchanged — and used it at the two genuine "chronological split can't be built" sites: `chronological_holdout`'s missing-date/empty-partition raises, and `prepare_chronological_matrices`'s `MIN_SPLIT_OBSERVATIONS` check. `build_predictor_frame`'s allowlist-mismatch raise stays a plain `ValueError`, deliberately not caught by the CLI's degradation logic.
+2. Narrowed `_run_baseline_ridge`/`_run_nonlinear_benchmark` to catch only `InsufficientDataError`.
+3. Added `test_run_analysis_does_not_swallow_unrelated_value_errors` — monkeypatches `evaluate_chronological_models` to raise an unrelated `ValueError`, confirms `run_analysis` now propagates it instead of swallowing it into a diagnostic. Confirmed RED first (old code swallowed it).
+4. Added the missing success-path assertions (`nonlinear_benchmark["succeeded"] is True` etc.) to the existing audit-trail test.
+5. GREEN: 13/13 focused (including Task 4's `test_validation.py`/`test_modeling.py`, confirming no regression from the exception-hierarchy change), 42/42 full suite. Re-verified against the real sample: exit 0, both reports written, unchanged behavior.
+
+Commit: `9df8492` — "fix: narrow Task 7's graceful-degradation catch to insufficient-data errors"
+
+Minor items noted, not fixed now: `.gitignore` overlap with Task 10 (will check when executing Task 10); `run_ols_analysis`'s direct-invocation report-overwrite risk (pre-existing Task 5 scope); redundant `prepare_chronological_matrices` calls (architectural, cross-module).
+
+Status: `pending-review` (awaiting external Codex review)
+
+**Codex — Review**
+_(paste Codex findings here)_
+
+**Claude — Response**
+_(pending)_
 
 ---
 
