@@ -887,7 +887,7 @@ Write 1,250–1,400 words excluding references. Follow this allocation:
 
 Explicitly state:
 
-- The outcome is loan-level funding duration, not individual lender choice.
+- Loan-level funding speed and the 24-hour funding indicator are the observable behavioral proxy for aggregate lender decision-making — the outcome the organizer's brief and judging rubric name directly — not a claim to observe individual lender choice.
 - The primary distinction is controllable narrative levers versus structural constraints.
 - Temporal periods and segment interactions are pre-specified.
 - All learned text transformations fit on training data only.
@@ -916,12 +916,18 @@ Expected: an integer between 1,250 and 1,500.
 
 Ask the user for exact team-member names and university affiliations. Replace only the two placeholders after receiving them; do not alter analytical content without a separate review request.
 
-- [ ] **Step 6: Commit Task 9**
+- [ ] **Step 6: Render the submission PDF**
+
+Once placeholders are filled, render `proposal/proposal.md` to `proposal/proposal.pdf` (for example with `pandoc proposal/proposal.md -o proposal/proposal.pdf`). Confirm the PDF opens and the word count still matches. Emailing the PDF to `MA.Hackathon@unsw.edu.au` is a manual step for the user to perform — do not send email on their behalf.
+
+- [ ] **Step 7: Commit Task 9**
 
 ```bash
 git add proposal/proposal.md tests/test_proposal.py
 git commit -m "docs: draft hackathon proposal"
 ```
+
+Note: `proposal/proposal.pdf` is a rendered artifact tied to the final, placeholder-filled proposal — commit it separately once team identity is finalized, not as part of the draft commit.
 
 ---
 

@@ -9,7 +9,7 @@
 
 Upgrade the repository from a broad exploratory starter into a reproducible, submission-ready research project aligned with the Marketing Analytics Hackathon 2026 judging rubric. The project will identify which controllable narrative choices are associated with faster Kiva funding, distinguish those choices from structural loan constraints, test whether associations differ across segments and periods, and turn the findings into ethical managerial guidance.
 
-The project studies aggregate loan-level funding responses. It will not claim to observe or causally identify individual lender decisions.
+The project studies aggregate loan-level funding responses. It will not claim to observe or causally identify individual lender decisions. Loan-level funding speed and the 24-hour funding indicator are used as the observable behavioral proxy for aggregate lender decision-making — the outcome the organizer's brief and judging rubric both name directly — so the proposal must state this proxy relationship explicitly rather than only disclaiming individual-level causal inference.
 
 ## Research Positioning
 
@@ -173,6 +173,7 @@ Tests will use synthetic fixtures and will not depend on the ignored competition
 ## Deliverables
 
 - `proposal/proposal.md`: submission-ready draft below the word limit, with placeholders only for team names and affiliations.
+- `proposal/proposal.pdf`: rendered submission copy for emailing to `MA.Hackathon@unsw.edu.au`, generated from `proposal.md` after placeholders are filled. Rendering is automated; the email send itself is a manual, user-confirmed action outside this repository's scope.
 - `README.md`: accurate structure, setup, reproducible commands, research framing, limitations, and one-week execution schedule.
 - Updated source modules and notebook reflecting the approved analysis.
 - `tests/`: automated regression tests.
@@ -202,6 +203,7 @@ Recommendations will be segment-specific and will include uncertainty. Ethical g
 ## Acceptance Criteria
 
 1. The proposal follows all five organizer sections and is at most 1,500 words excluding references.
+1a. The proposal explicitly names loan-level funding speed as the observable proxy for aggregate lender decision-making in its aim section, and a rendered `proposal.pdf` matching the final `proposal.md` exists for the manual email submission step.
 2. No model imputes a missing target or uses post-outcome information as a predictor.
 3. Primary evaluation is chronological and all learned transformations fit only on training observations.
 4. Time evolution and at least two meaningful segment comparisons are present.
