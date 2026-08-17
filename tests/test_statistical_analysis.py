@@ -3,7 +3,38 @@ import os
 import pandas as pd
 import pytest
 
-from src.statistical_analysis import fit_explanatory_models, format_association_summary, run_ols_analysis
+from src.statistical_analysis import (
+    _term_has_variation,
+    fit_explanatory_models,
+    format_association_summary,
+    run_ols_analysis,
+)
+
+
+def test_default_interaction_tests_narrative_framing_by_period_not_gender(large_synthetic_kiva_df):
+    # The approved design pre-specifies "narrative framing x analysis
+    # period" as the temporal-heterogeneity test (the 20%-weighted
+    # "evolutionary perspective" judging criterion) - not a gender x
+    # period interaction, which answers a different question.
+    result = fit_explanatory_models(large_synthetic_kiva_df)
+    assert "family_mentions_per_100_words:C(analysis_period)" in result["duration_formula"]
+    assert "family_mentions_per_100_words:C(analysis_period)" in result["binary_formula"]
+    assert "C(gender_classification):C(analysis_period)" not in result["duration_formula"]
+
+
+def test_continuous_by_categorical_interaction_is_not_rejected_as_sparse(large_synthetic_kiva_df):
+    # A continuous narrative measure's ~unique values will almost always
+    # occur in only one period each - that is not the same thing as the
+    # interaction being unusable, and must not be rejected as if it were
+    # a sparse categorical x categorical crosstab.
+    from src.data_loader import prepare_analysis_data
+    from src.features import extract_deterministic_features
+
+    prepared = prepare_analysis_data(large_synthetic_kiva_df)
+    featured = extract_deterministic_features(prepared)
+    data = featured.loc[featured["valid_completed_outcome"]].copy()
+
+    assert _term_has_variation("family_mentions_per_100_words:C(analysis_period)", data)
 
 
 def test_explanatory_models_use_valid_rows_and_robust_covariance(large_synthetic_kiva_df):

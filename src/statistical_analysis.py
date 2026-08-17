@@ -97,13 +97,19 @@ BASE_FORMULA_TERMS = [
 ]
 
 # Pre-specified period interaction included by default: does the
-# association between gender classification and the outcome differ across
-# the pre-pandemic / pandemic-disruption / post-pandemic analysis periods?
-# This is the only interaction fit by default, per the brief ("add only
-# pre-specified period interactions in the default sample model"). Callers
-# investigating other segments pass additional patsy-formula terms via
-# `extra_interactions`.
-DEFAULT_PERIOD_INTERACTIONS = ["C(analysis_period):C(gender_classification)"]
+# association between narrative framing and the outcome differ across the
+# pre-pandemic / pandemic-disruption / post-pandemic analysis periods? This
+# is the project's temporal-heterogeneity test (design spec: "Narrative
+# framing x analysis period" is the pre-specified evolutionary-perspective
+# comparison), and the only interaction fit by default, per the brief ("add
+# only pre-specified period interactions in the default sample model").
+# `family_mentions_per_100_words` is used as the single representative
+# framing measure to keep the default model parsimonious - it is one of
+# `FRAMING_TERMS`'s three main effects already in the base formula, so this
+# adds one interaction term, not a new predictor. Callers investigating
+# other segments (region, loan-size band, sector, or other framing
+# measures) pass additional patsy-formula terms via `extra_interactions`.
+DEFAULT_PERIOD_INTERACTIONS = ["family_mentions_per_100_words:C(analysis_period)"]
 
 
 def _term_columns(term: str) -> "list[str]":
@@ -116,24 +122,40 @@ def _term_columns(term: str) -> "list[str]":
     return columns
 
 
+def _is_categorical_component(component: str) -> bool:
+    return re.fullmatch(r"C\([^)]+\)", component.strip()) is not None
+
+
 def _term_has_variation(term: str, data: pd.DataFrame) -> bool:
     """
     A term is usable only if every column it references has at least two
-    distinct non-null values in `data`, AND - for a two-way interaction -
-    every observed combination of the two factors' levels actually occurs
-    at least once.
+    distinct non-null values in `data`, AND - for a two-way interaction
+    between two *categorical* (`C(...)`) factors - every observed
+    combination of the two factors' levels actually occurs at least once.
 
-    The second check matters on real (not synthetic) data: e.g. on the
-    project's ~100-row sample, `gender_classification` only has "female"
-    and "male" observed (no "mixed"/"unknown"), and no loan happens to be
-    both "male" and posted during "pandemic_disruption". Both factors vary
-    on their own, but that one interaction dummy (male x pandemic_disruption)
-    is a column of all zeros - contributing nothing while still inflating
-    the column count, which trips the rank check below for a reason that
-    has nothing to do with overall sample size. Dropping just the
-    interaction (not the main effects) here keeps the default pre-specified
-    model actually fittable on realistically sparse categorical data,
-    instead of only ever working on generously-varied fixtures.
+    The categorical x categorical check matters on real (not synthetic)
+    data: e.g. on the project's ~100-row sample, `gender_classification`
+    only has "female" and "male" observed (no "mixed"/"unknown"), and no
+    loan happens to be both "male" and posted during "pandemic_disruption".
+    Both factors vary on their own, but that one interaction dummy (male x
+    pandemic_disruption) is a column of all zeros - contributing nothing
+    while still inflating the column count, which trips the rank check
+    below for a reason that has nothing to do with overall sample size.
+    Dropping just the interaction (not the main effects) here keeps the
+    default pre-specified model actually fittable on realistically sparse
+    categorical data, instead of only ever working on generously-varied
+    fixtures.
+
+    That full-crosstab check is meaningless for a *continuous* narrative
+    measure x categorical period, though: a continuous column's dozens of
+    near-unique values will almost always occur in only one period each,
+    so a literal crosstab is nearly always sparse-with-zeros by
+    construction - not because the interaction is actually unusable. For a
+    continuous x categorical term, instead require that the continuous
+    side varies *within* at least one level of the categorical side
+    (catching the pathological case where it is constant in every group);
+    the rank check in `_fit_design` is the authoritative backstop for
+    anything subtler that this heuristic misses.
     """
     columns = _term_columns(term)
     for col in columns:
@@ -141,10 +163,28 @@ def _term_has_variation(term: str, data: pd.DataFrame) -> bool:
             raise KeyError(f"Formula term {term!r} references unknown column {col!r}")
         if data[col].dropna().nunique() < 2:
             return False
-    if len(columns) == 2:
+    if len(columns) != 2:
+        return True
+
+    components = [component.strip() for component in term.split(":")]
+    categorical_flags = [_is_categorical_component(component) for component in components]
+
+    if all(categorical_flags):
         crosstab = pd.crosstab(data[columns[0]], data[columns[1]])
         if (crosstab.to_numpy() == 0).any():
             return False
+        return True
+
+    if any(categorical_flags):
+        cat_index = categorical_flags.index(True)
+        cat_col, cont_col = columns[cat_index], columns[1 - cat_index]
+        within_group_variation = data.groupby(data[cat_col], observed=True)[cont_col].nunique()
+        if not (within_group_variation >= 2).any():
+            return False
+        return True
+
+    # Continuous x continuous: both components already passed the overall
+    # nunique >= 2 check above; the rank check is the backstop.
     return True
 
 
@@ -266,9 +306,9 @@ def fit_explanatory_models(df: pd.DataFrame, extra_interactions=None) -> "dict[s
 
     `extra_interactions` optionally adds more patsy-formula interaction
     terms (e.g. segment-specific interactions) on top of the default
-    `C(analysis_period):C(gender_classification)` interaction - useful for
-    exploratory follow-up on the full dataset without changing the default
-    pre-specified model.
+    `family_mentions_per_100_words:C(analysis_period)` narrative-by-period
+    interaction - useful for exploratory follow-up on the full dataset
+    without changing the default pre-specified model.
 
     Each model is fit independently: if one is too small, rank-deficient,
     or not well-identified (e.g. quasi-complete separation in the binary
@@ -428,7 +468,7 @@ def format_association_summary(results: "dict[str, object]") -> str:
                 + ", ".join(results["binary_dropped_terms"])
             )
         lines.append("")
-        lines.extend(_format_coefficient_lines(binary_results, "the odds of funding within 24 hours"))
+        lines.extend(_format_coefficient_lines(binary_results, "the log-odds of funding within 24 hours"))
 
     return "\n".join(lines)
 

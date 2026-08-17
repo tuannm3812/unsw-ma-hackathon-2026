@@ -131,28 +131,43 @@ def large_synthetic_kiva_df():
     return pd.DataFrame(rows)
 
 
-# `separated_binary_kiva_df` is `large_synthetic_kiva_df`'s generator with one
-# change: every "Health"-sector loan is forced to fund within 24 hours. That
-# makes `sector` a near-perfect predictor of `funded_within_24h` (quasi-
-# complete separation), which drives the 24-hour binomial GLM's standard
-# errors non-finite, while `log_funding_speed` (a continuous target) is
-# unaffected - the duration OLS model still fits normally on the same rows.
-# This reproduces, deterministically and offline, the real project sample's
-# failure mode (sparse sector/region cells with a constant 24-hour outcome)
-# so `fit_explanatory_models`'s per-model graceful-degradation path is
+# `separated_binary_kiva_df` reuses `large_synthetic_kiva_df`'s generator
+# with two changes, both needed to reliably reproduce genuine quasi-complete
+# separation (verified empirically, not assumed) against the project's
+# actual default formula:
+#   1. A wider sector list (11 categories, matching the real project
+#      sample's higher categorical cardinality) with a single row forced
+#      into a sector ("Health") that always funds within 24 hours - one
+#      perfectly-separated observation is enough to make that sector's
+#      coefficient diverge and its HC3 standard errors non-finite.
+#   2. A smaller sample (60 rows, vs. 120) so that one categorical level is
+#      not diluted into statistical irrelevance by many competing rows.
+# `log_funding_speed` (continuous) is unaffected by which sector a row is
+# in, so the duration OLS model still fits normally on the same rows - only
+# the 24-hour binomial GLM is driven non-finite. This reproduces,
+# deterministically and offline, the real project sample's failure mode
+# (sparse sector/region cells with a constant 24-hour outcome) so
+# `fit_explanatory_models`'s per-model graceful-degradation path is
 # exercised with genuine statistical behavior, not a mock.
+_SEPARATED_FIXTURE_SECTORS = _LARGE_FIXTURE_SECTORS + [
+    "Arts", "Construction", "Manufacturing", "Transportation", "Wholesale",
+]
+_SEPARATED_FIXTURE_REGIONS = _LARGE_FIXTURE_REGIONS + ["Middle East"]
+
+
 @pytest.fixture
 def separated_binary_kiva_df():
     rng = random.Random(20260817)
     rows = []
-    n_rows = 120
+    n_rows = 60
     for idx in range(n_rows):
         year = rng.choice(_LARGE_FIXTURE_YEARS)
         month = rng.randint(1, 12)
         day = rng.randint(1, 28)
         posted = pd.Timestamp(year=year, month=month, day=day, tz="UTC")
-        sector = rng.choice(_LARGE_FIXTURE_SECTORS)
-        if sector == "Health":
+        sector = rng.choice(_SEPARATED_FIXTURE_SECTORS)
+        if idx == 0:
+            sector = "Health"
             hours = rng.choice(_LARGE_FIXTURE_SHORT_HOURS)
         else:
             hours = (
@@ -180,7 +195,7 @@ def separated_binary_kiva_df():
             "longitude": 0.0,
             "country_iso": country_iso,
             "country_name": country_name,
-            "region": rng.choice(_LARGE_FIXTURE_REGIONS),
+            "region": rng.choice(_SEPARATED_FIXTURE_REGIONS),
             "country_ppp": float(rng.randint(1000, 15000)),
             "fundsLentInCountry": rng.randint(50000, 500000),
             "country_latitude": 0.0,
