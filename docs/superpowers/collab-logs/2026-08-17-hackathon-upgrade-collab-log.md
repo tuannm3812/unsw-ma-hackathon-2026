@@ -500,7 +500,38 @@ No response required; Task 5 is approved. Claude may proceed to Task 6.
 
 ## Task 6: Consolidate the Nonlinear Benchmark
 
-Status: `not-started`
+**Claude — Implementation**
+Dispatched via `superpowers:subagent-driven-development` (implementer subagent, model: sonnet).
+- Rewrote `src/advanced_modeling.py`: removed the old leakage-unsafe random-5-fold-CV over XGBoost+LightGBM (fit on the full dataset, imputed the missing target with its own median). `evaluate_boosted_model(df, holdout_start, n_topics, random_state) -> dict` now calls Task 4's `prepare_chronological_matrices` exactly once (no re-derived split/preprocessing), fits `HistGradientBoostingRegressor` on the training partition only, converts predictions via `log_predictions_to_days` (the same helper a prior Codex review added after catching Ridge's negative-duration bug in Task 4), and reports `mae_days`/`medae_days`/`rmse_days`/`r2` plus a permutation-importance DataFrame.
+- `run_advanced_cv_modeling` kept as a deprecated wrapper that delegates to the new benchmark instead of silently repeating the old behavior.
+- Removed `xgboost`/`lightgbm` from `requirements.txt`; confirmed via `rg` no other file (including the not-yet-rewritten notebook) references them.
+
+Commit: `a8372ac` — "feat: use one chronological nonlinear benchmark". 34/34 tests passing.
+
+**Internal task-reviewer subagent (Claude, model: sonnet) — spec + quality gate**
+✅ Spec compliant, zero Critical findings — independently re-traced every `.fit()` call site and confirmed against Task 4's actual `prepare_chronological_matrices`/`log_predictions_to_days` implementations (not just the diff's claims about them). **Task quality: Approved**, with one Important finding actioned below.
+- **Important:** permutation importance was scored against the model's native log-space target (`y_holdout`) rather than day-space (`y_holdout_days`), inconsistent with every other metric this function reports. The reviewer's reasoning: `log_predictions_to_days` is a convex transform, so this isn't just a scale difference — it can change the actual *ranking* of feature importances, since it amplifies errors on long-duration predictions more than short ones. Self-flagged by the implementer as a judgment call, but the reviewer concluded it should be resolved, not left as a footnote.
+- Minor: metric computation duplicates arithmetic already in `src/modeling.py`'s private `_days_metrics` (not cleanly reusable since it's underscore-prefixed); no direct test coverage of `run_advanced_cv_modeling`'s delegation path; return dict omits `numeric_features`/`categorical_features` that the linear baseline's equivalent function includes.
+
+Files changed: `src/advanced_modeling.py` (rewritten), `tests/test_advanced_modeling.py` (new), `requirements.txt`.
+
+**Claude — Response**
+Verified the finding before fixing: reproduced it concretely by computing both a manual day-space and log-space `permutation_importance` call against the same fitted model and comparing to what the code reported. Confirmed the reviewer's point was not theoretical — 23 of 62 features' importance scores differed by up to 8.5x between log-space and day-space scoring on the synthetic fixture, i.e. a real ranking-affecting difference, not a cosmetic one.
+
+Fixed via TDD:
+1. Added `test_permutation_importance_is_scored_in_day_space_not_log_space` — computes an independent day-space `permutation_importance` call and asserts the function's reported values match it (and differ from the log-space equivalent). Confirmed RED with the exact magnitude of mismatch noted above.
+2. Added `_day_space_neg_mae`, a scorer that converts predictions to days via `log_predictions_to_days` before computing MAE, and passed it (with `y_holdout_days`) to `permutation_importance` instead of the log-space target and string scorer.
+3. GREEN: 2/2 focused, 35/35 full suite. Re-verified against the real 100-row sample: runs cleanly, holdout R² ≈ 0.39 (notably better than Ridge's -12.2 from Task 4 on the same data).
+
+Commit: `5d11171` — "fix: score permutation importance in day-space, not log-space"
+
+Status: `pending-review` (awaiting external Codex review)
+
+**Codex — Review**
+_(paste Codex findings here)_
+
+**Claude — Response**
+_(pending)_
 
 ---
 
