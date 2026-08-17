@@ -1,81 +1,59 @@
 import os
-import numpy as np
 import pandas as pd
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.decomposition import NMF, LatentDirichletAllocation
 try:
     from src.data_loader import load_and_prepare_data
+    from src.text_transformer import KivaTopicTransformer
 except ModuleNotFoundError:
     from data_loader import load_and_prepare_data
+    from text_transformer import KivaTopicTransformer
+
 
 def extract_topics_nmf(df: pd.DataFrame, n_topics: int = 5, n_top_words: int = 10):
     """
-    Fits an NMF (Non-Negative Matrix Factorization) topic model on loan descriptions.
-    Extracts topic mixture probabilities and names them based on top terms.
-    
+    FULL-SAMPLE EXPLORATORY ANALYSIS ONLY — NOT FOR LEAKAGE-SAFE EVALUATION.
+
+    Fits an NMF (Non-Negative Matrix Factorization) topic model on the entire input
+    DataFrame. This is a convenience function for descriptive exploratory analysis,
+    where fitting on the full sample is acceptable because the results are never used
+    to evaluate held-out predictions. For leakage-safe evaluation, use KivaTopicTransformer
+    directly, fitting on training data only and transforming other splits separately.
+
     Args:
         df (pd.DataFrame): Input DataFrame containing Kiva loans.
         n_topics (int): Number of topics to extract.
         n_top_words (int): Number of top words to show per topic.
-        
+
     Returns:
         pd.DataFrame: Copy of DataFrame with topic probability columns.
         dict: Mapping from topic index to top words.
     """
     df = df.copy()
-    
-    # 1. Clean descriptions
-    # We clean html and fillna
-    try:
-        from src.features import clean_html
-    except ModuleNotFoundError:
-        from features import clean_html
-    descriptions = df['description'].apply(clean_html).fillna("")
-    
-    # 2. Vectorize text using TF-IDF (removing standard English stop words)
-    vectorizer = TfidfVectorizer(
-        max_df=0.95,
+
+    # Extract descriptions (cleaned text already contains the description column)
+    descriptions = df['description']
+
+    # Fit transformer on full sample (exploratory use only)
+    transformer = KivaTopicTransformer(
+        n_topics=n_topics,
         min_df=2,
-        stop_words='english',
-        lowercase=True,
-        ngram_range=(1, 2)
+        random_state=42
     )
-    tfidf = vectorizer.fit_transform(descriptions)
-    
-    # 3. Fit NMF Model
-    nmf = NMF(
-        n_components=n_topics,
-        random_state=42,
-        init='nndsvda',
-        max_iter=1000
-    )
-    nmf_features = nmf.fit_transform(tfidf)
-    
-    # Normalize topic weights per row so they sum to 1 (probability distribution)
-    row_sums = nmf_features.sum(axis=1, keepdims=True)
-    # Avoid division by zero
-    row_sums[row_sums == 0] = 1.0
-    nmf_probs = nmf_features / row_sums
-    
-    # 4. Extract top words for each topic
-    feature_names = vectorizer.get_feature_names_out()
-    topic_keywords = {}
-    
-    for topic_idx, topic in enumerate(nmf.components_):
-        top_features_ind = topic.argsort()[:-n_top_words - 1:-1]
-        top_words = [feature_names[i] for i in top_features_ind]
-        topic_keywords[topic_idx] = top_words
-        
-    # 5. Append topic probabilities to DataFrame
-    topic_cols = []
+    transformer.fit(descriptions)
+
+    # Transform to get topic probabilities
+    topic_probs = transformer.transform(descriptions)
+
+    # Get topic keywords
+    topic_keywords = transformer.get_topic_terms(n_top_words=n_top_words)
+
+    # Append topic probabilities to DataFrame
     for i in range(n_topics):
         col_name = f'topic_{i}'
-        df[col_name] = nmf_probs[:, i]
-        topic_cols.append(col_name)
-        
+        df[col_name] = topic_probs[col_name].values
+
     # Get dominant topic index
-    df['dominant_topic'] = nmf_probs.argmax(axis=1)
-    
+    df['dominant_topic'] = topic_probs.idxmax(axis=1).str.replace('topic_', '').astype(int)
+
     return df, topic_keywords
 
 def analyze_topics_speed(df_topics: pd.DataFrame, topic_keywords: dict):
