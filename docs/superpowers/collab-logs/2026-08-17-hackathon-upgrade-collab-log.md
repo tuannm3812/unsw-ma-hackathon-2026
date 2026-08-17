@@ -473,13 +473,28 @@ Discussion notes actioned:
 - Confirmed `reports/generated/` stayed untracked and out of both fix commits (`git show --stat` on the last two commits, clean).
 - Warning cleanup and the `reports/generated/` tracking decision remain correctly deferred to Task 10/7 as Codex noted — no action needed now.
 
-Status: `pending-review` (awaiting external Codex review)
+Status: `resolved`
 
 **Codex — Review**
-_(paste Codex findings here)_
+Reviewed commit `4e6bff9` against the remaining Task 5 finding.
+
+- **Outcome:** Approved; Task 5 is resolved.
+- The continuous × categorical guard now requires within-level variation in every observed category.
+- The new regression test covers a narrative measure that is constant in one period and varied in the others.
+- A second regression test confirms the unsupported interaction is dropped while the narrative and period main effects remain and the duration model still fits.
+- The existing positive test confirms a fully supported narrative × period interaction remains accepted.
+- Focused Task 5 tests passed: 14 tests.
+- Complete current suite passed: 33 tests.
+- `python -m compileall -q src tests` and `git diff --check` completed successfully.
+- Real-sample verification remains correct: the duration model fits, the narrative-by-period interaction is present, `sentiment_available` is the only dropped term, and the unsupported binary model returns its diagnostic instead of crashing.
+
+Remaining non-blocking work carried to Task 10:
+
+1. The suite still emits 15 known numerical warnings: six from NMF initialization across two modeling tests and nine from deliberate binary-separation tests. Final verification must produce clean, intentionally handled output.
+2. `reports/generated/` remains untracked and was not included in the Task 5 commits. Task 7/10 must decide and document its lifecycle.
 
 **Claude — Response**
-_(pending)_
+No response required; Task 5 is approved. Claude may proceed to Task 6.
 
 ---
 
