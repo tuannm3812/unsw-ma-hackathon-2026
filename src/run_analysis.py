@@ -30,7 +30,12 @@ both build their chronological train/holdout split via the same
 `prepare_chronological_matrices` helper and the same
 `MIN_SPLIT_OBSERVATIONS` floor, a `holdout_start` that is too aggressive
 for one is too aggressive for the other - so both stages, not just the
-nonlinear benchmark, are attempted defensively here.
+nonlinear benchmark, are attempted defensively here. Only
+`src.validation.InsufficientDataError` is caught for this, though - a
+narrower net than "any `ValueError`" - so a genuinely different bug (e.g.
+a misconfigured predictor allowlist) still fails loudly instead of being
+silently downgraded into a report that merely looks like "sample too
+small."
 """
 
 import argparse
@@ -50,11 +55,13 @@ try:
     from src.data_loader import load_kiva_pickle, prepare_analysis_data
     from src.modeling import evaluate_chronological_models
     from src.statistical_analysis import fit_explanatory_models, format_association_summary
+    from src.validation import InsufficientDataError
 except ModuleNotFoundError:
     from advanced_modeling import evaluate_boosted_model
     from data_loader import load_kiva_pickle, prepare_analysis_data
     from modeling import evaluate_chronological_models
     from statistical_analysis import fit_explanatory_models, format_association_summary
+    from validation import InsufficientDataError
 
 
 def _json_default(obj):
@@ -155,11 +162,15 @@ def _describe_dataset(df: pd.DataFrame, prepared: pd.DataFrame, holdout_start: s
 def _run_baseline_ridge(df: pd.DataFrame, holdout_start: str, n_topics: int) -> dict:
     """
     Run the leakage-safe chronological baseline+Ridge evaluation (Task 4),
-    stripped of `_artifacts`. Caught defensively: it shares its
-    `MIN_SPLIT_OBSERVATIONS` chronological-split logic with the nonlinear
-    benchmark below, so a `holdout_start` too aggressive for one is too
-    aggressive for the other, and a too-small sample here should degrade
-    this section of the report to a diagnostic, not crash the whole run.
+    stripped of `_artifacts`. Catches only `InsufficientDataError`
+    (raised when the chronological split itself is too small or
+    unusable) - not every `ValueError`, since e.g. a misconfigured
+    predictor allowlist also raises `ValueError` and that is a
+    programming bug that must fail loudly, not get silently downgraded
+    into a report that merely looks like "sample too small." It shares
+    its split logic with the nonlinear benchmark below, so a
+    `holdout_start` too aggressive for one is too aggressive for the
+    other.
     """
     try:
         results = evaluate_chronological_models(df, holdout_start=holdout_start, n_topics=n_topics)
@@ -168,7 +179,7 @@ def _run_baseline_ridge(df: pd.DataFrame, holdout_start: str, n_topics: int) -> 
         results["succeeded"] = True
         results["error"] = None
         return results
-    except ValueError as error:
+    except InsufficientDataError as error:
         return {
             "attempted": True,
             "succeeded": False,
@@ -181,8 +192,10 @@ def _run_nonlinear_benchmark(df: pd.DataFrame, holdout_start: str, n_topics: int
     Attempt the nonlinear (gradient-boosted) benchmark (Task 6), recording
     a clear diagnostic instead of crashing if the chronological split is
     too small - the failure mode `prepare_chronological_matrices` raises
-    via `ValueError` when either partition has fewer than
-    `MIN_SPLIT_OBSERVATIONS` valid rows.
+    via `InsufficientDataError` when either partition has fewer than
+    `MIN_SPLIT_OBSERVATIONS` valid rows. Only that specific error is
+    caught; an unrelated `ValueError` (a real bug elsewhere in the
+    pipeline) is left to propagate.
     """
     try:
         results = evaluate_boosted_model(
@@ -198,7 +211,7 @@ def _run_nonlinear_benchmark(df: pd.DataFrame, holdout_start: str, n_topics: int
         results["succeeded"] = True
         results["error"] = None
         return results
-    except ValueError as error:
+    except InsufficientDataError as error:
         return {
             "attempted": True,
             "succeeded": False,

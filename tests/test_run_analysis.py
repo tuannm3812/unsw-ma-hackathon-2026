@@ -79,6 +79,14 @@ def test_run_analysis_records_audit_trail_and_versions(tmp_path, large_synthetic
     assert summary["baseline_ridge"]["succeeded"] is True
     assert "metrics" in summary["baseline_ridge"]
 
+    # A regression that breaks the nonlinear benchmark on a normally-sized
+    # split must fail this test, not silently degrade to a "diagnostic"
+    # with nothing to catch it.
+    assert summary["nonlinear_benchmark"]["attempted"] is True
+    assert summary["nonlinear_benchmark"]["succeeded"] is True
+    assert summary["nonlinear_benchmark"]["error"] is None
+    assert "metrics" in summary["nonlinear_benchmark"]
+
     assert summary["explanatory"]["attempted"] is True
     assert summary["explanatory"]["n_duration"] is not None
 
@@ -117,6 +125,30 @@ def test_run_analysis_records_diagnostic_when_nonlinear_split_too_small(tmp_path
         assert nonlinear["error"]
     assert (output_dir / "analysis_summary.json").exists()
     assert (output_dir / "association_summary.txt").exists()
+
+
+def test_run_analysis_does_not_swallow_unrelated_value_errors(tmp_path, large_synthetic_kiva_df, monkeypatch):
+    # The "catch and record a diagnostic" pattern exists specifically for
+    # the chronological split being too small - not as a blanket net for
+    # any ValueError anywhere in the call chain. A genuinely different bug
+    # (e.g. a misconfigured predictor allowlist, or an unrelated modeling
+    # error) must still crash loudly, not get silently downgraded into a
+    # report that merely looks like "sample too small."
+    import src.run_analysis as run_analysis_module
+
+    def _broken_evaluate_chronological_models(*args, **kwargs):
+        raise ValueError("predictor allowlist references a column that does not exist")
+
+    monkeypatch.setattr(
+        run_analysis_module, "evaluate_chronological_models", _broken_evaluate_chronological_models
+    )
+
+    data_path = tmp_path / "sample.pkl"
+    _write_pickle(large_synthetic_kiva_df, data_path)
+    output_dir = tmp_path / "reports"
+
+    with pytest.raises(ValueError, match="predictor allowlist"):
+        run_analysis(data_path, output_dir, holdout_start="2024-01-01")
 
 
 def test_run_analysis_writes_files_atomically_no_partial_leftover(tmp_path, large_synthetic_kiva_df):

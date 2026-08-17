@@ -1,6 +1,18 @@
 import pandas as pd
 
 
+class InsufficientDataError(ValueError):
+    """
+    Raised when a chronological split cannot be built because the data
+    itself is unusable for it - an unparseable/missing date, or an empty
+    training or holdout partition. A subclass of `ValueError` (existing
+    `pytest.raises(ValueError, ...)` assertions still match), but callers
+    that need to distinguish "this sample is too small/unsuitable" from
+    other, unrelated `ValueError`s (e.g. a misconfigured predictor
+    allowlist) can catch this specifically instead of every `ValueError`.
+    """
+
+
 def chronological_holdout(
     df: pd.DataFrame,
     date_col: str = "fundraisingDate",
@@ -27,7 +39,7 @@ def chronological_holdout(
     dates = pd.to_datetime(df[date_col], errors="coerce", utc=True)
     if dates.isna().any():
         missing = int(dates.isna().sum())
-        raise ValueError(
+        raise InsufficientDataError(
             f"{missing} row(s) have a missing or unparseable {date_col}; "
             "chronological_holdout requires a valid date for every row"
         )
@@ -40,7 +52,7 @@ def chronological_holdout(
     holdout = df.loc[holdout_mask].copy()
 
     if train.empty or holdout.empty:
-        raise ValueError(
+        raise InsufficientDataError(
             "chronological_holdout produced an empty training or holdout partition "
             f"for holdout_start={holdout_start!r}; choose a holdout_start with rows "
             "on both sides"

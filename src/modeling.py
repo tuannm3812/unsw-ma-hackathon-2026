@@ -34,12 +34,12 @@ try:
     from src.data_loader import load_kiva_pickle, prepare_analysis_data
     from src.features import extract_deterministic_features
     from src.text_transformer import KivaTopicTransformer
-    from src.validation import chronological_holdout
+    from src.validation import InsufficientDataError, chronological_holdout
 except ModuleNotFoundError:
     from data_loader import load_kiva_pickle, prepare_analysis_data
     from features import extract_deterministic_features
     from text_transformer import KivaTopicTransformer
-    from validation import chronological_holdout
+    from validation import InsufficientDataError, chronological_holdout
 
 
 # Explicit predictor allowlist, built from the project's data contract for
@@ -189,7 +189,7 @@ def prepare_chronological_matrices(
     )
 
     if len(train_raw) < MIN_SPLIT_OBSERVATIONS or len(holdout_raw) < MIN_SPLIT_OBSERVATIONS:
-        raise ValueError(
+        raise InsufficientDataError(
             "prepare_chronological_matrices requires at least "
             f"{MIN_SPLIT_OBSERVATIONS} valid observations in both the training and "
             f"holdout splits; got {len(train_raw)} training and {len(holdout_raw)} "
