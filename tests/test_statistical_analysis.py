@@ -51,11 +51,67 @@ def test_summary_reports_coefficients_regardless_of_significance(large_synthetic
     summary = format_association_summary(results)
 
     n_duration_terms = len(results["duration"].params) - 1  # exclude intercept
-    # Every pre-specified coefficient must be reported, not only p < 0.05 ones.
-    reported_coef_lines = [
-        line for line in summary.splitlines() if line.strip().startswith("- ")
+    n_binary_terms = len(results["binary"].params) - 1  # exclude intercept
+
+    # Every pre-specified coefficient must be reported, not only p < 0.05
+    # ones - checked per model (not a combined total) so that filtering
+    # applied to only one section would still be caught.
+    duration_section, binary_section = summary.split("24-hour funding model:", 1)
+    duration_coef_lines = [
+        line for line in duration_section.splitlines() if line.strip().startswith("- ")
     ]
-    assert len(reported_coef_lines) >= n_duration_terms
+    binary_coef_lines = [
+        line for line in binary_section.splitlines() if line.strip().startswith("- ")
+    ]
+    assert len(duration_coef_lines) == n_duration_terms
+    assert len(binary_coef_lines) == n_binary_terms
+
+
+def test_fit_degrades_gracefully_when_one_model_is_not_well_identified(separated_binary_kiva_df):
+    # `separated_binary_kiva_df` forces quasi-complete separation in the
+    # 24-hour binary model (one sector always funds within 24h) while the
+    # continuous duration target is unaffected - reproducing the real
+    # project sample's failure mode. A single unfittable model must not
+    # discard an otherwise-successful one.
+    result = fit_explanatory_models(separated_binary_kiva_df)
+
+    assert result["duration"] is not None
+    assert result["duration"].cov_type == "HC3"
+    assert result["duration_error"] is None
+
+    assert result["binary"] is None
+    assert result["binary_error"] is not None
+    assert "non-finite standard errors" in result["binary_error"]
+
+
+def test_summary_reports_diagnostic_for_a_model_that_could_not_be_fit(separated_binary_kiva_df):
+    results = fit_explanatory_models(separated_binary_kiva_df)
+    summary = format_association_summary(results)
+
+    # The duration model's coefficients are still reported normally...
+    assert "associated with funding speed" in summary
+    # ...and the binary section explains why it has no coefficients,
+    # instead of crashing or silently omitting the section.
+    assert results["binary_error"] in summary
+    assert "causes" not in summary.lower()
+    assert "has a significant effect" not in summary.lower()
+
+
+def test_run_ols_analysis_writes_report_when_one_model_cannot_be_fit(separated_binary_kiva_df, tmp_path):
+    pkl_path = tmp_path / "kiva.pkl"
+    separated_binary_kiva_df.to_pickle(pkl_path)
+    report_dir = tmp_path / "reports"
+
+    results = run_ols_analysis(str(pkl_path), str(report_dir))
+
+    assert results["duration"] is not None
+    assert results["binary"] is None
+    report_path = os.path.join(str(report_dir), "statistical_summary.txt")
+    assert os.path.exists(report_path)
+    with open(report_path, "r", encoding="utf-8") as f:
+        content = f.read()
+    assert "associated with funding speed" in content
+    assert results["binary_error"] in content
 
 
 def test_run_ols_analysis_wrapper_writes_association_language_report(large_synthetic_kiva_df, tmp_path):

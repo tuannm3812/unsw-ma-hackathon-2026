@@ -129,3 +129,67 @@ def large_synthetic_kiva_df():
             "raisedDate": (posted + pd.Timedelta(hours=hours)).isoformat(),
         })
     return pd.DataFrame(rows)
+
+
+# `separated_binary_kiva_df` is `large_synthetic_kiva_df`'s generator with one
+# change: every "Health"-sector loan is forced to fund within 24 hours. That
+# makes `sector` a near-perfect predictor of `funded_within_24h` (quasi-
+# complete separation), which drives the 24-hour binomial GLM's standard
+# errors non-finite, while `log_funding_speed` (a continuous target) is
+# unaffected - the duration OLS model still fits normally on the same rows.
+# This reproduces, deterministically and offline, the real project sample's
+# failure mode (sparse sector/region cells with a constant 24-hour outcome)
+# so `fit_explanatory_models`'s per-model graceful-degradation path is
+# exercised with genuine statistical behavior, not a mock.
+@pytest.fixture
+def separated_binary_kiva_df():
+    rng = random.Random(20260817)
+    rows = []
+    n_rows = 120
+    for idx in range(n_rows):
+        year = rng.choice(_LARGE_FIXTURE_YEARS)
+        month = rng.randint(1, 12)
+        day = rng.randint(1, 28)
+        posted = pd.Timestamp(year=year, month=month, day=day, tz="UTC")
+        sector = rng.choice(_LARGE_FIXTURE_SECTORS)
+        if sector == "Health":
+            hours = rng.choice(_LARGE_FIXTURE_SHORT_HOURS)
+        else:
+            hours = (
+                rng.choice(_LARGE_FIXTURE_SHORT_HOURS) if rng.random() < 0.4
+                else rng.choice(_LARGE_FIXTURE_LONG_HOURS)
+            )
+        n_sentences = rng.randint(2, 5)
+        description = " ".join(rng.sample(_LARGE_FIXTURE_THEME_SENTENCES, n_sentences))
+        country_iso, country_name = rng.choice(_LARGE_FIXTURE_COUNTRIES)
+
+        rows.append({
+            "id": idx + 1,
+            "status": "funded",
+            "borrowerCount": rng.choice([1, 1, 1, 2, 3]),
+            "name": f"Borrower {idx}",
+            "gender": rng.choice(_LARGE_FIXTURE_GENDER_TOKENS),
+            "loanAmount": float(rng.randint(100, 3000)),
+            "lenderRepaymentTerm": rng.randint(3, 36),
+            "repaymentInterval": rng.choice(_LARGE_FIXTURE_REPAYMENT_INTERVALS),
+            "sector": sector,
+            "activity": "General",
+            "use": "to buy stock and materials for the business",
+            "city": "Test City",
+            "latitude": 0.0,
+            "longitude": 0.0,
+            "country_iso": country_iso,
+            "country_name": country_name,
+            "region": rng.choice(_LARGE_FIXTURE_REGIONS),
+            "country_ppp": float(rng.randint(1000, 15000)),
+            "fundsLentInCountry": rng.randint(50000, 500000),
+            "country_latitude": 0.0,
+            "country_longitude": 0.0,
+            "description": description,
+            "whySpecial": "It serves an underserved community.",
+            "image_url": "https://example.test/image.webp",
+            "disbursalDate": (posted - pd.Timedelta(days=7)).isoformat(),
+            "fundraisingDate": posted.isoformat(),
+            "raisedDate": (posted + pd.Timedelta(hours=hours)).isoformat(),
+        })
+    return pd.DataFrame(rows)

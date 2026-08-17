@@ -218,6 +218,35 @@ def _check_well_identified(results, model_label: str, n_obs: int, n_cols: int):
         )
 
 
+def _fit_one_model(kind: str, formula: str, data: pd.DataFrame, model_label: str):
+    """
+    Fit one explanatory model (OLS for `kind == "ols"`, binomial GLM for
+    `kind == "glm"`) and return `(results, error_message)`.
+
+    `_fit_design`'s rank/size check and `_check_well_identified`'s
+    non-finite-standard-error check both raise `ValueError` on a design
+    this task cannot trust. Rather than let that abort the whole
+    `fit_explanatory_models` call - discarding a *different*, perfectly
+    well-identified model along with it - the failure is caught here and
+    returned as a diagnostic string. This is what lets, e.g., a real
+    dataset with sparse sector/region cells still produce a usable
+    duration-model report even when the 24-hour binary model cannot be
+    reliably fit on the same sample (see the acceptance criterion:
+    insufficient data must yield a clear diagnostic, not a discarded
+    result or a misleading metric).
+    """
+    try:
+        y, X = _fit_design(formula, data, model_label)
+        if kind == "ols":
+            results = sm.OLS(y, X).fit(cov_type="HC3")
+        else:
+            results = sm.GLM(y, X, family=sm.families.Binomial()).fit(cov_type="HC3")
+        _check_well_identified(results, model_label, *X.shape)
+        return results, None
+    except ValueError as error:
+        return None, str(error)
+
+
 def fit_explanatory_models(df: pd.DataFrame, extra_interactions=None) -> "dict[str, object]":
     """
     Fit the two robust explanatory (association) models of Kiva funding
@@ -241,11 +270,21 @@ def fit_explanatory_models(df: pd.DataFrame, extra_interactions=None) -> "dict[s
     exploratory follow-up on the full dataset without changing the default
     pre-specified model.
 
-    Returns a dict with the fitted `duration`/`binary` results objects,
-    `n_duration`/`n_binary` row counts actually used, the exact formulas
-    fit, and any pre-specified terms dropped for lacking variation in that
-    particular sample (see the module docstring for why `sentiment_available`
-    is a common one to see dropped).
+    Each model is fit independently: if one is too small, rank-deficient,
+    or not well-identified (e.g. quasi-complete separation in the binary
+    model from a sparse categorical cell), that model's slot is `None` and
+    its `*_error` string explains why - the *other* model's results are
+    still returned if it fit successfully. Only if *neither* model can be
+    fit does this function raise, since there would be nothing left to
+    report.
+
+    Returns a dict with `duration`/`binary` results objects (or `None`),
+    `duration_error`/`binary_error` diagnostic strings (or `None` when
+    that model fit successfully), `n_duration`/`n_binary` row counts
+    attempted, the exact formulas fit, and any pre-specified terms dropped
+    for lacking variation in that particular sample (see the module
+    docstring for why `sentiment_available` is a common one to see
+    dropped).
     """
     prepared = prepare_analysis_data(df)
     featured = extract_deterministic_features(prepared)
@@ -266,17 +305,24 @@ def fit_explanatory_models(df: pd.DataFrame, extra_interactions=None) -> "dict[s
         "funded_within_24h", binary_data, extra_interactions
     )
 
-    y_dur, X_dur = _fit_design(duration_formula, duration_data, "Duration (OLS)")
-    duration_results = sm.OLS(y_dur, X_dur).fit(cov_type="HC3")
-    _check_well_identified(duration_results, "Duration (OLS)", *X_dur.shape)
+    duration_results, duration_error = _fit_one_model(
+        "ols", duration_formula, duration_data, "Duration (OLS)"
+    )
+    binary_results, binary_error = _fit_one_model(
+        "glm", binary_formula, binary_data, "24-hour funding (GLM)"
+    )
 
-    y_bin, X_bin = _fit_design(binary_formula, binary_data, "24-hour funding (GLM)")
-    binary_results = sm.GLM(y_bin, X_bin, family=sm.families.Binomial()).fit(cov_type="HC3")
-    _check_well_identified(binary_results, "24-hour funding (GLM)", *X_bin.shape)
+    if duration_results is None and binary_results is None:
+        raise ValueError(
+            "fit_explanatory_models could not fit either model: "
+            f"duration - {duration_error}; binary - {binary_error}"
+        )
 
     return {
         "duration": duration_results,
         "binary": binary_results,
+        "duration_error": duration_error,
+        "binary_error": binary_error,
         "n_duration": int(len(duration_data)),
         "n_binary": int(len(binary_data)),
         "duration_formula": duration_formula,
@@ -320,6 +366,11 @@ def format_association_summary(results: "dict[str, object]") -> str:
     variables for them. Deliberately never uses "effect", "causes", or
     "proves" - the models here describe statistical association among
     pre-specified predictors and outcomes, not a causal claim.
+
+    Either model may be `None` (see `fit_explanatory_models`) if it could
+    not be reliably fit on this sample; that section reports the clear
+    diagnostic in `*_error` instead of coefficients, rather than crashing
+    or silently disappearing.
     """
     duration_results = results["duration"]
     binary_results = results["binary"]
@@ -331,39 +382,53 @@ def format_association_summary(results: "dict[str, object]") -> str:
         f"Duration model: log(1 + funding speed in days) ~ pre-specified predictors, "
         f"n = {results['n_duration']} loans with a valid completed outcome. "
         "OLS with HC3 heteroskedasticity-robust standard errors.",
-        "Coefficients below describe how each pre-specified predictor is "
-        "associated with funding speed, holding the other modeled predictors "
-        "fixed. They describe statistical association, not a causal claim, "
-        "and every pre-specified predictor is reported regardless of "
-        "statistical significance.",
     ]
-    if results.get("duration_dropped_terms"):
+    if duration_results is None:
         lines.append(
-            "Dropped for lacking variation in this sample: "
-            + ", ".join(results["duration_dropped_terms"])
+            f"This model could not be reliably fit on this sample: {results['duration_error']}"
         )
-    lines.append("")
-    lines.extend(_format_coefficient_lines(duration_results, "funding speed"))
+    else:
+        lines.append(
+            "Coefficients below describe how each pre-specified predictor is "
+            "associated with funding speed, holding the other modeled predictors "
+            "fixed. They describe statistical association, not a causal claim, "
+            "and every pre-specified predictor is reported regardless of "
+            "statistical significance."
+        )
+        if results.get("duration_dropped_terms"):
+            lines.append(
+                "Dropped for lacking variation in this sample: "
+                + ", ".join(results["duration_dropped_terms"])
+            )
+        lines.append("")
+        lines.extend(_format_coefficient_lines(duration_results, "funding speed"))
     lines.append("")
 
-    lines.extend([
+    lines.append(
         f"24-hour funding model: funded within 24 hours ~ pre-specified predictors, "
         f"n = {results['n_binary']} loans with a known 24-hour funding outcome. "
         "Binomial GLM (log-odds scale) with HC3 heteroskedasticity-robust "
-        "standard errors.",
-        "Coefficients below describe how each pre-specified predictor is "
-        "associated with the log-odds of funding within 24 hours, holding "
-        "the other modeled predictors fixed. They describe statistical "
-        "association, not a causal claim, and every pre-specified predictor "
-        "is reported regardless of statistical significance.",
-    ])
-    if results.get("binary_dropped_terms"):
+        "standard errors."
+    )
+    if binary_results is None:
         lines.append(
-            "Dropped for lacking variation in this sample: "
-            + ", ".join(results["binary_dropped_terms"])
+            f"This model could not be reliably fit on this sample: {results['binary_error']}"
         )
-    lines.append("")
-    lines.extend(_format_coefficient_lines(binary_results, "the odds of funding within 24 hours"))
+    else:
+        lines.extend([
+            "Coefficients below describe how each pre-specified predictor is "
+            "associated with the log-odds of funding within 24 hours, holding "
+            "the other modeled predictors fixed. They describe statistical "
+            "association, not a causal claim, and every pre-specified predictor "
+            "is reported regardless of statistical significance.",
+        ])
+        if results.get("binary_dropped_terms"):
+            lines.append(
+                "Dropped for lacking variation in this sample: "
+                + ", ".join(results["binary_dropped_terms"])
+            )
+        lines.append("")
+        lines.extend(_format_coefficient_lines(binary_results, "the odds of funding within 24 hours"))
 
     return "\n".join(lines)
 
