@@ -26,7 +26,7 @@ import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import Ridge
-from sklearn.metrics import mean_absolute_error, median_absolute_error
+from sklearn.metrics import mean_absolute_error, median_absolute_error, r2_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
@@ -242,10 +242,26 @@ def prepare_chronological_matrices(
     }
 
 
+def log_predictions_to_days(log_predictions: np.ndarray) -> np.ndarray:
+    """
+    Convert log1p-space duration predictions back to days.
+
+    `log_funding_speed` targets are always >= 0 (they come from
+    `log1p(funding_speed_days)` with `funding_speed_days >= 0`), but an
+    unconstrained linear model can still predict a negative log value.
+    `np.expm1` of a negative log prediction yields a negative "duration",
+    which is outside the target's domain. Clip at zero in log space before
+    converting, so every model's predictions stay within the domain of
+    actual elapsed time.
+    """
+    return np.expm1(np.clip(log_predictions, a_min=0.0, a_max=None))
+
+
 def _days_metrics(y_true_days: np.ndarray, y_pred_days: np.ndarray) -> dict:
     return {
         "mae_days": float(mean_absolute_error(y_true_days, y_pred_days)),
         "medae_days": float(median_absolute_error(y_true_days, y_pred_days)),
+        "r2": float(r2_score(y_true_days, y_pred_days)),
     }
 
 
@@ -263,8 +279,9 @@ def evaluate_chronological_models(
       - `ridge`: `Ridge(alpha=1.0)` fit on the transformed training matrix.
 
     Both are trained on `log_funding_speed` and converted back to days via
-    `np.expm1` before MAE/median-AE are computed, so the reported metrics
-    are in the same units analysts think in (days), not log-days.
+    `log_predictions_to_days` (clip at zero, then `np.expm1`) before MAE,
+    median-AE, and R2 are computed, so the reported metrics are in the same
+    units analysts think in (days), not log-days, and never negative.
 
     Returns a JSON-serializable dict (row counts, split boundary, feature
     names, metrics) plus a private `_artifacts` key holding fitted objects,
@@ -279,28 +296,39 @@ def evaluate_chronological_models(
     y_train_days, y_holdout_days = artifacts["y_train_days"], artifacts["y_holdout_days"]
 
     # Baseline: training-median log-speed, applied as a constant prediction.
+    # (Guaranteed >= 0 since it's the median of non-negative training
+    # targets, but converted through the same clipped helper as every other
+    # model for a single, consistently-tested log-to-days conversion path.)
     train_median_log = float(np.median(y_train))
-    baseline_train_pred_days = np.full_like(y_train_days, np.expm1(train_median_log))
-    baseline_holdout_pred_days = np.full_like(y_holdout_days, np.expm1(train_median_log))
+    baseline_train_pred_days = np.full_like(y_train_days, log_predictions_to_days(np.array(train_median_log)))
+    baseline_holdout_pred_days = np.full_like(y_holdout_days, log_predictions_to_days(np.array(train_median_log)))
 
+    train_metrics = _days_metrics(y_train_days, baseline_train_pred_days)
+    holdout_metrics = _days_metrics(y_holdout_days, baseline_holdout_pred_days)
     baseline_metrics = {
-        "train_mae_days": _days_metrics(y_train_days, baseline_train_pred_days)["mae_days"],
-        "holdout_mae_days": _days_metrics(y_holdout_days, baseline_holdout_pred_days)["mae_days"],
-        "train_medae_days": _days_metrics(y_train_days, baseline_train_pred_days)["medae_days"],
-        "holdout_medae_days": _days_metrics(y_holdout_days, baseline_holdout_pred_days)["medae_days"],
+        "train_mae_days": train_metrics["mae_days"],
+        "holdout_mae_days": holdout_metrics["mae_days"],
+        "train_medae_days": train_metrics["medae_days"],
+        "holdout_medae_days": holdout_metrics["medae_days"],
+        "train_r2": train_metrics["r2"],
+        "holdout_r2": holdout_metrics["r2"],
     }
 
     # Ridge, fit only on the training partition.
     ridge = Ridge(alpha=1.0, random_state=42)
     ridge.fit(X_train, y_train)
-    ridge_train_pred_days = np.expm1(ridge.predict(X_train))
-    ridge_holdout_pred_days = np.expm1(ridge.predict(X_holdout))
+    ridge_train_pred_days = log_predictions_to_days(ridge.predict(X_train))
+    ridge_holdout_pred_days = log_predictions_to_days(ridge.predict(X_holdout))
 
+    train_metrics = _days_metrics(y_train_days, ridge_train_pred_days)
+    holdout_metrics = _days_metrics(y_holdout_days, ridge_holdout_pred_days)
     ridge_metrics = {
-        "train_mae_days": _days_metrics(y_train_days, ridge_train_pred_days)["mae_days"],
-        "holdout_mae_days": _days_metrics(y_holdout_days, ridge_holdout_pred_days)["mae_days"],
-        "train_medae_days": _days_metrics(y_train_days, ridge_train_pred_days)["medae_days"],
-        "holdout_medae_days": _days_metrics(y_holdout_days, ridge_holdout_pred_days)["medae_days"],
+        "train_mae_days": train_metrics["mae_days"],
+        "holdout_mae_days": holdout_metrics["mae_days"],
+        "train_medae_days": train_metrics["medae_days"],
+        "holdout_medae_days": holdout_metrics["medae_days"],
+        "train_r2": train_metrics["r2"],
+        "holdout_r2": holdout_metrics["r2"],
     }
 
     artifacts["ridge_model"] = ridge
@@ -344,6 +372,8 @@ def run_baseline_model(pkl_path: str, holdout_start: str = "2024-01-01", n_topic
         print(f"Holdout MAE (days):   {metrics['holdout_mae_days']:.4f}")
         print(f"Train median AE:      {metrics['train_medae_days']:.4f}")
         print(f"Holdout median AE:    {metrics['holdout_medae_days']:.4f}")
+        print(f"Train R2:             {metrics['train_r2']:.4f}")
+        print(f"Holdout R2:           {metrics['holdout_r2']:.4f}")
 
     ridge = results["_artifacts"]["ridge_model"]
     coef_df = pd.DataFrame({

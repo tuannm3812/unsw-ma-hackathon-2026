@@ -1,10 +1,11 @@
 import math
 
+import numpy as np
 import pandas as pd
 import pytest
 
 from src.data_loader import prepare_analysis_data
-from src.modeling import build_predictor_frame, evaluate_chronological_models
+from src.modeling import build_predictor_frame, evaluate_chronological_models, log_predictions_to_days
 
 
 def test_predictor_frame_excludes_outcomes_and_post_outcome_fields(synthetic_kiva_df):
@@ -100,9 +101,33 @@ def test_evaluate_chronological_models_is_leakage_safe_and_finite(chronological_
 
     baseline = results["metrics"]["baseline"]
     ridge = results["metrics"]["ridge"]
+    metric_keys = (
+        "train_mae_days", "holdout_mae_days",
+        "train_medae_days", "holdout_medae_days",
+        "train_r2", "holdout_r2",
+    )
     for metrics in (baseline, ridge):
-        for key in ("train_mae_days", "holdout_mae_days", "train_medae_days", "holdout_medae_days"):
+        for key in metric_keys:
             assert math.isfinite(metrics[key])
 
     topic_transformer = results["_artifacts"]["topic_transformer"]
     assert "futureonlytoken" not in topic_transformer.vectorizer_.vocabulary_
+
+
+def test_log_predictions_to_days_clips_negative_log_predictions_to_zero():
+    log_predictions = np.array([-1.0, 0.0, np.log1p(5.0)])
+    days = log_predictions_to_days(log_predictions)
+    assert days[0] == pytest.approx(0.0)
+    assert days[1] == pytest.approx(0.0)
+    assert days[2] == pytest.approx(5.0)
+
+
+def test_ridge_predictions_never_convert_to_negative_days(chronological_kiva_df):
+    results = evaluate_chronological_models(chronological_kiva_df, holdout_start="2024-01-01", n_topics=2)
+    ridge = results["_artifacts"]["ridge_model"]
+    X_train = results["_artifacts"]["X_train"]
+    X_holdout = results["_artifacts"]["X_holdout"]
+    train_days = log_predictions_to_days(ridge.predict(X_train))
+    holdout_days = log_predictions_to_days(ridge.predict(X_holdout))
+    assert (train_days >= 0).all()
+    assert (holdout_days >= 0).all()
