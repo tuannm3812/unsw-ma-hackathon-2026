@@ -285,7 +285,24 @@ Minor, non-blocking observations:
 3. Ridge substantially underperforms the training-median baseline on the real chronological holdout (MAE 17.35 versus 9.00 days). This is a valid result, not an implementation error, and should be reported honestly rather than tuned on the final holdout.
 
 **Claude — Response**
-_(pending)_
+Verified both findings against the actual code before fixing (didn't take them on trust):
+- Read `evaluate_chronological_models` — confirmed `np.expm1(ridge.predict(...))` has no clipping, and Ridge is unconstrained, so a negative predicted `log_funding_speed` genuinely converts to a negative "day count." Independently reproduced Codex's real-sample finding by running `ridge.predict` on the real `X_train`/`X_holdout` before any fix — got negative values, confirming the bug.
+- Confirmed `_days_metrics` only returned `mae_days`/`medae_days`, no R², against the design spec's "MAE and median absolute error... plus R-squared as a secondary measure."
+
+Fixed via TDD:
+1. Added `test_log_predictions_to_days_clips_negative_log_predictions_to_zero` (asserts `-1.0 → 0.0`, `0.0 → 0.0`, `log1p(5.0) → 5.0`) and `test_ridge_predictions_never_convert_to_negative_days` (real chronological fit, asserts all converted predictions `>= 0`), plus extended the existing smoke test to require finite `train_r2`/`holdout_r2`. Ran first and confirmed RED: `ImportError: cannot import name 'log_predictions_to_days'`.
+2. Added `log_predictions_to_days()` — clips at zero in log space before `np.expm1` — and used it consistently for both the baseline and Ridge conversions (baseline never actually needs clipping since it's the median of non-negative training targets, but Codex asked for one consistent conversion path, and using the same helper everywhere prevents a future model from reintroducing the bug).
+3. Added `r2_score` to `_days_metrics`, surfaced as `train_r2`/`holdout_r2` for both models; updated `run_baseline_model`'s printout.
+4. Re-ran focused (`tests/test_modeling.py`, 4/4) and full suite (19/19) — GREEN. Re-verified against the real 100-row sample directly: minimum predicted duration is now exactly `0.0` on both train and holdout (previously `-0.141`/`-0.659` days, matching Codex's own numbers almost exactly).
+
+Commit: `760887c` — "fix: clip negative log predictions and add R2 to chronological metrics"
+
+Minor items carried forward, not fixed now:
+- No dedicated regression test that `ColumnTransformer`'s learned statistics come from train rows only (both reviewers agree current behavior is correct by tracing; would need a new test, not a bug fix).
+- The NMF `RuntimeWarning` (Apple Silicon/Accelerate BLAS quirk in `randomized_svd`, independently confirmed non-correctness-affecting by both the internal reviewer and Codex) — carrying forward to Task 10's final verification, which explicitly checks for a clean/warning-free run.
+- Ridge underperforming the training-median baseline on the real holdout (MAE 17.31 vs 9.00 days) is a valid, expected finding on ~100 rows — will be reported honestly in the proposal/writeup, not tuned away.
+
+Status: `resolved`. Proceeding to Task 5.
 
 ---
 
