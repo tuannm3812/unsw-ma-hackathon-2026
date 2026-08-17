@@ -1,7 +1,9 @@
 import os
 import pickle
 import pandas as pd
+import numpy as np
 from typing import Union, List, Dict, Any
+from collections.abc import Sequence
 
 def load_kiva_pickle(file_path: str) -> pd.DataFrame:
     """
@@ -29,44 +31,64 @@ def load_kiva_pickle(file_path: str) -> pd.DataFrame:
         
     return df
 
+def validate_schema(df: pd.DataFrame, required_columns: Sequence[str]) -> None:
+    missing = sorted(set(required_columns) - set(df.columns))
+    if missing:
+        raise ValueError(f"Missing required columns: {', '.join(missing)}")
+
+
+def prepare_analysis_data(df: pd.DataFrame) -> pd.DataFrame:
+    validate_schema(df, ["fundraisingDate", "raisedDate"])
+    result = df.copy()
+    for column in ["disbursalDate", "fundraisingDate", "raisedDate"]:
+        if column in result:
+            result[column] = pd.to_datetime(result[column], errors="coerce", utc=True)
+    duration = (result["raisedDate"] - result["fundraisingDate"]).dt.total_seconds() / 86400
+    result["funding_speed_days"] = duration.where(duration >= 0)
+    result["valid_completed_outcome"] = duration.notna() & duration.ge(0)
+    result["outcome_issue"] = np.select(
+        [result["raisedDate"].isna(), result["fundraisingDate"].isna(), duration.lt(0)],
+        ["missing_raised_date", "missing_fundraising_date", "negative_duration"],
+        default="",
+    )
+    result["log_funding_speed"] = np.log1p(result["funding_speed_days"])
+    result["funded_within_24h"] = result["funding_speed_days"].le(1).astype("Int64")
+    result.loc[~result["valid_completed_outcome"], "funded_within_24h"] = pd.NA
+    year = result["fundraisingDate"].dt.year
+    result["fundraising_year"] = year.astype("Int64")
+    result["fundraising_month"] = result["fundraisingDate"].dt.month.astype("Int64")
+    result["analysis_period"] = pd.cut(
+        year,
+        bins=[2015, 2019, 2021, 2025],
+        labels=["pre_pandemic", "pandemic_disruption", "post_pandemic"],
+    )
+    return result
+
 def preprocess_dates_and_target(df: pd.DataFrame) -> pd.DataFrame:
     """
     Parses dates and calculates the target variable (funding speed in days).
-    
+    Delegates to prepare_analysis_data for backward compatibility.
+
     Args:
         df (pd.DataFrame): Raw Kiva loans DataFrame.
-        
+
     Returns:
         pd.DataFrame: Preprocessed DataFrame with datetime columns and target.
     """
-    df = df.copy()
-    
-    # Parse date columns to datetime
-    date_cols = ['disbursalDate', 'fundraisingDate', 'raisedDate']
-    for col in date_cols:
-        if col in df.columns:
-            df[col] = pd.to_datetime(df[col], errors='coerce')
-            
-    # Calculate funding speed (target variable) in days
-    # funding speed = raisedDate - fundraisingDate
-    if 'raisedDate' in df.columns and 'fundraisingDate' in df.columns:
-        # Convert difference to float days
-        df['funding_speed_days'] = (df['raisedDate'] - df['fundraisingDate']).dt.total_seconds() / (24 * 3600)
-        
-    return df
+    return prepare_analysis_data(df)
 
 def load_and_prepare_data(file_path: str) -> pd.DataFrame:
     """
     Helper function to load and preprocess the Kiva dataset in a single call.
-    
+
     Args:
         file_path (str): Path to the pickle file.
-        
+
     Returns:
         pd.DataFrame: Preprocessed DataFrame ready for feature engineering.
     """
     df = load_kiva_pickle(file_path)
-    df = preprocess_dates_and_target(df)
+    df = prepare_analysis_data(df)
     return df
 
 if __name__ == "__main__":
