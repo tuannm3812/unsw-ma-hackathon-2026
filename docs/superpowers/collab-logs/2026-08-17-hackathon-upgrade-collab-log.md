@@ -158,6 +158,16 @@ Follow-up noted for Task 4: `gender_classification` and `loan_size_band` must be
 
 Status: `resolved`. Proceeding to Task 4.
 
+**Codex — Follow-up Review**
+Verified commit `6ecc5ce` against the requested Task 2 correction.
+
+- The regression test uses the exact review example and correctly expects `6.5`.
+- The implementation now sums individual token lengths and preserves the zero-word guard.
+- Focused feature tests passed: 8/8.
+- Full suite at the time of Task 4 review passed: 17/17.
+
+**Outcome:** Task 2 remains `resolved`; no further changes requested.
+
 ---
 
 ## Task 3: Add a Training-Fitted Text Topic Transformer
@@ -224,10 +234,55 @@ Files changed: `src/validation.py` (new), `src/modeling.py` (rewritten), `tests/
 
 **Human decision (asked via AskUserQuestion):** keep `country_name` excluded (redundant one-hot signal with `country_iso` on a ~100-row sample) and amend the spec instead of restoring the column. Spec updated and committed: `05fe5f5` — "docs: amend spec to note country_name is deliberately excluded".
 
-Status: `pending-review` (awaiting external Codex review)
+Status: `changes-requested`
 
 **Codex — Review**
-_(paste Codex findings here)_
+Reviewed commits `96c9b44` and `05fe5f5` against Task 4 and the amended design specification.
+
+- **Outcome:** Changes requested; two Important correctness/specification findings.
+- Focused Tasks 2/4 tests passed: 12 tests.
+- Complete current suite passed: 17 tests, with three existing scikit-learn numerical warnings.
+- `python -m compileall -q src tests` and `git diff --check` completed successfully.
+- Confirmed by tracing every learned transformation that TF-IDF/NMF, numeric imputation, scaling, categorical imputation, and one-hot encoding fit only on training rows.
+- Manual leakage probe confirmed the numeric imputer learned the training median (`13.0`) despite extreme holdout-only values, and holdout-only categories did not enter fitted feature names.
+- Confirmed `gender_classification` and `loan_size_band` appear in encoded features.
+- The `country_name` exclusion is internally consistent after the user-approved spec amendment.
+
+**Important 1 — Ridge produces impossible negative funding-duration predictions**
+
+Location: `src/modeling.py`, `evaluate_chronological_models`, conversion of Ridge log predictions with `np.expm1` (currently lines 296–297).
+
+Root-cause evidence:
+
+- The non-negative target is `log1p(funding_speed_days)`, but unconstrained Ridge can predict negative log values.
+- On the real 100-row sample, training predictions included 4 negative log values and holdout predictions included 2.
+- Direct `np.expm1` conversion produced negative durations: minimum −0.141 days in training and −0.659 days in holdout.
+- Negative elapsed time is outside the target domain and makes the reported duration metrics include impossible predictions.
+
+Requested correction, following TDD:
+
+1. Add a focused conversion helper or otherwise expose testable post-processing.
+2. Add a failing test demonstrating that negative log predictions convert to exactly zero days, while zero and positive log predictions retain their expected values.
+3. Clip predicted log duration at zero before `np.expm1` (or equivalently constrain converted durations to zero), and use the same conversion consistently for all duration models.
+4. Store or return the day-scale predictions, or test the helper directly, so the non-negativity invariant remains regression-tested.
+
+**Important 2 — Required secondary R² metric is missing**
+
+Location: `src/modeling.py`, `_days_metrics` and returned model metrics (currently lines 245–249 and 286–304).
+
+The approved design specifies MAE and median absolute error as primary metrics and R² as a secondary measure. Task 4 returns only MAE and median absolute error.
+
+Requested correction:
+
+1. Add `r2_score` to `_days_metrics` using day-scale observed and post-processed predicted values.
+2. Include train and holdout R² for both the median baseline and Ridge result.
+3. Extend the modeling smoke test to require finite R² values.
+
+Minor, non-blocking observations:
+
+1. Add a regression test for training-only imputer/category fitting when convenient; current behavior was verified manually and is correct.
+2. The full suite emits three `RuntimeWarning` messages from scikit-learn randomized SVD during NMF initialization. This does not invalidate finite outputs, but final verification must resolve or explicitly isolate the warning to meet the warning-free completion standard.
+3. Ridge substantially underperforms the training-median baseline on the real chronological holdout (MAE 17.35 versus 9.00 days). This is a valid result, not an implementation error, and should be reported honestly rather than tuned on the final holdout.
 
 **Claude — Response**
 _(pending)_
