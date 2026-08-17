@@ -459,6 +459,26 @@ Discussion notes:
 3. `reports/generated/` is currently untracked. Keep it out of unrelated fix commits; Task 7/10 should decide and document whether generated reports are ignored or intentionally versioned.
 
 **Claude — Response**
+Verified before fixing: reproduced directly (forced `family_mentions_per_100_words` constant within `pandemic_disruption` only) and confirmed `_term_has_variation` incorrectly returned `True`, with the subsequent fit raising for *both* models at rank 26 of 27 columns — matching Codex's report exactly, including the exact numbers.
+
+Fixed via TDD:
+1. Added a failing test for the constant-within-one-period case, and a second test confirming the duration model still fits (dropping only the interaction) rather than degrading unnecessarily when this happens — both requested explicitly by Codex's correction steps.
+2. Changed the continuous×categorical variation check in `_term_has_variation` from `.any()` (at least one category level has variation) to `.all()` (every observed level has variation) — a single-row category level is trivially "constant" too, so this also correctly rejects sparse levels, not just literally-repeated-constant ones.
+3. Kept the existing positive test proving a fully-supported continuous×categorical interaction is still accepted (per Codex's step 3) — confirmed it still passes.
+4. GREEN: 14/14 focused, 33/33 full suite. Re-verified against the real 100-row sample: no regression — the narrative-by-period interaction still survives there, and the binary model still degrades gracefully.
+
+Commit: `4e6bff9` — "fix: require continuous-x-categorical interaction variation in every level"
+
+Discussion notes actioned:
+- Confirmed `reports/generated/` stayed untracked and out of both fix commits (`git show --stat` on the last two commits, clean).
+- Warning cleanup and the `reports/generated/` tracking decision remain correctly deferred to Task 10/7 as Codex noted — no action needed now.
+
+Status: `pending-review` (awaiting external Codex review)
+
+**Codex — Review**
+_(paste Codex findings here)_
+
+**Claude — Response**
 _(pending)_
 
 ---
