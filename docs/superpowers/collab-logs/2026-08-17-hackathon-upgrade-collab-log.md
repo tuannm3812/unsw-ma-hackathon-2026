@@ -312,6 +312,46 @@ Status: `not-started`
 
 ---
 
+## Task 5: Add Robust Explanatory Duration and 24-Hour Models
+
+**Claude — Implementation**
+Dispatched via `superpowers:subagent-driven-development` (implementer subagent, model: sonnet — statsmodels formula/interaction design judgment).
+- Rewrote `src/statistical_analysis.py`: `fit_explanatory_models(df, extra_interactions=None)` fits OLS on `log_funding_speed` and a binomial GLM on `funded_within_24h`, both with `cov_type="HC3"`, on rows with a valid completed outcome only (never imputed). Formula: `log_loan_amount + lenderRepaymentTerm + is_group_loan + C(gender_classification) + desc_word_count + family/agency/urgency_mentions_per_100_words + desc_sentiment_compound + sentiment_available + C(repaymentInterval) + C(sector) + C(region) + C(analysis_period)`, plus one pre-specified `C(analysis_period):C(gender_classification)` interaction by default, with `extra_interactions` for exploratory follow-up. `format_association_summary` renders every pre-specified coefficient (never `p<0.05`-filtered) as an association with a 95% CI, never causal language. `run_ols_analysis` preserved as a thin wrapper. This finally fixed the `female_ratio`/`log_country_ppp` breakage Task 2's review flagged and deferred here.
+- Caught, by testing against the real 100-row sample (not just the fixture): `sentiment_available` is a dataset-level constant (VADER availability, not per-row), so it's pruned per-sample when it has no variation; a period×gender interaction cell can be empty on real data, so interactions are dropped (main effects kept) when their crosstab has a zero cell.
+- Added `large_synthetic_kiva_df` (120-row) fixture to `tests/conftest.py`.
+
+Commit: `14a8d53` — "feat: add robust explanatory funding models". 26/26 tests passing.
+
+**Internal task-reviewer subagent (Claude, model: sonnet) — spec + quality gate**
+❌ One Important finding; otherwise ✅ every literal spec item independently re-verified by executing the code against both the fixture and the real sample (not just reading the diff). **Task quality: Needs fixes → resolved (see below).**
+- **Important:** the implementer's own `_check_well_identified` addition (checks GLM standard errors are finite, catching quasi-complete separation) is a legitimate, well-reasoned extension of "too-small design" diagnostics — but it meant `run_ols_analysis` crashed *entirely* with no report at all on the real 100-row sample, because the binary model's failure discarded the already-successfully-fit duration model too. Reviewer independently reproduced this by running the wrapper against the real pickle. Also noted `notebooks/starter_eda.py:251` already calls `run_ols_analysis` directly and would crash if re-run.
+- **Important:** `test_summary_reports_coefficients_regardless_of_significance` checked a *combined* coefficient-line count across both models, so `p<0.05` filtering applied to only the binary section wouldn't have been caught.
+- Minor: `patsy` used but not pinned in `requirements.txt` (transitive-only); a documentation wording nit in the *report* (not the source) about binary/duration row sets being a "subset" rather than equal sets.
+
+Files changed: `src/statistical_analysis.py` (rewritten), `tests/test_statistical_analysis.py` (new), `tests/conftest.py` (extended).
+
+**Human decision (asked via AskUserQuestion):** degrade gracefully now rather than deferring to Task 7/8 — a per-model fit failure should not discard a different, successfully-fit model, matching the design spec's "clear diagnostic instead of a misleading metric" acceptance criterion and the same attempt+diagnostic pattern already planned for Task 7's nonlinear benchmark.
+
+**Claude — Response**
+Fixed via TDD:
+1. Added `separated_binary_kiva_df` fixture — deliberately engineered (verified empirically first, not assumed) to trigger genuine quasi-complete separation in the binary model only, by forcing one sector's loans to always fund within 24h, while the continuous duration target is unaffected. This reproduces the real dataset's failure mode deterministically and offline (no dependency on the gitignored competition pickle).
+2. Added `_fit_one_model` — fits each model independently, catches a per-model `ValueError` from `_fit_design`/`_check_well_identified`, returns `(results_or_None, error_message_or_None)`. `fit_explanatory_models` now only raises if *both* models fail (nothing left to report); otherwise returns `duration_error`/`binary_error` alongside the (possibly-`None`) results. `format_association_summary` and `run_ols_analysis`'s written report both surface the diagnostic for a failed model while still reporting the other model's coefficients in full.
+3. Strengthened the flagged test to assert per-model coefficient-line counts, not a combined bound.
+4. Pinned `patsy>=0.5.3` in `requirements.txt`.
+5. Ran RED first (3 new tests failed against the old strict-raise behavior) → GREEN (10/10 focused, 29/29 full suite). Re-verified directly against the real `data/Kiva_Loans_Sample.pkl`: duration model fits and reports fully, binary model reports its diagnostic instead of crashing, report file written successfully end-to-end (previously: uncaught crash, no report).
+
+Commit: `5f528c5` — "fix: degrade gracefully when one explanatory model can't be fit"
+
+Status: `pending-review` (awaiting external Codex review)
+
+**Codex — Review**
+_(paste Codex findings here)_
+
+**Claude — Response**
+_(pending)_
+
+---
+
 ## Task 6: Consolidate the Nonlinear Benchmark
 
 Status: `not-started`
