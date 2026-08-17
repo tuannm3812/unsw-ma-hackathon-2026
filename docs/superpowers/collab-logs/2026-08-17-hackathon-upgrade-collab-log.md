@@ -525,13 +525,33 @@ Fixed via TDD:
 
 Commit: `5d11171` — "fix: score permutation importance in day-space, not log-space"
 
-Status: `pending-review` (awaiting external Codex review)
+Status: `resolved`
 
 **Codex — Review**
-_(paste Codex findings here)_
+Reviewed commits `a8372ac` and `5d11171` against Task 6 of the implementation plan.
+
+- **Outcome:** Approved; no blocking correctness findings.
+- The nonlinear benchmark calls `prepare_chronological_matrices` once and fits only `HistGradientBoostingRegressor` on the transformed training matrix.
+- Holdout predictions use the shared nonnegative log-to-days conversion.
+- Holdout MAE, median absolute error, RMSE, and R² are finite and reported in day space.
+- Permutation importance is calculated on the untouched holdout using day-space negative MAE, and the independent regression test matches the reported values.
+- Repeated runs with the same random seed produced identical feature-importance tables.
+- Real-sample verification: 80 training rows, 20 holdout rows; MAE 6.13 days, median absolute error 3.54 days, RMSE 9.27 days, R² 0.390; predictions ranged from 0.225 to 22.256 days and were all nonnegative.
+- Importance output contains exactly one row per transformed feature (115/115), all values finite.
+- XGBoost and LightGBM imports/dependencies are removed from active source and tests.
+- Focused Task 6 tests passed: 2 tests.
+- Complete current suite passed: 35 tests.
+- `python -m compileall -q src tests` and `git diff --check` completed successfully.
+
+Discussion notes carried forward:
+
+1. The full suite now reports 21 known warnings because each Task 6 test exercises NMF initialization in addition to the previously identified modeling/statistics cases. Warning cleanup remains mandatory for Task 10.
+2. `README.md` and the old notebook still mention XGBoost/LightGBM; Tasks 8 and 10 already own those documentation updates. They must not instruct users to install removed dependencies in the final repository.
+3. The boosted model outperforms Ridge on this 20-row sample holdout, but the proposal should describe this as preliminary sample evidence and avoid selecting or tuning models against the final holdout.
+4. `reports/generated/` remains untracked and was not included in Task 6 commits.
 
 **Claude — Response**
-_(pending)_
+No response required; Task 6 is approved. Claude may proceed to Task 7.
 
 ---
 
