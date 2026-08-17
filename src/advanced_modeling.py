@@ -1,114 +1,151 @@
+"""
+Nonlinear benchmark for predicting Kiva loan funding speed.
+
+This module provides exactly one gradient-boosting benchmark,
+`evaluate_boosted_model`, built on top of the shared leakage-safe
+chronological data-prep pipeline in `src/modeling.py`
+(`prepare_chronological_matrices`). It does not re-derive its own
+train/holdout split or preprocessing: it calls
+`prepare_chronological_matrices` once, fits `HistGradientBoostingRegressor`
+on the training partition only, and evaluates on the untouched chronological
+holdout - the same evaluation design `evaluate_chronological_models` uses
+for the linear baselines, so the two benchmarks are directly comparable.
+
+`sklearn.ensemble.HistGradientBoostingRegressor` is used instead of
+`xgboost`/`lightgbm` to avoid two redundant third-party gradient-boosting
+dependencies for a single nonlinear reference point; scikit-learn's built-in
+implementation is sufficient for a benchmark and keeps `requirements.txt`
+smaller.
+"""
+
 import os
+
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.model_selection import KFold
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-import xgboost as xgb
-import lightgbm as lgb
+from sklearn.ensemble import HistGradientBoostingRegressor
+from sklearn.inspection import permutation_importance
+from sklearn.metrics import mean_absolute_error, median_absolute_error, mean_squared_error, r2_score
 
 try:
-    from src.data_loader import load_and_prepare_data
-    from src.features import build_features
+    from src.data_loader import load_kiva_pickle
+    from src.modeling import log_predictions_to_days, prepare_chronological_matrices
 except ModuleNotFoundError:
-    from data_loader import load_and_prepare_data
-    from features import build_features
+    from data_loader import load_kiva_pickle
+    from modeling import log_predictions_to_days, prepare_chronological_matrices
 
 
-def run_advanced_cv_modeling(pkl_path: str):
+def evaluate_boosted_model(
+    df: pd.DataFrame,
+    holdout_start: str = "2024-01-01",
+    n_topics: int = 5,
+    random_state: int = 42,
+) -> dict:
     """
-    Runs a 5-Fold Cross-Validation pipeline using LightGBM and XGBoost models.
-    Saves evaluations and compares performance to baseline models.
+    Fit a `HistGradientBoostingRegressor` on the shared chronological
+    training split and evaluate it on the untouched chronological holdout.
+
+    Reuses `prepare_chronological_matrices` for the entire split/
+    preprocessing pipeline (chronological train/holdout split, imputation,
+    scaling, one-hot encoding, and topic modeling - all fit on the training
+    partition only). This function fits nothing on the holdout or the full
+    dataset; it only fits the boosted regressor on the already-encoded
+    training matrix.
+
+    Predictions are made in log space (matching the target the model is
+    trained on) and converted back to days via `log_predictions_to_days`,
+    which clips negative log predictions to zero before `expm1` so an
+    unconstrained regressor can never yield a negative "duration".
+
+    Permutation importance is computed on the holdout split (the data the
+    model has not seen), using negative MAE as the scoring function and the
+    same `random_state` used to fit the model, so results are reproducible.
+
+    Returns a dict with row counts, feature names, a `"metrics"` dict
+    (`mae_days`, `medae_days`, `rmse_days`, `r2`), an `"importance"`
+    DataFrame with exactly the columns `{"feature", "permutation_importance"}`
+    sorted by importance descending, and a private `_artifacts` key holding
+    the fitted model and the matrices/transformers from
+    `prepare_chronological_matrices`.
     """
-    # 1. Load data & extract features
-    print("Loading and preparing data...")
-    df = load_and_prepare_data(pkl_path)
-    df_feat = build_features(df)
-    
-    # 2. Define features & target
-    target_col = 'funding_speed_days'
-    exclude_cols = [
-        'id', 'status', 'name', 'gender', 'repaymentInterval', 'sector', 'activity', 
-        'use', 'city', 'country_iso', 'country_name', 'region', 'description', 
-        'whySpecial', 'image_url', 'disbursalDate', 'fundraisingDate', 'raisedDate',
-        'clean_description', 'clean_use', 'borrower_gender_clean', target_col
-    ]
-    feature_cols = [col for col in df_feat.columns if col not in exclude_cols]
-    
-    X = df_feat[feature_cols].select_dtypes(include=[np.number]).fillna(0)
-    y = df_feat[target_col].fillna(df_feat[target_col].median())
-    
-    print(f"Dataset Size: {X.shape[0]} samples, {X.shape[1]} features.")
-    
-    # 3. Setup K-Fold Cross Validation
-    kf = KFold(n_splits=5, shuffle=True, random_state=42)
-    
-    xgb_maes, xgb_rmses, xgb_r2s = [], [], []
-    lgb_maes, lgb_rmses, lgb_r2s = [], [], []
-    
-    print("\n--- Training Models with 5-Fold Cross-Validation ---")
-    
-    for fold, (train_idx, val_idx) in enumerate(kf.split(X, y)):
-        X_train, X_val = X.iloc[train_idx], X.iloc[val_idx]
-        y_train, y_val = y.iloc[train_idx], y.iloc[val_idx]
-        
-        # XGBoost
-        xgb_model = xgb.XGBRegressor(
-            n_estimators=100,
-            max_depth=4,
-            learning_rate=0.05,
-            random_state=42,
-            n_jobs=-1
-        )
-        xgb_model.fit(X_train, y_train)
-        y_pred_xgb = xgb_model.predict(X_val)
-        
-        xgb_maes.append(mean_absolute_error(y_val, y_pred_xgb))
-        xgb_rmses.append(np.sqrt(mean_squared_error(y_val, y_pred_xgb)))
-        xgb_r2s.append(r2_score(y_val, y_pred_xgb))
-        
-        # LightGBM
-        lgb_model = lgb.LGBMRegressor(
-            n_estimators=100,
-            max_depth=4,
-            learning_rate=0.05,
-            random_state=42,
-            n_jobs=-1,
-            verbose=-1
-        )
-        lgb_model.fit(X_train, y_train)
-        y_pred_lgb = lgb_model.predict(X_val)
-        
-        lgb_maes.append(mean_absolute_error(y_val, y_pred_lgb))
-        lgb_rmses.append(np.sqrt(mean_squared_error(y_val, y_pred_lgb)))
-        lgb_r2s.append(r2_score(y_val, y_pred_lgb))
-        
-        print(f"Fold {fold+1} | XGB MAE: {xgb_maes[-1]:.3f} | LGB MAE: {lgb_maes[-1]:.3f}")
-        
-    # 4. Summary metrics
-    print("\n--- CV Results Summary ---")
-    print(f"XGBoost  - Mean MAE: {np.mean(xgb_maes):.4f} +/- {np.std(xgb_maes):.4f}")
-    print(f"XGBoost  - Mean RMSE: {np.mean(xgb_rmses):.4f} +/- {np.std(xgb_rmses):.4f}")
-    print(f"XGBoost  - Mean R2: {np.mean(xgb_r2s):.4f} +/- {np.std(xgb_r2s):.4f}")
-    
-    print(f"LightGBM - Mean MAE: {np.mean(lgb_maes):.4f} +/- {np.std(lgb_maes):.4f}")
-    print(f"LightGBM - Mean RMSE: {np.mean(lgb_rmses):.4f} +/- {np.std(lgb_rmses):.4f}")
-    print(f"LightGBM - Mean R2: {np.mean(lgb_r2s):.4f} +/- {np.std(lgb_r2s):.4f}")
-    
-    # 5. Fit final models on full dataset to analyze feature importances
-    xgb_full = xgb.XGBRegressor(n_estimators=100, max_depth=4, learning_rate=0.05, random_state=42, n_jobs=-1)
-    xgb_full.fit(X, y)
-    
-    importances = pd.DataFrame({
-        'Feature': X.columns,
-        'Importance': xgb_full.feature_importances_
-    }).sort_values(by='Importance', ascending=False)
-    
-    print("\nTop 10 XGBoost Feature Importances:")
-    print(importances.head(10).to_string(index=False))
-    
-    return X, y, xgb_full, importances
+    matrices = prepare_chronological_matrices(df, holdout_start=holdout_start, n_topics=n_topics)
+    artifacts = matrices["_artifacts"]
+
+    X_train, X_holdout = artifacts["X_train"], artifacts["X_holdout"]
+    y_train = artifacts["y_train"]
+    y_holdout_days = artifacts["y_holdout_days"]
+
+    model = HistGradientBoostingRegressor(random_state=random_state)
+    model.fit(X_train, y_train)
+
+    holdout_pred_days = log_predictions_to_days(model.predict(X_holdout))
+
+    metrics = {
+        "mae_days": float(mean_absolute_error(y_holdout_days, holdout_pred_days)),
+        "medae_days": float(median_absolute_error(y_holdout_days, holdout_pred_days)),
+        "rmse_days": float(np.sqrt(mean_squared_error(y_holdout_days, holdout_pred_days))),
+        "r2": float(r2_score(y_holdout_days, holdout_pred_days)),
+    }
+
+    perm_result = permutation_importance(
+        model,
+        X_holdout,
+        artifacts["y_holdout"],
+        scoring="neg_mean_absolute_error",
+        random_state=random_state,
+    )
+    importance = pd.DataFrame({
+        "feature": matrices["feature_names"],
+        "permutation_importance": perm_result.importances_mean,
+    }).sort_values(by="permutation_importance", ascending=False).reset_index(drop=True)
+
+    artifacts["boosted_model"] = model
+
+    return {
+        "holdout_start": matrices["holdout_start"],
+        "train_rows": matrices["train_rows"],
+        "holdout_rows": matrices["holdout_rows"],
+        "feature_names": matrices["feature_names"],
+        "metrics": metrics,
+        "importance": importance,
+        "_artifacts": artifacts,
+    }
+
+
+def run_advanced_cv_modeling(pkl_path: str) -> dict:
+    """
+    Deprecated. This used to run a random 5-fold cross-validation with
+    XGBoost and LightGBM, fit on the full dataset (including the holdout it
+    was "evaluated" on) with the missing target imputed by its own median -
+    a leakage-unsafe design on every count. It has been replaced by
+    `evaluate_boosted_model`, which trains a single
+    `HistGradientBoostingRegressor` on a chronological train split and
+    evaluates on an untouched chronological holdout, consistent with the
+    rest of this project's leakage-safe evaluation design.
+
+    This wrapper no longer performs the old evaluation; it loads the data
+    and delegates to `evaluate_boosted_model` so existing callers keep
+    working, but get the leakage-safe benchmark instead.
+    """
+    print(
+        "run_advanced_cv_modeling is deprecated: it used a leakage-unsafe "
+        "random 5-fold CV over XGBoost/LightGBM fit on the full dataset. "
+        "Delegating to evaluate_boosted_model (chronological holdout, "
+        "HistGradientBoostingRegressor) instead."
+    )
+    df = load_kiva_pickle(pkl_path)
+    results = evaluate_boosted_model(df)
+
+    print(f"\nTraining rows: {results['train_rows']}")
+    print(f"Holdout rows:  {results['holdout_rows']}")
+    print(f"Holdout MAE (days):    {results['metrics']['mae_days']:.4f}")
+    print(f"Holdout median AE:     {results['metrics']['medae_days']:.4f}")
+    print(f"Holdout RMSE (days):   {results['metrics']['rmse_days']:.4f}")
+    print(f"Holdout R2:            {results['metrics']['r2']:.4f}")
+    print("\nTop 10 permutation importances (holdout):")
+    print(results["importance"].head(10).to_string(index=False))
+
+    return results
+
 
 if __name__ == "__main__":
     default_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "Kiva_Loans_Sample.pkl")
