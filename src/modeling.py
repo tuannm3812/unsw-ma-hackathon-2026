@@ -267,12 +267,36 @@ def log_predictions_to_days(log_predictions: np.ndarray) -> np.ndarray:
     turn a model's raw log-space prediction into a day-space one - Ridge,
     the training-median baseline, and (via `src/advanced_modeling.py`) the
     nonlinear benchmark's holdout predictions and its permutation-importance
-    scorer. A sufficiently extreme *finite* log-space value (e.g. ~1000)
-    still overflows `np.expm1` into a non-finite `inf` day-space value with
-    the RuntimeWarning above suppressed - checked and raised here, once, so
-    every caller is protected without duplicating the check at each call
-    site.
+    scorer. Two distinct failure modes are checked, not just one:
+
+    1. The raw prediction itself is already non-finite (`nan`, `+inf`, or
+       `-inf`) - a badly broken model, not a conversion artifact. This must
+       be checked *before* clipping: `np.clip(-inf, a_min=0.0, ...)`
+       evaluates to a plain `0.0` (clipping treats `-inf` as "below the
+       floor"), which would otherwise silently launder a `-inf` prediction
+       into a plausible-looking "funded in 0 days" instead of raising a
+       diagnostic - the more dangerous failure mode of the two, since it
+       produces a convincing wrong answer rather than an obviously invalid
+       one.
+    2. The raw prediction is finite but sufficiently extreme (e.g. ~1000)
+       that it overflows `np.expm1` into a non-finite `inf` day-space value,
+       with the RuntimeWarning above suppressed - checked *after*
+       conversion, since the input itself was valid.
+
+    Both are checked here, once, so every caller is protected without
+    duplicating the check at each call site - and each raises a distinct,
+    accurate message rather than describing an overflow that did not
+    happen.
     """
+    if not np.all(np.isfinite(log_predictions)):
+        raise InsufficientDataError(
+            "log_predictions_to_days received non-finite log-space "
+            "prediction(s) (nan, +inf, or -inf) - the underlying model "
+            "itself produced an invalid value; this is not a conversion "
+            "artifact. This usually means the model is not well identified "
+            "on this sample. Provide more rows or fewer/coarser predictor "
+            "columns, and try again."
+        )
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore", category=RuntimeWarning)
         days = np.expm1(np.clip(log_predictions, a_min=0.0, a_max=None))

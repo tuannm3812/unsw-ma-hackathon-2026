@@ -190,8 +190,22 @@ def test_log_predictions_to_days_raises_on_extreme_finite_log_prediction():
     # boundary every caller (Ridge, the nonlinear benchmark, permutation
     # importance) goes through, so the check belongs here, once - not
     # duplicated at each call site.
-    with pytest.raises(InsufficientDataError, match="non-finite"):
+    with pytest.raises(InsufficientDataError, match="overflowed through np.expm1"):
         log_predictions_to_days(np.array([1000.0]))
+
+
+@pytest.mark.parametrize("raw_value", [np.nan, np.inf, -np.inf])
+def test_log_predictions_to_days_raises_on_non_finite_raw_predictions(raw_value):
+    # A raw non-finite log-space prediction is a different failure mode
+    # than the finite-overflow case above: it must be caught *before*
+    # np.clip, not after. `-inf` in particular is dangerous if checked only
+    # post-clip: `np.clip(-inf, a_min=0.0, ...)` evaluates to a plain
+    # `0.0`, silently laundering a catastrophically broken prediction into
+    # a plausible-looking "funded in 0 days" instead of raising - a
+    # regression an earlier version of this function had (only the
+    # post-conversion check existed, so -inf never got caught).
+    with pytest.raises(InsufficientDataError, match="received non-finite log-space prediction"):
+        log_predictions_to_days(np.array([raw_value]))
 
 
 def test_evaluate_chronological_models_raises_when_ridge_predictions_convert_to_infinity(

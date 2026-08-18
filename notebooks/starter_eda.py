@@ -122,8 +122,12 @@ schema = pd.DataFrame({
 schema
 
 # %%
+# Deliberately excludes borrower identifiers (name, id, image_url): this
+# project analyzes aggregate narrative/structural patterns, never
+# individual borrowers, and a public-facing preview should not redistribute
+# identifiable rows just because the source platform happens to show them.
 preview_cols = [
-    "name", "gender", "borrowerCount", "loanAmount", "sector", "activity",
+    "gender", "borrowerCount", "loanAmount", "sector", "activity",
     "region", "country_name", "repaymentInterval", "description",
     "fundraisingDate", "raisedDate",
 ]
