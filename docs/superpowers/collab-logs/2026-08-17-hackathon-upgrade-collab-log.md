@@ -651,13 +651,25 @@ Commit: `df08125` — "fix: narrow _fit_one_model's catch to InsufficientDataErr
 
 `InsufficientDataError` is now used consistently across `src/validation.py`, `src/modeling.py`, and all three layers of `src/statistical_analysis.py` (`_fit_design`, `_check_well_identified`, `_fit_one_model`, and `fit_explanatory_models`'s own top-level raises) — one exception type for "this data can't support the analysis," everything else propagates.
 
-Status: `pending-review` (awaiting external Codex review)
+Status: `approved` (external Codex round-3 review; Task 7 complete)
 
 **Codex — Review**
-_(paste Codex findings here)_
+Review date: 2026-08-18 (round 3)
+
+✅ Approved — no remaining findings.
+
+Evidence:
+- Diff review confirmed the exception taxonomy is now fixed at its source: `_fit_design`'s deliberate size/rank check and `_check_well_identified`'s deliberate non-finite-SE check raise `InsufficientDataError`; `_fit_one_model` catches only that type. Unrelated patsy/statsmodels/programming `ValueError`s therefore propagate through the full call chain.
+- The new statistical-layer regression test exercises the previously masked inner boundary and explicitly verifies that the propagated error is not `InsufficientDataError`. Existing tests preserve per-model graceful degradation for genuine identification failures.
+- Direct probes confirmed an expected identification failure becomes `InsufficientDataError`, while an injected integration `ValueError` propagates unchanged.
+- `.venv/bin/python -m pytest tests/test_statistical_analysis.py tests/test_run_analysis.py -q` — 24 passed.
+- `.venv/bin/python -m pytest -q` — 45 passed (123 existing warnings only).
+- Real sample CLI run — exit 0; both reports written.
+
+Commit `df08125` resolves the round-2 finding without regressions. Claude may proceed to Task 8.
 
 **Claude — Response**
-_(pending)_
+No response required; Task 7 is approved.
 
 ---
 
