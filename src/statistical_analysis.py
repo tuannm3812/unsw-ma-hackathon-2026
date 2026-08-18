@@ -96,7 +96,7 @@ BASE_FORMULA_TERMS = [
     "sentiment_available",
     "C(repaymentInterval)",
     "C(sector)",
-    "C(region)",
+    "C(region_group)",
     "C(analysis_period)",
     "C(loan_size_band)",
 ]
@@ -125,9 +125,23 @@ BASE_FORMULA_TERMS = [
 # exactly like the period interaction was before this list grew to three.
 # Callers investigating additional segments (sector, or other framing
 # measures) pass additional patsy-formula terms via `extra_interactions`.
+#
+# The region interaction/main-effect use `region_group` (`src/features.py`'s
+# fixed Africa/Asia/"Other" collapse), not raw `region`: on this project's
+# real development sample, one raw region (Oceania) has exactly one
+# observation, which makes `family_mentions_per_100_words:C(region)`
+# unfittable (see `_term_has_variation`'s within-level variation check) -
+# collapsing sparse regions into "Other" is the same "restricted to
+# adequately represented levels" principle already used for sector above,
+# applied here because region (unlike sector) is one of the three
+# interactions included by default rather than opt-in. Only `region_group`
+# is used as a main effect here, not both `region_group` and raw `region`
+# together - since `region_group` is a strict coarsening of `region`, its
+# dummy columns are exact linear combinations of `region`'s, so including
+# both would make the design rank-deficient by construction.
 DEFAULT_SEGMENT_INTERACTIONS = [
     "family_mentions_per_100_words:C(analysis_period)",
-    "family_mentions_per_100_words:C(region)",
+    "family_mentions_per_100_words:C(region_group)",
     "family_mentions_per_100_words:C(loan_size_band)",
 ]
 

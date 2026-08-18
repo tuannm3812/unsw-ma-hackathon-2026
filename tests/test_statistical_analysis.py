@@ -95,43 +95,49 @@ def test_default_formula_considers_all_three_pre_specified_segment_interactions(
     # interaction from before this task.
     result = fit_explanatory_models(large_synthetic_kiva_df)
     assert "family_mentions_per_100_words:C(analysis_period)" in result["duration_formula"]
-    assert "family_mentions_per_100_words:C(region)" in result["duration_formula"]
+    assert "family_mentions_per_100_words:C(region_group)" in result["duration_formula"]
     assert "family_mentions_per_100_words:C(loan_size_band)" in result["duration_formula"]
     # None of the three segment interactions were pruned on this fixture
     # (only the dataset-level `sentiment_available` constant is - see the
     # module docstring on why that one is always dropped).
     assert "family_mentions_per_100_words:C(analysis_period)" not in result["duration_dropped_terms"]
-    assert "family_mentions_per_100_words:C(region)" not in result["duration_dropped_terms"]
+    assert "family_mentions_per_100_words:C(region_group)" not in result["duration_dropped_terms"]
     assert "family_mentions_per_100_words:C(loan_size_band)" not in result["duration_dropped_terms"]
     # loan_size_band's own main effect must be present too - introducing an
     # interaction without its main effect is not standard practice.
     assert "C(loan_size_band)" in result["duration_formula"]
 
 
-def test_region_interaction_is_pruned_when_one_region_has_no_family_mentions_variation(
+def test_region_interaction_is_pruned_when_region_group_has_no_family_mentions_variation(
     large_synthetic_kiva_df,
 ):
     # Mirrors test_duration_model_still_fits_when_interaction_is_dropped_
-    # for_one_constant_period, but for the new region interaction: the
-    # existing _term_has_variation/_select_available_terms pruning
-    # machinery (built specifically to handle "this interaction isn't
-    # supportable on this sample") must extend to the two new default
-    # interactions without any new pruning logic.
+    # for_one_constant_period, but for the region interaction: the existing
+    # _term_has_variation/_select_available_terms pruning machinery (built
+    # specifically to handle "this interaction isn't supportable on this
+    # sample") must extend to the two new default interactions without any
+    # new pruning logic. Uses `region_group` (not raw `region`), since that
+    # is what the interaction and its main effect are now built on - zeros
+    # out every row whose `region_group` is "Other" (which collapses three
+    # of `_LARGE_FIXTURE_REGIONS` - Latin America, Eastern Europe, Pacific -
+    # so the whole "Other" level loses variation, not just one raw region).
     frame = large_synthetic_kiva_df.copy()
     from src.data_loader import prepare_analysis_data
+    from src.features import extract_deterministic_features
 
     prepared = prepare_analysis_data(frame)
-    pacific_mask = prepared["region"] == "Pacific"
-    frame.loc[pacific_mask, "description"] = "to buy stock and materials for the business"
+    featured_probe = extract_deterministic_features(prepared)
+    other_mask = featured_probe["region_group"] == "Other"
+    frame.loc[other_mask, "description"] = "to buy stock and materials for the business"
 
     result = fit_explanatory_models(frame)
     assert result["duration"] is not None
-    assert "family_mentions_per_100_words:C(region)" in result["duration_dropped_terms"]
+    assert "family_mentions_per_100_words:C(region_group)" in result["duration_dropped_terms"]
     # The other two default interactions and all main effects survive -
     # dropping one unsupported interaction must not take down the others.
     assert "family_mentions_per_100_words:C(analysis_period)" not in result["duration_dropped_terms"]
     assert "family_mentions_per_100_words:C(loan_size_band)" not in result["duration_dropped_terms"]
-    assert "C(region)" in result["duration_formula"]
+    assert "C(region_group)" in result["duration_formula"]
     assert "family_mentions_per_100_words" in result["duration_formula"]
 
 

@@ -30,6 +30,7 @@ REQUIRED_DETERMINISTIC_COLUMNS = [
     "gender",
     "borrowerCount",
     "loanAmount",
+    "region",
 ]
 
 # Narrative framing patterns. These are theory-guided keyword lists, not
@@ -257,15 +258,41 @@ def _add_financial_features(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+# Fixed, transparent region-grouping allowlist, used by `region_group`
+# below. Asia and Africa are the only two regions with adequate
+# representation in this project's development sample (55 and 36 of the
+# ~100 valid loans respectively; every other region - Central America,
+# Middle East, North America, Oceania - totals under 10 combined, with one
+# region down to a single loan). Grouping the rest into "Other" keeps every
+# level of the family-framing x region interaction
+# (`src/statistical_analysis.py`'s `DEFAULT_SEGMENT_INTERACTIONS`)
+# well-populated instead of leaving single-observation categories that make
+# it unfittable. This list is a fixed constant, not derived from whatever
+# specific subset of rows a given call to `extract_deterministic_features`
+# receives, so the grouping is identical and reproducible across the full
+# sample, any train/holdout split, or the eventual full competition
+# dataset - the same design already used for `loan_size_band`'s fixed
+# dollar thresholds above.
+REGION_MAJOR_CATEGORIES = ["Africa", "Asia"]
+
+
+def _add_region_group_feature(df: pd.DataFrame) -> pd.DataFrame:
+    df["region_group"] = df["region"].where(df["region"].isin(REGION_MAJOR_CATEGORIES), "Other")
+    return df
+
+
 def extract_financial_and_geography_features(df: pd.DataFrame) -> pd.DataFrame:
     """
     Compatibility wrapper: adds transparent, fixed-threshold loan-size
-    features by delegating to a focused deterministic helper. Raw
-    categorical and geography columns are left untouched for downstream
-    pipelines to encode after a train/validation split.
+    features and the fixed `region_group` allowlist by delegating to
+    focused deterministic helpers. Raw `region`/`sector`/etc. columns
+    themselves are left untouched for downstream pipelines to encode
+    after a train/validation split.
     """
     df = df.copy()
-    return _add_financial_features(df)
+    df = _add_financial_features(df)
+    df = _add_region_group_feature(df)
+    return df
 
 
 def extract_deterministic_features(df: pd.DataFrame) -> pd.DataFrame:

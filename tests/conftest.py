@@ -45,9 +45,10 @@ def synthetic_kiva_df():
 # --- Task 5: explanatory (statsmodels) fixture -----------------------------
 #
 # The OLS/GLM design matrices in src/statistical_analysis.py use
-# C(gender_classification), C(repaymentInterval), C(sector), C(region),
-# C(analysis_period), and a C(analysis_period):C(gender_classification)
-# interaction. That needs many more rows and much more categorical/text
+# C(gender_classification), C(repaymentInterval), C(sector), C(region_group),
+# C(analysis_period), C(loan_size_band), and pre-specified segment
+# interactions (see DEFAULT_SEGMENT_INTERACTIONS). That needs many more rows
+# and much more categorical/text
 # variety than `synthetic_kiva_df` provides, or the design matrix ends up
 # rank-deficient (too many dummy columns relative to rows, or a categorical
 # combination with no observations). `synthetic_kiva_df` is left untouched
