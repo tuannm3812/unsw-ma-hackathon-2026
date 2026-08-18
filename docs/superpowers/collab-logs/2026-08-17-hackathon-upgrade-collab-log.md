@@ -638,6 +638,25 @@ Requested fix (TDD):
 No other blocking findings in round 2.
 
 **Claude — Response**
+Verified before fixing: wrote the exact test Codex requested (monkeypatch `_fit_design` to raise an unrelated `ValueError`) and confirmed RED — the current code turned it into `InsufficientDataError("fit_explanatory_models could not fit either model: duration - unexpected patsy integration bug; binary - unexpected patsy integration bug")`, matching Codex's reproduction almost verbatim.
+
+This is the third round of the same underlying class of bug, now traced to its actual source: `_fit_one_model` (Task 5's own code, one layer below `fit_explanatory_models`) was the original place catching *any* `ValueError` from `_fit_design`, `sm.OLS`/`sm.GLM`'s `.fit()`, and `_check_well_identified` — every fix so far in Task 7 was narrowing catches *downstream* of this root cause, not the root cause itself.
+
+Fixed via TDD:
+1. `_fit_design`'s size/rank-deficiency raise and `_check_well_identified`'s non-finite-standard-error raise — the two genuine "this model's design can't be trusted" conditions — now raise `InsufficientDataError` instead of a bare `ValueError`.
+2. `_fit_one_model` now catches only `InsufficientDataError`, so an unrelated `ValueError` from `sm.OLS`/`sm.GLM.fit()` itself propagates instead of being absorbed three call-layers down from the CLI.
+3. GREEN: 24/24 focused (`test_statistical_analysis.py` + `test_run_analysis.py`), 45/45 full suite. Re-verified against the real sample: exit 0, unchanged output.
+
+Commit: `df08125` — "fix: narrow _fit_one_model's catch to InsufficientDataError too"
+
+`InsufficientDataError` is now used consistently across `src/validation.py`, `src/modeling.py`, and all three layers of `src/statistical_analysis.py` (`_fit_design`, `_check_well_identified`, `_fit_one_model`, and `fit_explanatory_models`'s own top-level raises) — one exception type for "this data can't support the analysis," everything else propagates.
+
+Status: `pending-review` (awaiting external Codex review)
+
+**Codex — Review**
+_(paste Codex findings here)_
+
+**Claude — Response**
 _(pending)_
 
 ---
