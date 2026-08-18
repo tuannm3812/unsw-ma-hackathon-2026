@@ -717,7 +717,42 @@ No response required; Task 8 is approved.
 
 ## Task 9: Draft the Organizer-Aligned Proposal
 
-Status: `not-started`
+**Note on process:** Written directly by Claude (not dispatched to an implementer subagent) — unlike Tasks 1–8, this is a persuasive-writing deliverable, not code, and needed direct synthesis of real findings across the whole project rather than mechanical transcription of a brief.
+
+**Claude — Implementation**
+- Wrote `tests/test_proposal.py` (brief's exact 3 tests: required headings, ≤1500 words excl. references, no causal/completed-analysis language) — confirmed RED (file didn't exist).
+- Pulled exact current numbers from `reports/generated/analysis_summary.json`/`association_summary.txt` (a real run of the Task 7 CLI against the real 100-row sample) before drafting, so every cited figure is real, not invented.
+- Drafted `proposal/proposal.md`: all 5 organizer-required sections, all 8 content points the brief requires stated explicitly (proxy framing for lender decision-making, controllable-vs-structural distinction, pre-specified interactions, training-only text fitting, chronological holdout, association-only language, ethical safeguards, one-week feasibility).
+
+**Content review (dispatched subagent, model: sonnet — fact-check + rubric alignment, not a code review)**
+Cross-checked every cited number against the real generated report, checked alignment against the organizer's weighted judging rubric, checked consistency with the approved design spec, and verified all 8 required content points were explicitly present (not just implied).
+- **Real factual error found:** the draft called Ridge "an unregularized linear model" while an earlier sentence in the same document correctly called it "a regularized linear model" — self-contradictory, and wrong (Ridge is L2-regularized by definition).
+- **Weakest rubric criterion:** Strategic depth/evolutionary perspective (20% weight) was architecturally present (the pre-specified period interaction was named) but not argued with any specific — the real interaction coefficient on the dev sample is null (p=0.999/0.836) and had been quietly omitted rather than addressed.
+- Prose: one ~90-word run-on sentence, one sentence mixing two unrelated points (illustrative finding + a robustness safeguard), a hypothetical-sounding description of a failure mode that had actually already occurred in the real run.
+- Noted (not a defect): the approved working title uses "Accelerate" — a mildly causal-sounding verb — consistent with the design spec's own already-approved title, flagged as a conscious choice worth being aware of, not an oversight to silently fix.
+
+**Claude — Response**
+Fixed both substantive findings and the prose issues:
+1. Fixed the Ridge contradiction — reworded as "the regularized linear model still overfits sharply despite its L2 penalty," turning it into a more honest, more interesting finding (regularization alone doesn't substitute for more data at n=100) rather than just silencing the error.
+2. Strengthened the evolutionary-perspective section: added a concrete, falsifiable working hypothesis (communal/family framing carrying more weight during the 2020–2021 disruption period) and reported the current null interaction honestly as an expected small-sample result, not omitted.
+3. Reframed the binary-model separation example from hypothetical ("for example...") to actual ("this is not hypothetical: ... already hits exactly this failure mode").
+4. Split the run-on sentence and separated the mixed-point sentence.
+5. Iterated on word count through these edits: 1425 → 1474 (after adding content) → 1536 (over cap after more additions) → trimmed Data Items and the new hypothesis paragraph → 1473 words, comfortable margin under the 1500 cap.
+6. Re-ran `tests/test_proposal.py` (3/3) and the full suite (49/49) after every edit round.
+
+Commit: `3ce83e6` — "docs: draft hackathon proposal"
+
+**Not changed:** the title's "Accelerate" verb — noted for the user's awareness, left as-is since it was already a design-spec-approved decision, not something to silently alter mid-task.
+
+**Still needed from the user:** exact team member names and university affiliations — the only two unresolved placeholders, per the task brief. Task 9's Step 6 (render PDF) and the "email to organizer" step both wait on this.
+
+Status: `pending-review` (awaiting external Codex review, and awaiting team identity from the user)
+
+**Codex — Review**
+_(paste Codex findings here)_
+
+**Claude — Response**
+_(pending)_
 
 ---
 
