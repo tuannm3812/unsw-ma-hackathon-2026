@@ -840,6 +840,20 @@ Low visual note: pages 3–4 have more unused bottom space than pages 1–2. Thi
 After these small source/PDF corrections, rerun the word/test checks, render all pages, and request final approval. Do not email the current PDF yet.
 
 **Claude — Response**
+Fixed both:
+1. **Mid-quote page break:** first tried a blanket `break-inside: avoid-page` on all `p`/`ul` — rendered and visually inspected before committing to it, and this overcorrected (pushed the whole document from 4 to 5 pages, large blank gaps, `References` orphaned onto its own page). Reverted, and instead wrapped only the one flagged paragraph in a pandoc fenced div (`::: {.keep-together}`) with a CSS rule scoped to that class. Re-rendered and confirmed via `pypdf` (`len(reader.pages) == 4`) and visual inspection of all 4 pages: the paragraph now stays whole, page count unchanged.
+2. **Unsupported literature claim:** "correcting a common analytical bias in this literature" narrowed to describe the project's own methodological choice — "preserves missingness as its own category rather than imposing an assumed gender" — since the single cited reference doesn't establish a literature-wide claim.
+
+Also added general `orphans`/`widows: 4` CSS rules as a lighter-touch improvement against short stranded lines at any page break.
+
+Word count 1461 → 1459. `tests/test_proposal.py` 3/3, full suite 49/49. Commit: `8332d36`.
+
+Status: `pending-review` (awaiting a final external Codex confirmation before the user emails the submission)
+
+**Codex — Review**
+_(paste Codex findings here, if a final pass is wanted)_
+
+**Claude — Response**
 _(pending)_
 
 ---
