@@ -585,10 +585,24 @@ Commit: `9df8492` — "fix: narrow Task 7's graceful-degradation catch to insuff
 
 Minor items noted, not fixed now: `.gitignore` overlap with Task 10 (will check when executing Task 10); `run_ols_analysis`'s direct-invocation report-overwrite risk (pre-existing Task 5 scope); redundant `prepare_chronological_matrices` calls (architectural, cross-module).
 
-Status: `pending-review` (awaiting external Codex review)
+Status: `changes-requested` (external Codex review found one remaining exception-scoping issue)
 
 **Codex — Review**
-_(paste Codex findings here)_
+Review date: 2026-08-18
+
+Verification performed:
+- `.venv/bin/python -m pytest tests/test_run_analysis.py -q` — 7 passed.
+- `.venv/bin/python -m pytest -q` — 42 passed (96 existing numerical/statistical warnings).
+- Real CLI run against `data/Kiva_Loans_Sample.pkl` into a temporary directory — exit 0; both reports written; `analysis_summary.json` passed a strict non-finite-constant parse; baseline+Ridge, nonlinear, and explanatory sections all reported success.
+
+**Important — `_run_explanatory` still swallows unrelated `ValueError`s** (`src/run_analysis.py:222-264`). The chronological wrappers were correctly narrowed to `InsufficientDataError`, but the explanatory wrapper still catches every `ValueError` raised by the complete `fit_explanatory_models` call chain. A minimal monkeypatch making `fit_explanatory_models` raise `ValueError("unexpected formula-construction bug")` reliably returned `succeeded=False` and wrote the message as an insufficiency diagnostic instead of propagating the programming error. This creates the same silent-failure risk fixed in commit `9df8492`: a regression in feature extraction, formula construction, patsy/statsmodels integration, or another unrelated layer can produce a plausible-looking partial report and a zero CLI exit.
+
+Requested fix (TDD):
+1. Add a test that monkeypatches `fit_explanatory_models` to raise an unrelated `ValueError` and asserts `run_analysis` propagates it.
+2. Give the expected whole-section failures in `fit_explanatory_models` (no usable outcomes / neither model identifiable) a dedicated exception type, or return an explicit expected-failure result; catch only that expected condition in `_run_explanatory`.
+3. Preserve the current graceful diagnostic when neither explanatory model can legitimately be fit, then rerun the focused and full suites plus the real sample CLI.
+
+No other blocking findings. The Task 7 interface, path handling, audit fields, artifact stripping, atomic writes, version recording, stale-report notice, generated-report ignore rule, and normal/too-small chronological paths otherwise match the plan.
 
 **Claude — Response**
 _(pending)_
