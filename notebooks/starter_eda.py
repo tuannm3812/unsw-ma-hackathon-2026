@@ -1,259 +1,457 @@
+# ---
+# jupyter:
+#   jupytext:
+#     cell_metadata_filter: -all
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.19.5
+#   kernelspec:
+#     display_name: Python 3 (ipykernel)
+#     language: python
+#     name: python3
+# ---
+
 # %% [markdown]
-# # UNSW Marketing Analytics Hackathon 2026 - Starter EDA & Baseline
-# This notebook/script serves as a starter template for analyzing the Kiva loans dataset 
-# and building a baseline model to predict **funding speed** (raisedDate - fundraisingDate).
-# 
-# **Goal of the Hackathon:**
-# Identify key factors that influence lender decision-making and funding speed 
-# within "subsistence marketplaces."
+# # UNSW Marketing Analytics Hackathon 2026 - Auditable Evidence Notebook
+#
+# This notebook is a thin, readable consumer of the leakage-safe, tested
+# pipeline in `src/` (Tasks 1-7). It does not re-implement any modeling,
+# feature-engineering, or statistical logic itself - every number below
+# comes from calling a `src` function exactly as it is documented and
+# unit-tested. If a number here looks wrong, the fix belongs in `src/` and
+# its tests, not in this notebook.
+#
+# **SAMPLE DATA WARNING - READ FIRST**
+# This notebook runs against `data/Kiva_Loans_Sample.pkl`, a **100-row
+# illustrative sample**, not the full competition dataset. Every figure,
+# metric, and coefficient produced below exists to demonstrate that the
+# pipeline runs end-to-end and to sanity-check its output - **it is not
+# final evidence** for any marketing decision. The same pipeline should be
+# re-run against the full competition dataset (via `src/run_analysis.py`)
+# before drawing conclusions that inform real decisions.
+
+# %% [markdown]
+# ## 1. Research question and association caveat
+#
+# **Research question:** Within this subsistence-marketplace lending
+# context, which controllable narrative choices (how a borrower's loan
+# description is framed) and structural factors (loan size, term, sector,
+# region, borrower gender/group structure) are **associated with** how
+# quickly a Kiva loan gets funded - and does that association look
+# different across the pre-pandemic, pandemic-disruption, and
+# post-pandemic periods?
+#
+# **Association, not causation.** Loans are not randomly assigned a
+# narrative framing or a loan amount; borrowers and field partners choose
+# them, and lenders self-select which loans to fund. Nothing in this
+# notebook (or in `src/statistical_analysis.py`, which it calls) supports a
+# causal claim. Every statistical result is reported as "associated with,"
+# holding the other modeled predictors fixed - never as "causes," "drives,"
+# "improves," or "proves."
 
 # %%
-import os
 import sys
-import pandas as pd
-import numpy as np
+from pathlib import Path
+
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 import seaborn as sns
 
-# Add src/ to path so we can import helper modules
-sys.path.append(os.path.abspath('../'))
-from src.data_loader import load_and_prepare_data
-from src.features import build_features
+
+def _find_project_root(start: Path) -> Path:
+    """
+    Walk upward from `start` (at most a few levels) until a directory that
+    looks like the repository root is found - one containing both a `src/`
+    package and `data/Kiva_Loans_Sample.pkl`. Falls back to `start` if
+    nothing is found, so the later `load_kiva_pickle` call raises a clear
+    `FileNotFoundError` instead of this helper silently guessing wrong.
+    """
+    candidate = start
+    for _ in range(5):
+        looks_like_root = (
+            (candidate / "data" / "Kiva_Loans_Sample.pkl").exists()
+            and (candidate / "src").is_dir()
+        )
+        if looks_like_root:
+            return candidate
+        if candidate.parent == candidate:
+            break
+        candidate = candidate.parent
+    return start
+
+
+try:
+    # Running as a plain script: `__file__` is notebooks/starter_eda.py.
+    PROJECT_ROOT = Path(__file__).resolve().parents[1]
+except NameError:
+    # Running as a notebook: there is no `__file__`. Jupyter/nbconvert
+    # typically execute with cwd set to the notebook's own directory
+    # (notebooks/), but this also tolerates being launched from the
+    # repository root, so search upward rather than assuming either.
+    PROJECT_ROOT = _find_project_root(Path.cwd())
+
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+DATA_PATH = PROJECT_ROOT / "data" / "Kiva_Loans_Sample.pkl"
+REPORTS_DIR = PROJECT_ROOT / "reports" / "generated"
+HOLDOUT_START = "2024-01-01"
+N_TOPICS = 5
+
+from src.advanced_modeling import evaluate_boosted_model
+from src.data_loader import load_kiva_pickle, prepare_analysis_data
+from src.features import extract_deterministic_features
 from src.modeling import run_baseline_model
+from src.run_analysis import run_analysis
+from src.statistical_analysis import fit_explanatory_models, format_association_summary
+from src.topics import extract_topics_nmf
 
-# Set style
 sns.set_theme(style="whitegrid")
-plt.rcParams['figure.figsize'] = (10, 6)
-plt.rcParams['font.size'] = 12
+plt.rcParams["figure.figsize"] = (10, 6)
+plt.rcParams["font.size"] = 12
+
+print(f"Project root resolved to: {PROJECT_ROOT}")
+print(f"Loading sample data from: {DATA_PATH}")
+print(
+    "Reminder: data/Kiva_Loans_Sample.pkl is a 100-row SAMPLE used to "
+    "exercise this pipeline - not the full competition dataset."
+)
 
 # %% [markdown]
-# ## 1. Load the Kiva Loans Sample
-# We will use the helper functions in `src/data_loader.py` to load the pickle file 
-# and compute the target variable: `funding_speed_days`.
+# ## 2. Data validity and outcome distribution
+#
+# `prepare_analysis_data` parses `fundraisingDate`/`raisedDate`, derives the
+# target (`funding_speed_days`), and flags every row's outcome validity. A
+# missing or negative duration is **never imputed** - such rows are excluded
+# from any speed-based analysis and their exclusion reason is recorded in
+# `outcome_issue`, so readers can audit exactly what was dropped and why.
 
 # %%
-pkl_path = "../data/Kiva_Loans_Sample.pkl"
-df = load_and_prepare_data(pkl_path)
-print(f"Dataset shape: {df.shape}")
-df.head(2)
+df_raw = load_kiva_pickle(str(DATA_PATH))
+prepared = prepare_analysis_data(df_raw)
 
-# %% [markdown]
-# ## 2. Exploratory Data Analysis (EDA)
-# Let's inspect the target variable: `funding_speed_days`.
+n_rows = len(prepared)
+n_valid = int(prepared["valid_completed_outcome"].sum())
+print(f"Rows loaded: {n_rows} (sample file, not the full competition dataset)")
+print(f"Rows with a valid completed outcome: {n_valid}")
+print(f"Rows excluded (missing/negative duration, never imputed): {n_rows - n_valid}")
 
-# %%
-# Target Summary Stats
-print("--- Funding Speed (Days) Summary Statistics ---")
-print(df['funding_speed_days'].describe())
+exclusion_counts = (
+    prepared.loc[~prepared["valid_completed_outcome"], "outcome_issue"]
+    .value_counts()
+)
+if len(exclusion_counts):
+    print("\nExclusion reasons:")
+    print(exclusion_counts.to_string())
+else:
+    print("\nNo excluded rows in this sample.")
 
-# Plot Distribution
-plt.figure()
-sns.histplot(df['funding_speed_days'], kde=True, bins=20, color='darkblue')
-plt.title('Distribution of Funding Speed (Days)')
-plt.xlabel('Funding Speed (Days)')
-plt.ylabel('Count')
-plt.show()
+valid = prepared.loc[prepared["valid_completed_outcome"]].copy()
 
-# Log Target Distribution (highly right-skewed)
-plt.figure()
-sns.histplot(np.log1p(df['funding_speed_days']), kde=True, bins=20, color='teal')
-plt.title('Distribution of Log(Funding Speed + 1)')
-plt.xlabel('Log(Funding Speed in Days)')
-plt.ylabel('Count')
-plt.show()
-
-# %% [markdown]
-# ### 2.1 Loan Amount vs. Funding Speed
-# Let's see if larger loans take longer to get funded.
+print("\nFunding speed (days) summary statistics, valid outcomes only:")
+print(valid["funding_speed_days"].describe())
 
 # %%
-plt.figure()
-sns.scatterplot(data=df, x='loanAmount', y='funding_speed_days', hue='region', alpha=0.8, s=80)
-plt.title('Loan Amount vs. Funding Speed by Region')
-plt.xlabel('Loan Amount ($)')
-plt.ylabel('Funding Speed (Days)')
-plt.show()
+fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+sns.histplot(valid["funding_speed_days"], kde=True, bins=20, color="darkblue", ax=axes[0])
+axes[0].set_title("Funding speed (days) - valid outcomes")
+axes[0].set_xlabel("Funding speed (days)")
 
-# Correlation
-corr = df['loanAmount'].corr(df['funding_speed_days'])
-print(f"Correlation between Loan Amount and Funding Speed: {corr:.3f}")
-
-# %% [markdown]
-# ### 2.2 Sector and Repayment Term vs. Funding Speed
-# Prosocial lenders might prioritize specific sectors (e.g., Education, Health) or prefer shorter repayment periods.
-
-# %%
-# Sector boxplot
-plt.figure(figsize=(12, 6))
-order = df.groupby('sector')['funding_speed_days'].median().sort_values().index
-sns.boxplot(data=df, x='sector', y='funding_speed_days', order=order, palette='viridis')
-plt.title('Funding Speed by Loan Sector')
-plt.xticks(rotation=45, ha='right')
-plt.ylabel('Funding Speed (Days)')
+sns.histplot(valid["log_funding_speed"], kde=True, bins=20, color="teal", ax=axes[1])
+axes[1].set_title("log(1 + funding speed) - valid outcomes")
+axes[1].set_xlabel("log(1 + funding speed in days)")
 plt.tight_layout()
 plt.show()
 
-# Repayment term vs. Funding speed
-plt.figure()
-sns.regplot(data=df, x='lenderRepaymentTerm', y='funding_speed_days', scatter_kws={'alpha':0.6}, line_kws={'color':'red'})
-plt.title('Repayment Term vs. Funding Speed')
-plt.xlabel('Repayment Term (Months)')
-plt.ylabel('Funding Speed (Days)')
+# %% [markdown]
+# ## 3. Funding behavior by period
+#
+# `analysis_period` (from `prepare_analysis_data`) buckets each loan's
+# posting year into `pre_pandemic` (<=2019), `pandemic_disruption`
+# (2020-2021), or `post_pandemic` (2022+). This is the project's primary
+# temporal lens for an evolutionary perspective on funding behavior.
+
+# %%
+period_counts = prepared["analysis_period"].value_counts(dropna=False).sort_index()
+print("Rows per analysis period (all rows, including excluded outcomes):")
+print(period_counts.to_string())
+
+# %%
+fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+
+sns.boxplot(
+    data=valid, x="analysis_period", y="funding_speed_days",
+    hue="analysis_period", legend=False, color="steelblue", ax=axes[0],
+)
+axes[0].set_title("Funding speed by analysis period (valid outcomes)")
+axes[0].set_xlabel("Analysis period")
+axes[0].set_ylabel("Funding speed (days)")
+
+within_24h_by_period = valid.dropna(subset=["funded_within_24h"]).groupby(
+    "analysis_period", observed=True
+)["funded_within_24h"].mean()
+within_24h_by_period.astype(float).plot(kind="bar", color="darkorange", ax=axes[1])
+axes[1].set_title("Share funded within 24 hours, by period")
+axes[1].set_xlabel("Analysis period")
+axes[1].set_ylabel("Share funded within 24h")
+axes[1].tick_params(axis="x", rotation=0)
+
+plt.tight_layout()
+plt.show()
+
+print("\nShare funded within 24 hours, by period (valid outcomes only):")
+print(within_24h_by_period.to_string())
+
+# %% [markdown]
+# ## 4. Controllable narrative versus structural predictors
+#
+# `extract_deterministic_features` computes two broad families of
+# predictors, without fitting anything across rows (safe to call on any
+# subset, including a holdout):
+#
+# - **Controllable narrative features** - choices a borrower/field partner
+#   can make when writing a loan description: framing rates per 100 words
+#   (`family_mentions_per_100_words`, `agency_mentions_per_100_words`,
+#   `urgency_mentions_per_100_words`, and others), description length, and
+#   sentiment (`desc_sentiment_compound`).
+# - **Structural predictors** - largely fixed by the loan itself:
+#   `log_loan_amount`, `lenderRepaymentTerm`, `sector`, `region`,
+#   `is_group_loan`, and `gender_classification` (never assumes a missing
+#   value means female - missing values are `"unknown"`).
+
+# %%
+featured = extract_deterministic_features(prepared)
+featured_valid = featured.loc[featured["valid_completed_outcome"]].copy()
+
+print("Gender classification counts (never assumes missing = female):")
+print(featured["gender_classification"].value_counts(dropna=False).to_string())
+
+print("\nGroup vs. individual loans:")
+print(featured["is_group_loan"].value_counts().rename({0: "individual", 1: "group"}).to_string())
+
+narrative_cols = [
+    "family_mentions_per_100_words",
+    "agency_mentions_per_100_words",
+    "urgency_mentions_per_100_words",
+    "desc_sentiment_compound",
+    "desc_word_count",
+]
+structural_cols = ["log_loan_amount", "lenderRepaymentTerm"]
+
+print("\nCorrelation with funding speed (days), valid outcomes only:")
+corr_table = featured_valid[narrative_cols + structural_cols + ["funding_speed_days"]].corr()[
+    "funding_speed_days"
+].drop("funding_speed_days")
+print(corr_table.sort_values().to_string())
+
+# %%
+fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+
+sns.regplot(
+    data=featured_valid, x="family_mentions_per_100_words", y="funding_speed_days",
+    scatter_kws={"alpha": 0.6}, line_kws={"color": "purple"}, ax=axes[0],
+)
+axes[0].set_title("Family framing rate vs. funding speed\n(narrative, controllable)")
+axes[0].set_xlabel("Family mentions per 100 words")
+axes[0].set_ylabel("Funding speed (days)")
+
+sns.boxplot(
+    data=featured_valid, x="loan_size_band", y="funding_speed_days",
+    order=["small", "medium", "large"], hue="loan_size_band", legend=False,
+    color="seagreen", ax=axes[1],
+)
+axes[1].set_title("Funding speed by loan-size band\n(structural, largely fixed)")
+axes[1].set_xlabel("Loan size band")
+axes[1].set_ylabel("Funding speed (days)")
+
+plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# ### 2.3 Gender & Group Loans
-# Does the borrower gender or group structure affect funding speed?
+# ### 4.1 Descriptive topic exploration (full-sample, exploratory only)
+#
+# `extract_topics_nmf` in `src/topics.py` is explicitly documented as a
+# **full-sample exploratory convenience function - not for leakage-safe
+# evaluation**. It is safe to use here purely to describe recurring themes
+# in the loan descriptions, since the results below are never used to
+# evaluate held-out predictions - the leakage-safe evaluation in Section 6
+# fits its own topic model on the training partition only.
 
 # %%
-# Group vs Individual
-df['is_group'] = df['borrowerCount'] > 1
-plt.figure()
-sns.boxplot(data=df, x='is_group', y='funding_speed_days', palette='pastel')
-plt.title('Funding Speed: Individual vs. Group Loans')
-plt.xlabel('Is Group Loan?')
-plt.ylabel('Funding Speed (Days)')
-plt.xticks([0, 1], ['Individual', 'Group'])
-plt.show()
+df_topics, topic_keywords = extract_topics_nmf(prepared, n_topics=N_TOPICS)
+df_topics_valid = df_topics.loc[df_topics["valid_completed_outcome"]]
 
-# Female ratio vs Funding speed
-# (We parse gender to get female ratio)
-from src.features import extract_borrower_features
-df_gender = extract_borrower_features(df)
-
-plt.figure()
-sns.scatterplot(data=df_gender, x='female_ratio', y='funding_speed_days', alpha=0.7, s=100)
-plt.title('Female Borrower Ratio vs. Funding Speed')
-plt.xlabel('Female Borrower Ratio (0 = All Male, 1 = All Female)')
-plt.ylabel('Funding Speed (Days)')
-plt.show()
-
-# %% [markdown]
-# ## 3. Feature Engineering and Narrative (Text) Analysis
-# Kiva loans include description and use texts. The narrative quality and framing 
-# (e.g. personal, family-focused, business-focused) represent key marketing levers.
-
-# %%
-# Apply feature engineering
-df_feat = build_features(df)
-
-# Plot word count vs funding speed
-plt.figure()
-sns.regplot(data=df_feat, x='desc_word_count', y='funding_speed_days', scatter_kws={'alpha':0.6}, line_kws={'color':'purple'})
-plt.title('Description Word Count vs. Funding Speed')
-plt.xlabel('Word Count')
-plt.ylabel('Funding Speed (Days)')
-plt.show()
-
-# Check family focus vs business focus
-plt.figure()
-fig, axes = plt.subplots(1, 2, figsize=(16, 6))
-sns.boxplot(ax=axes[0], data=df_feat, x='has_family_focus', y='funding_speed_days', palette='Set2')
-axes[0].set_title('Funding Speed by Family/Need Focus')
-axes[0].set_xticklabels(['No Mention', 'Mentioned'])
-
-sns.boxplot(ax=axes[1], data=df_feat, x='has_business_focus', y='funding_speed_days', palette='Set2')
-axes[1].set_title('Funding Speed by Business Focus')
-axes[1].set_xticklabels(['No Mention', 'Mentioned'])
-plt.show()
-
-# %% [markdown]
-# ### 3.1 Narrative Sentiment Analysis (VADER)
-# Let's explore how the sentiment (emotional tone) of the borrower's description 
-# relates to funding speed. We look at the VADER compound sentiment score, which 
-# ranges from -1 (extremely negative) to +1 (extremely positive).
-
-# %%
-# Plot Sentiment Distribution
-plt.figure()
-sns.histplot(df_feat['desc_sentiment_compound'], kde=True, bins=15, color='orange')
-plt.title('Distribution of Description Compound Sentiment')
-plt.xlabel('Compound Sentiment Score')
-plt.ylabel('Count')
-plt.show()
-
-# Scatter plot: Sentiment vs Funding Speed
-plt.figure()
-sns.regplot(data=df_feat, x='desc_sentiment_compound', y='funding_speed_days', scatter_kws={'alpha':0.6}, line_kws={'color':'red'})
-plt.title('Description Sentiment vs. Funding Speed')
-plt.xlabel('Description Compound Sentiment')
-plt.ylabel('Funding Speed (Days)')
-plt.show()
-
-# Correlation
-sentiment_corr = df_feat['desc_sentiment_compound'].corr(df_feat['funding_speed_days'])
-print(f"Correlation between Description Sentiment and Funding Speed: {sentiment_corr:.3f}")
-
-# %% [markdown]
-# ### 3.2 Narrative Topic Modeling (NMF)
-# Let's extract hidden themes (topics) from the loan descriptions using Non-Negative Matrix 
-# Factorization (NMF) and see how the theme of the request affects its funding speed.
-
-# %%
-from src.topics import extract_topics_nmf, analyze_topics_speed
-df_topics, topic_keywords = extract_topics_nmf(df, n_topics=5)
-
-# Print topics and keywords
 for idx, words in topic_keywords.items():
-    print(f"Topic {idx} Top Words: {', '.join(words[:6])}")
+    print(f"Topic {idx} top words: {', '.join(words[:6])}")
 
-# Print mean speed per dominant topic
-analyze_topics_speed(df_topics, topic_keywords)
-
-# Boxplot of dominant topic vs funding speed
 plt.figure(figsize=(10, 6))
-# Create labels for boxplot x-axis using the first 3 keywords
-labels = [f"Topic {i}\n({', '.join(words[:3])})" for i, words in topic_keywords.items()]
-sns.boxplot(data=df_topics, x='dominant_topic', y='funding_speed_days', palette='Set3')
-plt.xticks(ticks=range(5), labels=labels, rotation=30, ha='right')
-plt.title('Funding Speed by Dominant Loan Topic')
-plt.xlabel('Dominant Topic')
-plt.ylabel('Funding Speed (Days)')
+topic_labels = [f"Topic {i}\n({', '.join(words[:3])})" for i, words in topic_keywords.items()]
+sns.boxplot(
+    data=df_topics_valid, x="dominant_topic", y="funding_speed_days",
+    hue="dominant_topic", legend=False, palette="Set3",
+)
+plt.xticks(ticks=range(N_TOPICS), labels=topic_labels, rotation=30, ha="right")
+plt.title("Funding speed by dominant description topic (descriptive, full-sample exploratory)")
+plt.xlabel("Dominant topic")
+plt.ylabel("Funding speed (days)")
 plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# ## 4. Baseline Modeling & Feature Influence
-# Let's run the modeling pipeline to predict funding speed and look at the variables 
-# that are most predictive of speed.
+# ## 5. Pre-specified period and segment comparisons
+#
+# `src/statistical_analysis.py` pre-specifies exactly one interaction as
+# the project's evolutionary-perspective comparison:
+# `family_mentions_per_100_words : C(analysis_period)` - does the
+# association between family/communal framing and the outcome differ across
+# periods? Looking at it descriptively here, before the robust model in
+# Section 7, keeps this a **pre-specified** comparison rather than post-hoc
+# data dredging.
 
 # %%
-X, y, ridge_model, rf_model = run_baseline_model(pkl_path)
+family_by_period = featured_valid.groupby("analysis_period", observed=True)[
+    "family_mentions_per_100_words"
+].agg(["mean", "median", "count"])
+print("Family framing rate by analysis period (pre-specified comparison):")
+print(family_by_period.to_string())
 
-# %% [markdown]
-# ### 4.1 Feature Importances (Random Forest)
-# Visualize which variables have the highest predictive power for funding speed.
+speed_by_period_gender = featured_valid.groupby(
+    ["analysis_period", "gender_classification"], observed=True
+)["funding_speed_days"].median().unstack("gender_classification")
+print("\nMedian funding speed (days) by period x gender classification (segment view):")
+print(speed_by_period_gender.to_string())
 
 # %%
-importances = pd.DataFrame({
-    'Feature': X.columns,
-    'Importance': rf_model.feature_importances_
-}).sort_values(by='Importance', ascending=False)
-
-plt.figure(figsize=(10, 8))
-sns.barplot(data=importances.head(15), x='Importance', y='Feature', palette='crest')
-plt.title('Top 15 Most Important Features (Random Forest)')
-plt.xlabel('Feature Importance')
-plt.ylabel('Feature')
+plt.figure()
+sns.lineplot(
+    data=family_by_period.reset_index(), x="analysis_period", y="mean",
+    marker="o", sort=False,
+)
+plt.title("Mean family framing rate across periods\n(pre-specified evolutionary comparison)")
+plt.xlabel("Analysis period")
+plt.ylabel("Mean family mentions per 100 words")
+plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# ## 5. Statistical Hypothesis Testing (OLS Regression)
-# While machine learning baseline models show feature predictive importance, fitting an OLS 
-# (Ordinary Least Squares) regression allows us to officially calculate p-values and verify 
-# which features have statistically significant effects on funding speed.
+# ## 6. Chronological evaluation results
+#
+# The primary predictive evaluation design in this project is
+# **chronological**, not a random split: `run_baseline_model` trains on
+# loans posted before `HOLDOUT_START` and evaluates on loans posted on or
+# after it, mirroring how a model would actually be used to score
+# newly-posted loans. All learned preprocessing (imputation, scaling,
+# one-hot encoding, and the training-fitted topic model) comes from
+# `src/modeling.py` and is fit on the training partition only.
 
 # %%
-import statsmodels.api as sm
-from src.statistical_analysis import run_ols_analysis
+baseline_results = run_baseline_model(str(DATA_PATH), holdout_start=HOLDOUT_START, n_topics=N_TOPICS)
 
-reports_dir = "../reports"
-results = run_ols_analysis(pkl_path, reports_dir)
+metrics_table = pd.DataFrame(baseline_results["metrics"]).T
+print(f"\nChronological split ({HOLDOUT_START} boundary) on the 100-row sample:")
+print(f"Train rows: {baseline_results['train_rows']}  |  Holdout rows: {baseline_results['holdout_rows']}")
+print("\nBaseline (training-median) vs. Ridge, in day space:")
+print(metrics_table[["train_mae_days", "holdout_mae_days", "holdout_r2"]])
 
 # %% [markdown]
-# ## Next Steps for the Hackathon:
-# 1. **Interaction Effects**: Check if the impact of narrative framing (e.g. sentiment or family focus) varies across regions/sectors. For example, does positive sentiment matter more in Africa or Asia?
-# 2. **Topic Modeling**: Use LDA (Latent Dirichlet Allocation) to extract topics from descriptions (e.g. farming, education, emergency) and see how topic mix affects speed.
-# 3. **Advanced Models**: Try LightGBM, XGBoost, or CatBoost, tuning hyperparameters using cross-validation.
-# 4. **Additional Text Features**: Score readability (Flesch-Kincaid) or check for specific stylistic metrics like punctuation (exclamations, question marks).
+# ### 6.1 Nonlinear benchmark
+#
+# `evaluate_boosted_model` (Task 6) reuses the exact same chronological
+# split and preprocessing pipeline, fitting a `HistGradientBoostingRegressor`
+# instead of `Ridge`, so its holdout metrics are directly comparable to the
+# ones above.
 
+# %%
+boosted_results = evaluate_boosted_model(df_raw, holdout_start=HOLDOUT_START, n_topics=N_TOPICS)
+print("Boosted (HistGradientBoostingRegressor) holdout metrics:")
+for name, value in boosted_results["metrics"].items():
+    print(f"  {name}: {value:.4f}")
+
+print("\nTop permutation importances (holdout, day-space MAE):")
+print(boosted_results["importance"].head(10).to_string(index=False))
+
+print(
+    f"\nWith only {baseline_results['holdout_rows']} holdout rows on this sample, "
+    "these metrics are illustrative of the pipeline, not a reliable estimate of "
+    "real-world predictive accuracy - re-run on the full competition dataset "
+    "before comparing models for a production decision."
+)
+
+# %% [markdown]
+# ## 7. Robust explanatory associations
+#
+# `fit_explanatory_models` fits two independent, robust (HC3
+# heteroskedasticity-consistent standard errors) explanatory models on every
+# valid observation - a duration OLS on `log_funding_speed` and a binomial
+# GLM on `funded_within_24h` - using only rows with a valid outcome (never
+# imputed). Each model is fit **independently**: on this 100-row sample, the
+# 24-hour binary model is expected to fail with a quasi-complete-separation
+# diagnostic (too little data for its categorical parameters), while the
+# duration model fits fine. That is expected behavior, not a bug - the
+# function returns a clear diagnostic string instead of unreliable
+# coefficients.
+
+# %%
+explanatory_results = fit_explanatory_models(df_raw)
+association_summary = format_association_summary(explanatory_results)
+print(association_summary)
+
+# %% [markdown]
+# ## 8. Ethical, managerial interpretation and limitations
+#
+# **Reading the association results responsibly.**
+# - Every coefficient above describes an *association*, holding the other
+#   modeled predictors fixed - never a causal claim. Borrowers were not
+#   randomly assigned a narrative framing, loan amount, or gender
+#   composition, so none of these results license a statement like
+#   "writing more family-framed descriptions will speed up funding."
+# - `gender_classification` never assumes a missing value means female;
+#   treating a marketing lever as "target female-presenting borrowers with
+#   framing X" from an association alone would risk reinforcing exactly the
+#   kind of gender-based targeting this project's design deliberately
+#   avoids assuming.
+# - The pre-specified `family_mentions_per_100_words : analysis_period`
+#   interaction is the project's evolutionary-perspective test: whether a
+#   narrative association looks stable or shifts across the pandemic
+#   periods. A shifting association is still just that - an association
+#   that differs by period, not evidence that the pandemic *caused* a
+#   change in how framing works.
+#
+# **Limitations of this run.**
+# 1. **Sample size.** `data/Kiva_Loans_Sample.pkl` has about 100 rows. That
+#    is enough to exercise every stage of this pipeline end-to-end, but far
+#    too few to treat any single metric, coefficient, or plot above as a
+#    stable estimate - especially the chronological holdout (a double-digit
+#    number of holdout rows) and the 24-hour binary model (which could not
+#    be reliably fit here at all).
+# 2. **No causal identification.** Nothing in this notebook - or in
+#    `src/statistical_analysis.py` - estimates a causal effect. A/B tests or
+#    a quasi-experimental design would be required before recommending a
+#    specific narrative change to field partners.
+# 3. **This notebook's numbers are not the final deliverable.** The
+#    reproducible pipeline exists precisely so the same analysis can be
+#    re-run, unchanged, against the full competition dataset - only that run
+#    should inform actual managerial decisions.
+#
+# The cell below runs that same reproducible pipeline (`run_analysis`, Task
+# 7) end-to-end on the 100-row sample one more time, writing an auditable
+# JSON summary and a plain-text association report to `reports/generated/`.
+# This is the same entry point that should be re-pointed at the full
+# competition dataset later.
+
+# %%
+full_summary = run_analysis(
+    str(DATA_PATH), str(REPORTS_DIR), holdout_start=HOLDOUT_START, n_topics=N_TOPICS
+)
+print(f"\nWrote auditable reports to: {REPORTS_DIR}")
+print(f"Rows in this run: {full_summary['data']['n_rows']} (sample - see Section 1 caveat)")
+print(f"Date range covered: {full_summary['data']['date_min']} to {full_summary['data']['date_max']}")
+print(
+    "\nFINAL REMINDER: all results in this notebook come from the 100-row "
+    "sample file and are for pipeline demonstration only, not final "
+    "managerial evidence. Re-run against the full competition dataset before "
+    "acting on any finding above."
+)
