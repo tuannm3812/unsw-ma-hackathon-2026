@@ -270,8 +270,8 @@ def log_predictions_to_days(log_predictions: np.ndarray) -> np.ndarray:
 
 def _check_ridge_well_identified(
     coefficients: np.ndarray,
-    train_pred: np.ndarray,
-    holdout_pred: np.ndarray,
+    train_pred_days: np.ndarray,
+    holdout_pred_days: np.ndarray,
     n_obs: int,
     n_cols: int,
 ) -> None:
@@ -285,14 +285,22 @@ def _check_ridge_well_identified(
     tests/test_modeling.py). This check turns the case where that stops
     holding (e.g. a much larger or more sparsely-encoded full dataset) into
     a clear diagnostic instead of a silently-NaN metric.
+
+    `train_pred_days`/`holdout_pred_days` must be the *day-space*
+    predictions returned by `log_predictions_to_days`, not the raw
+    log-space `ridge.predict()` output: a finite log-space prediction can
+    still convert to a non-finite `inf` once `np.expm1` is applied (see
+    the call site in `evaluate_chronological_models`), so checking only
+    the pre-conversion values would miss exactly the failure mode this
+    guard exists to catch.
     """
     if not (
         np.all(np.isfinite(coefficients))
-        and np.all(np.isfinite(train_pred))
-        and np.all(np.isfinite(holdout_pred))
+        and np.all(np.isfinite(train_pred_days))
+        and np.all(np.isfinite(holdout_pred_days))
     ):
         raise InsufficientDataError(
-            f"Ridge produced non-finite coefficients or predictions for "
+            f"Ridge produced non-finite coefficients or day-space predictions for "
             f"{n_obs} training observations vs {n_cols} design columns - the "
             "design is likely too rank-deficient for a stable fit. Provide "
             "more rows or fewer/coarser predictor columns, and try again."
@@ -372,11 +380,19 @@ def evaluate_chronological_models(
         ridge.fit(X_train, y_train)
         ridge_train_pred = ridge.predict(X_train)
         ridge_holdout_pred = ridge.predict(X_holdout)
-    _check_ridge_well_identified(
-        ridge.coef_, ridge_train_pred, ridge_holdout_pred, *X_train.shape
-    )
     ridge_train_pred_days = log_predictions_to_days(ridge_train_pred)
     ridge_holdout_pred_days = log_predictions_to_days(ridge_holdout_pred)
+    # Checked *after* the log1p-to-days conversion, not just on the raw
+    # log-space predictions above: `log_predictions_to_days` itself
+    # suppresses RuntimeWarning around `np.expm1`, and a finite log
+    # prediction (e.g. ~1000, which a badly overfit Ridge on this
+    # project's small sample can produce) converts to a non-finite `inf`
+    # day-space value with no warning surfaced at all. Checking only the
+    # pre-conversion values would silently let that inf reach the metrics
+    # below.
+    _check_ridge_well_identified(
+        ridge.coef_, ridge_train_pred_days, ridge_holdout_pred_days, *X_train.shape
+    )
 
     train_metrics = _days_metrics(y_train_days, ridge_train_pred_days)
     holdout_metrics = _days_metrics(y_holdout_days, ridge_holdout_pred_days)

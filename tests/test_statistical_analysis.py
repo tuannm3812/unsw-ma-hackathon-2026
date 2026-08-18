@@ -5,12 +5,24 @@ import pytest
 
 import src.statistical_analysis as statistical_analysis_module
 from src.statistical_analysis import (
+    _check_well_identified,
     _term_has_variation,
     fit_explanatory_models,
     format_association_summary,
     run_ols_analysis,
 )
 from src.validation import InsufficientDataError
+
+
+class _FakeGlmResults:
+    """Minimal stand-in for a statsmodels results object - just the `.bse`
+    attribute `_check_well_identified` reads - so its `separation_detected`
+    branch can be tested directly without depending on which statsmodels
+    version happens to produce literal NaN/inf standard errors for a given
+    separated design (see the docstring on `_check_well_identified`)."""
+
+    def __init__(self, bse):
+        self.bse = pd.Series(bse)
 
 
 def test_default_interaction_tests_narrative_framing_by_period_not_gender(large_synthetic_kiva_df):
@@ -200,6 +212,56 @@ def test_summary_reports_coefficients_regardless_of_significance(large_synthetic
     ]
     assert len(duration_coef_lines) == n_duration_terms
     assert len(binary_coef_lines) == n_binary_terms
+
+
+def test_check_well_identified_passes_finite_bse_and_no_separation():
+    _check_well_identified(_FakeGlmResults([0.5, 0.5]), "label", n_obs=20, n_cols=2)  # no raise
+
+
+def test_check_well_identified_raises_on_separation_even_with_finite_bse():
+    # Complete separation does not reliably leave literal NaN/inf standard
+    # errors behind in every statsmodels version (requirements.txt only
+    # pins statsmodels>=0.14.0) - it can also converge to large-but-finite,
+    # meaningless coefficients/SEs depending on how IRLS terminates. The
+    # `PerfectSeparationWarning` statsmodels raises specifically for this
+    # condition must be treated as authoritative on its own, not only as a
+    # hint that happens to correlate with non-finite `bse`.
+    with pytest.raises(InsufficientDataError, match="non-finite standard errors"):
+        _check_well_identified(
+            _FakeGlmResults([0.5, 0.5]), "label", n_obs=20, n_cols=2, separation_detected=True
+        )
+
+
+def test_fit_one_model_treats_a_recorded_perfect_separation_warning_as_insufficient_data(monkeypatch):
+    # Integration-level check that `_fit_one_model`'s GLM branch actually
+    # wires the captured `PerfectSeparationWarning` through to
+    # `_check_well_identified`, rather than only relying on `bse` - forces
+    # a fake GLM fit that emits the warning but returns finite `bse`, and
+    # confirms the caller still raises InsufficientDataError. Only needs
+    # enough columns for `_fit_design`'s real `patsy.dmatrices` call to
+    # succeed - the GLM fit itself is faked below.
+    from statsmodels.tools.sm_exceptions import PerfectSeparationWarning
+
+    data = pd.DataFrame({
+        "y": [0, 1, 0, 1, 0, 1, 0, 1],
+        "x": [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0],
+    })
+
+    class _FakeFittedGlm:
+        def fit(self, cov_type):
+            import warnings as warnings_module
+            warnings_module.warn("perfect separation", PerfectSeparationWarning)
+            return _FakeGlmResults([0.5, 0.5])
+
+    def _fake_glm(*args, **kwargs):
+        return _FakeFittedGlm()
+
+    monkeypatch.setattr(statistical_analysis_module.sm, "GLM", _fake_glm)
+    results, error = statistical_analysis_module._fit_one_model("glm", "y ~ x", data, "test_model")
+
+    assert results is None
+    assert error is not None
+    assert "non-finite standard errors" in error
 
 
 def test_fit_degrades_gracefully_when_one_model_is_not_well_identified(separated_binary_kiva_df):

@@ -182,6 +182,27 @@ def test_ridge_and_log_conversion_stay_finite_on_a_sample_that_triggers_overfit_
             assert math.isfinite(value)
 
 
+def test_evaluate_chronological_models_raises_when_ridge_predictions_convert_to_infinity(
+    chronological_kiva_df, monkeypatch,
+):
+    # `_check_ridge_well_identified` must run on the *day-space*
+    # predictions (after `log_predictions_to_days`'s `np.expm1`), not just
+    # the raw log-space `ridge.predict()` output: a finite log-space value
+    # (e.g. 1000.0) converts to `inf` in day-space with no warning
+    # surfaced. Force exactly that by making `Ridge.predict()` return a
+    # constant, finite-but-extreme value, and confirm the pipeline raises
+    # a clear diagnostic instead of silently returning `inf` metrics.
+    from src.modeling import Ridge
+
+    def _extreme_predict(self, X):
+        return np.full(X.shape[0], 1000.0)
+
+    monkeypatch.setattr(Ridge, "predict", _extreme_predict)
+
+    with pytest.raises(InsufficientDataError, match="non-finite"):
+        evaluate_chronological_models(chronological_kiva_df, holdout_start="2024-01-01", n_topics=2)
+
+
 def test_check_ridge_well_identified_passes_through_finite_coefficients_and_predictions():
     coefficients = np.array([0.1, -0.2, 0.3])
     train_pred = np.array([0.5, 0.6])

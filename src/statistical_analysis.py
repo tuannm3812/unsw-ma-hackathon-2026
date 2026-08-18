@@ -260,7 +260,9 @@ def _fit_design(formula: str, data: pd.DataFrame, model_label: str):
     return y, X
 
 
-def _check_well_identified(results, model_label: str, n_obs: int, n_cols: int):
+def _check_well_identified(
+    results, model_label: str, n_obs: int, n_cols: int, separation_detected: bool = False
+):
     """
     A design can pass the rank check above (the X matrix is technically
     full rank) and still not support the fitted model: with many sparse
@@ -272,10 +274,25 @@ def _check_well_identified(results, model_label: str, n_obs: int, n_cols: int):
     categorical parameters). Reporting those as if they were valid 95% CIs
     would be a "robust" model in name only, so this is checked and raised
     just as explicitly as the rank check.
+
+    `separation_detected` is the caller's own record of whether
+    statsmodels raised `PerfectSeparationWarning` while fitting. That
+    warning is checked independently of `results.bse`'s numeric value
+    because complete separation does not always leave literal NaN/inf
+    standard errors behind - depending on the statsmodels version and how
+    far IRLS iterates before its convergence tolerance kicks in, it can
+    also converge to large-but-finite coefficients with finite-looking
+    (but meaningless) standard errors. `requirements.txt` only pins
+    `statsmodels>=0.14.0`, so this project cannot assume every environment
+    numerically fails the same way - the warning itself, which statsmodels
+    raises specifically to flag this condition, is the environment-
+    independent signal, and is treated as authoritative here regardless of
+    what `results.bse` happens to look like.
     """
-    if not np.all(np.isfinite(results.bse)):
+    if separation_detected or not np.all(np.isfinite(results.bse)):
         raise InsufficientDataError(
-            f"{model_label} produced non-finite standard errors for "
+            f"{model_label} produced non-finite standard errors or a "
+            "statsmodels perfect/quasi-complete separation warning for "
             f"{n_obs} observations vs {n_cols} design columns - this usually means "
             "quasi-complete separation (a categorical level whose outcome is "
             "constant, e.g. every loan in some sector/region cell has the same "
@@ -310,6 +327,7 @@ def _fit_one_model(kind: str, formula: str, data: pd.DataFrame, model_label: str
     """
     try:
         y, X = _fit_design(formula, data, model_label)
+        separation_detected = False
         if kind == "ols":
             results = sm.OLS(y, X).fit(cov_type="HC3")
         else:
@@ -318,15 +336,22 @@ def _fit_one_model(kind: str, formula: str, data: pd.DataFrame, model_label: str
             # `_check_well_identified` below) makes statsmodels' own GLM
             # `.fit()` surface RuntimeWarning/PerfectSeparationWarning -
             # that is statsmodels' internal signal of the exact condition
-            # being tested for, not an accidental numerical issue, and
-            # `_check_well_identified` still turns it into a clear
-            # `InsufficientDataError` diagnostic rather than an unstable
-            # fit. Scoped to just this call.
-            with warnings.catch_warnings():
+            # being tested for, not an accidental numerical issue.
+            # RuntimeWarning is suppressed outright (never diagnostic on
+            # its own), but PerfectSeparationWarning is *recorded*, not
+            # suppressed: its occurrence is passed to
+            # `_check_well_identified` as authoritative evidence of an
+            # untrustworthy fit, independent of whether `results.bse`
+            # itself happens to come out non-finite in this environment.
+            # Scoped to just this call.
+            with warnings.catch_warnings(record=True) as caught:
+                warnings.simplefilter("always")
                 warnings.filterwarnings("ignore", category=RuntimeWarning)
-                warnings.filterwarnings("ignore", category=PerfectSeparationWarning)
                 results = sm.GLM(y, X, family=sm.families.Binomial()).fit(cov_type="HC3")
-        _check_well_identified(results, model_label, *X.shape)
+            separation_detected = any(
+                issubclass(w.category, PerfectSeparationWarning) for w in caught
+            )
+        _check_well_identified(results, model_label, *X.shape, separation_detected=separation_detected)
         return results, None
     except InsufficientDataError as error:
         return None, str(error)
