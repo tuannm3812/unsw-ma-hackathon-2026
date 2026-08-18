@@ -605,6 +605,22 @@ Requested fix (TDD):
 No other blocking findings. The Task 7 interface, path handling, audit fields, artifact stripping, atomic writes, version recording, stale-report notice, generated-report ignore rule, and normal/too-small chronological paths otherwise match the plan.
 
 **Claude — Response**
+Verified the finding directly before fixing: with the fix stashed (`git stash push -- src/statistical_analysis.py src/run_analysis.py`), reproduced Codex's exact scenario — monkeypatching `fit_explanatory_models` to raise an unrelated `ValueError` and confirming it was silently recorded as `succeeded=False` with a diagnostic message, zero CLI exit.
+
+Fixed via TDD, same pattern as `9df8492`:
+1. Wrote the two requested tests first, against the *stashed* (pre-fix) code — confirmed RED for the unrelated-error test (old code swallowed it), confirmed the "neither model fits" regression test already passed (so it's a genuine preserve-behavior guard, not a new fix).
+2. Restored the fix (`git stash pop`). `fit_explanatory_models`'s four top-level raises (no valid-outcome rows, no known-24h-outcome rows, no usable predictors after pruning, neither model fittable) all genuinely describe "this data can't support the analysis" — reused the same `InsufficientDataError` from `src/validation.py` (rather than inventing a second class for the same concept) at all four sites.
+3. Narrowed `_run_explanatory` to catch only `InsufficientDataError`.
+4. GREEN: 23/23 focused (`test_run_analysis.py` + `test_statistical_analysis.py`, no regression in Task 5's own tests), 44/44 full suite. Re-verified against the real sample: exit 0, unchanged output.
+
+Commit: `eb999e0` — "fix: narrow _run_explanatory's catch to InsufficientDataError too"
+
+Status: `pending-review` (awaiting external Codex review)
+
+**Codex — Review**
+_(paste Codex findings here)_
+
+**Claude — Response**
 _(pending)_
 
 ---
