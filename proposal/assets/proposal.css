@@ -1,0 +1,118 @@
+@page {
+  size: A4;
+  margin: 2.2cm 2.2cm 2cm 2.2cm;
+  @bottom-center {
+    content: "Page " counter(page) " of " counter(pages);
+    font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+    font-size: 9pt;
+    color: #8a94a6;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.5;
+  color: #1f2733;
+  font-weight: 400;
+}
+
+/* Title (H1) */
+h1 {
+  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 700;
+  font-size: 18pt;
+  line-height: 1.25;
+  color: #103A6B;
+  margin: 0 0 0.35em 0;
+  padding-bottom: 0.25em;
+  border-bottom: 2.5pt solid #1A73C7;
+}
+
+/* Section headings (H2) */
+h2 {
+  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 700;
+  font-size: 13pt;
+  color: #103A6B;
+  background: #EAF2FB;
+  padding: 0.28em 0.6em;
+  border-left: 4pt solid #1A73C7;
+  margin: 1.3em 0 0.55em 0;
+  break-after: avoid;
+}
+
+/* Sub-headings (H3) inside Analytical Approaches */
+h3 {
+  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 700;
+  font-size: 11pt;
+  color: #B3541E;
+  margin: 1em 0 0.3em 0;
+  break-after: avoid;
+}
+
+p {
+  margin: 0 0 0.75em 0;
+  text-align: left;
+}
+
+/* Byline block (team/affiliation lines directly under the title) */
+h1 + p {
+  margin: 0 0 0.15em 0;
+  font-size: 10pt;
+  color: #3B4657;
+}
+h1 + p + p {
+  margin: 0 0 0.7em 0;
+  font-size: 10pt;
+  color: #3B4657;
+}
+
+/* Venue line (italic paragraph right after the byline) */
+p:has(> em:only-child) {
+  font-size: 9.5pt;
+  color: #6B7688;
+  margin-bottom: 1.1em;
+}
+
+strong {
+  color: #0B4F8A;
+  font-weight: 700;
+}
+
+em {
+  color: #B3541E;
+  font-style: italic;
+}
+
+ul {
+  margin: 0.2em 0 0.85em 0;
+  padding-left: 1.3em;
+}
+
+li {
+  margin-bottom: 0.3em;
+}
+
+li::marker {
+  color: #1A73C7;
+}
+
+code {
+  font-family: "SFMono-Regular", "Menlo", "Consolas", monospace;
+  font-size: 0.92em;
+  background: #EEF1F6;
+  color: #103A6B;
+  padding: 0.05em 0.35em;
+  border-radius: 3px;
+  letter-spacing: normal;
+}
+
+hr {
+  border: none;
+  border-top: 1pt solid #D7DEE8;
+  margin: 1.2em 0;
+}
