@@ -47,7 +47,9 @@ A gradient-boosted regressor (`HistGradientBoostingRegressor`) benchmarks nonlin
 
 ### Leakage-Safe Validation
 
+::: {.keep-together}
 All evaluation is **chronological, not random**: models train on loans posted before a cutoff and are scored on loans posted after it, mirroring how a model would actually be used to score newly posted loans. Every learned transformation — missing-value imputation, feature scaling, one-hot encoding, and the **TF-IDF/NMF topic model** fit on narrative text — is fit on the training partition only and merely applied, never refit, to the holdout; a dedicated exception type distinguishes "this split has too little data" from unrelated bugs, so a too-small split degrades gracefully into a labeled diagnostic instead of a misleading number.
+:::
 
 On the 100-loan development sample, an 80/20 chronological split already demonstrates this discipline end to end:
 
@@ -64,7 +66,7 @@ We use borrower narrative text only through derived features, never as raw text 
 Structural, borrower, and contextual predictors:
 
 - **Structural:** loan amount (log-transformed), repayment term, and repayment interval
-- **Borrower:** group size and a **gender classification** (female, male, mixed, or unknown) that never defaults a missing value to female, correcting a common analytical bias in this literature
+- **Borrower:** group size and a **gender classification** (female, male, mixed, or unknown) that preserves missingness as its own category rather than imposing an assumed gender
 - **Contextual:** sector, region, country purchasing-power parity, and posting year/month, collapsed into three pre-specified analysis periods (2016–2019, 2020–2021, 2022–2025) spanning the dataset's full range; `country_name` is represented only through `country_iso` to avoid duplicating the same geographic signal
 
 We exclude, enforced by an **explicit predictor allowlist, not a blocklist**, so a leakage-sensitive field cannot be silently reintroduced by a future edit:

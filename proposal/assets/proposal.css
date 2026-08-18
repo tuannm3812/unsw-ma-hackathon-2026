@@ -57,6 +57,23 @@ h3 {
 p {
   margin: 0 0 0.75em 0;
   text-align: left;
+  orphans: 4;
+  widows: 4;
+}
+
+ul {
+  orphans: 4;
+  widows: 4;
+}
+
+/* Applied selectively (via a pandoc fenced div) to the one short
+   paragraph a review flagged as breaking awkwardly mid-quotation
+   across a page boundary - not applied document-wide, since forcing
+   every paragraph to avoid splitting pushes short paragraphs onto a
+   new page and leaves large gaps behind, trading one cosmetic issue
+   for a worse one. */
+.keep-together {
+  break-inside: avoid-page;
 }
 
 /* Byline block (team/affiliation lines directly under the title) */
