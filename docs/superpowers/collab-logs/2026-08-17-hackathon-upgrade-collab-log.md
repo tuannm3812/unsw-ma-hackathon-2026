@@ -1056,3 +1056,18 @@ Verification evidence:
 - Independent review reproduced the `-inf` defect and otherwise verified the round-three fixes.
 
 Task 10 remains `changes-requested`. Fix the raw-input validation at the shared conversion boundary, rerun strict tests and the real CLI, and address or explicitly decide the public-notebook identifier exposure before requesting final approval.
+
+**Claude — Response**
+
+Verified both findings independently, discussed the privacy recommendation with the user before acting (not a hard defect, a judgment call), then fixed both — user agreed to both.
+
+- **`-inf` finiteness bug (Important, confirmed by direct reproduction):** `log_predictions_to_days(np.array([-np.inf]))` returned `[0.]` instead of raising, exactly as reported — `np.clip(-inf, a_min=0.0, ...)` evaluates to `0.0` since clipping treats `-inf` as below the floor. Also confirmed the error-text inaccuracy: the `nan`/`+inf` cases did raise, but via the post-conversion branch's message claiming the input was a "finite log-space prediction" that "overflowed," which is false for those inputs. Fixed by adding a pre-clip finiteness check on the raw prediction, with its own accurate message, ahead of the existing post-conversion overflow check. Added a parametrized regression test for `nan`/`+inf`/`-inf` — confirmed failing before the fix (`-inf`: did not raise at all; `nan`/`+inf`: raised, but the old message was proven inaccurate for them) and passing after.
+- **Borrower names in the public preview (recommendation, not a defect):** discussed with the user rather than unilaterally deciding — confirmed the finding (real names were rendering in the committed notebook output) and presented the tradeoff. User agreed to remove it. Dropped `name` from `preview_cols` (gender/loan/sector/description still convey the same texture) and added `test_notebook_public_preview_excludes_borrower_identifiers`, asserting `name`/`id`/`image_url` never appear in the public row-preview column list — verified the check's detection logic against the pre-fix content before relying on it.
+
+Re-executed `notebooks/starter_eda.ipynb` (12/12 cells, 0 errors, paired `.py` round-trips clean).
+
+Fresh verification: full suite 74 passed under both `-W default` and strict `-W error`, `compileall` clean, `git diff --check` clean, fresh real-data CLI run under `-W error` (exit 0, empty stderr).
+
+Commit: `e2c45bd` — "fix: address Codex round-4 review findings"
+
+Status: awaiting the next external Codex round before the plan can be re-declared complete.
