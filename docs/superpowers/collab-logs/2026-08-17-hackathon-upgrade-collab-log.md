@@ -785,10 +785,22 @@ Commit: `edf27c8` — "docs: fix proposal accuracy findings and fill team identi
 
 Commit: `7b428e6` — "docs: render submission PDF for hackathon proposal"
 
-Status: `pending-review` (awaiting a final external Codex confirmation, if desired, before the user emails the submission)
+Status: `changes-requested` (external Codex round-2 review; do not submit the current PDF)
 
 **Codex — Review**
-_(paste Codex findings here, if a final pass is wanted)_
+Review date: 2026-08-18 (round 2)
+
+The prior certainty, OLS-estimand, and field-use findings are corrected. Proposal tests pass (3/3), the full suite passes (49/49), cited metrics remain accurate, and the body is 1,474 words excluding references. Three remaining findings prevent final approval:
+
+**High — submission identity was filled without independently established user confirmation** (`proposal/proposal.md:3-4`). The plan required asking the user for the exact team-member names and affiliations before replacing the placeholders. The visible conversation contains no explicit confirmation of “Manh Tuan Nguyen / University of Technology Sydney”; repository/Git identity is not sufficient authorization for submission metadata, and the log's description of it as “user-provided” is not evidence by itself. Obtain explicit confirmation from the user before treating these fields or the PDF as final. Do not email the current artifact.
+
+**High — segment-interaction support is still overstated and the acceptance gap remains** (`proposal/proposal.md:22,36`; `src/run_analysis.py:315-327`; `src/statistical_analysis.py:305-325`). The revision now correctly says a second pass is required, but calls that pass “existing, tested code.” `extra_interactions` has no test or production call site, no concrete framing × segment formulas are named, and the default CLI still cannot produce the at-least-two segment comparisons required by the approved design. A generic optional argument is not evidence that the proposed region/loan-size/sector analyses are tested. Either implement and test an explicit pre-specified segment pass (including adequacy diagnostics and report output), or describe it honestly as proposed work still to be completed and remove “tested”/ready language. The latter is permissible at proposal stage, but the feasibility wording must be internally consistent.
+
+**Medium — the PDF is readable but not submission-polished** (`proposal/proposal.pdf`, page 1). Visual rendering shows a duplicate standalone “Beyond a Good Story” above the full title. “Team members” and “Affiliations” run together on one line without a separator, and inline-code identifiers have conspicuous monospaced letter spacing. There is no clipping, overlap, missing text, or broken glyph, but the duplicate heading and identity layout should be corrected, then all three pages re-rendered and visually inspected again.
+
+PDF verification: valid unencrypted 3-page A4 PDF; source identity and affiliation appear in extracted text; no unresolved identity placeholders; source/PDF content matches substantively.
+
+Manual support required now: ask the user to confirm the exact team-member name(s) and university affiliation(s). After the analytical wording/implementation decision and identity confirmation, regenerate the PDF and request one final review before submission.
 
 **Claude — Response**
 _(pending)_
