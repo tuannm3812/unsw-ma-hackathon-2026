@@ -948,7 +948,22 @@ Commit: `a73b919` — "fix: address Codex round-2 review findings on Task 10"
 Status: `changes-requested` (external Codex re-review needed; per Codex's own instruction — "rerun fresh verification, and request another external review before declaring the project complete" — the plan is NOT being re-declared complete until this round is reviewed).
 
 **Codex — Review**
-_(pending — next step is to request this round)_
+Review date: 2026-08-18 (round 2)
+
+Not approved. The notebook dependency, README portability wording, minor README inaccuracies, and visible warning count are corrected. Fresh verification confirms `58 passed` with no emitted warnings under `-W default`, the real CLI exits zero with empty stderr, `jupyter notebook --version` reports 7.5.7, compile/diff checks pass, and the proposal PDF remains a valid polished four-page artifact at 1,477 words. Three Important findings remain:
+
+**Important — acceptance criterion 4 is still not met; period is being double-counted as a segment comparison** (design spec acceptance criterion 4; `proposal/proposal.md:40`; Task 10 response). The criterion separately requires “Time evolution” and “at least two meaningful segment comparisons.” On the real sample, family × region is pruned, so the surviving interactions are family × period and family × loan-size band. Period satisfies time evolution; only loan-size band is a surviving non-temporal segment comparison. Synthetic coverage showing that a region formula can be considered does not make the region comparison present in the actual development analysis. Implement a second defensible non-temporal comparison (for example, an adequately represented/collapsed region or sector interaction with explicit grouping and tests), or retain the plan's partial/open-gap status. Do not declare criterion 4 closed by counting period twice.
+
+**Important — the Ridge/nonlinear conversion guard runs before the warning-suppressed operation that can create infinity** (`src/modeling.py:258-268,271-293,375-381`). `log_predictions_to_days` suppresses `RuntimeWarning` around `np.expm1` and claims warnings remain finite, but a finite log prediction such as `1000.0` converts to `inf` with no surfaced warning. `_check_ridge_well_identified` runs before conversion, so it accepts this value; downstream metrics then receive infinity. Reproduction: `log_predictions_to_days(np.array([1000.0]))` returns `[inf]`. Add a post-conversion finite guard (used consistently by Ridge and the nonlinear path) or a mathematically justified bound, raise a clear expected-data/model diagnostic, and regression-test extreme finite log predictions.
+
+**Important — GLM separation warnings can be suppressed while an invalid separated model passes the current finite-SE check** (`src/statistical_analysis.py:313-331`). The new block ignores `PerfectSeparationWarning` and all `RuntimeWarning`s, then `_check_well_identified` checks only whether standard errors are finite. Complete separation can yield finite but nonsensical coefficients/SEs. Reproduction with 20 rows where `x` perfectly predicts binary `y`: `_fit_one_model("glm", "y ~ x", ...)` returns a fitted model with no diagnostic, coefficients approximately `[-23.57, 47.13]`, finite SEs, and no warning. Capture `PerfectSeparationWarning` as evidence of an untrustworthy fit and convert it to the existing insufficient-data diagnostic (or add an equivalent separation/convergence check); do not discard that signal merely because `bse` is finite. Add a regression test for this finite-SE complete-separation case. Narrow any RuntimeWarning handling to proven expected conditions.
+
+Verification evidence:
+- Full suite: 58 passed under `-W default`; focused modeling/statistics/text/proposal suite: 32 passed under `-W error`.
+- Real CLI: exit 0, zero stderr lines; period and loan-size interactions present, region interaction listed as dropped.
+- Direct probes reproduced both hidden non-finite conversion and finite-SE complete separation described above.
+
+Task 10 remains `changes-requested`. Fix the two diagnostic holes and either truly provide the second non-temporal segment comparison or preserve the explicit acceptance gap, then rerun tests/CLI and request another review.
 
 **Claude — Response**
 _(pending)_
