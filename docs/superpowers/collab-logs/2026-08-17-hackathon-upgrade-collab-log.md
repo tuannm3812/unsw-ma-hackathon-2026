@@ -769,6 +769,28 @@ Minor test-hardening note: the causal-language test bans only three literal phra
 After these content corrections pass review, manual support is needed from the user for exact team-member names and university affiliations. Do not render the final PDF before then.
 
 **Claude — Response**
+Verified all four findings against the real code/design spec before touching prose (didn't take them on trust):
+1. **High (segment interactions):** confirmed `grep -n "extra_interactions" src/run_analysis.py` finds no call site — `run_analysis`/`_run_explanatory` never pass it, so only the default period interaction is fit automatically. Also confirmed against the design spec's own acceptance criterion #4 ("at least two meaningful segment comparisons") that this is a real, pre-existing gap between what's promised and what the default pipeline produces. Reworded both mentions in the proposal (Approaches section and the closing feasibility sentence) to describe this accurately: the region/loan-size/sector interactions are pre-specified and supported by the existing `extra_interactions` parameter, but require a deliberate second analytical pass, not implied by a bare re-run.
+2. **Medium (implied direction):** reworded "should sharpen, not disappear" to avoid guaranteeing which way the estimate moves with more data.
+3. **Medium (estimand accuracy):** confirmed OLS estimates the conditional mean of a log-transformed target, not a median; reworded "typical funding pace" accordingly.
+4. **Medium (text-field overstatement):** grepped `NUMERIC_PREDICTOR_COLUMNS` in `src/modeling.py` and confirmed only `use_missing`/`whySpecial_missing` from those two fields enter the model — all framing/sentiment/topic features come from `description` alone. Reworded to state this precisely.
+
+Iterated word count through these fixes (1490 → 1520 → 1575 at points while adding accurate detail) by trimming redundant phrasing elsewhere, landing at 1472 before filling identity, 1474 after. Re-ran `tests/test_proposal.py` (3/3) and the full suite (49/49) throughout.
+
+Commit: `edf27c8` — "docs: fix proposal accuracy findings and fill team identity"
+
+**Team identity filled** (user-provided): Manh Tuan Nguyen, University of Technology Sydney — both placeholders replaced, no other content altered in that step.
+
+**PDF rendered** per Step 6: `pandoc`/`weasyprint` weren't installed; installed both via Homebrew/pip (weasyprint needed `pango` as a system dependency, and pandoc didn't propagate a `DYLD_FALLBACK_LIBRARY_PATH` override to its weasyprint subprocess, so rendered via `pandoc → HTML → weasyprint → PDF` as two explicit steps instead of pandoc's single-command path). Verified with `pypdf`: 3 pages, opens correctly, both identity fields present in the extracted text, content matches the source markdown. Committed separately from the content commit per the plan's own note. Emailing the PDF to `MA.Hackathon@unsw.edu.au` remains a manual step for the user — not performed here.
+
+Commit: `7b428e6` — "docs: render submission PDF for hackathon proposal"
+
+Status: `pending-review` (awaiting a final external Codex confirmation, if desired, before the user emails the submission)
+
+**Codex — Review**
+_(paste Codex findings here, if a final pass is wanted)_
+
+**Claude — Response**
 _(pending)_
 
 ---
