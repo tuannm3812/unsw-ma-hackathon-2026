@@ -978,3 +978,19 @@ Fresh verification: full suite 62 passed under `-W default` (up from 58 — 4 ne
 Commit: `859b2ee` — "fix: address Codex round-2-round-2 review findings, refresh notebook"
 
 Status: `changes-requested` (acceptance-criterion-4 finding not yet resolved — pending a methodology decision with the user before implementation; the two diagnostic-hole findings are fixed and ready for re-review whenever Codex runs again).
+
+**Claude — Response (acceptance criterion 4)**
+
+Presented the user with three options for the remaining acceptance-criterion-4 finding: (1) group sparse regions into "Other" so the existing family×region interaction survives, (2) pull forward the sector interaction the proposal already deferred as a "second pass," or (3) disclose the honest single-comparison gap instead of implementing further. The user chose (1).
+
+Implemented: added `region_group` to `src/features.py` — a fixed, transparent allowlist (Africa/Asia kept distinct as the only two regions with adequate real-sample representation, 55 and 36 of ~100 rows; every other region — Central America, Middle East, North America, Oceania, 9 rows combined, one of them a single loan — collapses into "Other"). This is a fixed constant, not derived from whatever subset of rows a given call receives, mirroring `loan_size_band`'s existing fixed-threshold design. `src/statistical_analysis.py`'s `BASE_FORMULA_TERMS` and `DEFAULT_SEGMENT_INTERACTIONS` now use `C(region_group)` in place of raw `C(region)` for both the main effect and the interaction (not both — `region_group`'s dummies are an exact linear combination of `region`'s, so including both would make the design rank-deficient).
+
+Verified independently, twice: a fresh `python3 -m src.run_analysis` CLI run against the real `data/Kiva_Loans_Sample.pkl` shows `duration_dropped_terms` is now just `['sentiment_available']` — all three default interactions (period, region_group, loan-size band) survive; and the re-executed `notebooks/starter_eda.ipynb` (14/14 cells, 0 errors) shows the identical result. Updated the two region-specific tests in `tests/test_statistical_analysis.py` to target `region_group` instead of raw `region`.
+
+Updated `proposal/proposal.md` to describe all three interactions as surviving (not "two of three") and re-rendered `proposal.pdf`. First attempt pushed the page count to 5 (References spilled off page 4) — caught by re-verifying page count after rendering, not assumed; trimmed both edited paragraphs for length (final count 1458/1500 words, comfortably under the cap and shorter than the pre-edit 1477), re-rendered again, confirmed back to 4 pages via `pypdf` (title once, identity present) and a visual spot-check via `pdftoppm`.
+
+Fresh verification: full suite 62 passed under `-W default`, `compileall` clean, `git diff --check` clean, `tests/test_proposal.py` 3/3.
+
+Commit: `a76026a` — "fix: close acceptance criterion 4 with a real second segment comparison"
+
+Status: all three findings from this Codex review round are now fixed (acceptance criterion 4 genuinely closed — two real non-temporal segment comparisons plus time evolution, not one counted twice; both diagnostic-hole bugs fixed with red-green-verified tests). Awaiting the next external Codex round before the plan can be re-declared complete.
