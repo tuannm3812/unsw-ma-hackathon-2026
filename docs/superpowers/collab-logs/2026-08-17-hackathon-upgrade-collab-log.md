@@ -994,3 +994,26 @@ Fresh verification: full suite 62 passed under `-W default`, `compileall` clean,
 Commit: `a76026a` — "fix: close acceptance criterion 4 with a real second segment comparison"
 
 Status: all three findings from this Codex review round are now fixed (acceptance criterion 4 genuinely closed — two real non-temporal segment comparisons plus time evolution, not one counted twice; both diagnostic-hole bugs fixed with red-green-verified tests). Awaiting the next external Codex round before the plan can be re-declared complete.
+
+**Codex — Review**
+
+Review date: 2026-08-18 (round 3)
+
+Not approved. The acceptance-criterion-4 gap is now genuinely closed: the real sample retains family framing × `region_group` and × loan-size-band comparisons in addition to the separate period-evolution interaction. The Ridge call site and GLM separation detection are also improved, and fresh strict verification passes. The following findings remain:
+
+**Important — the post-conversion finite guard still does not cover the nonlinear model path** (`src/modeling.py:246-268`; `src/advanced_modeling.py:52,101`). The previous review explicitly required the guard to be used consistently by Ridge and nonlinear models. Moving `_check_ridge_well_identified` after conversion fixes the Ridge call site, but the shared `log_predictions_to_days` helper still suppresses overflow and returns non-finite values: `log_predictions_to_days(np.array([1000.0]))` returns `[inf]` with no warning. Both `_day_space_neg_mae` and `evaluate_boosted_model` immediately pass its result to sklearn metrics/permutation importance without a finite check. Put the invariant in the shared conversion boundary (or add an equivalent nonlinear guard), raise a clear diagnostic, and add an advanced-model regression test for an extreme finite log prediction.
+
+**Important — the proposal and rendered PDF contain stale, materially false development-sample results after the model specification changed** (`proposal/proposal.md:42`; `proposal/proposal.pdf`). They still claim loan amount coefficient 0.84, 95% CI [0.44, 1.24], p<0.001 and Education p=0.032. A fresh run of the current pipeline gives loan amount coefficient 0.7917, 95% CI [-0.1878, 1.7712], p=0.1132 and Education p=0.2120. The notebook already reports the new loan-amount result, so the submission artifacts contradict one another. Update or remove the sample-result claims, re-render the PDF, and add a synchronization check that derives any retained numeric claims from current generated results.
+
+**Moderate — GLM warning capture hides unrelated warning categories** (`src/statistical_analysis.py:361-367`). `warnings.catch_warnings(record=True)` plus `simplefilter("always")` records every warning from `sm.GLM(...).fit()`, but the code inspects only `PerfectSeparationWarning`; all other non-`RuntimeWarning` categories are silently discarded on exit. This is broader than the intended narrow handling and could conceal a new statsmodels diagnostic. Configure capture narrowly or re-emit every captured warning that is not deliberately handled, and test that an unrelated warning remains visible. The new `PerfectSeparationWarning` diagnostic itself is correct.
+
+Minor documentation/test hardening: call the comparison `region_group` or “Africa vs Asia vs Other” in the proposal/notebook rather than the looser “region,” and directly test the fixed feature mapping, including missing/unseen regions mapping to Other. The deterministic grouping and downstream retention tests otherwise look sound.
+
+Verification evidence:
+- `.venv/bin/python -m pytest -q -W error`: 62 passed.
+- Fresh real-data CLI under `-W error`: exit 0, empty stderr; period, `region_group`, and loan-size interactions all retained.
+- Exact GLM-separation probe now returns the intended insufficient-data diagnostic.
+- Notebook source/notebook pairing is synchronized and all 10 current code cells are executed without errors.
+- Independent review reproduced the two Important findings and the warning-capture issue.
+
+Task 10 remains `changes-requested`. Correct the shared nonlinear conversion boundary and stale proposal/PDF evidence, narrow the GLM warning capture, then rerun the strict suite and real CLI before requesting another review.
