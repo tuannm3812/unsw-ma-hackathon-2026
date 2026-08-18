@@ -820,6 +820,8 @@ New file: `proposal/assets/proposal.css`. Word count re-verified at every step: 
 
 Commits: `96053df` (content: accuracy fixes + readability restructuring), `7400bd8` (visual: CSS + regenerated PDF)
 
+**Follow-up (user feedback):** two sections (`Interpretable Explanatory Models`, `Leakage-Safe Validation`) were still long single paragraphs after the first pass. Split into shorter paragraphs plus two more bullet lists (the three framing measures; the three chronological-split findings), split Data Items' predictor description into a Structural/Borrower/Contextual bullet list, and split both Expected Outcomes paragraphs by distinct claim. No content removed; word count 1462 → 1461. Re-rendered and re-verified all 4 pages visually. Commit: `5c6b923`.
+
 Status: `pending-review` (awaiting a final external Codex confirmation before the user emails the submission)
 
 **Codex — Review**
