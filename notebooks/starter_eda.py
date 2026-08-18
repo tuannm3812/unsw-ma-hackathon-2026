@@ -102,13 +102,49 @@ plt.rcParams["figure.figsize"] = (10, 6)
 plt.rcParams["font.size"] = 12
 
 # %% [markdown]
-# ## 2. Data validity and outcome distribution
+# ## 2. Dataset Overview
+#
+# [Kiva](https://www.kiva.org) is a nonprofit microfinance platform:
+# individual lenders fund small loans to borrowers around the world,
+# usually to grow a small business or cover a household need. Each row
+# below is one loan; the fields shown are exactly as provided by the
+# sample export, before any feature engineering.
+
+# %%
+df_raw = load_kiva_pickle(str(DATA_PATH))
+print(f"Shape: {df_raw.shape[0]} loans x {df_raw.shape[1]} raw columns")
+
+schema = pd.DataFrame({
+    "dtype": df_raw.dtypes.astype(str),
+    "non_null": df_raw.count(),
+    "missing": df_raw.isna().sum(),
+})
+schema
+
+# %%
+preview_cols = [
+    "name", "gender", "borrowerCount", "loanAmount", "sector", "activity",
+    "region", "country_name", "repaymentInterval", "description",
+    "fundraisingDate", "raisedDate",
+]
+df_raw[preview_cols].head(5)
+
+# %% [markdown]
+# **Insight:** each row is one loan with borrower/loan attributes (amount,
+# sector, region, repayment terms), free-text `description`/`use`/
+# `whySpecial` fields, and two key dates - `fundraisingDate` (posted) and
+# `raisedDate` (fully funded) - whose difference *is* the funding-speed
+# outcome this project models. No column is missing more than 6 of 100
+# rows (`latitude`/`longitude`); every derived feature used from here on
+# (Section 5 onward) comes from these raw columns, none newly fetched.
+
+# %% [markdown]
+# ## 3. Data validity and outcome distribution
 #
 # `prepare_analysis_data` derives the funding-speed target and flags outcome
 # validity; an invalid/missing duration is excluded, never imputed.
 
 # %%
-df_raw = load_kiva_pickle(str(DATA_PATH))
 prepared = prepare_analysis_data(df_raw)
 valid = prepared.loc[prepared["valid_completed_outcome"]].copy()
 
@@ -135,7 +171,7 @@ plt.show()
 # pipeline (right panel).
 
 # %% [markdown]
-# ## 3. Funding behavior by period
+# ## 4. Funding behavior by period
 #
 # `analysis_period` buckets each loan's posting year into `pre_pandemic`
 # (<=2019), `pandemic_disruption` (2020-2021), or `post_pandemic` (2022+) -
@@ -171,10 +207,10 @@ plt.show()
 # (40 pre-pandemic, 17 pandemic-disruption, 43 post-pandemic). The share
 # funded within 24 hours is highest pre-pandemic (50%) and lower in both
 # the pandemic-disruption (29%) and post-pandemic periods (35%) - a
-# descriptive hint of the evolutionary comparison formalized in Section 7.
+# descriptive hint of the evolutionary comparison formalized in Section 8.
 
 # %% [markdown]
-# ## 4. Controllable narrative versus structural predictors
+# ## 5. Controllable narrative versus structural predictors
 #
 # `extract_deterministic_features` computes two families of predictors
 # without fitting anything across rows:
@@ -230,17 +266,17 @@ plt.show()
 # **Insight:** simple bivariate correlations with funding speed are
 # dominated by structural factors - loan amount (r=0.58) and repayment
 # term (r=0.36) - while every narrative framing measure correlates weakly
-# (|r| ≤ 0.16). This is exactly why Section 7's multivariate model holds
+# (|r| ≤ 0.16). This is exactly why Section 8's multivariate model holds
 # structural predictors fixed before assessing narrative associations. The
 # borrower sample also skews heavily female (86 vs. 14 male) - a real
 # limitation for any gender-segmented claim.
 
 # %% [markdown]
-# ### 4.1 Descriptive topic exploration (full-sample, exploratory only)
+# ### 5.1 Descriptive topic exploration (full-sample, exploratory only)
 #
 # `extract_topics_nmf` is a **full-sample exploratory convenience function -
 # not for leakage-safe evaluation**. Safe to use here purely to describe
-# recurring narrative themes; the leakage-safe evaluation in Section 6 fits
+# recurring narrative themes; the leakage-safe evaluation in Section 7 fits
 # its own topic model on the training partition only.
 
 # %%
@@ -268,12 +304,12 @@ plt.show()
 # systematically faster- or slower-funded at this sample size.
 
 # %% [markdown]
-# ## 5. Pre-specified period and segment comparisons
+# ## 6. Pre-specified period and segment comparisons
 #
 # `src/statistical_analysis.py` pre-specifies three default interactions -
 # family framing × analysis period, × region group (Africa/Asia/Other), and
 # × loan-size band. Looking at the period one descriptively here, before
-# the robust model in Section 7, keeps it a **pre-specified** comparison
+# the robust model in Section 8, keeps it a **pre-specified** comparison
 # rather than post-hoc data dredging.
 
 # %%
@@ -299,14 +335,14 @@ plt.show()
 # %% [markdown]
 # **Insight:** family/communal framing declines somewhat over time (mean
 # 3.10 → 2.73 → 2.27 mentions per 100 words, pre- to
-# post-pandemic) - the raw material for Section 7's formal interaction
+# post-pandemic) - the raw material for Section 8's formal interaction
 # test. Median funding speed by period×gender is noisy at this
 # sample size (e.g. only one male loan in the pandemic-disruption period),
 # underscoring why the formal model controls for structure rather than
 # reading these small cells directly.
 
 # %% [markdown]
-# ## 6. Chronological evaluation results
+# ## 7. Chronological evaluation results
 #
 # The primary predictive evaluation design is **chronological, not
 # random**: `run_baseline_model` trains on loans posted before
@@ -327,7 +363,7 @@ metrics_table = pd.DataFrame(baseline_results["metrics"]).T
 # Ridge's holdout number.
 
 # %% [markdown]
-# ### 6.1 Nonlinear benchmark
+# ### 7.1 Nonlinear benchmark
 #
 # `evaluate_boosted_model` reuses the exact same chronological split and
 # preprocessing pipeline, fitting a `HistGradientBoostingRegressor` instead
@@ -347,7 +383,7 @@ boosted_results = evaluate_boosted_model(df_raw, holdout_start=HOLDOUT_START, n_
 # production decision.
 
 # %% [markdown]
-# ## 7. Robust explanatory associations
+# ## 8. Robust explanatory associations
 #
 # `fit_explanatory_models` fits two independent, robust (HC3
 # heteroskedasticity-consistent) explanatory models on every valid
@@ -372,7 +408,7 @@ explanatory_results = fit_explanatory_models(df_raw)
 # written to `reports/generated/association_summary.txt` by the next cell.
 
 # %% [markdown]
-# ## 8. Ethical, managerial interpretation and limitations
+# ## 9. Ethical, managerial interpretation and limitations
 #
 # **Reading the association results responsibly.**
 # - Every coefficient above describes an *association*, holding other
