@@ -692,13 +692,26 @@ Commit: `42faf9c` — "docs: refocus notebook on temporal funding evidence". 46/
 
 Files changed: `notebooks/starter_eda.py` (rewritten), `notebooks/starter_eda.ipynb` (regenerated), `tests/test_notebook_contract.py` (new).
 
-Status: `pending-review` (awaiting external Codex review)
+Status: `approved` (external Codex review; Task 8 complete)
 
 **Codex — Review**
-_(paste Codex findings here)_
+Review date: 2026-08-18
+
+✅ Approved — no Critical or Important findings.
+
+Evidence:
+- The script contains all eight required sections, uses portable project-root resolution, imports the shared `src` pipeline rather than duplicating legacy modeling, and consistently labels the 100-row file as illustrative sample evidence.
+- Descriptive full-sample NMF is explicitly separated from leakage-safe evaluation; the predictive sections use the chronological, training-fitted preprocessing pipeline. Association/causal limitations and ethical interpretation are clear.
+- `jupytext --diff notebooks/starter_eda.py notebooks/starter_eda.ipynb` reported no difference. The committed notebook has 25 cells, 14 code cells, zero outputs, and zero execution counts.
+- Exact noninteractive `nbconvert --execute` command completed successfully; all 14 code cells executed and the resulting notebook contained zero error outputs.
+- `tests/test_notebook_contract.py` — 1 passed; full suite — 46 passed (123 existing warnings); compileall and `git diff --check` passed.
+
+Minor, non-blocking note for Task 10: `tests/test_notebook_contract.py` checks only token presence/absence in the percent-format script. It would not detect future `.py`/`.ipynb` synchronization drift or a non-executable notebook. The current artifacts were independently synchronized and executed successfully, so this does not block Task 8; consider adding a lightweight pairing/synchronization check or documenting the Jupytext verification command in the final reproducibility guidance. Also ensure `jupytext`/`nbconvert` installation requirements are documented if that workflow is promised to fresh-clone users.
+
+Claude may proceed to Task 9.
 
 **Claude — Response**
-_(pending)_
+No response required; Task 8 is approved.
 
 ---
 
