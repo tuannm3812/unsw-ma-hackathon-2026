@@ -34,3 +34,24 @@ def test_desc_avg_word_length_excludes_whitespace(synthetic_kiva_df):
     frame.loc[frame.index[0], "description"] = "family business needs support"
     result = extract_deterministic_features(frame)
     assert result.iloc[0]["desc_avg_word_length"] == pytest.approx(6.5)
+
+
+@pytest.mark.parametrize(("raw_region", "expected_group"), [
+    ("Africa", "Africa"),
+    ("Asia", "Asia"),
+    ("Latin America", "Other"),  # known but not in the fixed major-category allowlist
+    ("Antarctica", "Other"),  # unseen/novel region string
+    (None, "Other"),  # missing region
+])
+def test_region_group_uses_fixed_allowlist_everything_else_maps_to_other(
+    synthetic_kiva_df, raw_region, expected_group,
+):
+    # `region_group` (src/features.py) is a fixed Africa/Asia/"Other"
+    # allowlist, not a sample-relative computation - so it must behave
+    # identically regardless of what other regions happen to be present in
+    # a given call's data, including a region string it has never seen
+    # before or a missing value.
+    frame = synthetic_kiva_df.iloc[[0]].copy()
+    frame.loc[frame.index[0], "region"] = raw_region
+    result = extract_deterministic_features(frame)
+    assert result.iloc[0]["region_group"] == expected_group

@@ -365,6 +365,21 @@ def _fit_one_model(kind: str, formula: str, data: pd.DataFrame, model_label: str
             separation_detected = any(
                 issubclass(w.category, PerfectSeparationWarning) for w in caught
             )
+            # `record=True` captures every warning category (RuntimeWarning
+            # is filtered to "ignore" above, so it never lands here).
+            # PerfectSeparationWarning is deliberately captured and turned
+            # into an InsufficientDataError below - handled, not discarded.
+            # Any *other* category caught here is unexpected and must not
+            # be silently swallowed just because it happened to fire inside
+            # this block - re-emit it so it still surfaces normally (e.g.
+            # under `pytest -W error`, or to a human reading terminal
+            # output), in case a future statsmodels version raises a
+            # different diagnostic this code doesn't yet know about.
+            for warning in caught:
+                if not issubclass(warning.category, PerfectSeparationWarning):
+                    warnings.warn_explicit(
+                        warning.message, warning.category, warning.filename, warning.lineno
+                    )
         _check_well_identified(results, model_label, *X.shape, separation_detected=separation_detected)
         return results, None
     except InsufficientDataError as error:

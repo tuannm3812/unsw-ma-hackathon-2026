@@ -271,10 +271,10 @@ plt.show()
 # ## 5. Pre-specified period and segment comparisons
 #
 # `src/statistical_analysis.py` pre-specifies three default interactions -
-# family framing × analysis period, × region, and ×
-# loan-size band. Looking at the period one descriptively here, before the
-# robust model in Section 7, keeps it a **pre-specified** comparison rather
-# than post-hoc data dredging.
+# family framing × analysis period, × region group (Africa/Asia/Other), and
+# × loan-size band. Looking at the period one descriptively here, before
+# the robust model in Section 7, keeps it a **pre-specified** comparison
+# rather than post-hoc data dredging.
 
 # %%
 family_by_period = featured_valid.groupby("analysis_period", observed=True)[
@@ -361,7 +361,7 @@ explanatory_results = fit_explanatory_models(df_raw)
 
 # %% [markdown]
 # **Insight:** the duration model fits without issue (n=100); none of the
-# three pre-specified family-framing interactions (period, region,
+# three pre-specified family-framing interactions (period, region group,
 # loan-size band) are distinguishable from zero at this sample size, and
 # only loan amount approaches significance (β=0.79, p=0.11) among all
 # predictors - expected at n=100, not evidence of no effect. As

@@ -182,16 +182,26 @@ def test_ridge_and_log_conversion_stay_finite_on_a_sample_that_triggers_overfit_
             assert math.isfinite(value)
 
 
+def test_log_predictions_to_days_raises_on_extreme_finite_log_prediction():
+    # A finite log-space value (e.g. 1000.0, which a badly overfit Ridge or
+    # boosted model on this project's small sample can produce) converts to
+    # a non-finite `inf` day-space value via `np.expm1` with no warning
+    # surfaced. `log_predictions_to_days` is the single shared conversion
+    # boundary every caller (Ridge, the nonlinear benchmark, permutation
+    # importance) goes through, so the check belongs here, once - not
+    # duplicated at each call site.
+    with pytest.raises(InsufficientDataError, match="non-finite"):
+        log_predictions_to_days(np.array([1000.0]))
+
+
 def test_evaluate_chronological_models_raises_when_ridge_predictions_convert_to_infinity(
     chronological_kiva_df, monkeypatch,
 ):
-    # `_check_ridge_well_identified` must run on the *day-space*
-    # predictions (after `log_predictions_to_days`'s `np.expm1`), not just
-    # the raw log-space `ridge.predict()` output: a finite log-space value
-    # (e.g. 1000.0) converts to `inf` in day-space with no warning
-    # surfaced. Force exactly that by making `Ridge.predict()` return a
-    # constant, finite-but-extreme value, and confirm the pipeline raises
-    # a clear diagnostic instead of silently returning `inf` metrics.
+    # Integration-level check that the shared-boundary guard in
+    # `log_predictions_to_days` actually protects the real Ridge call site:
+    # force `Ridge.predict()` to return a constant, finite-but-extreme
+    # value, and confirm the pipeline raises a clear diagnostic instead of
+    # silently returning `inf` metrics.
     from src.modeling import Ridge
 
     def _extreme_predict(self, X):
@@ -203,29 +213,22 @@ def test_evaluate_chronological_models_raises_when_ridge_predictions_convert_to_
         evaluate_chronological_models(chronological_kiva_df, holdout_start="2024-01-01", n_topics=2)
 
 
-def test_check_ridge_well_identified_passes_through_finite_coefficients_and_predictions():
-    coefficients = np.array([0.1, -0.2, 0.3])
-    train_pred = np.array([0.5, 0.6])
-    holdout_pred = np.array([0.4])
-    # Should not raise.
-    _check_ridge_well_identified(coefficients, train_pred, holdout_pred, n_obs=2, n_cols=3)
+def test_check_ridge_well_identified_passes_through_finite_coefficients():
+    _check_ridge_well_identified(np.array([0.1, -0.2, 0.3]), n_obs=2, n_cols=3)  # no raise
 
 
-@pytest.mark.parametrize(
-    "coefficients,train_pred,holdout_pred",
-    [
-        (np.array([0.1, np.nan]), np.array([0.5]), np.array([0.4])),
-        (np.array([0.1, 0.2]), np.array([np.inf]), np.array([0.4])),
-        (np.array([0.1, 0.2]), np.array([0.5]), np.array([-np.inf])),
-    ],
-)
-def test_check_ridge_well_identified_raises_insufficient_data_error_on_non_finite_values(
-    coefficients, train_pred, holdout_pred,
+@pytest.mark.parametrize("coefficients", [
+    np.array([0.1, np.nan]),
+    np.array([np.inf, 0.2]),
+    np.array([0.1, -np.inf]),
+])
+def test_check_ridge_well_identified_raises_insufficient_data_error_on_non_finite_coefficients(
+    coefficients,
 ):
     # Mirrors `_check_well_identified`'s non-finite-standard-error check in
     # src/statistical_analysis.py: if Ridge's near-rank-deficient design
-    # ever produces genuinely non-finite output (rather than the benign,
-    # still-finite RuntimeWarning case verified above), this must surface
-    # as a clear diagnostic instead of a silently-NaN metric.
+    # ever produces genuinely non-finite coefficients (rather than the
+    # benign, still-finite RuntimeWarning case verified above), this must
+    # surface as a clear diagnostic instead of a silently-NaN metric.
     with pytest.raises(InsufficientDataError, match="non-finite"):
-        _check_ridge_well_identified(coefficients, train_pred, holdout_pred, n_obs=2, n_cols=2)
+        _check_ridge_well_identified(coefficients, n_obs=2, n_cols=2)

@@ -270,6 +270,42 @@ def test_fit_one_model_treats_a_recorded_perfect_separation_warning_as_insuffici
     assert "non-finite standard errors" in error
 
 
+def test_fit_one_model_re_emits_an_unrelated_warning_instead_of_silently_discarding_it(
+    monkeypatch,
+):
+    # `_fit_one_model`'s GLM branch uses `warnings.catch_warnings(record=True)`
+    # + `simplefilter("always")` to capture PerfectSeparationWarning without
+    # depending on `results.bse` - but that same mechanism captures *every*
+    # warning category, not just PerfectSeparationWarning. Only
+    # RuntimeWarning (filtered to "ignore") and PerfectSeparationWarning
+    # (converted into InsufficientDataError) are meant to be handled; any
+    # other category (e.g. a future statsmodels diagnostic this code
+    # doesn't know about) must still surface, not be silently swallowed
+    # just because it fired inside this block.
+    data = pd.DataFrame({
+        "y": [0, 1, 0, 1, 0, 1, 0, 1],
+        "x": [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0],
+    })
+
+    class _FakeFittedGlm:
+        def fit(self, cov_type):
+            import warnings as warnings_module
+            warnings_module.warn("some unrelated diagnostic", UserWarning)
+            return _FakeGlmResults([0.5, 0.5])
+
+    def _fake_glm(*args, **kwargs):
+        return _FakeFittedGlm()
+
+    monkeypatch.setattr(statistical_analysis_module.sm, "GLM", _fake_glm)
+    with pytest.warns(UserWarning, match="some unrelated diagnostic"):
+        results, error = statistical_analysis_module._fit_one_model("glm", "y ~ x", data, "test_model")
+
+    # The unrelated warning does not itself indicate an untrustworthy fit -
+    # the model still fits successfully (finite bse, no separation).
+    assert results is not None
+    assert error is None
+
+
 def test_fit_degrades_gracefully_when_one_model_is_not_well_identified(separated_binary_kiva_df):
     # `separated_binary_kiva_df` forces quasi-complete separation in the
     # 24-hour binary model (one sector always funds within 24h) while the

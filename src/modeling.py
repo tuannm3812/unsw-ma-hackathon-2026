@@ -249,11 +249,11 @@ def log_predictions_to_days(log_predictions: np.ndarray) -> np.ndarray:
 
     `log_funding_speed` targets are always >= 0 (they come from
     `log1p(funding_speed_days)` with `funding_speed_days >= 0`), but an
-    unconstrained linear model can still predict a negative log value.
-    `np.expm1` of a negative log prediction yields a negative "duration",
-    which is outside the target's domain. Clip at zero in log space before
-    converting, so every model's predictions stay within the domain of
-    actual elapsed time.
+    unconstrained model (Ridge, or the nonlinear benchmark) can still
+    predict a negative log value. `np.expm1` of a negative log prediction
+    yields a negative "duration", which is outside the target's domain.
+    Clip at zero in log space before converting, so every model's
+    predictions stay within the domain of actual elapsed time.
 
     A model badly overfit on this project's small real sample (e.g. Ridge
     on an ~80-row training split) can pass in extreme log-space values;
@@ -262,45 +262,52 @@ def log_predictions_to_days(log_predictions: np.ndarray) -> np.ndarray:
     `data/Kiva_Loans_Sample.pkl` - see the report). Scoped to just this
     conversion so any other RuntimeWarning in this module still surfaces
     normally.
+
+    This is the single shared boundary every caller in this project uses to
+    turn a model's raw log-space prediction into a day-space one - Ridge,
+    the training-median baseline, and (via `src/advanced_modeling.py`) the
+    nonlinear benchmark's holdout predictions and its permutation-importance
+    scorer. A sufficiently extreme *finite* log-space value (e.g. ~1000)
+    still overflows `np.expm1` into a non-finite `inf` day-space value with
+    the RuntimeWarning above suppressed - checked and raised here, once, so
+    every caller is protected without duplicating the check at each call
+    site.
     """
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore", category=RuntimeWarning)
-        return np.expm1(np.clip(log_predictions, a_min=0.0, a_max=None))
+        days = np.expm1(np.clip(log_predictions, a_min=0.0, a_max=None))
+    if not np.all(np.isfinite(days)):
+        raise InsufficientDataError(
+            "log_predictions_to_days produced non-finite day-space value(s) "
+            "from finite log-space prediction(s) - an extreme prediction "
+            "overflowed through np.expm1. This usually means the underlying "
+            "model is not well identified on this sample (e.g. severe "
+            "overfitting on too few training rows relative to features). "
+            "Provide more rows or fewer/coarser predictor columns, and try "
+            "again."
+        )
+    return days
 
 
-def _check_ridge_well_identified(
-    coefficients: np.ndarray,
-    train_pred_days: np.ndarray,
-    holdout_pred_days: np.ndarray,
-    n_obs: int,
-    n_cols: int,
-) -> None:
+def _check_ridge_well_identified(coefficients: np.ndarray, n_obs: int, n_cols: int) -> None:
     """
     Mirrors `statistical_analysis._check_well_identified`: a design can stay
     technically full rank while still being too close to rank-deficient to
     support a stable fit. On this project's small real sample, Ridge's SVD
-    solver can emit a benign RuntimeWarning (suppressed above) without the
-    resulting coefficients/predictions ever going non-finite - verified
-    against `data/Kiva_Loans_Sample.pkl` and a synthetic fixture (see
-    tests/test_modeling.py). This check turns the case where that stops
-    holding (e.g. a much larger or more sparsely-encoded full dataset) into
-    a clear diagnostic instead of a silently-NaN metric.
+    solver can emit a benign RuntimeWarning (suppressed in `.fit()`'s call
+    site) without the resulting coefficients ever going non-finite -
+    verified against `data/Kiva_Loans_Sample.pkl` and a synthetic fixture
+    (see tests/test_modeling.py). This check turns the case where that
+    stops holding into a clear diagnostic instead of a silently-NaN metric.
 
-    `train_pred_days`/`holdout_pred_days` must be the *day-space*
-    predictions returned by `log_predictions_to_days`, not the raw
-    log-space `ridge.predict()` output: a finite log-space prediction can
-    still convert to a non-finite `inf` once `np.expm1` is applied (see
-    the call site in `evaluate_chronological_models`), so checking only
-    the pre-conversion values would miss exactly the failure mode this
-    guard exists to catch.
+    Only checks `coefficients`: prediction finiteness (including the
+    post-`log_predictions_to_days` day-space case) is guaranteed by
+    `log_predictions_to_days` itself, the shared conversion boundary every
+    caller goes through - duplicating that check here would be dead code.
     """
-    if not (
-        np.all(np.isfinite(coefficients))
-        and np.all(np.isfinite(train_pred_days))
-        and np.all(np.isfinite(holdout_pred_days))
-    ):
+    if not np.all(np.isfinite(coefficients)):
         raise InsufficientDataError(
-            f"Ridge produced non-finite coefficients or day-space predictions for "
+            f"Ridge produced non-finite coefficients for "
             f"{n_obs} training observations vs {n_cols} design columns - the "
             "design is likely too rank-deficient for a stable fit. Provide "
             "more rows or fewer/coarser predictor columns, and try again."
@@ -380,19 +387,13 @@ def evaluate_chronological_models(
         ridge.fit(X_train, y_train)
         ridge_train_pred = ridge.predict(X_train)
         ridge_holdout_pred = ridge.predict(X_holdout)
+    # `log_predictions_to_days` itself raises InsufficientDataError if the
+    # conversion produces a non-finite day-space value (see its docstring),
+    # so prediction finiteness is already guaranteed by the time these
+    # return. Only the coefficients need a separate check below.
     ridge_train_pred_days = log_predictions_to_days(ridge_train_pred)
     ridge_holdout_pred_days = log_predictions_to_days(ridge_holdout_pred)
-    # Checked *after* the log1p-to-days conversion, not just on the raw
-    # log-space predictions above: `log_predictions_to_days` itself
-    # suppresses RuntimeWarning around `np.expm1`, and a finite log
-    # prediction (e.g. ~1000, which a badly overfit Ridge on this
-    # project's small sample can produce) converts to a non-finite `inf`
-    # day-space value with no warning surfaced at all. Checking only the
-    # pre-conversion values would silently let that inf reach the metrics
-    # below.
-    _check_ridge_well_identified(
-        ridge.coef_, ridge_train_pred_days, ridge_holdout_pred_days, *X_train.shape
-    )
+    _check_ridge_well_identified(ridge.coef_, *X_train.shape)
 
     train_metrics = _days_metrics(y_train_days, ridge_train_pred_days)
     holdout_metrics = _days_metrics(y_holdout_days, ridge_holdout_pred_days)
