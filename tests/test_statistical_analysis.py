@@ -3,12 +3,14 @@ import os
 import pandas as pd
 import pytest
 
+import src.statistical_analysis as statistical_analysis_module
 from src.statistical_analysis import (
     _term_has_variation,
     fit_explanatory_models,
     format_association_summary,
     run_ols_analysis,
 )
+from src.validation import InsufficientDataError
 
 
 def test_default_interaction_tests_narrative_framing_by_period_not_gender(large_synthetic_kiva_df):
@@ -109,6 +111,24 @@ def test_fit_raises_clear_error_on_too_small_design(large_synthetic_kiva_df):
     tiny = large_synthetic_kiva_df.head(3).copy()
     with pytest.raises(ValueError, match="observations"):
         fit_explanatory_models(tiny)
+
+
+def test_fit_does_not_mask_unrelated_value_errors_from_model_fitting(large_synthetic_kiva_df, monkeypatch):
+    # _fit_one_model must only catch the deliberate "this design can't be
+    # trusted" checks (_fit_design's size/rank check, _check_well_identified's
+    # non-finite-standard-error check) - not every ValueError from the
+    # model-fitting integration boundary. An unrelated bug there (e.g. a
+    # patsy/statsmodels integration error) must propagate unchanged, not
+    # get relabeled as "neither model could be fit" (InsufficientDataError)
+    # and silently reported as a data-insufficiency diagnostic.
+    def _broken_fit_design(*args, **kwargs):
+        raise ValueError("unexpected patsy integration bug")
+
+    monkeypatch.setattr(statistical_analysis_module, "_fit_design", _broken_fit_design)
+
+    with pytest.raises(ValueError, match="unexpected patsy integration bug") as excinfo:
+        fit_explanatory_models(large_synthetic_kiva_df)
+    assert not isinstance(excinfo.value, InsufficientDataError)
 
 
 def test_summary_reports_coefficients_regardless_of_significance(large_synthetic_kiva_df):

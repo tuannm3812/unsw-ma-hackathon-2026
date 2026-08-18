@@ -233,7 +233,7 @@ def _fit_design(formula: str, data: pd.DataFrame, model_label: str):
     n_obs, n_cols = X.shape
     rank = int(np.linalg.matrix_rank(X.to_numpy()))
     if n_obs <= n_cols or rank < n_cols:
-        raise ValueError(
+        raise InsufficientDataError(
             f"{model_label} design is too small or rank-deficient: "
             f"{n_obs} observations vs {n_cols} design columns (matrix rank {rank}). "
             "Provide more rows with varied categorical coverage, or reduce "
@@ -256,7 +256,7 @@ def _check_well_identified(results, model_label: str, n_obs: int, n_cols: int):
     just as explicitly as the rank check.
     """
     if not np.all(np.isfinite(results.bse)):
-        raise ValueError(
+        raise InsufficientDataError(
             f"{model_label} produced non-finite standard errors for "
             f"{n_obs} observations vs {n_cols} design columns - this usually means "
             "quasi-complete separation (a categorical level whose outcome is "
@@ -272,8 +272,8 @@ def _fit_one_model(kind: str, formula: str, data: pd.DataFrame, model_label: str
     `kind == "glm"`) and return `(results, error_message)`.
 
     `_fit_design`'s rank/size check and `_check_well_identified`'s
-    non-finite-standard-error check both raise `ValueError` on a design
-    this task cannot trust. Rather than let that abort the whole
+    non-finite-standard-error check both raise `InsufficientDataError` on
+    a design this task cannot trust. Rather than let that abort the whole
     `fit_explanatory_models` call - discarding a *different*, perfectly
     well-identified model along with it - the failure is caught here and
     returned as a diagnostic string. This is what lets, e.g., a real
@@ -282,6 +282,13 @@ def _fit_one_model(kind: str, formula: str, data: pd.DataFrame, model_label: str
     reliably fit on the same sample (see the acceptance criterion:
     insufficient data must yield a clear diagnostic, not a discarded
     result or a misleading metric).
+
+    Only `InsufficientDataError` is caught here, not every `ValueError`:
+    `sm.OLS`/`sm.GLM`'s own `.fit()` can raise `ValueError` for reasons
+    unrelated to the deliberate size/rank/separation checks above (a
+    patsy/statsmodels integration bug, say), and that must propagate
+    rather than being relabeled as "this model couldn't be fit" and
+    silently reported as a data-insufficiency diagnostic.
     """
     try:
         y, X = _fit_design(formula, data, model_label)
@@ -291,7 +298,7 @@ def _fit_one_model(kind: str, formula: str, data: pd.DataFrame, model_label: str
             results = sm.GLM(y, X, family=sm.families.Binomial()).fit(cov_type="HC3")
         _check_well_identified(results, model_label, *X.shape)
         return results, None
-    except ValueError as error:
+    except InsufficientDataError as error:
         return None, str(error)
 
 
