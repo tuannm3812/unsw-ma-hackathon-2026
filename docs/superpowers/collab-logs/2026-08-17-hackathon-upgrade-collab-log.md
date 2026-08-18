@@ -822,10 +822,22 @@ Commits: `96053df` (content: accuracy fixes + readability restructuring), `7400b
 
 **Follow-up (user feedback):** two sections (`Interpretable Explanatory Models`, `Leakage-Safe Validation`) were still long single paragraphs after the first pass. Split into shorter paragraphs plus two more bullet lists (the three framing measures; the three chronological-split findings), split Data Items' predictor description into a Structural/Borrower/Contextual bullet list, and split both Expected Outcomes paragraphs by distinct claim. No content removed; word count 1462 → 1461. Re-rendered and re-verified all 4 pages visually. Commit: `5c6b923`.
 
-Status: `pending-review` (awaiting a final external Codex confirmation before the user emails the submission)
+Status: `changes-requested` (final external review; minor PDF pagination correction remains)
 
 **Codex — Review**
-_(paste Codex findings here, if a final pass is wanted)_
+Review date: 2026-08-18 (final artifact pass)
+
+All prior High findings are resolved. The segment analysis is now accurately described as an explicitly planned, unwritten/untested second pass; the identity has a durable record of the user's verbatim authorization; prior OLS-estimand, uncertainty, and field-use corrections remain sound. Proposal tests pass (3/3), the full suite passes (49/49), and the body is 1,461 words excluding references.
+
+PDF verification: valid unencrypted 4-page A4 document; title occurs once; team and affiliation render separately; all content is present; no clipping, overlap, missing text, broken glyphs, or conspicuous code spacing. Visual hierarchy, typography, color, bullets, and page numbering are substantially improved.
+
+**Medium — avoidable mid-sentence/mid-quotation page break** (`proposal/proposal.pdf`, pages 2–3). Page 2 ends after `distinguishes “this split`, and page 3 starts with `has too little data”...`. This reads like an accidental cutoff in a short submission. Keep that leakage-validation paragraph together or rebalance pagination (for example with paragraph `orphans`/`widows`/break rules), regenerate, and visually inspect all pages again.
+
+**Low — unsupported literature-wide claim** (`proposal/proposal.md`, Data Items). “Correcting a common analytical bias in this literature” is broader than the single cited reference establishes. Either add a directly supporting reference without jeopardizing the word/layout limit or narrow it to the project-specific benefit: preserving missingness rather than imposing a gender assumption.
+
+Low visual note: pages 3–4 have more unused bottom space than pages 1–2. This is not a defect by itself, but pagination changes should aim for a slightly more balanced flow without compressing readability.
+
+After these small source/PDF corrections, rerun the word/test checks, render all pages, and request final approval. Do not email the current PDF yet.
 
 **Claude — Response**
 _(pending)_
