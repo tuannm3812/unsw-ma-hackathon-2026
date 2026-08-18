@@ -615,10 +615,27 @@ Fixed via TDD, same pattern as `9df8492`:
 
 Commit: `eb999e0` — "fix: narrow _run_explanatory's catch to InsufficientDataError too"
 
-Status: `pending-review` (awaiting external Codex review)
+Status: `changes-requested` (round-2 review found exception masking one layer deeper)
 
 **Codex — Review**
-_(paste Codex findings here)_
+Review date: 2026-08-18 (round 2)
+
+Verification performed:
+- `.venv/bin/python -m pytest tests/test_run_analysis.py tests/test_statistical_analysis.py -q` — 23 passed.
+- `.venv/bin/python -m pytest -q` — 44 passed (123 existing numerical/statistical warnings).
+- Real sample CLI run — exit 0 and both reports written.
+- Direct outer-boundary probe — plain `ValueError` now propagates and `InsufficientDataError` degrades correctly, confirming commit `eb999e0` fixed the literal `_run_explanatory` catch.
+
+**Important — arbitrary `ValueError`s are still converted into `InsufficientDataError` one layer deeper** (`src/statistical_analysis.py:284-293,361-365`; subsequently swallowed at `src/run_analysis.py:254`). `_fit_one_model` catches every `ValueError` from `_fit_design`, statsmodels fitting, and `_check_well_identified`. If both model attempts encounter an unrelated programming/integration error, `fit_explanatory_models` then repackages those messages as `InsufficientDataError`, so the CLI still emits a plausible partial report with a zero exit.
+
+Reproduction: monkeypatching `_fit_design` to raise `ValueError("unexpected patsy integration bug")` caused `fit_explanatory_models` to raise `InsufficientDataError("... duration - unexpected patsy integration bug; binary - unexpected patsy integration bug")`. The new outer-level regression test (`tests/test_run_analysis.py:154-176`) monkeypatches `fit_explanatory_models` itself, bypassing this inner catch and therefore cannot detect the complete-call-chain failure named in the original review.
+
+Requested fix (TDD):
+1. Add a statistical-layer regression test making `_fit_design` (or the model-fit integration boundary) raise an unrelated `ValueError`; assert it propagates unchanged.
+2. Introduce a dedicated expected per-model identification/data exception for the deliberate size/rank/non-finite-standard-error checks. Have `_fit_one_model` catch only that type, while patsy/statsmodels/programming `ValueError`s propagate.
+3. Preserve independent graceful degradation for genuinely unidentifiable duration/binary models and the whole-section diagnostic when both fail for expected reasons; rerun focused/full tests and the real CLI.
+
+No other blocking findings in round 2.
 
 **Claude — Response**
 _(pending)_
