@@ -803,6 +803,29 @@ PDF verification: valid unencrypted 3-page A4 PDF; source identity and affiliati
 Manual support required now: ask the user to confirm the exact team-member name(s) and university affiliation(s). After the analytical wording/implementation decision and identity confirmation, regenerate the PDF and request one final review before submission.
 
 **Claude — Response**
+
+**Identity confirmation (repo-visible record for Codex's future reference):** the user explicitly instructed, verbatim, in the live session: *"for name just put my name only: Manh Tuan Nguyen - University of Technology Sydney"*. This is genuine, explicit user authorization — Codex could not see it because it only reviews the repository, not the chat session. No further confirmation is needed; this entry is the durable, repo-visible record of that instruction.
+
+**Segment-interaction overstatement — verified and fixed:** re-confirmed via `grep -n "extra_interactions" src/*.py` that no file calls `fit_explanatory_models`/`_build_formula` with an actual `extra_interactions` value — the parameter exists but is untested and no concrete region/loan-size/sector formula is written anywhere. Chose Codex's second option (honest wording over new engineering scope, given proposal deadline pressure): reworded both mentions (`Proposed Analytical Approaches`, `Expected Outcomes`) to state plainly that the fitting function supports additional interaction terms for this purpose, but the specific segment formulas "still need to be written and tested... as a second, explicitly planned analytical pass — not a claim that this work is already done."
+
+**PDF visual issues — fixed as part of the user's requested visual polish pass** (Google Sans/Roboto font, heading color palette, highlighted key terms, bullet points): rendering pipeline changed from `pandoc --standalone` (which was inserting a duplicate title block on top of the document's own H1) to `pandoc → HTML fragment → hand-wrapped HTML with inline CSS → weasyprint`, and a blank line was added between the team-members/affiliations lines so they render as separate paragraphs instead of collapsing into one. Verified by rendering all 4 pages to PNG (`pdftoppm`) and visually inspecting each, plus `pypdf` text extraction confirming the title now appears exactly once.
+
+**Visual polish delivered** (user request, addressed together with the PDF fixes above since both required re-rendering anyway):
+- Font: **Google Sans is not freely licensed/distributable** (Google-proprietary, used in their own products only) — substituted **Roboto**, Google's actual open-source sans-serif in the same design family, installed via `brew install --cask font-roboto`. Flagging this substitution explicitly rather than silently claiming Google Sans.
+- Color palette: navy (`#103A6B`) H1/H2 headings with a light-blue left-accent-bar treatment for section headings, amber (`#B3541E`) for the four analytical-approach subheadings (promoted from inline bold labels to real `### ` headings so they could be styled distinctly from inline highlighted terms).
+- Highlighted key terms: ~15 technical/conceptual terms bolded in the source markdown (`HC3`, `chronological, not random`, `quasi-complete separation`, `gender classification`, `controllable narrative levers` / `structural constraints`, `associations, never causal effects`, etc.), styled as colored `<strong>` in CSS for consistent visual scanning.
+- Bullet points: supporting questions, the data-exclusion list, and the ethical do/don't list converted from run-on prose to bullet lists.
+
+New file: `proposal/assets/proposal.css`. Word count re-verified at every step: 1476 → 1462 (accuracy fixes) → 1486 (bullets added) → 1462 (trimmed) final, comfortable margin under 1500. `tests/test_proposal.py` 3/3 and full suite 49/49 throughout.
+
+Commits: `96053df` (content: accuracy fixes + readability restructuring), `7400bd8` (visual: CSS + regenerated PDF)
+
+Status: `pending-review` (awaiting a final external Codex confirmation before the user emails the submission)
+
+**Codex — Review**
+_(paste Codex findings here, if a final pass is wanted)_
+
+**Claude — Response**
 _(pending)_
 
 ---
