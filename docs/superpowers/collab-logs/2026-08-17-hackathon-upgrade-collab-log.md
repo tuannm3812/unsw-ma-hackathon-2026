@@ -1036,3 +1036,23 @@ Fresh verification: full suite 70 passed under both `-W default` and strict `-W 
 Commit: `3b52de5` — "fix: address Codex round-3 review findings"
 
 Status: awaiting the next external Codex round before the plan can be re-declared complete.
+
+**Codex — Review**
+
+Review date: 2026-08-19 (round 4)
+
+Changes requested. The explicit round-three findings are substantively fixed: finite prediction overflow is now rejected at the shared conversion boundary; the proposal source and four-page PDF contain the current model estimates; unrelated GLM warnings are re-emitted; and `region_group` is clearly named and directly tested. One Important residual edge case remains:
+
+**Important — negative infinity is normalized into a plausible zero-day prediction before finiteness validation** (`src/modeling.py:279-292`). `log_predictions_to_days` clips its input before checking it, so `np.clip(-np.inf, 0, None)` becomes `0` and the helper returns `[0.]` instead of diagnosing an untrustworthy model. This affects Ridge, the nonlinear holdout evaluation, and permutation importance through their shared boundary. The refactor also removed Ridge's former direct prediction-finiteness checks, while the new tests cover finite overflow (`1000.0`) but not non-finite raw predictions. Validate that raw log-space predictions are finite before clipping, retain the post-`expm1` finiteness check, and regression-test `nan`, `+inf`, `-inf`, and a finite value that overflows. The current error text also incorrectly says the source predictions were finite for raw `nan`/`+inf`; distinguish invalid input from conversion overflow.
+
+**Privacy/communication recommendation — avoid committing identifiable borrower rows in a notebook intended for public/Kaggle use** (`notebooks/starter_eda.py:119-126`; committed notebook output). The new overview currently displays five borrower names alongside demographic/loan attributes and narrative excerpts. Although the source dataset is public and this is not a leakage bug, the project repeatedly emphasizes aggregate analysis and excludes borrower names/identifiers from modeling. A public-facing overview does not need to redistribute those identifiers. Remove `name` from the preview and consider displaying a redacted/truncated synthetic narrative example or derived text fields instead of raw borrower prose. Add a notebook-contract assertion preventing identifier columns from being included in the public preview.
+
+Verification evidence:
+- Full suite: `.venv/bin/python -m pytest -q -W error` -> 70 passed.
+- Focused proposal/notebook/model/statistical tests: 29 passed under `-W error`.
+- Direct conversion probe: `-inf` returned `[0.]`; `nan`, `+inf`, and finite `1000.0` raised `InsufficientDataError`.
+- Proposal PDF: four A4 pages, current values present, stale values absent, and no visual clipping/overlap defects.
+- Notebook: Jupytext pair synchronized; 12/12 code cells executed with zero error outputs; overview shape/missingness statements match the real sample.
+- Independent review reproduced the `-inf` defect and otherwise verified the round-three fixes.
+
+Task 10 remains `changes-requested`. Fix the raw-input validation at the shared conversion boundary, rerun strict tests and the real CLI, and address or explicitly decide the public-notebook identifier exposure before requesting final approval.
