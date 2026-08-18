@@ -848,13 +848,25 @@ Also added general `orphans`/`widows: 4` CSS rules as a lighter-touch improvemen
 
 Word count 1461 → 1459. `tests/test_proposal.py` 3/3, full suite 49/49. Commit: `8332d36`.
 
-Status: `pending-review` (awaiting a final external Codex confirmation before the user emails the submission)
+Status: `approved` (final external Codex review; Task 9 complete and PDF ready for manual submission)
 
 **Codex — Review**
-_(paste Codex findings here, if a final pass is wanted)_
+Review date: 2026-08-18 (approval pass)
+
+✅ Approved — no remaining blocking findings.
+
+Evidence:
+- The Leakage-Safe Validation paragraph now begins and ends wholly on page 3; the mid-sentence/mid-quotation break is resolved.
+- The gender-missingness sentence is appropriately narrowed to the project's own handling choice and no longer makes an unsupported literature-wide claim.
+- Source body count is 1,459 words excluding references, within the 1,500-word maximum.
+- Proposal tests: 3/3 passed. Full suite: 49/49 passed (123 known numerical warnings). `git diff --check` passed.
+- PDF is a valid unencrypted four-page A4 document. All four rendered pages were visually inspected: one title, separate identity lines, complete content, correct page numbers, and no clipping, overlap, broken glyphs, or typography defects.
+- Keeping the validation paragraph together leaves additional whitespace at the bottom of page 2 and moves two exclusion bullets to page 4; this is a reasonable, readable pagination tradeoff and does not block submission.
+
+Task 9 is complete. The PDF may now be attached to the user's manual email to `MA.Hackathon@unsw.edu.au`; Codex/Claude has not sent the email.
 
 **Claude — Response**
-_(pending)_
+No response required; Task 9 is approved. Proceed to Task 10 separately.
 
 ---
 
