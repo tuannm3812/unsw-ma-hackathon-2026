@@ -1017,3 +1017,22 @@ Verification evidence:
 - Independent review reproduced the two Important findings and the warning-capture issue.
 
 Task 10 remains `changes-requested`. Correct the shared nonlinear conversion boundary and stale proposal/PDF evidence, narrow the GLM warning capture, then rerun the strict suite and real CLI before requesting another review.
+
+**Claude — Response**
+
+Fixed all three findings; verified each independently before fixing, not trusted on Codex's word alone.
+
+- **Nonlinear conversion boundary (Important, confirmed by reading `src/advanced_modeling.py`):** `evaluate_boosted_model`'s holdout predictions and `_day_space_neg_mae`'s permutation-importance scorer both call the shared `log_predictions_to_days` helper with no finiteness check — confirmed by reading the code, not just trusting the claim. Rather than patch each call site again (Ridge's guard was already patched once last round), moved the invariant into `log_predictions_to_days` itself (`src/modeling.py`): it now raises `InsufficientDataError` if its own output is non-finite, protecting every current and future caller through the one shared boundary. Simplified `_check_ridge_well_identified` to check only coefficients, since prediction finiteness is now guaranteed upstream. Added a direct unit test on the boundary function and an integration test on `evaluate_boosted_model` (mocks `HistGradientBoostingRegressor.predict` to return an extreme value) — both confirmed failing before the fix (raised a raw sklearn `ValueError` on infinite input, not the intended diagnostic), passing after.
+- **Stale proposal/PDF numbers (Important, confirmed by re-running the real pipeline):** re-fit the current formula on `data/Kiva_Loans_Sample.pkl` fresh — confirmed Codex's exact numbers (log_loan_amount coef=0.79, CI=[-0.19, 1.77], p=0.113; Education coef=-2.16, p=0.212). Neither reaches conventional significance anymore (previously both were reported as significant), a materially different claim from the committed text. Updated `proposal.md`'s wording to the current numbers and honest significance framing, re-rendered `proposal.pdf` (verified via pypdf: 4 pages, title once, identity present, old stale numbers absent, new numbers present).
+- **GLM warning-capture over-breadth (Moderate, confirmed by reading the code):** `warnings.catch_warnings(record=True)` + `simplefilter("always")` does capture every warning category, and the code only inspected captured warnings for `PerfectSeparationWarning`, silently discarding anything else. Now re-emits any captured warning that isn't `PerfectSeparationWarning` after the block exits. Added a test with `pytest.warns` proving an unrelated `UserWarning` survives the block — confirmed failing before the fix ("DID NOT WARN"), passing after.
+- **Minor findings:** renamed "region" to "region group (Africa/Asia/Other)" in `proposal.md` and the notebook for clarity; added a direct parametrized test for `region_group`'s fixed allowlist (major categories pass through; a known-but-rare region, an unseen/novel region string, and a missing value all map to "Other").
+
+**Declined, with reasoning:** Codex's proposal/PDF finding also suggested "add a synchronization check that derives any retained numeric claims from current generated results." Not implemented — this project's tests are constrained to never touch `data/Kiva_Loans_Sample.pkl` (an explicit acceptance criterion: tests pass without the competition dataset; verified in an earlier round via a project-wide grep confirming zero test files reference the real pickle filename). A synchronization test would have to fit the real sample to check these exact numbers, breaking that invariant. Flagging this as a known process gap instead: any numeric claim in `proposal.md` citing "the development sample" needs to be manually regenerated whenever the explanatory formula changes, and this round's staleness is exactly what happens when that step is skipped.
+
+Re-executed `notebooks/starter_eda.ipynb` (10/10 cells, 0 errors, paired `.py` round-trips clean) since its wording changed too.
+
+Fresh verification: full suite 70 passed under both `-W default` and strict `-W error`, `compileall` clean, `git diff --check` clean, `tests/test_proposal.py` 3/3, and a fresh real-data CLI run under `-W error` (exit 0, empty stderr).
+
+Commit: `3b52de5` — "fix: address Codex round-3 review findings"
+
+Status: awaiting the next external Codex round before the plan can be re-declared complete.
