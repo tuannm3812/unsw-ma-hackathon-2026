@@ -151,6 +151,63 @@ def test_run_analysis_does_not_swallow_unrelated_value_errors(tmp_path, large_sy
         run_analysis(data_path, output_dir, holdout_start="2024-01-01")
 
 
+def test_run_analysis_does_not_swallow_unrelated_explanatory_value_errors(
+    tmp_path, large_synthetic_kiva_df, monkeypatch
+):
+    # Same principle as the chronological-stage test above, applied to the
+    # explanatory (Task 5) stage: fit_explanatory_models raising a
+    # ValueError for a reason unrelated to insufficient data (e.g. a bug
+    # in feature extraction or formula construction) must propagate, not
+    # get silently recorded as a "couldn't fit" diagnostic.
+    import src.run_analysis as run_analysis_module
+
+    def _broken_fit_explanatory_models(*args, **kwargs):
+        raise ValueError("unexpected formula-construction bug")
+
+    monkeypatch.setattr(
+        run_analysis_module, "fit_explanatory_models", _broken_fit_explanatory_models
+    )
+
+    data_path = tmp_path / "sample.pkl"
+    _write_pickle(large_synthetic_kiva_df, data_path)
+    output_dir = tmp_path / "reports"
+
+    with pytest.raises(ValueError, match="unexpected formula-construction bug"):
+        run_analysis(data_path, output_dir, holdout_start="2024-01-01")
+
+
+def test_run_analysis_still_degrades_when_neither_explanatory_model_fits(
+    tmp_path, large_synthetic_kiva_df, monkeypatch
+):
+    # The expected "neither model could be fit" case must still degrade
+    # gracefully to a report diagnostic, not crash - this is the behavior
+    # narrowing the except clause must preserve.
+    from src.validation import InsufficientDataError
+
+    import src.run_analysis as run_analysis_module
+
+    def _unfittable_explanatory_models(*args, **kwargs):
+        raise InsufficientDataError("fit_explanatory_models could not fit either model: forced for test")
+
+    monkeypatch.setattr(
+        run_analysis_module, "fit_explanatory_models", _unfittable_explanatory_models
+    )
+
+    data_path = tmp_path / "sample.pkl"
+    _write_pickle(large_synthetic_kiva_df, data_path)
+    output_dir = tmp_path / "reports"
+
+    summary = run_analysis(data_path, output_dir, holdout_start="2024-01-01")
+
+    assert summary["explanatory"]["attempted"] is True
+    assert summary["explanatory"]["succeeded"] is False
+    assert "could not fit either model" in summary["explanatory"]["error"]
+    # Other sections are unaffected by the explanatory stage's failure.
+    assert summary["baseline_ridge"]["succeeded"] is True
+    assert (output_dir / "analysis_summary.json").exists()
+    assert (output_dir / "association_summary.txt").exists()
+
+
 def test_run_analysis_writes_files_atomically_no_partial_leftover(tmp_path, large_synthetic_kiva_df):
     data_path = tmp_path / "sample.pkl"
     _write_pickle(large_synthetic_kiva_df, data_path)

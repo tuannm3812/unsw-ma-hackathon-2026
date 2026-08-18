@@ -224,10 +224,15 @@ def _run_explanatory(df: pd.DataFrame) -> dict:
     Run the robust explanatory (association) models (Task 5). Each of the
     duration/binary sub-models already degrades independently to a
     diagnostic inside `fit_explanatory_models` (see `duration_error`/
-    `binary_error`); `fit_explanatory_models` itself only raises if
-    *neither* model could be fit at all, which is caught here so that
-    edge case degrades this section of the report too, rather than
-    crashing the whole run.
+    `binary_error`); `fit_explanatory_models` itself only raises
+    `InsufficientDataError` if the data can't support fitting anything at
+    all (no valid-outcome rows, no usable predictors after pruning, or
+    neither model could be fit) - caught here so that edge case degrades
+    this section of the report too, rather than crashing the whole run.
+    Only `InsufficientDataError` is caught, not every `ValueError`, for
+    the same reason as the chronological stages above: an unrelated bug
+    (e.g. in feature extraction or formula construction) must still fail
+    loudly.
     """
     try:
         results = fit_explanatory_models(df)
@@ -246,7 +251,7 @@ def _run_explanatory(df: pd.DataFrame) -> dict:
             "duration_dropped_terms": results["duration_dropped_terms"],
             "binary_dropped_terms": results["binary_dropped_terms"],
         }, results
-    except ValueError as error:
+    except InsufficientDataError as error:
         return {
             "attempted": True,
             "succeeded": False,

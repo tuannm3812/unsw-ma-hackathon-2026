@@ -52,9 +52,11 @@ import statsmodels.api as sm
 try:
     from src.data_loader import load_kiva_pickle, prepare_analysis_data
     from src.features import extract_deterministic_features
+    from src.validation import InsufficientDataError
 except ModuleNotFoundError:
     from data_loader import load_kiva_pickle, prepare_analysis_data
     from features import extract_deterministic_features
+    from validation import InsufficientDataError
 
 
 # Pre-specified predictors for both the duration and 24-hour models, per the
@@ -216,7 +218,7 @@ def _build_formula(target: str, data: pd.DataFrame, extra_interactions=None):
         candidates += list(extra_interactions)
     kept, dropped = _select_available_terms(candidates, data)
     if not kept:
-        raise ValueError(f"No usable predictors remain for target {target!r} after pruning constant terms")
+        raise InsufficientDataError(f"No usable predictors remain for target {target!r} after pruning constant terms")
     formula = f"{target} ~ " + " + ".join(kept)
     return formula, dropped
 
@@ -337,11 +339,11 @@ def fit_explanatory_models(df: pd.DataFrame, extra_interactions=None) -> "dict[s
 
     duration_data = featured.loc[featured["valid_completed_outcome"]].copy()
     if duration_data.empty:
-        raise ValueError("fit_explanatory_models found no rows with a valid completed outcome")
+        raise InsufficientDataError("fit_explanatory_models found no rows with a valid completed outcome")
 
     binary_data = featured.loc[featured["funded_within_24h"].notna()].copy()
     if binary_data.empty:
-        raise ValueError("fit_explanatory_models found no rows with a known 24-hour funding outcome")
+        raise InsufficientDataError("fit_explanatory_models found no rows with a known 24-hour funding outcome")
     binary_data["funded_within_24h"] = binary_data["funded_within_24h"].astype(int)
 
     duration_formula, duration_dropped = _build_formula(
@@ -359,7 +361,7 @@ def fit_explanatory_models(df: pd.DataFrame, extra_interactions=None) -> "dict[s
     )
 
     if duration_results is None and binary_results is None:
-        raise ValueError(
+        raise InsufficientDataError(
             "fit_explanatory_models could not fit either model: "
             f"duration - {duration_error}; binary - {binary_error}"
         )
