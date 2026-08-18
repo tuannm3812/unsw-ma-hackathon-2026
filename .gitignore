@@ -155,6 +155,12 @@ Thumbs.db
 # if the team ever wants to, rather than committing every run's output).
 reports/generated/
 
+# Scratch, executed copies of the notebook produced while verifying it runs
+# end to end (e.g. via `jupytext --execute` / `nbconvert --execute --output
+# *.executed.ipynb`). The paired source notebook, notebooks/starter_eda.ipynb,
+# is intentionally committed and is NOT matched by this pattern.
+*.executed.ipynb
+
 # Large competition datasets (exclude big data files)
 data/**/*.csv
 data/**/*.pkl
