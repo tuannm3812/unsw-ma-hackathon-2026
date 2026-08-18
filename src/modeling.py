@@ -20,6 +20,7 @@ after the fact.
 """
 
 import os
+import warnings
 
 import numpy as np
 import pandas as pd
@@ -253,8 +254,49 @@ def log_predictions_to_days(log_predictions: np.ndarray) -> np.ndarray:
     which is outside the target's domain. Clip at zero in log space before
     converting, so every model's predictions stay within the domain of
     actual elapsed time.
+
+    A model badly overfit on this project's small real sample (e.g. Ridge
+    on an ~80-row training split) can pass in extreme log-space values;
+    `np.expm1`/`np.clip` on those can themselves emit a benign
+    RuntimeWarning without producing a non-finite result (verified against
+    `data/Kiva_Loans_Sample.pkl` - see the report). Scoped to just this
+    conversion so any other RuntimeWarning in this module still surfaces
+    normally.
     """
-    return np.expm1(np.clip(log_predictions, a_min=0.0, a_max=None))
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=RuntimeWarning)
+        return np.expm1(np.clip(log_predictions, a_min=0.0, a_max=None))
+
+
+def _check_ridge_well_identified(
+    coefficients: np.ndarray,
+    train_pred: np.ndarray,
+    holdout_pred: np.ndarray,
+    n_obs: int,
+    n_cols: int,
+) -> None:
+    """
+    Mirrors `statistical_analysis._check_well_identified`: a design can stay
+    technically full rank while still being too close to rank-deficient to
+    support a stable fit. On this project's small real sample, Ridge's SVD
+    solver can emit a benign RuntimeWarning (suppressed above) without the
+    resulting coefficients/predictions ever going non-finite - verified
+    against `data/Kiva_Loans_Sample.pkl` and a synthetic fixture (see
+    tests/test_modeling.py). This check turns the case where that stops
+    holding (e.g. a much larger or more sparsely-encoded full dataset) into
+    a clear diagnostic instead of a silently-NaN metric.
+    """
+    if not (
+        np.all(np.isfinite(coefficients))
+        and np.all(np.isfinite(train_pred))
+        and np.all(np.isfinite(holdout_pred))
+    ):
+        raise InsufficientDataError(
+            f"Ridge produced non-finite coefficients or predictions for "
+            f"{n_obs} training observations vs {n_cols} design columns - the "
+            "design is likely too rank-deficient for a stable fit. Provide "
+            "more rows or fewer/coarser predictor columns, and try again."
+        )
 
 
 def _days_metrics(y_true_days: np.ndarray, y_pred_days: np.ndarray) -> dict:
@@ -315,10 +357,26 @@ def evaluate_chronological_models(
     }
 
     # Ridge, fit only on the training partition.
+    #
+    # On this project's small real sample (~80 training rows vs. many
+    # one-hot/topic columns), the design is close to rank-deficient, which
+    # can make both `Ridge.fit()`'s internal SVD-based solver and
+    # `Ridge.predict()`'s `X @ coef_ + intercept_` emit a benign
+    # divide-by-zero/overflow/invalid-value RuntimeWarning without the
+    # resulting coefficients/predictions actually being non-finite
+    # (verified directly against `data/Kiva_Loans_Sample.pkl` - see the
+    # report). Scoped to just these three calls.
     ridge = Ridge(alpha=1.0, random_state=42)
-    ridge.fit(X_train, y_train)
-    ridge_train_pred_days = log_predictions_to_days(ridge.predict(X_train))
-    ridge_holdout_pred_days = log_predictions_to_days(ridge.predict(X_holdout))
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=RuntimeWarning)
+        ridge.fit(X_train, y_train)
+        ridge_train_pred = ridge.predict(X_train)
+        ridge_holdout_pred = ridge.predict(X_holdout)
+    _check_ridge_well_identified(
+        ridge.coef_, ridge_train_pred, ridge_holdout_pred, *X_train.shape
+    )
+    ridge_train_pred_days = log_predictions_to_days(ridge_train_pred)
+    ridge_holdout_pred_days = log_predictions_to_days(ridge_holdout_pred)
 
     train_metrics = _days_metrics(y_train_days, ridge_train_pred_days)
     holdout_metrics = _days_metrics(y_holdout_days, ridge_holdout_pred_days)

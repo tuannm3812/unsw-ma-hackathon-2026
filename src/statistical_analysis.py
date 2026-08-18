@@ -43,11 +43,13 @@ sample that is simply too small), not a substitute for it.
 
 import os
 import re
+import warnings
 
 import numpy as np
 import pandas as pd
 import patsy
 import statsmodels.api as sm
+from statsmodels.tools.sm_exceptions import PerfectSeparationWarning
 
 try:
     from src.data_loader import load_kiva_pickle, prepare_analysis_data
@@ -96,22 +98,38 @@ BASE_FORMULA_TERMS = [
     "C(sector)",
     "C(region)",
     "C(analysis_period)",
+    "C(loan_size_band)",
 ]
 
-# Pre-specified period interaction included by default: does the
-# association between narrative framing and the outcome differ across the
-# pre-pandemic / pandemic-disruption / post-pandemic analysis periods? This
-# is the project's temporal-heterogeneity test (design spec: "Narrative
-# framing x analysis period" is the pre-specified evolutionary-perspective
-# comparison), and the only interaction fit by default, per the brief ("add
-# only pre-specified period interactions in the default sample model").
-# `family_mentions_per_100_words` is used as the single representative
-# framing measure to keep the default model parsimonious - it is one of
-# `FRAMING_TERMS`'s three main effects already in the base formula, so this
-# adds one interaction term, not a new predictor. Callers investigating
-# other segments (region, loan-size band, sector, or other framing
+# Pre-specified segment interactions included by default: does the
+# association between narrative framing and the outcome differ across
+# (1) the pre-pandemic / pandemic-disruption / post-pandemic analysis
+# periods, (2) broad region, or (3) loan-size band? These are three of the
+# design spec's four pre-specified heterogeneity tests ("Analytical
+# Design": narrative framing x period / region / loan-size band / sector).
+# The fourth - narrative framing x sector - is deliberately left out of
+# this default list: the brief requires it be "restricted to adequately
+# represented sectors," which needs a sample-specific sector allowlist
+# decision this generic default formula cannot make safely, so it remains
+# available only via `extra_interactions` for a caller that has made that
+# judgment call. `family_mentions_per_100_words` is used as the single
+# representative framing measure for all three, to keep the default model
+# parsimonious - it is one of `FRAMING_TERMS`'s three main effects already
+# in the base formula, so this adds three interaction terms, not new
+# predictors (`C(loan_size_band)` is added to `BASE_FORMULA_TERMS` above as
+# its own main effect, since introducing an interaction without the
+# corresponding main effect is not standard modeling practice - see the
+# report for this project's discussion of that judgment call). Each
+# interaction is independently pruned by `_select_available_terms` if the
+# specific fitting sample cannot support it (see `_term_has_variation`),
+# exactly like the period interaction was before this list grew to three.
+# Callers investigating additional segments (sector, or other framing
 # measures) pass additional patsy-formula terms via `extra_interactions`.
-DEFAULT_PERIOD_INTERACTIONS = ["family_mentions_per_100_words:C(analysis_period)"]
+DEFAULT_SEGMENT_INTERACTIONS = [
+    "family_mentions_per_100_words:C(analysis_period)",
+    "family_mentions_per_100_words:C(region)",
+    "family_mentions_per_100_words:C(loan_size_band)",
+]
 
 
 def _term_columns(term: str) -> "list[str]":
@@ -213,7 +231,7 @@ def _build_formula(target: str, data: pd.DataFrame, extra_interactions=None):
     candidate term (main effect or interaction) that is constant in `data`.
     Returns (formula, dropped_terms).
     """
-    candidates = list(BASE_FORMULA_TERMS) + list(DEFAULT_PERIOD_INTERACTIONS)
+    candidates = list(BASE_FORMULA_TERMS) + list(DEFAULT_SEGMENT_INTERACTIONS)
     if extra_interactions:
         candidates += list(extra_interactions)
     kept, dropped = _select_available_terms(candidates, data)
@@ -295,7 +313,19 @@ def _fit_one_model(kind: str, formula: str, data: pd.DataFrame, model_label: str
         if kind == "ols":
             results = sm.OLS(y, X).fit(cov_type="HC3")
         else:
-            results = sm.GLM(y, X, family=sm.families.Binomial()).fit(cov_type="HC3")
+            # Quasi-complete separation in the intentionally engineered
+            # test scenarios this module is designed to catch (see
+            # `_check_well_identified` below) makes statsmodels' own GLM
+            # `.fit()` surface RuntimeWarning/PerfectSeparationWarning -
+            # that is statsmodels' internal signal of the exact condition
+            # being tested for, not an accidental numerical issue, and
+            # `_check_well_identified` still turns it into a clear
+            # `InsufficientDataError` diagnostic rather than an unstable
+            # fit. Scoped to just this call.
+            with warnings.catch_warnings():
+                warnings.filterwarnings("ignore", category=RuntimeWarning)
+                warnings.filterwarnings("ignore", category=PerfectSeparationWarning)
+                results = sm.GLM(y, X, family=sm.families.Binomial()).fit(cov_type="HC3")
         _check_well_identified(results, model_label, *X.shape)
         return results, None
     except InsufficientDataError as error:
@@ -320,10 +350,11 @@ def fit_explanatory_models(df: pd.DataFrame, extra_interactions=None) -> "dict[s
     features are available regardless of what the caller already computed.
 
     `extra_interactions` optionally adds more patsy-formula interaction
-    terms (e.g. segment-specific interactions) on top of the default
-    `family_mentions_per_100_words:C(analysis_period)` narrative-by-period
-    interaction - useful for exploratory follow-up on the full dataset
-    without changing the default pre-specified model.
+    terms (e.g. a narrative-by-sector interaction restricted to adequately
+    represented sectors) on top of the three default
+    `DEFAULT_SEGMENT_INTERACTIONS` (narrative framing by analysis period,
+    region, and loan-size band) - useful for exploratory follow-up on the
+    full dataset without changing the default pre-specified model.
 
     Each model is fit independently: if one is too small, rank-deficient,
     or not well-identified (e.g. quasi-complete separation in the binary

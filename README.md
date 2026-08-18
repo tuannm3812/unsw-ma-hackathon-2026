@@ -39,7 +39,7 @@ unsw-ma-hackathon-2026/
 │   └── assets/proposal.css        # Stylesheet used to render the PDF
 ├── reports/
 │   ├── generated/                 # Output of `python3 -m src.run_analysis` (git-ignored)
-│   └── statistical_summary.txt    # Curated, committed statistical summary snapshot
+│   └── statistical_summary.txt    # Superseded-report notice pointing to reports/generated/
 ├── src/
 │   ├── __init__.py
 │   ├── data_loader.py             # Loads the pickle, parses dates, derives the outcome
@@ -77,16 +77,16 @@ source .venv/bin/activate          # macOS/Linux
 pip install -r requirements.txt
 ```
 
-`requirements.txt` covers everything needed to run the pipeline and test suite: `pandas`, `numpy`, `scikit-learn`, `matplotlib`, `seaborn`, `openpyxl`, `statsmodels`, `patsy`, `nltk`, `ipykernel`, `pytest`. There is no `xgboost` or `lightgbm` dependency anywhere in the codebase - the nonlinear benchmark uses scikit-learn's built-in `HistGradientBoostingRegressor` instead, to avoid two redundant third-party gradient-boosting dependencies.
+`requirements.txt` covers everything needed to run the pipeline, notebook, and test suite: `pandas`, `numpy`, `scikit-learn`, `matplotlib`, `seaborn`, `openpyxl`, `statsmodels`, `patsy`, `nltk`, `ipykernel`, `notebook`, `pytest`. There is no `xgboost` or `lightgbm` dependency anywhere in the codebase - the nonlinear benchmark uses scikit-learn's built-in `HistGradientBoostingRegressor` instead, to avoid two redundant third-party gradient-boosting dependencies.
 
 ### 4. Optional tooling for regenerating docs (not in `requirements.txt`)
 
-Opening and running the notebook only needs `ipykernel`, already listed above. Two extra, ad-hoc toolchains are needed only if you want to regenerate or re-verify these committed artifacts yourself, and are **not** listed in `requirements.txt`:
+Opening and running the notebook interactively via `jupyter notebook` (below) needs the `notebook` package, which is listed in `requirements.txt`; opening it inside VS Code / Spyder instead only needs `ipykernel` for kernel execution, since those editors bundle their own Jupyter front end. Two extra, ad-hoc toolchains are needed only if you want to regenerate or re-verify these committed artifacts yourself, and are **not** listed in `requirements.txt`:
 
 - **Regenerating/verifying `notebooks/starter_eda.ipynb`** from `notebooks/starter_eda.py` (the jupytext-paired source of truth) requires `pip install jupytext nbconvert`.
 - **Re-rendering `proposal/proposal.pdf`** from `proposal/proposal.md` requires `pandoc` (e.g. `brew install pandoc`) plus `pip install weasyprint`.
 
-Place the raw data files in `data/` before running anything - see `data/README.md` for exact filenames.
+Place the raw data files in `data/` before running the analysis or notebook - see `data/README.md` for exact filenames. The test suite does not need them (see below).
 
 ## Verifying the codebase
 
@@ -104,7 +104,7 @@ Run the full leakage-safe pipeline end to end from the repository root and write
 python3 -m src.run_analysis --data data/Kiva_Loans_Sample.pkl --output-dir reports/generated
 ```
 
-This writes `reports/generated/analysis_summary.json` (machine-readable metrics, dataset audit trail, software versions) and `reports/generated/association_summary.txt` (human-readable, association-language narrative) atomically, and resolves paths portably regardless of the current working directory. `--holdout-start` (default `2024-01-01`) sets the chronological train/holdout boundary.
+This writes `reports/generated/analysis_summary.json` (machine-readable metrics, dataset audit trail, software versions) and `reports/generated/association_summary.txt` (human-readable, association-language narrative) atomically. `--data`/`--output-dir` accept relative or absolute paths and are resolved against the caller's current working directory (not a hardcoded machine path) - but `python3 -m src.run_analysis` itself must be run from the repository root (or with the repo root on `PYTHONPATH`), since that is what makes the `src` package importable. `--holdout-start` (default `2024-01-01`) sets the chronological train/holdout boundary.
 
 To open and step through the narrative notebook version of the same analysis:
 
@@ -162,7 +162,7 @@ The proposal covers Days 1-7 below as a generic post-proposal analysis week (no 
 | 4 | Explanatory statistics | Full-data OLS/GLM refit (`src/statistical_analysis.py`); write and test the pre-specified region/loan-size/sector interaction formulas |
 | 5 | Nonlinear benchmark and comparison | Permutation-importance comparison against the explanatory-model coefficients; sensitivity check on `fundsLentInCountry` |
 | 6 | CLI run and reporting | Full-dataset `python3 -m src.run_analysis` run; review `analysis_summary.json` / `association_summary.txt` for anomalies |
-| 7 | Notebook and write-up | Refresh `notebooks/starter_eda.ipynb` against full-data results; finalize proposal narrative and managerial recommendations |
+| 7 | Notebook and final write-up | Refresh `notebooks/starter_eda.ipynb` against full-data results; prepare the final analysis write-up/presentation and managerial recommendations for submission (the proposal itself is already submitted by this point) |
 
 ## Proposal
 

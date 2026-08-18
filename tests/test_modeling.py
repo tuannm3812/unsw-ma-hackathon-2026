@@ -1,11 +1,18 @@
 import math
+import warnings
 
 import numpy as np
 import pandas as pd
 import pytest
 
 from src.data_loader import prepare_analysis_data
-from src.modeling import build_predictor_frame, evaluate_chronological_models, log_predictions_to_days
+from src.modeling import (
+    _check_ridge_well_identified,
+    build_predictor_frame,
+    evaluate_chronological_models,
+    log_predictions_to_days,
+)
+from src.validation import InsufficientDataError
 
 
 def test_predictor_frame_excludes_outcomes_and_post_outcome_fields(synthetic_kiva_df):
@@ -131,3 +138,73 @@ def test_ridge_predictions_never_convert_to_negative_days(chronological_kiva_df)
     holdout_days = log_predictions_to_days(ridge.predict(X_holdout))
     assert (train_days >= 0).all()
     assert (holdout_days >= 0).all()
+
+
+def test_ridge_and_log_conversion_stay_finite_on_a_sample_that_triggers_overfit_warnings(
+    large_synthetic_kiva_df,
+):
+    # `large_synthetic_kiva_df` (120 rows, default 2024-01-01 holdout split
+    # -> ~88 training rows against many one-hot/topic-encoded columns)
+    # reliably reproduces the benign divide-by-zero/overflow/invalid-value
+    # RuntimeWarning that a near-rank-deficient design can trigger inside
+    # both `Ridge.fit()`'s internal SVD solver and `Ridge.predict()`'s
+    # `X @ coef_ + intercept_` (see the `warnings.catch_warnings` block
+    # around the Ridge fit/predict calls in `evaluate_chronological_models`)
+    # - confirmed here with real numbers that the fitted coefficients, raw
+    # predictions, and the day-space conversion all remain finite
+    # regardless of that warning firing. This mirrors the finiteness
+    # verified directly against the real `data/Kiva_Loans_Sample.pkl` (see
+    # the report).
+    results = evaluate_chronological_models(large_synthetic_kiva_df, holdout_start="2024-01-01", n_topics=5)
+    ridge = results["_artifacts"]["ridge_model"]
+    X_train = results["_artifacts"]["X_train"]
+    X_holdout = results["_artifacts"]["X_holdout"]
+
+    assert np.isfinite(ridge.coef_).all()
+
+    # Re-predicting here (outside evaluate_chronological_models's own
+    # scoped `warnings.catch_warnings` block) intentionally reproduces the
+    # same known, already-diagnosed RuntimeWarning to directly assert
+    # finiteness on the raw predictions - suppressed the same way and for
+    # the same documented reason as the production call site, not an
+    # unexplained leak.
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=RuntimeWarning)
+        raw_train_pred = ridge.predict(X_train)
+        raw_holdout_pred = ridge.predict(X_holdout)
+    assert np.isfinite(raw_train_pred).all()
+    assert np.isfinite(raw_holdout_pred).all()
+    assert np.isfinite(log_predictions_to_days(raw_train_pred)).all()
+    assert np.isfinite(log_predictions_to_days(raw_holdout_pred)).all()
+
+    for metrics in results["metrics"].values():
+        for value in metrics.values():
+            assert math.isfinite(value)
+
+
+def test_check_ridge_well_identified_passes_through_finite_coefficients_and_predictions():
+    coefficients = np.array([0.1, -0.2, 0.3])
+    train_pred = np.array([0.5, 0.6])
+    holdout_pred = np.array([0.4])
+    # Should not raise.
+    _check_ridge_well_identified(coefficients, train_pred, holdout_pred, n_obs=2, n_cols=3)
+
+
+@pytest.mark.parametrize(
+    "coefficients,train_pred,holdout_pred",
+    [
+        (np.array([0.1, np.nan]), np.array([0.5]), np.array([0.4])),
+        (np.array([0.1, 0.2]), np.array([np.inf]), np.array([0.4])),
+        (np.array([0.1, 0.2]), np.array([0.5]), np.array([-np.inf])),
+    ],
+)
+def test_check_ridge_well_identified_raises_insufficient_data_error_on_non_finite_values(
+    coefficients, train_pred, holdout_pred,
+):
+    # Mirrors `_check_well_identified`'s non-finite-standard-error check in
+    # src/statistical_analysis.py: if Ridge's near-rank-deficient design
+    # ever produces genuinely non-finite output (rather than the benign,
+    # still-finite RuntimeWarning case verified above), this must surface
+    # as a clear diagnostic instead of a silently-NaN metric.
+    with pytest.raises(InsufficientDataError, match="non-finite"):
+        _check_ridge_well_identified(coefficients, train_pred, holdout_pred, n_obs=2, n_cols=2)

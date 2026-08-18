@@ -37,7 +37,7 @@ Three theoretically distinct framing measures anchor the narrative predictors, f
 - **Agentic/competence** framing
 - **Urgency** appeals
 
-The default model fits one **pre-specified interaction**, family framing × analysis period, directly testing whether the persuasive value of communal narrative evolves over time. Narrative × region, × loan-size band, and × sector comparisons are equally pre-specified; the fitting function already accepts additional interaction terms for exactly this purpose, but the specific segment formulas still need to be written and tested against the full dataset as a second, explicitly planned analytical pass — not a claim that this work is already done.
+The default model now fits three **pre-specified interactions** — family framing × analysis period, × region, and × loan-size band — each independently dropped if a given sample cannot support it (e.g. a region with only one observation). On the development sample, two of the three already survive and are reported (period and loan-size band; region is correctly pruned for a single-observation category). Narrative × sector is equally pre-specified but deliberately kept opt-in, since it must be "restricted to adequately represented sectors" — a sample-specific judgment the default formula cannot safely make on its own.
 
 On the same development sample, loan amount is significantly associated with slower funding (coefficient 0.84 in this log-log specification, 95% CI [0.44, 1.24], p<0.001), and the Education sector is associated with faster funding relative to the reference sector (p=0.032) — illustrative of feasibility, not a full-data conclusion; several other sector estimates carry wide confidence intervals at this sample size, and any predictor lacking variation in a given sample is automatically dropped.
 
@@ -92,7 +92,7 @@ For Kiva field partners and borrower-support staff, the managerial payoff is seg
 
 The same growth in funding speed pursued through manipulation would undermine the trust prosocial lending depends on. Every limitation — sample size, non-identified segments, the associational nature of every estimate — is reported alongside the findings themselves.
 
-The core pipeline is already implemented, tested, and running end to end on the development sample; the full dataset requires re-running that same code path, plus writing and testing the region/loan-size/sector interaction formulas as a second, explicitly scoped analytical pass — both fit comfortably within the one-week window.
+The core pipeline — including the period and loan-size-band segment interactions — is already implemented, tested, and running end to end on the development sample; the full dataset requires only re-running that same code path, plus writing and testing the sector interaction's category grouping as a small, explicitly scoped second pass, both comfortably within the one-week window.
 
 ## References
 

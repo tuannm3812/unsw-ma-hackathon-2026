@@ -1,3 +1,5 @@
+import warnings
+
 import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
@@ -111,13 +113,24 @@ class KivaTopicTransformer(BaseEstimator, TransformerMixin):
                 f"({matrix.shape[0]} documents, {matrix.shape[1]} features)"
             )
 
-        # Fit NMF model
-        self.nmf_ = NMF(
-            n_components=self.n_topics,
-            random_state=self.random_state,
-            init="nndsvda",
-            max_iter=1000,
-        ).fit(matrix)
+        # Fit NMF model.
+        #
+        # init="nndsvda"'s randomized_svd initialization step can trigger a
+        # benign RuntimeWarning (divide-by-zero/overflow/invalid value in
+        # matmul) from numpy/Accelerate-BLAS on Apple Silicon - reproduced
+        # identically on unrelated random matrices with no Kiva data
+        # involved, and confirmed the resulting topic-probability outputs
+        # (see `transform` below) remain finite regardless. Scoped to just
+        # this call so any other RuntimeWarning in this module still
+        # surfaces normally.
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", category=RuntimeWarning)
+            self.nmf_ = NMF(
+                n_components=self.n_topics,
+                random_state=self.random_state,
+                init="nndsvda",
+                max_iter=1000,
+            ).fit(matrix)
 
         return self
 
