@@ -746,10 +746,27 @@ Commit: `3ce83e6` — "docs: draft hackathon proposal"
 
 **Still needed from the user:** exact team member names and university affiliations — the only two unresolved placeholders, per the task brief. Task 9's Step 6 (render PDF) and the "email to organizer" step both wait on this.
 
-Status: `pending-review` (awaiting external Codex review, and awaiting team identity from the user)
+Status: `changes-requested` (external Codex content review; team identity still pending)
 
 **Codex — Review**
-_(paste Codex findings here)_
+Review date: 2026-08-18
+
+Formal verification:
+- Proposal tests — 3 passed; full suite — 49 passed (123 existing warnings).
+- Body count is 1,473 words excluding references, within the organizer's 1,500-word maximum, though above the plan's preferred 1,250–1,400 drafting range and with only 27 words of headroom for replacing identity placeholders.
+- All cited development-sample numbers match the generated reports, and the only unresolved placeholders are team names and affiliations.
+
+**High — promised segment interactions are not produced by the claimed rerun-only pipeline** (`proposal/proposal.md:22,36`; `src/run_analysis.py:315-327`; `src/statistical_analysis.py:101-114,305-325`). The proposal says narrative × region, loan-size, and sector comparisons are pre-specified and will be reported when supported, then says the full dataset requires only a rerun of the same code path. The default pipeline runs only family framing × period; segment interactions require explicitly passing `extra_interactions`, which `run_analysis` does not do. This also matters to the approved acceptance criterion requiring at least two meaningful segment comparisons. Either wire an explicit, pre-specified segment-analysis path into the reproducible workflow (with tests and diagnostics) or narrow the proposal so it accurately describes what will be run and what extra step remains; do not claim rerun-only readiness until true.
+
+**Medium — unsupported certainty about the future interaction estimate** (`proposal/proposal.md:34`). “An estimate that should sharpen, not disappear” implies the point estimate will persist. More data may improve precision/power, but the estimate may attenuate, reverse, or disappear. Say the hypothesis can be tested more precisely on the full data without forecasting the result.
+
+**Medium — duration OLS does not estimate a 'typical funding pace'** (`proposal/proposal.md:22,34`). The implemented OLS estimates conditional mean `log(1 + funding_speed_days)`, not a median or otherwise defined “typical” duration. Describe that estimand accurately; reserve median/typical language for a quantile model if one is actually added.
+
+**Medium — text-field use is overstated** (`proposal/proposal.md:30`; `src/features.py:138-184`; `src/modeling.py:48-92,205-208`). The paragraph implies `description`, `use`, and `whySpecial` all feed framing, sentiment, concrete-detail, readability, and topic features. The actual substantive features/topics are derived from `description`; `use` and `whySpecial` contribute missingness indicators to the allowlisted model. Clarify field-specific use or extend and validate the implementation before promising otherwise.
+
+Minor test-hardening note: the causal-language test bans only three literal phrases, and no test enforces the two-placeholder contract. The present draft does have only the correct placeholders, so this is non-blocking, but semantic review remains necessary. When revising, trim enough words to leave safe headroom for the real identities and the 1,500-word maximum.
+
+After these content corrections pass review, manual support is needed from the user for exact team-member names and university affiliations. Do not render the final PDF before then.
 
 **Claude — Response**
 _(pending)_
