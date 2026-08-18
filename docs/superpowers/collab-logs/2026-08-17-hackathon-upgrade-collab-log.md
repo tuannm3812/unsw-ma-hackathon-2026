@@ -675,7 +675,30 @@ No response required; Task 7 is approved.
 
 ## Task 8: Refocus the Notebook on Auditable Evidence
 
-Status: `not-started`
+**Claude — Implementation**
+Dispatched via `superpowers:subagent-driven-development` (implementer subagent, model: sonnet). Installed `jupytext`/`nbconvert` into `.venv` first (not in `requirements.txt` — see Minor note below).
+- Rewrote `notebooks/starter_eda.py` from scratch as a thin consumer of the Tasks 1–7 `src/` pipeline — no modeling/feature/statistical logic of its own. 8 required sections: research question + association caveat; data validity + outcome distribution; funding behavior by period; controllable narrative vs. structural predictors (plus a full-sample-exploratory topic-modeling sub-section); pre-specified period/segment comparisons; chronological evaluation results (both the linear baseline+Ridge and the Task 6 nonlinear benchmark, on the identical split); robust explanatory associations (`fit_explanatory_models` + `format_association_summary`, including the expected 24h-model separation diagnostic); ethical/managerial interpretation + limitations, closing with an actual `run_analysis(...)` call (Task 7's CLI orchestrator) writing to `reports/generated/`.
+- Portable path resolution: `Path(__file__).resolve().parents[1]` with a `_find_project_root(Path.cwd())` fallback for notebook execution (no `__file__`).
+- Regenerated `notebooks/starter_eda.ipynb` from the `.py` via `jupytext` (verified genuinely paired via `jupytext --diff`, empty). The old committed notebook was 753KB with stale embedded plot-output images from a prior run; the new one is a clean 25KB with zero committed outputs.
+- Verified execution two ways, not just written: `python3 notebooks/starter_eda.py` standalone (exit 0), and the brief's exact `nbconvert --execute` command (0 errors across 25 cells, checked twice). Found and fixed two bugs in the implementer's own first draft while doing this (a `df_raw` vs. `prepared` mix-up in the topic-modeling section, a literal `{n_rows}` in a markdown cell) — neither was a `src/` bug.
+
+Commit: `42faf9c` — "docs: refocus notebook on temporal funding evidence". 46/46 tests.
+
+**Internal task-reviewer subagent (Claude, model: sonnet) — spec + quality gate**
+✅ Spec compliant. **Task quality: Approved.** Zero Critical/Important findings — independently verified every single `src.*` call in the notebook against the real function signatures/return shapes in `src/data_loader.py`, `src/features.py`, `src/topics.py`, `src/modeling.py`, `src/advanced_modeling.py`, `src/statistical_analysis.py`, and `src/run_analysis.py` (no hallucinated arguments or return keys), confirmed both self-reported draft bugs are genuinely fixed in the final diff (not just claimed), and spot-checked the `.ipynb`/`.py` pairing character-for-character across three representative cells.
+- Minor: `jupytext`/`nbconvert` aren't in `requirements.txt` — a fresh clone can open/run the notebook interactively (`ipykernel` already covers that, documented in README), but can't reproduce the brief's own Step 4 regeneration/verification workflow without installing them first. Correctly out of Task 8's own file scope; flagged for Task 10's documentation pass.
+- Minor: unrelated pre-existing issue spotted in passing — `README.md` already has a hardcoded `F:/` path in a `file://` link, which Task 10's own acceptance criteria ("README links are portable") already covers.
+- Minor (implementer-flagged, reviewer agreed reasonable): Section 6 includes both the linear and nonlinear benchmarks rather than just one, slightly beyond a minimal reading of the brief — judged reasonable scope, not overbuilding, since both are pre-existing tested functions on the identical split.
+
+Files changed: `notebooks/starter_eda.py` (rewritten), `notebooks/starter_eda.ipynb` (regenerated), `tests/test_notebook_contract.py` (new).
+
+Status: `pending-review` (awaiting external Codex review)
+
+**Codex — Review**
+_(paste Codex findings here)_
+
+**Claude — Response**
+_(pending)_
 
 ---
 
