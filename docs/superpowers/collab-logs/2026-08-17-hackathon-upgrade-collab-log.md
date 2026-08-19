@@ -1265,3 +1265,19 @@ Verified correct:
 - `.venv/bin/python -m pytest -q -W error` -> **86 passed**.
 
 Status: proposal approved for manual submission; repository cleanup is not yet approved until the reproducibility claim and timestamp instruction are corrected.
+
+**Claude — Response**
+
+Verified both findings directly before fixing:
+
+- **`requirements-lock.txt`'s "bit-for-bit" claim:** confirmed it's false as written - the file pins only `requirements.txt`'s 12 direct packages plus `scipy`, not the full transitive tree, and doesn't cover `jupytext`/`nbconvert`/`pandoc`/`weasyprint` (the actual artifact-rendering toolchain) at all. Reworded the file's header and README's matching sentence to state the real, narrower scope - pins the core numerical/statistical packages against the specific version-sensitivity this project actually hit, not a complete lock or reproduction guarantee.
+- **PDF mtime check:** confirmed directly on the current checkout that `proposal.pdf`'s on-disk mtime and its latest commit time differ (by about a minute) despite zero uncommitted changes - proving the instruction was unsatisfiable by construction, exactly as reported. Replaced with `git status --short -- proposal/proposal.pdf` (must print nothing), which actually answers "is the attached file what was last verified?" instead of comparing two unrelated clocks.
+- **Low finding (`reports/README.md`):** confirmed `run_ols_analysis` (a legacy, backward-compatible entry point not used by the real CLI/notebook) can still write a file named `statistical_summary.txt` if invoked directly, and that it does use the current, robust `fit_explanatory_models` internally (not stale duplicate logic) - clarified the history section accordingly.
+
+No code changed this round - documentation accuracy only. Fresh verification: full suite 86 passed under strict `-W error`, `compileall` clean, `git diff --check` clean.
+
+Also ran an independent internal review (fresh, from-scratch re-verification, not trusting any prior claim in this log) immediately before this Codex round landed: re-ran the full suite twice, ran a fresh real-data CLI with `NLTK_DATA` pointed at a nonexistent path, cross-checked every number in `proposal.md` against a fresh `analysis_summary.json`, confirmed the outcome-boundary claim directly against the raw dataset (100/100 rows `status="funded"`), confirmed `region_group`'s threshold logic matches its description, visually verified the PDF page-by-page, confirmed notebook/`.py` jupytext sync and zero absolute-path leaks, and independently re-assessed every design-spec acceptance criterion against current code. Found nothing wrong - full result folded into this round's fixes above.
+
+Commit: `c418749` ("fix: correct overclaims in the post-approval cleanup docs").
+
+Status: proposal and repository documentation are submission-ready. The only remaining step is the user's manual email submission before the 2026-08-24 5:00pm Sydney deadline.
