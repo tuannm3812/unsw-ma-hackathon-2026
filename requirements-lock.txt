@@ -1,0 +1,52 @@
+# Exact versions used to produce every committed artifact in this repo -
+# notebooks/starter_eda.ipynb's committed output, proposal/proposal.pdf,
+# and every "verified against the real dataset" claim in the collaboration
+# log. requirements.txt intentionally uses lower bounds (>=) so a normal
+# `pip install -r requirements.txt` stays installable as new package
+# versions ship; this file exists because a *different* set of versions
+# satisfying those same lower bounds can produce different numerical edge
+# cases and warnings on the same code (this project hit exactly that
+# category of bug more than once during development - see the
+# collaboration log's warning-cleanup and reproducibility rounds).
+#
+# Not meant to replace requirements.txt for normal installs. Use this only
+# when you need to reproduce a committed artifact bit-for-bit:
+#
+#   pip install -r requirements-lock.txt
+#
+# Python: 3.9.6 (this repo has no minimum-version check beyond what
+# individual packages themselves enforce; Python 3.9+ per README).
+#
+# Regenerate after intentionally upgrading a dependency (exact-name match
+# against requirements.txt, not a substring grep - avoids false positives
+# like "notebook_shim" matching "notebook"):
+#
+#   python3 -c "
+#   import subprocess
+#   names = {l.split('>=')[0].strip().lower() for l in open('requirements.txt') if l.strip()}
+#   for line in subprocess.run(['pip', 'freeze'], capture_output=True, text=True).stdout.splitlines():
+#       if '==' in line and line.split('==')[0].lower() in names:
+#           print(line)
+#   "
+#
+# then re-verify every committed artifact (tests, real-data CLI run,
+# notebook re-execution, PDF re-render) before committing the new lock.
+
+pandas==2.3.3
+numpy==2.0.2
+scikit-learn==1.6.1
+matplotlib==3.9.4
+seaborn==0.13.2
+openpyxl==3.1.5
+statsmodels==0.14.6
+patsy==1.0.2
+nltk==3.9.2
+ipykernel==6.31.0
+notebook==7.5.7
+pytest==8.4.2
+
+# Not directly required (not in requirements.txt), but pinned here too
+# since it is the transitive dependency most likely to change numerical
+# edge-case/warning behavior in statsmodels/scikit-learn - the exact
+# category of version-sensitivity this file exists to pin down.
+scipy==1.13.1

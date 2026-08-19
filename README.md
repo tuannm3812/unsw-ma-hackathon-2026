@@ -5,7 +5,7 @@ Working repository for our submission to the **UNSW Marketing Analytics Hackatho
 ## Submission deadline and constraints
 
 - **Proposal due:** 2026-08-24, 5:00pm Sydney time (AEST/UTC+10), via email to `MA.Hackathon@unsw.edu.au`.
-- **Format:** five required proposal sections, 1,500-word maximum excluding references. The current draft (`proposal/proposal.md` / `proposal/proposal.pdf`) is submission-ready at 1,417 words excluding references (via `tests/test_proposal.py`'s authoritative regex count - re-run that test rather than trust this number if the proposal changes again).
+- **Format:** five required proposal sections, 1,500-word maximum excluding references. The current draft (`proposal/proposal.md` / `proposal/proposal.pdf`) is submission-ready at 1,421 words excluding references (via `tests/test_proposal.py`'s authoritative regex count - re-run that test rather than trust this number if the proposal changes again).
 - **Judging criteria (weighted):** insightfulness/originality 30%, analytical rigor/relevance 30%, strategic depth/evolutionary perspective 20%, feasibility 10%, clarity 10%.
 
 ## Research questions
@@ -15,7 +15,7 @@ Working repository for our submission to the **UNSW Marketing Analytics Hackatho
 **Supporting questions.** (kept in sync with `proposal/proposal.md`'s Project Aim section - see that file for the authoritative, current wording)
 
 - Which narrative characteristics — specificity, tone, beneficiary focus, agency, and thematic framing — are associated with funding speed after controlling for loan amount, term, sector, region, and borrower structure?
-- Does that association differ across pre-specified segments — analysis period, region group, and loan-size band by default, with sector, gender, and group-status interactions as explicitly scoped extensions?
+- Does that association differ across pre-specified segments — analysis period, region group, and loan-size band by default, with a sector interaction as an explicitly scoped extension (restricted to adequately represented sectors)?
 - Did the narrative–speed association shift across the **pre-pandemic, pandemic-disruption, and post-pandemic** periods — the project's central **evolutionary-perspective** test?
 - How well do patterns learned on earlier loans predict later-period outcomes, and which controllable features carry the most practical opportunity?
 
@@ -39,7 +39,7 @@ unsw-ma-hackathon-2026/
 │   └── assets/proposal.css        # Stylesheet used to render the PDF
 ├── reports/
 │   ├── generated/                 # Output of `python3 -m src.run_analysis` (git-ignored)
-│   └── statistical_summary.txt    # Superseded-report notice pointing to reports/generated/
+│   └── README.md                  # Explains reports/generated/; no committed report artifact itself
 ├── resources/nltk_data/sentiment/  # Vendored VADER lexicon + its upstream MIT license/provenance
 ├── src/
 │   ├── __init__.py
@@ -56,6 +56,7 @@ unsw-ma-hackathon-2026/
 ├── tests/                          # 11 test files, offline, no dataset or network required
 ├── .gitignore
 ├── requirements.txt
+├── requirements-lock.txt           # Exact versions behind every committed artifact
 └── README.md                       # This file
 ```
 
@@ -80,6 +81,8 @@ pip install -r requirements.txt
 ```
 
 `requirements.txt` covers everything needed to run the pipeline, notebook, and test suite: `pandas`, `numpy`, `scikit-learn`, `matplotlib`, `seaborn`, `openpyxl`, `statsmodels`, `patsy`, `nltk`, `ipykernel`, `notebook`, `pytest`. There is no `xgboost` or `lightgbm` dependency anywhere in the codebase - the nonlinear benchmark uses scikit-learn's built-in `HistGradientBoostingRegressor` instead, to avoid two redundant third-party gradient-boosting dependencies. Sentiment scoring (VADER, via `nltk`) works out of the box with no separate download step: `pip install nltk` alone does not include the lexicon data, so it is vendored directly in `resources/nltk_data/` (see that directory's README) instead of relying on `nltk.download(...)`, which this project's tests/CLI must never call (no network access during import or feature extraction).
+
+`requirements.txt` intentionally uses lower bounds (`>=`) so installs stay possible as new versions ship - but a different set of versions satisfying those same bounds can produce different numerical edge cases and warnings on identical code (this project hit exactly that during development). For a bit-for-bit reproduction of the committed notebook output and PDF, `pip install -r requirements-lock.txt` instead pins the exact versions those artifacts were produced with.
 
 ### 4. Optional tooling for regenerating docs (not in `requirements.txt`)
 
@@ -170,7 +173,22 @@ Steps 1-2 and 5-6 below are manual analytical work each week's data requires, no
 
 ## Proposal
 
-The submission-ready proposal lives at `proposal/proposal.md` (source, 1,417 words excluding references - see `tests/test_proposal.py` for the authoritative count) and `proposal/proposal.pdf` (styled render). Team identity (team member name and affiliation) is **already filled in** in both files - Manh Tuan Nguyen, University of Technology Sydney - there is no outstanding placeholder to complete before submission.
+The submission-ready proposal lives at `proposal/proposal.md` (source, 1,421 words excluding references - see `tests/test_proposal.py` for the authoritative count) and `proposal/proposal.pdf` (styled render). Team identity (team member name and affiliation) is **already filled in** in both files - Manh Tuan Nguyen, University of Technology Sydney - there is no outstanding placeholder to complete before submission.
+
+## Submission checklist (manual - not automated by anything in this repo)
+
+Nothing in this repository sends email; the send step is always a deliberate, manual action by the team.
+
+1. **Recipient:** `MA.Hackathon@unsw.edu.au`
+2. **Deadline:** 2026-08-24, 5:00pm Sydney time (AEST/UTC+10) - send with margin, not at the deadline itself.
+3. **Subject line:** a clear, identifiable subject naming the team/project (e.g. team member name + "UNSW Marketing Analytics Hackathon 2026 Proposal").
+4. **Body:** state the team member name and affiliation (Manh Tuan Nguyen, University of Technology Sydney) and that the attached PDF is the complete proposal submission.
+5. **Attachment:** `proposal/proposal.pdf` - the single, current, rendered file, not `proposal.md` and not an older cached copy. Confirm the attached file's modification time matches the latest `git log -1 proposal/proposal.pdf`.
+6. **Pre-send verification** (re-run fresh, don't trust a memory of an earlier run):
+   - `python3 -m pytest tests/test_proposal.py -v` - all 3 pass (required sections present, ≤1500 words, no causal/completed-analysis language).
+   - Open `proposal/proposal.pdf` itself and visually confirm: 4 pages, title appears once, team identity present, no clipped/overlapping text.
+7. **Send**, then **immediately verify**: check the sent-mail folder for the outgoing message with the correct attachment, and watch for any bounce/delivery-failure notification.
+8. **Keep proof of submission** (the sent email itself, with timestamp) in case of a later dispute about timing.
 
 ## Known limitation
 
