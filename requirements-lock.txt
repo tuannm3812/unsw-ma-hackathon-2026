@@ -1,16 +1,25 @@
-# Exact versions used to produce every committed artifact in this repo -
-# notebooks/starter_eda.ipynb's committed output, proposal/proposal.pdf,
-# and every "verified against the real dataset" claim in the collaboration
-# log. requirements.txt intentionally uses lower bounds (>=) so a normal
-# `pip install -r requirements.txt` stays installable as new package
-# versions ship; this file exists because a *different* set of versions
-# satisfying those same lower bounds can produce different numerical edge
-# cases and warnings on the same code (this project hit exactly that
-# category of bug more than once during development - see the
-# collaboration log's warning-cleanup and reproducibility rounds).
+# Pinned direct numerical/statistical environment - NOT a complete lock
+# and NOT a bit-for-bit artifact reproduction guarantee. It pins exactly
+# requirements.txt's own direct packages (plus scipy, the transitive
+# dependency most likely to shift statsmodels/scikit-learn numerical
+# edge-case/warning behavior) - it does not pin the rest of the
+# transitive dependency tree, and it does not cover the separate
+# artifact-rendering toolchain (jupytext/nbconvert for the notebook,
+# pandoc/weasyprint plus system fonts for the PDF - see "Optional tooling
+# for regenerating docs" in README.md, which is intentionally not in
+# requirements.txt at all). A from-scratch environment built only from
+# this file can still legitimately differ in exact rendered bytes from
+# the committed notebook/PDF for reasons outside this file's scope.
 #
-# Not meant to replace requirements.txt for normal installs. Use this only
-# when you need to reproduce a committed artifact bit-for-bit:
+# What this file *is* useful for: requirements.txt intentionally uses
+# lower bounds (>=) so a normal `pip install -r requirements.txt` stays
+# installable as new package versions ship; a different set of versions
+# satisfying those same lower bounds can produce different numerical
+# edge cases and warnings on identical code (this project hit exactly
+# that category of bug more than once during development - see the
+# collaboration log's warning-cleanup and reproducibility rounds). This
+# file pins down that specific, previously-real risk for the core
+# numerical/statistical packages - nothing more.
 #
 #   pip install -r requirements-lock.txt
 #

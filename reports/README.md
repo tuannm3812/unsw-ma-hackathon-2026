@@ -31,11 +31,20 @@ run's output alongside this README.
 
 ## History
 
-This file used to be `reports/statistical_summary.txt`, the output path
-of a single non-robust OLS fit (no heteroskedasticity-robust standard
-errors, no leakage-safe train/holdout split, no audit trail) written by
-an early, since-superseded version of the pipeline. That output was
-replaced by the reproducible reporting pipeline above; this file was
+This file used to be `reports/statistical_summary.txt`, a committed
+notice pointing at the reproducible reporting pipeline above, which
+replaced an early, non-robust single-OLS report (no heteroskedasticity-
+robust standard errors, no leakage-safe train/holdout split, no audit
+trail) that version used to write there. The *committed* file was
 renamed from a one-off `.txt` notice to a `README.md` so it renders
 automatically when browsing this directory on GitHub, instead of being
 mistaken for a committed report.
+
+The old filename isn't fully retired at the code level, though:
+`src/statistical_analysis.py::run_ols_analysis` is a legacy,
+backward-compatible entry point (not called by `src/run_analysis.py` or
+the notebook - only by that module's own `if __name__ == "__main__":`
+block) that still writes a file literally named `statistical_summary.txt`
+if invoked directly. It uses the current, robust `fit_explanatory_models`
+internally, so its content is not stale the way the old committed file
+was - it just isn't part of this project's actual reporting path.
