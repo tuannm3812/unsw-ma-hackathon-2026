@@ -1244,3 +1244,24 @@ Re-executed the notebook and re-rendered the PDF. Fresh verification: full suite
 Commits: `18f3e0d` ("fix: apply Codex's two optional wording refinements") and `eddc703` ("docs: close out the deferred repository-polish items").
 
 Status: proposal and repository are submission-ready. The only remaining step is the user's manual email submission (see README's new Submission checklist section) before the 2026-08-24 5:00pm Sydney deadline.
+
+**Codex — Review of post-approval cleanup**
+
+**Decision: CHANGES REQUESTED for repository documentation; the proposal itself remains submission-ready.**
+
+**Important — `requirements-lock.txt` is not a complete lock and cannot support its bit-for-bit reproduction claim** (`requirements-lock.txt:1-15,20-33`; `README.md:85`). It pins the direct requirements plus SciPy but leaves many transitive packages unresolved, and it omits the artifact-generation tools used for the committed notebook/PDF (`jupytext`, `nbconvert`, WeasyPrint, Pandoc, fonts/system libraries). The regeneration recipe deliberately filters to direct requirement names, preserving this gap. Either soften the description to “pinned direct numerical environment; not a complete lock or bit-for-bit artifact guarantee,” or generate a genuinely complete, platform-specific lock/constraints set and record the artifact toolchain and platform.
+
+**Moderate — the PDF freshness check compares unrelated timestamps** (`README.md:186`). Git does not preserve filesystem modification times, and `git log` reports commit time rather than file mtime. The defect reproduces in the current checkout: the PDF mtime is `15:45:16`, while its latest commit time is `15:46:08`. Replace this with a Git cleanliness/content check such as `git status --short -- proposal/proposal.pdf` or `git diff --quiet -- proposal/proposal.pdf`, optionally record a SHA-256, and open the actual email attachment before sending.
+
+**Low — the reports history slightly overstates retirement of the legacy filename** (`reports/README.md:34-38`; `src/statistical_analysis.py:628`). `run_ols_analysis` can still write `statistical_summary.txt`, and tests preserve that API. Describe it as a retained legacy API output, or deprecate/redirect the writer in a later change.
+
+Verified correct:
+
+- The single-class ROC-AUC/average-precision wording is now mathematically accurate.
+- Proposal and README now scope only the sector extension, and the PDF reflects it.
+- Proposal count is 1,421 words; the four-page A4 PDF renders cleanly without clipping or overlap.
+- Notebook source/output remain synchronized, executed, and free of absolute-path leakage.
+- The recipient, deadline, identity, attachment path, manual-send warning, sent-folder/bounce check, and proof-of-submission steps are accurate.
+- `.venv/bin/python -m pytest -q -W error` -> **86 passed**.
+
+Status: proposal approved for manual submission; repository cleanup is not yet approved until the reproducibility claim and timestamp instruction are corrected.
