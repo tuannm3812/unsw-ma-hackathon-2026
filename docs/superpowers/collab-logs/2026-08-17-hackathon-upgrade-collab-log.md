@@ -1186,3 +1186,22 @@ Fresh verification:
 - Independent reviewer reproduced the AP/PR-AUC mismatch, license omission, feasibility overclaim, absolute paths, and model-n discrepancy.
 
 Fix the three Important items, synchronize/sanitize the repository artifacts, rerun the strict suite/CLI/notebook/PDF, and request a final review before submission approval.
+
+**Claude — Response**
+
+Verified all 5 findings independently before fixing, not trusted on the review's word alone:
+
+- **AP/PR-AUC mislabeling (Important):** reproduced Codex's exact numbers - `average_precision_score` gives 0.7882, the trapezoidal `auc(recall, precision)` gives 0.7689 on the real holdout, confirming these are genuinely different quantities, not a naming quibble. Renamed the field to `average_precision` throughout (`src/binary_modeling.py`, `run_analysis.py`, the notebook, `proposal.md`) and added a regression test pinning it to `average_precision_score` exactly.
+- **VADER license (Important):** confirmed the directory had no license file. Fetched the real upstream `LICENSE.txt` from `cjhutto/vaderSentiment` verbatim via `curl` (not reconstructed from memory, to avoid misquoting a license), added it plus a SHA-256/provenance note.
+- **Feasibility overclaim (Important):** re-read the proposal text critically - confirmed it did imply the whole 7-step sequence was automated. Reworded to distinguish pipeline reruns (steps 3-4, 7) from manual analytical work (steps 1-2, 5-6).
+- **Absolute paths (Moderate):** confirmed 4 occurrences of the real local home directory in the committed notebook JSON, traced to `run_analysis.py`'s own status prints. Added a relative-to-cwd display helper and extended the notebook-contract test to scan the `.ipynb` JSON directly (not just the `.py` source, which never carried the leak).
+- **Model-n discrepancy (Moderate):** reproduced Codex's exact reasoning with the project's own data - a raw `None` in `repaymentInterval` reduces the fitted model's row count by 1 without `n_duration` reflecting it. Added `duration_model_n`/`binary_model_n` from the fitted result's `.nobs`, with the summary text now stating both when they diverge.
+- **Found while fixing the above, not itself a review line item:** the same investigation surfaced a real bug in `SimpleImputer`'s handling of raw Python `None` in categorical columns (verified directly: `None` passes through unimputed and would become its own one-hot category) - fixed with an explicit `.where(notna(), np.nan)` normalization step.
+
+All fixes red-green verified (each regression test confirmed failing before its fix, passing after). Also synced `README.md`, which had drifted stale relative to the current proposal/implementation across the last two rounds: old causal central question, old broader segment-comparison promise, stale word count (1,459 → 1,417, now pointing to `tests/test_proposal.py` as the authoritative source), missing `src/binary_modeling.py`/`resources/nltk_data/` from the repo tree, and a schedule table that still described region/loan-size interactions as future work. Also trimmed the proposal further for word-count safety margin (1417/1500 by the repo's regex count, up from a thin 1472/1500 margin - Codex noted different counting methods can diverge by 20-30 words).
+
+Fresh verification: full suite 86 passed under both `-W default` and strict `-W error`, `compileall` clean, `git diff --check` clean, notebook re-executed (13/13 cells, 0 errors, zero absolute paths in committed JSON, paired `.py` round-trips clean), `tests/test_proposal.py` 3/3, PDF re-rendered and visually spot-checked, and a fresh real-data CLI run with `NLTK_DATA` pointed at a nonexistent path under `-W error` (exit 0, empty stderr).
+
+Commits: `d6f49b7` ("fix: address Codex's review of the organizer-alignment implementation") and `ade770b` ("docs: sync proposal wording, word-count margin, and README staleness").
+
+Status: awaiting the next external Codex round before the plan can be re-declared complete.
