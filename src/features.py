@@ -8,13 +8,28 @@ try:
 except ModuleNotFoundError:
     from data_loader import validate_schema
 
-# NLTK's VADER sentiment analyzer is used only when its lexicon is already
-# installed locally. Nothing in this module ever downloads it: the project's
-# constraint is that no network access happens during import or feature
-# extraction.
+# NLTK's VADER sentiment analyzer is used only when its lexicon is
+# available locally. Nothing in this module ever downloads it over the
+# network - the project's constraint is that no network access happens
+# during import or feature extraction. `pip install nltk` does not itself
+# include the lexicon data (it normally requires a separate
+# `nltk.download("vader_lexicon")` call), which made sentiment scoring
+# silently environment-dependent: a machine that happened to have already
+# run that download got real sentiment scores, a clean checkout silently
+# got constant placeholder values instead - changing the fitted formula
+# with no visible failure. Fixed by vendoring the lexicon
+# (`resources/nltk_data/`, see its README for provenance/license) and
+# adding it to NLTK's local search path here, so it is found identically
+# on every machine regardless of whether that download ever happened.
 try:
     import nltk
     from nltk.sentiment.vader import SentimentIntensityAnalyzer
+
+    _VENDORED_NLTK_DATA_DIR = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "resources", "nltk_data"
+    )
+    if _VENDORED_NLTK_DATA_DIR not in nltk.data.path:
+        nltk.data.path.insert(0, _VENDORED_NLTK_DATA_DIR)
 except ImportError:  # pragma: no cover - nltk is a listed dependency
     nltk = None
     SentimentIntensityAnalyzer = None
@@ -68,10 +83,16 @@ YEARS_IN_BUSINESS_PATTERN = (
 
 
 def _vader_lexicon_available() -> bool:
-    """Return True only if the VADER lexicon is already installed locally.
+    """Return True only if the VADER lexicon is available locally.
 
     This never triggers a network call: nltk.data.find only searches local
-    NLTK data paths and raises LookupError when the resource is absent.
+    NLTK data paths and raises LookupError when the resource is absent. In
+    practice this is always True in this project - the vendored copy under
+    `resources/nltk_data/` (added to nltk's search path at import time
+    above) guarantees it - but the check and the constant-value fallback
+    below are kept regardless, so an nltk-less or otherwise-broken
+    environment still degrades to a labeled, visible `sentiment_available
+    = 0` instead of crashing.
     """
     if nltk is None:
         return False
@@ -258,26 +279,49 @@ def _add_financial_features(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-# Fixed, transparent region-grouping allowlist, used by `region_group`
-# below. Asia and Africa are the only two regions with adequate
-# representation in this project's development sample (55 and 36 of the
-# ~100 valid loans respectively; every other region - Central America,
-# Middle East, North America, Oceania - totals under 10 combined, with one
-# region down to a single loan). Grouping the rest into "Other" keeps every
-# level of the family-framing x region interaction
-# (`src/statistical_analysis.py`'s `DEFAULT_SEGMENT_INTERACTIONS`)
-# well-populated instead of leaving single-observation categories that make
-# it unfittable. This list is a fixed constant, not derived from whatever
-# specific subset of rows a given call to `extract_deterministic_features`
-# receives, so the grouping is identical and reproducible across the full
-# sample, any train/holdout split, or the eventual full competition
-# dataset - the same design already used for `loan_size_band`'s fixed
-# dollar thresholds above.
-REGION_MAJOR_CATEGORIES = ["Africa", "Asia"]
+# Minimum observation count for a region to keep its own level in
+# `region_group` below, rather than being collapsed into "Other". This is
+# a fixed, transparent *threshold* (mirroring `loan_size_band`'s fixed
+# dollar thresholds above), not a fixed *name list*: an earlier version of
+# this feature hardcoded `["Africa", "Asia"]` because those were the only
+# two regions with >=10 observations in this project's ~100-row
+# development sample - but a hardcoded name list silently stops adapting
+# once the full competition dataset (with a different, probably larger and
+# differently-distributed set of regions) is substituted in, discarding
+# whatever regional heterogeneity the full data actually supports. A
+# count-based threshold recomputes which regions qualify from whatever
+# data is actually passed to `extract_deterministic_features`, so the
+# *rule* ("well-populated regions get their own level") stays fixed and
+# pre-specified while its *result* correctly adapts to the sample size.
+# 10 is chosen as a conventional rule-of-thumb floor for a stable
+# categorical-level estimate (consistent with `MIN_SPLIT_OBSERVATIONS`
+# elsewhere in this project's leakage-safe split logic).
+MIN_REGION_OBSERVATIONS = 10
 
 
 def _add_region_group_feature(df: pd.DataFrame) -> pd.DataFrame:
-    df["region_group"] = df["region"].where(df["region"].isin(REGION_MAJOR_CATEGORIES), "Other")
+    """
+    Add `region_group`: `region` collapsed so that only regions with at
+    least `MIN_REGION_OBSERVATIONS` rows *in this specific `df`* keep their
+    own level; everything else (including any region name never seen
+    before) becomes "Other". Computed fresh from `df` every call - by
+    design, so it reflects whatever data is actually passed in rather than
+    a value baked in from a different sample. This is safe for this
+    project's only current caller, `fit_explanatory_models`
+    (`src/statistical_analysis.py`), which calls
+    `extract_deterministic_features` exactly once on the *whole* valid
+    sample (not a train/holdout split) before fitting - so the threshold
+    is applied consistently within that one call. A caller that instead
+    computed `region_group` separately on a train partition and a holdout
+    partition could get different major-region sets between the two (the
+    same distinction `KivaTopicTransformer`'s fit-train/apply-to-holdout
+    design exists to avoid) - `region_group` is not currently used by
+    `src/modeling.py`'s predictive pipeline for exactly this reason; adding
+    it there would need a fit-on-train/apply-to-holdout redesign first.
+    """
+    counts = df["region"].value_counts()
+    major_regions = counts[counts >= MIN_REGION_OBSERVATIONS].index
+    df["region_group"] = df["region"].where(df["region"].isin(major_regions), "Other")
     return df
 
 

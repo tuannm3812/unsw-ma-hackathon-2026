@@ -180,7 +180,8 @@ def prepare_chronological_matrices(
 
     Returns a dict with row counts, feature name lists, and a private
     `_artifacts` key holding the fitted transformers, transformed matrices,
-    targets (log space and days), and untransformed predictor frames.
+    both targets (continuous: log space and days; binary: `funded_within_24h`),
+    and untransformed predictor frames.
     """
     prepared = prepare_analysis_data(df)
     valid = prepared.loc[prepared["valid_completed_outcome"]].copy()
@@ -220,6 +221,14 @@ def prepare_chronological_matrices(
     y_holdout = holdout_raw["log_funding_speed"].to_numpy(dtype=float)
     y_train_days = train_raw["funding_speed_days"].to_numpy(dtype=float)
     y_holdout_days = holdout_raw["funding_speed_days"].to_numpy(dtype=float)
+    # `funded_within_24h` is always determinable (never <NA>) within rows
+    # that already passed the `valid_completed_outcome` filter above (see
+    # `prepare_analysis_data`), so this is safe to cast straight to int -
+    # exposed here, not just the continuous target, so any binary-outcome
+    # classifier (see `src/binary_modeling.py`) can reuse this exact same
+    # leakage-safe split/encoding instead of rebuilding it.
+    y_train_binary = train_raw["funded_within_24h"].to_numpy(dtype=int)
+    y_holdout_binary = holdout_raw["funded_within_24h"].to_numpy(dtype=int)
 
     return {
         "holdout_start": holdout_start,
@@ -237,6 +246,8 @@ def prepare_chronological_matrices(
             "y_holdout": y_holdout,
             "y_train_days": y_train_days,
             "y_holdout_days": y_holdout_days,
+            "y_train_binary": y_train_binary,
+            "y_holdout_binary": y_holdout_binary,
             "train_df": train_full,
             "holdout_df": holdout_full,
         },

@@ -77,7 +77,7 @@ source .venv/bin/activate          # macOS/Linux
 pip install -r requirements.txt
 ```
 
-`requirements.txt` covers everything needed to run the pipeline, notebook, and test suite: `pandas`, `numpy`, `scikit-learn`, `matplotlib`, `seaborn`, `openpyxl`, `statsmodels`, `patsy`, `nltk`, `ipykernel`, `notebook`, `pytest`. There is no `xgboost` or `lightgbm` dependency anywhere in the codebase - the nonlinear benchmark uses scikit-learn's built-in `HistGradientBoostingRegressor` instead, to avoid two redundant third-party gradient-boosting dependencies.
+`requirements.txt` covers everything needed to run the pipeline, notebook, and test suite: `pandas`, `numpy`, `scikit-learn`, `matplotlib`, `seaborn`, `openpyxl`, `statsmodels`, `patsy`, `nltk`, `ipykernel`, `notebook`, `pytest`. There is no `xgboost` or `lightgbm` dependency anywhere in the codebase - the nonlinear benchmark uses scikit-learn's built-in `HistGradientBoostingRegressor` instead, to avoid two redundant third-party gradient-boosting dependencies. Sentiment scoring (VADER, via `nltk`) works out of the box with no separate download step: `pip install nltk` alone does not include the lexicon data, so it is vendored directly in `resources/nltk_data/` (see that directory's README) instead of relying on `nltk.download(...)`, which this project's tests/CLI must never call (no network access during import or feature extraction).
 
 ### 4. Optional tooling for regenerating docs (not in `requirements.txt`)
 

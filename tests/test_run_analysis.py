@@ -89,6 +89,42 @@ def test_run_analysis_records_audit_trail_and_versions(tmp_path, large_synthetic
 
     assert summary["explanatory"]["attempted"] is True
     assert summary["explanatory"]["n_duration"] is not None
+    # Both explanatory sub-models fit on this well-behaved synthetic
+    # fixture, so status must be the strict "success", not just "attempted".
+    assert summary["explanatory"]["status"] == "success"
+
+    assert summary["binary_classifier"]["attempted"] is True
+    assert summary["binary_classifier"]["succeeded"] is True
+    assert summary["binary_classifier"]["error"] is None
+    metrics = summary["binary_classifier"]["metrics"]
+    assert "roc_auc" in metrics and "pr_auc" in metrics and "brier_score" in metrics
+
+
+def test_run_analysis_reports_partial_success_when_only_one_explanatory_model_fits(
+    tmp_path, separated_binary_kiva_df,
+):
+    # `separated_binary_kiva_df` forces quasi-complete separation in the
+    # 24-hour binary explanatory model while the duration model fits fine
+    # - exactly the real 100-row development sample's behavior. The old
+    # `succeeded` semantics reported `True` here (the stage "attempted"
+    # without raising), which an automated consumer could misread as
+    # "everything in this section is trustworthy." `status` must say
+    # "partial_success", and `succeeded` must be strictly `False` since
+    # not everything fit.
+    data_path = tmp_path / "sample.pkl"
+    _write_pickle(separated_binary_kiva_df, data_path)
+    output_dir = tmp_path / "reports"
+    summary = run_analysis(data_path, output_dir, holdout_start="2024-01-01")
+
+    explanatory = summary["explanatory"]
+    assert explanatory["attempted"] is True
+    assert explanatory["duration_fitted"] is True
+    assert explanatory["binary_fitted"] is False
+    assert explanatory["status"] == "partial_success"
+    assert explanatory["succeeded"] is False
+
+    report_text = (output_dir / "association_summary.txt").read_text()
+    assert "24-Hour Funding Classifier" in report_text
 
 
 def test_run_analysis_resolves_paths_without_assuming_cwd(tmp_path, large_synthetic_kiva_df, monkeypatch):
@@ -201,6 +237,7 @@ def test_run_analysis_still_degrades_when_neither_explanatory_model_fits(
 
     assert summary["explanatory"]["attempted"] is True
     assert summary["explanatory"]["succeeded"] is False
+    assert summary["explanatory"]["status"] == "failed"
     assert "could not fit either model" in summary["explanatory"]["error"]
     # Other sections are unaffected by the explanatory stage's failure.
     assert summary["baseline_ridge"]["succeeded"] is True

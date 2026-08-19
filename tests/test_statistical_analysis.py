@@ -118,17 +118,21 @@ def test_region_interaction_is_pruned_when_region_group_has_no_family_mentions_v
     # sample") must extend to the two new default interactions without any
     # new pruning logic. Uses `region_group` (not raw `region`), since that
     # is what the interaction and its main effect are now built on - zeros
-    # out every row whose `region_group` is "Other" (which collapses three
-    # of `_LARGE_FIXTURE_REGIONS` - Latin America, Eastern Europe, Pacific -
-    # so the whole "Other" level loses variation, not just one raw region).
+    # out every row in the "Pacific" level specifically. `region_group` is
+    # now a count-based threshold (src/features.py), not a fixed name
+    # list, and every one of _LARGE_FIXTURE_REGIONS's 5 regions clears
+    # that threshold on this 120-row fixture (each has 18+ rows, well
+    # above MIN_REGION_OBSERVATIONS) - so region_group == region here and
+    # there is no "Other" level to target; picking one real level directly
+    # exercises the same pruning path.
     frame = large_synthetic_kiva_df.copy()
     from src.data_loader import prepare_analysis_data
     from src.features import extract_deterministic_features
 
     prepared = prepare_analysis_data(frame)
     featured_probe = extract_deterministic_features(prepared)
-    other_mask = featured_probe["region_group"] == "Other"
-    frame.loc[other_mask, "description"] = "to buy stock and materials for the business"
+    pacific_mask = featured_probe["region_group"] == "Pacific"
+    frame.loc[pacific_mask, "description"] = "to buy stock and materials for the business"
 
     result = fit_explanatory_models(frame)
     assert result["duration"] is not None

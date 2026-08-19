@@ -2,21 +2,22 @@
 Reproducible, auditable CLI orchestration for the full Kiva funding-speed
 analysis.
 
-This module wires together the three modeling stages already built by
+This module wires together the four modeling stages already built by
 earlier tasks - the leakage-safe chronological baseline+Ridge evaluation
 (`src/modeling.py`, Task 4), the robust explanatory association models
-(`src/statistical_analysis.py`, Task 5), and the nonlinear benchmark
-(`src/advanced_modeling.py`, Task 6) - against one loaded dataset, and
-writes the results out as two auditable reports:
+(`src/statistical_analysis.py`, Task 5), the nonlinear benchmark
+(`src/advanced_modeling.py`, Task 6), and the leakage-safe chronological
+24-hour funding classifier (`src/binary_modeling.py`) - against one
+loaded dataset, and writes the results out as two auditable reports:
 
   - `analysis_summary.json`: a machine-readable, JSON-serializable summary
-    (dataset audit trail, all three stages' metrics, software versions).
+    (dataset audit trail, all four stages' metrics, software versions).
   - `association_summary.txt`: a human-readable association-language
     report (same audit trail, plus the full explanatory-model narrative
     from `format_association_summary`).
 
 This module deliberately introduces no new modeling logic of its own -
-every number in these reports comes from calling the three modules above
+every number in these reports comes from calling the four modules above
 exactly as they document. Its job is orchestration, auditability (record
 dataset size, date range, exclusion counts, split boundary, and software
 versions, so a report can be traced back to the run that produced it), and
@@ -52,12 +53,14 @@ import statsmodels
 
 try:
     from src.advanced_modeling import evaluate_boosted_model
+    from src.binary_modeling import evaluate_chronological_binary_classifier
     from src.data_loader import load_kiva_pickle, prepare_analysis_data
     from src.modeling import evaluate_chronological_models
     from src.statistical_analysis import fit_explanatory_models, format_association_summary
     from src.validation import InsufficientDataError
 except ModuleNotFoundError:
     from advanced_modeling import evaluate_boosted_model
+    from binary_modeling import evaluate_chronological_binary_classifier
     from data_loader import load_kiva_pickle, prepare_analysis_data
     from modeling import evaluate_chronological_models
     from statistical_analysis import fit_explanatory_models, format_association_summary
@@ -219,6 +222,33 @@ def _run_nonlinear_benchmark(df: pd.DataFrame, holdout_start: str, n_topics: int
         }
 
 
+def _run_binary_classifier(df: pd.DataFrame, holdout_start: str, n_topics: int, random_state: int) -> dict:
+    """
+    Attempt the leakage-safe chronological binary classifier for
+    `funded_within_24h` (design-spec requirement: ROC AUC/PR AUC/Brier
+    score when both classes are present). Shares
+    `prepare_chronological_matrices` with the two continuous-target
+    stages above, so the same `InsufficientDataError`-on-too-small-split
+    failure mode applies here too - caught the same way, not left to
+    crash the whole run.
+    """
+    try:
+        results = evaluate_chronological_binary_classifier(
+            df, holdout_start=holdout_start, n_topics=n_topics, random_state=random_state
+        )
+        results.pop("_artifacts", None)
+        results["attempted"] = True
+        results["succeeded"] = True
+        results["error"] = None
+        return results
+    except InsufficientDataError as error:
+        return {
+            "attempted": True,
+            "succeeded": False,
+            "error": str(error),
+        }
+
+
 def _run_explanatory(df: pd.DataFrame) -> dict:
     """
     Run the robust explanatory (association) models (Task 5). Each of the
@@ -233,17 +263,33 @@ def _run_explanatory(df: pd.DataFrame) -> dict:
     the same reason as the chronological stages above: an unrelated bug
     (e.g. in feature extraction or formula construction) must still fail
     loudly.
+
+    `status` is one of `"success"` (both duration and binary fit),
+    `"partial_success"` (exactly one did - this is the normal outcome on
+    the ~100-row development sample, where duration fits but the binary
+    model hits quasi-complete separation), or `"failed"` (neither fit,
+    the `except` branch below). `succeeded` mirrors `status == "success"`
+    - it used to be `True` whenever this function didn't raise, which
+    conflated "both models fit" with "at least one did," letting an
+    automated consumer that only checks `succeeded` misread a partial
+    result as a clean one. `duration_fitted`/`binary_fitted` were already
+    present for anyone reading closely; `status` makes the tri-state
+    explicit for anyone who isn't.
     """
     try:
         results = fit_explanatory_models(df)
+        duration_fitted = results["duration"] is not None
+        binary_fitted = results["binary"] is not None
+        both_fitted = duration_fitted and binary_fitted
         return {
             "attempted": True,
-            "succeeded": True,
+            "succeeded": both_fitted,
+            "status": "success" if both_fitted else "partial_success",
             "error": None,
             "n_duration": results["n_duration"],
             "n_binary": results["n_binary"],
-            "duration_fitted": results["duration"] is not None,
-            "binary_fitted": results["binary"] is not None,
+            "duration_fitted": duration_fitted,
+            "binary_fitted": binary_fitted,
             "duration_error": results["duration_error"],
             "binary_error": results["binary_error"],
             "duration_formula": results["duration_formula"],
@@ -255,6 +301,7 @@ def _run_explanatory(df: pd.DataFrame) -> dict:
         return {
             "attempted": True,
             "succeeded": False,
+            "status": "failed",
             "error": str(error),
             "n_duration": None,
             "n_binary": None,
@@ -284,6 +331,36 @@ def _format_audit_header(data_section: dict, versions: dict) -> "list[str]":
         "Software versions: " + ", ".join(f"{name}={version}" for name, version in versions.items()),
         "",
     ]
+    return lines
+
+
+def _format_binary_classifier_section(binary_classifier: dict) -> "list[str]":
+    lines = [
+        "24-Hour Funding Classifier (leakage-safe chronological holdout)",
+        "-" * 62,
+    ]
+    if not binary_classifier["succeeded"]:
+        lines.append(f"Could not be reliably fit on this sample: {binary_classifier['error']}")
+        lines.append("")
+        return lines
+
+    metrics = binary_classifier["metrics"]
+    lines.append(
+        f"Train rows: {binary_classifier['train_rows']}  |  "
+        f"Holdout rows: {binary_classifier['holdout_rows']}"
+    )
+    if metrics["single_class_holdout"]:
+        lines.append(
+            "Holdout partition contains only one funded_within_24h class - "
+            "ROC AUC and PR AUC are mathematically undefined and omitted."
+        )
+    else:
+        lines.append(f"Holdout ROC AUC: {metrics['roc_auc']:.4f}")
+        lines.append(f"Holdout PR AUC:  {metrics['pr_auc']:.4f}")
+    lines.append(f"Holdout Brier score: {metrics['brier_score']:.4f}")
+    lines.append(f"Holdout accuracy: {metrics['holdout_accuracy']:.4f}")
+    lines.append(f"Holdout class balance: {metrics['holdout_class_balance']}")
+    lines.append("")
     return lines
 
 
@@ -322,12 +399,16 @@ def run_analysis(data_path, output_dir, holdout_start: str = "2024-01-01", n_top
     print("Attempting the nonlinear (gradient-boosted) benchmark...")
     nonlinear_benchmark = _run_nonlinear_benchmark(df, holdout_start, n_topics, random_state=42)
 
+    print("Attempting the leakage-safe 24-hour funding classifier...")
+    binary_classifier = _run_binary_classifier(df, holdout_start, n_topics, random_state=42)
+
     summary = {
         "generated_at": pd.Timestamp.now(tz="UTC").isoformat(),
         "software_versions": versions,
         "data": data_section,
         "baseline_ridge": baseline_ridge,
         "nonlinear_benchmark": nonlinear_benchmark,
+        "binary_classifier": binary_classifier,
         "explanatory": explanatory_section,
     }
 
@@ -342,6 +423,7 @@ def run_analysis(data_path, output_dir, holdout_start: str = "2024-01-01", n_top
         "",
     ]
     text_lines.extend(_format_audit_header(data_section, versions))
+    text_lines.extend(_format_binary_classifier_section(binary_classifier))
     if explanatory_raw is not None:
         text_lines.append(format_association_summary(explanatory_raw))
     else:
