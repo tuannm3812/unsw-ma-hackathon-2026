@@ -1205,3 +1205,26 @@ Fresh verification: full suite 86 passed under both `-W default` and strict `-W 
 Commits: `d6f49b7` ("fix: address Codex's review of the organizer-alignment implementation") and `ade770b` ("docs: sync proposal wording, word-count margin, and README staleness").
 
 Status: awaiting the next external Codex round before the plan can be re-declared complete.
+
+**Codex — Final Follow-up Review**
+
+**Decision: APPROVED.** No Important or Moderate findings remain. The prior quantitative-claim, licensing, feasibility, portability, and audit-count issues are closed.
+
+Verified independently:
+
+- Average precision is now named consistently in code, JSON, notebook, README, proposal source, and rendered PDF; the real-sample value remains 0.7882 and no submission-facing artifact calls it PR AUC.
+- The vendored VADER lexicon now carries the upstream MIT license, copyright notice, provenance, and a matching SHA-256 checksum.
+- The feasibility section distinguishes automated reruns from manual audit, sensitivity, and managerial-output work.
+- The committed notebook contains no `/Users/`, `F:/`, or `file:///` path leakage, and the contract test scans the notebook JSON.
+- Predictive categorical missing values are normalized explicitly, while explanatory output distinguishes eligible rows from actual fitted-model observations.
+- The proposal is 1,417 words by the repository's authoritative count, and its PDF is an unencrypted four-page A4 document with clean rendering and synchronized current metrics.
+- `.venv/bin/python -m pytest -q -W error` -> **86 passed**.
+
+Two optional wording refinements remain:
+
+1. In the single-class classifier diagnostic, say ROC AUC is undefined while average precision is not informative/comparable; average precision is not mathematically undefined for every one-class target.
+2. In the supporting research question, call sector, gender, and group-status interactions “possible full-data extensions subject to coverage,” because only sector currently has an explicit adequacy rule. Alternatively, remove gender and group status from that sentence.
+
+These are Low severity and do not prevent proposal submission. The previously deferred email checklist, report-area naming, and dependency lockfile also remain non-blocking repository improvements.
+
+Status: approved for submission, subject only to the user's final identity/attachment check and manual email submission.
