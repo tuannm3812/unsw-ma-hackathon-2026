@@ -372,7 +372,9 @@ def _format_binary_classifier_section(binary_classifier: dict) -> "list[str]":
     if metrics["single_class_holdout"]:
         lines.append(
             "Holdout partition contains only one funded_within_24h class - "
-            "ROC AUC and average precision are mathematically undefined and omitted."
+            "ROC AUC is mathematically undefined and omitted; average "
+            "precision would be a trivial number determined only by the "
+            "class balance, not the classifier, so it is omitted too."
         )
     else:
         lines.append(f"Holdout ROC AUC: {metrics['roc_auc']:.4f}")

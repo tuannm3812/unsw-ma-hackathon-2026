@@ -15,7 +15,7 @@ Kiva lenders do not observe one another's decisions directly, so no dataset reco
 **Supporting questions.**
 
 - Which narrative characteristics — specificity, tone, beneficiary focus, agency, and thematic framing — are associated with funding speed after controlling for loan amount, term, sector, region, and borrower structure?
-- Does that association differ across pre-specified segments — analysis period, region group, and loan-size band by default, with sector, gender, and group-status interactions as explicitly scoped extensions?
+- Does that association differ across pre-specified segments — analysis period, region group, and loan-size band by default, with a sector interaction as an explicitly scoped extension (restricted to adequately represented sectors)?
 - Did the narrative–speed association shift across the **pre-pandemic, pandemic-disruption, and post-pandemic** periods — the project's central **evolutionary-perspective** test?
 - How well do patterns learned on earlier loans predict later-period outcomes, and which controllable features carry the most practical opportunity?
 

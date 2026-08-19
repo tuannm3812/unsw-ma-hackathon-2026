@@ -56,13 +56,18 @@ def test_binary_classifier_average_precision_matches_sklearns_definition_exactly
 
 
 def test_binary_classifier_degrades_gracefully_on_single_class_holdout(large_synthetic_kiva_df, monkeypatch):
-    # ROC AUC/average precision are mathematically undefined with only one
-    # class in y_true - force exactly that (an all-1s holdout target) and
-    # confirm
-    # the function reports a labeled diagnostic instead of letting
-    # roc_auc_score raise an opaque ValueError or returning a meaningless
-    # number. Brier score and accuracy remain well-defined regardless, so
-    # they must still be reported.
+    # With only one class in y_true, ROC AUC is mathematically undefined
+    # (roc_auc_score itself returns nan), but average_precision_score is
+    # not undefined in the same sense - it returns a real, technically
+    # valid number (1.0/0.0) that is trivial, determined only by the
+    # class balance rather than the classifier. Force exactly this (an
+    # all-1s holdout target) and confirm both are still omitted as a
+    # labeled diagnostic - ROC AUC because it is undefined, average
+    # precision because it would be uninformative - rather than letting
+    # roc_auc_score raise an opaque ValueError or reporting the
+    # meaningless average-precision number as if it were real. Brier
+    # score and accuracy remain well-defined and informative regardless,
+    # so they must still be reported.
     import src.binary_modeling as binary_modeling_module
 
     real_prepare = binary_modeling_module.prepare_chronological_matrices

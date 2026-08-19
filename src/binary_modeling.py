@@ -61,18 +61,25 @@ def evaluate_chronological_binary_classifier(
 
     A chronological split (unlike a random one) is not guaranteed to leave
     both classes in the holdout partition - e.g. every loan posted after
-    `holdout_start` could happen to fund within 24h, or none could. ROC
-    AUC/average precision are mathematically undefined with only one class
-    present in `y_true`, so this is checked explicitly and reported as a
-    labeled diagnostic (`roc_auc`/`average_precision` set to `None`,
-    `single_class_holdout` set to `True`) rather than letting scikit-learn
-    raise an opaque `ValueError` or silently returning a meaningless
-    number. Brier score and holdout accuracy remain well-defined
-    regardless of class balance, so they are always reported. The training
-    partition having only one class is a harder failure (a classifier
-    cannot be fit on it at all) and raises `InsufficientDataError`,
-    mirroring how `prepare_chronological_matrices` itself raises when a
-    split is too small to support any model.
+    `holdout_start` could happen to fund within 24h, or none could. With
+    only one class present in `y_true`, ROC AUC is mathematically
+    undefined (`roc_auc_score` itself returns `nan`); average precision is
+    not undefined in the same sense - `average_precision_score` returns a
+    real number (1.0 for an all-positive holdout, 0.0 for an all-negative
+    one, verified directly) - but that number is trivial, determined
+    entirely by the holdout's class balance rather than anything the
+    classifier actually discriminated, so it is not informative or
+    comparable across runs either. Both are therefore checked explicitly
+    and reported as a labeled diagnostic (`roc_auc`/`average_precision`
+    set to `None`, `single_class_holdout` set to `True`) rather than
+    letting scikit-learn raise an opaque `ValueError` (ROC AUC) or
+    silently returning a technically-defined-but-meaningless number
+    (average precision). Brier score and holdout accuracy remain
+    well-defined and informative regardless of class balance, so they are
+    always reported. The training partition having only one class is a
+    harder failure (a classifier cannot be fit on it at all) and raises
+    `InsufficientDataError`, mirroring how `prepare_chronological_matrices`
+    itself raises when a split is too small to support any model.
 
     Returns a dict with row counts, feature names, a `"metrics"` dict
     (`roc_auc`, `average_precision`, `brier_score`, `holdout_accuracy`,
