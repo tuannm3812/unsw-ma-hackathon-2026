@@ -150,6 +150,31 @@ def test_explanatory_models_use_valid_rows_and_robust_covariance(large_synthetic
     assert result["duration"].cov_type == "HC3"
     assert result["n_duration"] == len(large_synthetic_kiva_df)
     assert result["n_binary"] == len(large_synthetic_kiva_df)
+    # No missing predictor values on this fixture, so the actual fitted
+    # design size must match the eligible-row count exactly.
+    assert result["duration_model_n"] == result["n_duration"]
+    assert result["binary_model_n"] == result["n_binary"]
+
+
+def test_model_n_reflects_rows_patsy_actually_dropped_for_a_missing_predictor(large_synthetic_kiva_df):
+    # Patsy silently drops any row with a missing value in *any* formula
+    # predictor when building the design matrix - n_duration/n_binary
+    # (the "eligible" counts) do not reflect this on their own. Force one
+    # row's repaymentInterval to be missing and confirm duration_model_n
+    # correctly comes out one lower than n_duration, and that the
+    # human-readable summary states both numbers rather than only the
+    # (now overstated) eligible count.
+    frame = large_synthetic_kiva_df.copy()
+    frame.loc[frame.index[0], "repaymentInterval"] = None
+
+    result = fit_explanatory_models(frame)
+    assert result["duration"] is not None
+    assert result["n_duration"] == len(frame)
+    assert result["duration_model_n"] == len(frame) - 1
+
+    summary = format_association_summary(result)
+    assert f"n = {len(frame) - 1} loans used in the fitted model" in summary
+    assert f"1 of {len(frame)} loans with a valid completed outcome excluded" in summary
 
 
 def test_summary_uses_association_not_effect_language(large_synthetic_kiva_df):

@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+from sklearn.metrics import average_precision_score
 
 from src.binary_modeling import evaluate_chronological_binary_classifier
 from src.validation import InsufficientDataError
@@ -13,28 +14,51 @@ def test_binary_classifier_returns_holdout_metrics(large_synthetic_kiva_df):
     assert result["train_rows"] > 0
     assert result["holdout_rows"] > 0
     assert set(metrics) == {
-        "roc_auc", "pr_auc", "brier_score", "holdout_accuracy",
+        "roc_auc", "average_precision", "brier_score", "holdout_accuracy",
         "single_class_holdout", "holdout_class_balance",
     }
     assert 0.0 <= metrics["brier_score"] <= 1.0
     assert 0.0 <= metrics["holdout_accuracy"] <= 1.0
 
 
-def test_binary_classifier_reports_roc_and_pr_auc_when_holdout_has_both_classes(large_synthetic_kiva_df):
+def test_binary_classifier_reports_roc_and_average_precision_when_holdout_has_both_classes(large_synthetic_kiva_df):
     result = evaluate_chronological_binary_classifier(
         large_synthetic_kiva_df, holdout_start="2024-01-01", n_topics=2,
     )
     metrics = result["metrics"]
     assert metrics["single_class_holdout"] is False
     assert metrics["roc_auc"] is not None
-    assert metrics["pr_auc"] is not None
+    assert metrics["average_precision"] is not None
     assert 0.0 <= metrics["roc_auc"] <= 1.0
-    assert 0.0 <= metrics["pr_auc"] <= 1.0
+    assert 0.0 <= metrics["average_precision"] <= 1.0
+
+
+def test_binary_classifier_average_precision_matches_sklearns_definition_exactly(large_synthetic_kiva_df):
+    # Regression test for a real mislabeling bug: this project's
+    # `average_precision` field must be exactly
+    # `sklearn.metrics.average_precision_score`, not the trapezoidal area
+    # under the precision-recall curve (`sklearn.metrics.auc(recall,
+    # precision)`) - the two are related but numerically different
+    # (confirmed on the real Kiva sample: 0.7882 vs. 0.7689). Recomputes
+    # average precision directly from the fitted classifier's own holdout
+    # predictions and asserts an exact match, so a future swap to a
+    # different precision-recall summary would fail this test rather than
+    # silently drift from what the field name promises.
+    result = evaluate_chronological_binary_classifier(
+        large_synthetic_kiva_df, holdout_start="2024-01-01", n_topics=2,
+    )
+    classifier = result["_artifacts"]["binary_classifier"]
+    X_holdout = result["_artifacts"]["X_holdout"]
+    y_holdout = result["_artifacts"]["y_holdout_binary"]
+    holdout_pred_proba = classifier.predict_proba(X_holdout)[:, 1]
+    expected = float(average_precision_score(y_holdout, holdout_pred_proba))
+    assert result["metrics"]["average_precision"] == pytest.approx(expected)
 
 
 def test_binary_classifier_degrades_gracefully_on_single_class_holdout(large_synthetic_kiva_df, monkeypatch):
-    # ROC AUC/PR AUC are mathematically undefined with only one class in
-    # y_true - force exactly that (an all-1s holdout target) and confirm
+    # ROC AUC/average precision are mathematically undefined with only one
+    # class in y_true - force exactly that (an all-1s holdout target) and
+    # confirm
     # the function reports a labeled diagnostic instead of letting
     # roc_auc_score raise an opaque ValueError or returning a meaningless
     # number. Brier score and accuracy remain well-defined regardless, so
@@ -58,7 +82,7 @@ def test_binary_classifier_degrades_gracefully_on_single_class_holdout(large_syn
     metrics = result["metrics"]
     assert metrics["single_class_holdout"] is True
     assert metrics["roc_auc"] is None
-    assert metrics["pr_auc"] is None
+    assert metrics["average_precision"] is None
     assert metrics["brier_score"] is not None
     assert 0.0 <= metrics["holdout_accuracy"] <= 1.0
 

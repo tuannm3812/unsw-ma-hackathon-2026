@@ -89,6 +89,9 @@ def test_run_analysis_records_audit_trail_and_versions(tmp_path, large_synthetic
 
     assert summary["explanatory"]["attempted"] is True
     assert summary["explanatory"]["n_duration"] is not None
+    # No missing predictor values on this fixture, so the actual fitted
+    # design size must match the eligible-row count exactly.
+    assert summary["explanatory"]["duration_model_n"] == summary["explanatory"]["n_duration"]
     # Both explanatory sub-models fit on this well-behaved synthetic
     # fixture, so status must be the strict "success", not just "attempted".
     assert summary["explanatory"]["status"] == "success"
@@ -97,7 +100,7 @@ def test_run_analysis_records_audit_trail_and_versions(tmp_path, large_synthetic
     assert summary["binary_classifier"]["succeeded"] is True
     assert summary["binary_classifier"]["error"] is None
     metrics = summary["binary_classifier"]["metrics"]
-    assert "roc_auc" in metrics and "pr_auc" in metrics and "brier_score" in metrics
+    assert "roc_auc" in metrics and "average_precision" in metrics and "brier_score" in metrics
 
 
 def test_run_analysis_reports_partial_success_when_only_one_explanatory_model_fits(

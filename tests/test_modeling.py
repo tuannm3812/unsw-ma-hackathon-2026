@@ -15,6 +15,33 @@ from src.modeling import (
 from src.validation import InsufficientDataError
 
 
+def test_build_predictor_frame_normalizes_a_raw_none_to_nan_for_the_imputer(synthetic_kiva_df):
+    # A raw source field can already contain a literal Python `None`
+    # (not np.nan) in an object-dtype column - unlike a category-dtype
+    # column, whose missing entries become np.nan automatically on cast
+    # to object. sklearn's SimpleImputer(missing_values=np.nan, the
+    # default) does NOT recognize a raw None as missing (verified
+    # directly: it passes None through unchanged rather than imputing
+    # it), which would otherwise let OneHotEncoder treat None as its own
+    # literal category instead of an imputed value.
+    frame = synthetic_kiva_df.copy()
+    frame.loc[frame.index[0], "repaymentInterval"] = None
+    prepared = prepare_analysis_data(frame)
+    predictors, _, _ = build_predictor_frame(prepared)
+    raw_value = predictors["repaymentInterval"].iloc[0]
+    assert raw_value is not None
+    assert pd.isna(raw_value)
+
+    # End-to-end: the full imputation pipeline must actually recover a
+    # real category, not silently leave a None/NaN behind.
+    from src.modeling import _build_column_transformer
+    numeric_cols = ["log_loan_amount"]
+    categorical_cols = ["repaymentInterval"]
+    transformer = _build_column_transformer(numeric_cols, categorical_cols)
+    transformed = transformer.fit_transform(predictors[numeric_cols + categorical_cols])
+    assert np.isfinite(transformed).all()
+
+
 def test_predictor_frame_excludes_outcomes_and_post_outcome_fields(synthetic_kiva_df):
     prepared = prepare_analysis_data(synthetic_kiva_df)
     predictors, numeric, categorical = build_predictor_frame(prepared)

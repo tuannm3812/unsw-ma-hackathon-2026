@@ -132,8 +132,16 @@ def build_predictor_frame(df: pd.DataFrame) -> "tuple[pd.DataFrame, list, list]"
     for column in categorical_columns:
         # Categorical/nullable dtypes convert missing entries to np.nan on
         # cast to object, which SimpleImputer(strategy="most_frequent")
-        # recognizes as missing.
+        # recognizes as missing - but a plain object-dtype column can
+        # already contain a literal Python `None` (not np.nan), which
+        # SimpleImputer's default missing_values=np.nan does NOT
+        # recognize as missing (verified directly: it passes a raw None
+        # through unchanged into OneHotEncoder instead of imputing it).
+        # `.where(notna(), np.nan)` normalizes every missing
+        # representation (None, pd.NA, NaT, np.nan) to plain np.nan
+        # uniformly, regardless of the column's original dtype.
         predictors[column] = predictors[column].astype(object)
+        predictors[column] = predictors[column].where(predictors[column].notna(), np.nan)
 
     return predictors, numeric_columns, categorical_columns
 

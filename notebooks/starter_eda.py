@@ -404,19 +404,21 @@ boosted_results = evaluate_boosted_model(df_raw, holdout_start=HOLDOUT_START, n_
 # `evaluate_chronological_binary_classifier` reuses the same chronological
 # split/preprocessing as the two benchmarks above, fitting a
 # `HistGradientBoostingClassifier` for `funded_within_24h` and reporting
-# ROC AUC, PR AUC, and Brier score on the untouched holdout - the design
-# spec's predictive-evaluation requirement for the binary outcome (distinct
-# from Section 8's *explanatory* GLM, which answers a different question
-# and cannot be fit at all on this sample).
+# ROC AUC, average precision (AP), and Brier score on the untouched holdout
+# - the design spec's predictive-evaluation requirement for the binary
+# outcome (distinct from Section 8's *explanatory* GLM, which answers a
+# different question and cannot be fit at all on this sample). AP, not the
+# trapezoidal PR-AUC, is reported: the two are related but numerically
+# different (see `src/binary_modeling.py`'s docstring).
 
 # %%
 binary_results = evaluate_chronological_binary_classifier(df_raw, holdout_start=HOLDOUT_START, n_topics=N_TOPICS)
 
 # %% [markdown]
 # **Insight:** the classifier discriminates well on this sample (holdout
-# ROC AUC 0.88, PR AUC 0.79, Brier score 0.17) despite a modest 20-row
-# holdout (7 funded-within-24h, 13 not) - treat as illustrative of the
-# pipeline, not a stable estimate, for the same small-sample reason as
+# ROC AUC 0.88, average precision 0.79, Brier score 0.17) despite a modest
+# 20-row holdout (7 funded-within-24h, 13 not) - treat as illustrative of
+# the pipeline, not a stable estimate, for the same small-sample reason as
 # every other predictive metric in this notebook.
 
 # %% [markdown]
@@ -481,4 +483,3 @@ explanatory_results = fit_explanatory_models(df_raw)
 full_summary = run_analysis(
     str(DATA_PATH), str(REPORTS_DIR), holdout_start=HOLDOUT_START, n_topics=N_TOPICS
 )
-print(f"Wrote auditable reports to: {REPORTS_DIR}")

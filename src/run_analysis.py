@@ -100,6 +100,22 @@ def _atomic_write_text(path: Path, content: str) -> None:
         raise
 
 
+def _display_path(path: Path) -> str:
+    """
+    Format `path` relative to the caller's current working directory for
+    a printed status line, falling back to the absolute path only if no
+    relative form exists (e.g. a different drive on Windows). This is
+    purely cosmetic - every internal read/write still uses the resolved
+    absolute `Path` - it only keeps a printed status line (which a
+    notebook can capture and commit as output) from baking in a specific
+    machine's home-directory path.
+    """
+    try:
+        return os.path.relpath(str(path))
+    except ValueError:
+        return str(path)
+
+
 def _software_versions() -> dict:
     return {
         "python": platform.python_version(),
@@ -288,6 +304,8 @@ def _run_explanatory(df: pd.DataFrame) -> dict:
             "error": None,
             "n_duration": results["n_duration"],
             "n_binary": results["n_binary"],
+            "duration_model_n": results["duration_model_n"],
+            "binary_model_n": results["binary_model_n"],
             "duration_fitted": duration_fitted,
             "binary_fitted": binary_fitted,
             "duration_error": results["duration_error"],
@@ -305,6 +323,8 @@ def _run_explanatory(df: pd.DataFrame) -> dict:
             "error": str(error),
             "n_duration": None,
             "n_binary": None,
+            "duration_model_n": None,
+            "binary_model_n": None,
             "duration_fitted": False,
             "binary_fitted": False,
             "duration_error": str(error),
@@ -352,11 +372,11 @@ def _format_binary_classifier_section(binary_classifier: dict) -> "list[str]":
     if metrics["single_class_holdout"]:
         lines.append(
             "Holdout partition contains only one funded_within_24h class - "
-            "ROC AUC and PR AUC are mathematically undefined and omitted."
+            "ROC AUC and average precision are mathematically undefined and omitted."
         )
     else:
         lines.append(f"Holdout ROC AUC: {metrics['roc_auc']:.4f}")
-        lines.append(f"Holdout PR AUC:  {metrics['pr_auc']:.4f}")
+        lines.append(f"Holdout average precision (AP): {metrics['average_precision']:.4f}")
     lines.append(f"Holdout Brier score: {metrics['brier_score']:.4f}")
     lines.append(f"Holdout accuracy: {metrics['holdout_accuracy']:.4f}")
     lines.append(f"Holdout class balance: {metrics['holdout_class_balance']}")
@@ -383,7 +403,7 @@ def run_analysis(data_path, output_dir, holdout_start: str = "2024-01-01", n_top
     data_path = Path(data_path).resolve()
     output_dir = Path(output_dir).resolve()
 
-    print(f"Loading data from {data_path}...")
+    print(f"Loading data from {_display_path(data_path)}...")
     df = load_kiva_pickle(str(data_path))
     prepared = prepare_analysis_data(df)
 
@@ -437,8 +457,8 @@ def run_analysis(data_path, output_dir, holdout_start: str = "2024-01-01", n_top
     association_path = output_dir / "association_summary.txt"
     _atomic_write_text(association_path, "\n".join(text_lines) + "\n")
 
-    print(f"Wrote {json_path}")
-    print(f"Wrote {association_path}")
+    print(f"Wrote {_display_path(json_path)}")
+    print(f"Wrote {_display_path(association_path)}")
 
     return summary
 

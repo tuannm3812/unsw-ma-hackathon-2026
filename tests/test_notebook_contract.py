@@ -41,6 +41,23 @@ def test_notebook_public_preview_excludes_borrower_identifiers():
         )
 
 
+def test_notebook_committed_output_has_no_machine_specific_absolute_paths():
+    # The percent-format .py source having no hardcoded paths (the check
+    # above) does not guarantee the committed .ipynb's *output cells* are
+    # clean too - src.run_analysis prints resolved absolute paths by
+    # design (a normal CLI tool audit trail), and a notebook run on any
+    # one machine bakes whatever that machine's home directory happened
+    # to be into the committed JSON, e.g. "/Users/<real-username>/...".
+    # For a notebook meant to be readable publicly (Kaggle), that leaks a
+    # real local username/directory structure into every future clone -
+    # checked directly on the .ipynb JSON, not just the .py source, since
+    # only the .ipynb carries committed output.
+    text = Path("notebooks/starter_eda.ipynb").read_text(encoding="utf-8")
+    assert "/Users/" not in text
+    assert "C:\\" not in text and "C:/" not in text
+    assert "file:///" not in text
+
+
 def test_readme_documents_current_portable_workflow():
     text = Path("README.md").read_text(encoding="utf-8")
     assert "python3 -m src.run_analysis" in text

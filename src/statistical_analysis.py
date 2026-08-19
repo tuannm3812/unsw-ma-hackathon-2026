@@ -465,6 +465,17 @@ def fit_explanatory_models(df: pd.DataFrame, extra_interactions=None) -> "dict[s
         "binary_error": binary_error,
         "n_duration": int(len(duration_data)),
         "n_binary": int(len(binary_data)),
+        # `n_duration`/`n_binary` above count rows *eligible* for the
+        # respective model (a valid completed outcome / a known 24-hour
+        # outcome) - not necessarily how many rows the fitted model
+        # actually used. Patsy silently drops any row with a missing
+        # value in *any* formula predictor when building the design
+        # matrix, so the two counts can diverge (e.g. one row with a
+        # missing repaymentInterval: 100 eligible, 99 actually fitted).
+        # These report the real fitted count directly from the results
+        # object's own `.nobs`, `None` when the model didn't fit at all.
+        "duration_model_n": int(duration_results.nobs) if duration_results is not None else None,
+        "binary_model_n": int(binary_results.nobs) if binary_results is not None else None,
         "duration_formula": duration_formula,
         "binary_formula": binary_formula,
         "duration_dropped_terms": duration_dropped,
@@ -497,6 +508,31 @@ def _format_coefficient_lines(results, dependent_label: str) -> "list[str]":
     return lines
 
 
+def _n_clause(eligible_n: int, model_n, eligibility_description: str) -> str:
+    """
+    Format the "n = ..." clause for one explanatory model's summary line.
+
+    `eligible_n` counts rows meeting the model's *eligibility* criterion
+    (a valid completed outcome, or a known 24-hour outcome) -
+    `fit_explanatory_models`'s `n_duration`/`n_binary`. `model_n` is the
+    actual row count the fitted statsmodels result used
+    (`results.nobs`), or `None` if the model never fit. Patsy silently
+    drops any row with a missing value in *any* formula predictor when
+    building the design matrix, so `model_n` can be lower than
+    `eligible_n` - surfaced explicitly here instead of only ever quoting
+    the eligibility count, which can overstate how many rows the
+    reported coefficients actually reflect.
+    """
+    if model_n is None or model_n == eligible_n:
+        return f"n = {eligible_n} loans {eligibility_description}"
+    excluded = eligible_n - model_n
+    return (
+        f"n = {model_n} loans used in the fitted model "
+        f"({excluded} of {eligible_n} loans {eligibility_description} excluded "
+        "for a missing predictor value)"
+    )
+
+
 def format_association_summary(results: "dict[str, object]") -> str:
     """
     Render `fit_explanatory_models`'s results as a human-readable summary
@@ -520,7 +556,7 @@ def format_association_summary(results: "dict[str, object]") -> str:
         "=" * 62,
         "",
         f"Duration model: log(1 + funding speed in days) ~ pre-specified predictors, "
-        f"n = {results['n_duration']} loans with a valid completed outcome. "
+        f"{_n_clause(results['n_duration'], results.get('duration_model_n'), 'with a valid completed outcome')}. "
         "OLS with HC3 heteroskedasticity-robust standard errors.",
     ]
     if duration_results is None:
@@ -546,7 +582,7 @@ def format_association_summary(results: "dict[str, object]") -> str:
 
     lines.append(
         f"24-hour funding model: funded within 24 hours ~ pre-specified predictors, "
-        f"n = {results['n_binary']} loans with a known 24-hour funding outcome. "
+        f"{_n_clause(results['n_binary'], results.get('binary_model_n'), 'with a known 24-hour funding outcome')}. "
         "Binomial GLM (log-odds scale) with HC3 heteroskedasticity-robust "
         "standard errors."
     )
