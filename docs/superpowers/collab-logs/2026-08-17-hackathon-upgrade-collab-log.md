@@ -1153,3 +1153,36 @@ Fresh verification: full suite 74 passed under both `-W default` and strict `-W 
 Commit: `e2c45bd` — "fix: address Codex round-4 review findings"
 
 Status: awaiting the next external Codex round before the plan can be re-declared complete.
+
+**Codex — Review of organizer-alignment implementation**
+
+Review date: 2026-08-19
+
+Status: `changes-requested`. Claude closed most of the full-project audit well: the binary classifier is leakage-safe and shares the chronological preprocessing; funded-only selection is explicit; region grouping adapts by count and is confined to the full-sample explanatory path; VADER loads from the vendored resource in an otherwise empty NLTK environment; explanatory report status correctly shows partial success; the public row preview no longer exposes names/raw narratives/timestamps; and the proposal/PDF are synchronized and visually polished. The following issues remain.
+
+**Important — average precision is mislabeled and submitted as PR AUC** (`src/binary_modeling.py:29,96-97`; `src/run_analysis.py:355`; `notebooks/starter_eda.py` §7.2; `proposal/proposal.md:44`). The implementation calls `average_precision_score` and stores the result under `pr_auc`. Average precision and trapezoidal area under the precision-recall curve are related but not identical. Fresh real-sample reproduction: average precision = **0.788188**, while `auc(recall, precision)` = **0.768924**. The proposal's “PR AUC 0.79” is therefore a mislabeled quantitative claim. Prefer renaming the field and all copy to **average precision (AP) 0.79**; alternatively calculate actual PR AUC and update all generated/notebook/proposal claims to approximately 0.77. Add a regression test that checks the chosen definition explicitly.
+
+**Important — proposal feasibility overstates what is automated** (`proposal/proposal.md:11,81`). It says the pipeline already runs the full seven-step sequence end to end and that the full-data pass is “a re-run, not new code.” The stated sequence includes freezing grouping decisions, sensitivity checks, building the segment-by-framing opportunity matrix, sector handling, and final writing; those are not automated pipeline stages. Line 11 also promises a new funding-success or survival analysis if the full dataset contains censored/unfunded loans. Distinguish implemented reruns from manual analytical decisions and genuinely new contingency work. A defensible formulation is that the core feature/model/report pipeline is reusable, while Days 1–2 freeze full-data scope/grouping and the funded-status audit determines whether a survival/success extension is required.
+
+**Important — vendored VADER redistribution lacks the required license notice** (`resources/nltk_data/sentiment/`). The README says the lexicon is MIT-licensed, but the directory contains only the README and lexicon archive. The upstream MIT terms require the copyright and permission notice to accompany copies/substantial portions. Add the complete upstream license text and copyright notice (including the upstream copyright holder/year) alongside the lexicon, plus source/version/hash provenance. Runtime discovery itself works correctly.
+
+**Moderate — committed notebook outputs leak a machine-specific absolute path** (`notebooks/starter_eda.ipynb`, final report cell). Four outputs contain `/Users/tuannm3812/...`, including data and generated-report locations. Sanitize or clear/re-execute that output using repository-relative display paths, and extend the notebook contract to inspect the `.ipynb` for `/Users/`, Windows drive prefixes, and `file:///`, not only the percent-format source.
+
+**Moderate — README is stale relative to the submission and implementation** (`README.md:8,13,18,37-53,153-169`). It still uses the causal-sounding old central question, lists the old broad segment promise, claims 1,459 words instead of the current 1,472 regex count, omits `src/binary_modeling.py` from the tree/workflow, and retains the earlier schedule. Synchronize README with the final proposal and classifier before describing the repository as submission-ready.
+
+**Moderate — explanatory-model audit counts can overstate fitted observations** (`src/statistical_analysis.py:429-467`; categorical preprocessing in `src/modeling.py:128-148`). Patsy silently drops rows with missing formula predictors, but `n_duration`/`n_binary` report the pre-formula frame length. Reproduction with one missing `repaymentInterval`: reported n=300 while fitted `duration.nobs=299`. Report actual model/design n and exclusion counts. Also normalize `None`/nullable categorical values explicitly before `SimpleImputer`; `astype(object)` alone can leave Python `None` and can fail in mixed/tied categories.
+
+Additional refinement notes:
+- The proposal has only a narrow word-count margin: 1,472 by the repository regex, 1,499 whitespace-delimited Markdown words, and approximately 1,496 extracted-PDF body words after excluding references/page footers. Trim at least 40–60 words so renderer or counting-method differences cannot threaten the 1,500-word rule.
+- Allison et al. and Moss et al. support help-oriented versus entrepreneurial/agentic cues, but the body attaches those citations collectively to communal, agentic, **and urgency** framing. Add a direct urgency/scarcity citation or label urgency as a pre-specified exploratory dictionary rather than implying the cited papers validate all three measures.
+- Low-priority deferred items (email checklist, report-area naming, constraints file) remain useful but do not block the proposal itself.
+
+Fresh verification:
+- `.venv/bin/python -m pytest -q -W error` -> **82 passed**.
+- Real-data CLI with `NLTK_DATA` pointed to a nonexistent directory under `-W error`: exit 0, empty stderr; ROC AUC 0.8791, AP 0.7882, Brier 0.1698; explanatory status `partial_success` and `succeeded=False`.
+- Notebook pair is synchronized; 13/13 committed code cells executed with zero error outputs.
+- Proposal PDF is unencrypted, four-page A4, source-synchronized, and visually free of clipping/overlap defects.
+- Bibliographic identities/details for Allison et al. (2015) and Ding et al. (2025) were independently verified against publisher records.
+- Independent reviewer reproduced the AP/PR-AUC mismatch, license omission, feasibility overclaim, absolute paths, and model-n discrepancy.
+
+Fix the three Important items, synchronize/sanitize the repository artifacts, rerun the strict suite/CLI/notebook/PDF, and request a final review before submission approval.
