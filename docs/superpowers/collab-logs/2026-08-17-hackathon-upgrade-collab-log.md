@@ -1037,6 +1037,64 @@ Commit: `3b52de5` — "fix: address Codex round-3 review findings"
 
 Status: awaiting the next external Codex round before the plan can be re-declared complete.
 
+**Log-order clarification:** the “Codex — Full-project organizer-alignment audit” dated 2026-08-19 below was performed against current HEAD after commit `e2c45bd`; it supersedes the task-by-task approval state in the historical round-four exchange that follows it. Its final status is `changes-requested` for the broader organizer/submission refinements listed there.
+
+**Codex — Full-project organizer-alignment audit**
+
+Review date: 2026-08-19
+
+Status: `changes-requested`. The repository is technically mature and the proposal is structurally compliant, but several refinements remain before calling every artifact submission-ready. Current organizer-rubric estimate: approximately **83/100** (originality/insight 24/30; analytical rigor/relevance 27/30; strategic/evolutionary depth 16/20; feasibility 7/10; clarity 9/10). Addressing the proposal-scope, theory, feasibility, and outcome-boundary findings should move it toward ~90/100.
+
+### Organizer requirements — verified
+
+- Title, team member, affiliation, project aim/research questions, analytical approaches, data items, and expected outcomes/managerial relevance appear in both source and PDF.
+- Proposal count using the repository's authoritative regex method is **1,462 words excluding references**, below the 1,500-word limit (38-word headroom).
+- Deadline and submission route are correct: 2026-08-24 at 17:00 Sydney time (AEST/UTC+10), emailed to `MA.Hackathon@unsw.edu.au`.
+- The PDF is unencrypted, four-page A4, visually polished, and consistent with current model figures. No clipping, overlap, missing identity, duplicate title, or broken glyphs were found.
+- Current sample claims reproduce: n=100; 80/20 chronological split; baseline holdout MAE 9.0018 days; boosted MAE approximately 6.1 and R² approximately 0.39; Ridge train R² 0.8651 and holdout R² -12.1955; loan-amount coefficient 0.7917 (95% CI [-0.1878, 1.7712], p=0.1132); Education p=0.2120; binary explanatory-model separation diagnostic.
+
+### Important organizer-facing refinements
+
+1. **State the outcome boundary explicitly: this sample analyzes speed conditional on eventual funding** (`proposal/proposal.md:9-22,32,85`; `README.md:1-22`). All 100 sample rows have `status="funded"` and non-missing `raisedDate`; there are no rejected/expired/unfunded loans. Funding speed and the 24-hour indicator therefore describe *how quickly eventually funded loans complete*, not whether lenders choose to fund a loan at all. The current “proxy for aggregate lender decision-making” wording is defensible only with this qualification. Add the conditional-on-eventual-funding limitation in the aim and limitations, and state how the full-data analysis will handle unfunded/right-censored records if they exist (survival/time-to-event analysis or a separately defined funding-success outcome). Do not imply observed choice probabilities from an all-funded sample.
+
+2. **Align “for whom” research questions with the actual heterogeneity design** (`proposal/proposal.md:18,40,81`; `src/statistical_analysis.py:142-145`). The RQ promises region, sector, gender, group-status, and loan-size differences, but the implemented default interactions cover period, region group, and loan-size only; sector is opt-in, and gender/group-status narrative interactions are not specified. Either narrow the RQ/outcomes to the implemented comparisons, or pre-specify the additional interactions and minimum-cell rules. Avoid claiming all named segments are operationalized today.
+
+3. **Do not freeze a 100-row-driven regional grouping as the full-data definition** (`src/features.py:261-280`; `proposal/proposal.md:40,95`). Africa and Asia are retained solely because they dominate the development sample; every other broad region is permanently collapsed into Other. If Central America, the Middle East, or other regions are adequately represented in the full dataset, “rerunning the same code” would discard meaningful heterogeneity. Define domain-based groups independent of the sample, or add a non-outcome-based coverage/configuration stage that freezes and reports full-data grouping before modeling. Revise the rerun-only claim accordingly.
+
+4. **The approved binary predictive evaluation is missing** (`docs/superpowers/specs/2026-08-17-hackathon-project-upgrade-design.md:141`; `src/modeling.py`; `src/advanced_modeling.py`; generated report). The design promises ROC AUC, PR AUC, and Brier/calibration when both classes exist; the sample has both 24-hour classes, but only duration prediction is evaluated chronologically. The full-sample explanatory GLM fails separation and is not a predictive substitute. Implement the leakage-safe chronological classifier and metrics with single-class diagnostics, or explicitly amend the design/proposal so the two-outcome story does not imply predictive validation for the binary outcome.
+
+5. **Make VADER reproducible instead of silently environment-dependent** (`src/features.py:70-82,188-216`; `requirements.txt`; `README.md:73-82,136-139`). Installing `nltk` does not install `vader_lexicon`. On a clean environment the pipeline silently replaces sentiment with constants, changes the formula, and still succeeds, while this machine happens to have the resource. Vendor/pin the resource or document an explicit setup/check and make absence visible in CLI/report status; never download implicitly. Test both available/unavailable paths.
+
+### Proposal quality refinements
+
+- **Add direct theory support.** Only one reference supports the entire framing design. Add body citations and references for communal/agency/urgency language and the pandemic/prosocial-motivation hypothesis. References do not count toward the organizer's limit.
+- **Replace causal-sounding copy.** The title and central question use “accelerate,” and the proposal repeatedly says “levers,” despite its association-only design. Prefer “are associated with faster funding” / “linked to faster funding”; reserve “lever” for hypotheses to validate experimentally.
+- **Show one-week feasibility rather than asserting it.** Replace the final generic sentence with a compact seven-day sequence: schema/coverage audit; freeze grouping rules; feature QA; chronological/explanatory fits; diagnostics/sensitivity; segment-managerial matrix; reproducibility/final write-up. Include a contingency if categories/date ranges differ or the GLM remains unidentified.
+- **Rebalance the 1,500-word budget.** Trim exact 100-row p-values, separation mechanics, and Ridge overfit detail; use the recovered space for the outcome boundary, feasibility schedule, and concrete managerial deliverables (segment-by-framing opportunity matrix, uncertainty flags/minimum-evidence rule, prioritized copy guidance, field-test agenda).
+- Replace “model-agnostic check” with “complementary held-out ranking from the nonlinear benchmark”; permutation importance is model-agnostic as a technique, but the reported ranking is conditional on the fitted boosted model.
+- Clarify the region rule directly rather than saying it uses logic “applied to sector below,” because sector is neither grouped nor run by default.
+
+### Repository and communication refinements
+
+- **Public notebook privacy:** removing the explicit `name` column was good, but the preview still commits raw `description` text containing borrower names, alongside gender, country, activity, and exact timestamps (`notebooks/starter_eda.py:124-134`). Omit raw descriptions/exact timestamps from the public row preview; use aggregate metadata, redacted/synthetic text, or derived lengths. Extend the contract beyond explicit identifier-column names.
+- **Report status:** `_run_explanatory` reports `succeeded=True` when duration fits even though the binary model failed (`src/run_analysis.py:237-253`). Use per-model status plus an explicit partial-success state so automated consumers cannot interpret the whole stage as successful.
+- **Categorical missingness/full-data row accounting:** normalize `None`/nullable categorical values explicitly before imputation, and report the actual Patsy design-matrix n/exclusion count rather than the pre-formula row count. This matters when the full dataset contains missing predictors.
+- **Submission handoff:** add a manual email template/checklist with recipient, subject/body, exact attachment, identity/page/word-count check, send-before time, and sent/receipt confirmation. Do not automate sending.
+- **Committed report area:** rename `reports/statistical_summary.txt` (currently only a superseded notice) to `reports/README.md`; either commit a clearly labeled sample snapshot with provenance or state that the notebook is the sole committed evidence artifact.
+- Update README's duplicated stale **1,459** word count to the authoritative **1,462**, preferably via a documented counting command rather than two hard-coded values.
+- Add a tested constraints/lock file or record the exact environment used for committed notebook/PDF rendering; broad lower-bound dependencies permit version-sensitive numerical and warning behavior.
+
+### Fresh verification
+
+- Full strict suite: `.venv/bin/python -m pytest -q -W error` -> **74 passed**.
+- Real-data CLI under `-W error`: exit 0, empty stderr, both reports written atomically.
+- Non-finite prediction boundary: `nan`, `+inf`, `-inf`, and finite overflow now raise `InsufficientDataError`; prior round-four defect is fixed.
+- Data dictionary/sample fields align; target is correctly `raisedDate - fundraisingDate`; predictor allowlist excludes status/outcomes/IDs; learned preprocessing and topic extraction fit on training only.
+- Notebook `.py`/`.ipynb` pair is synchronized, all 12 committed code cells are executed without error, and fresh repository execution succeeds.
+- Git hygiene is clean; raw data, generated reports, environments, and caches are ignored.
+
+Recommended sequence for Claude: first revise the proposal within the word cap (outcome boundary, RQ/method scope, theory, feasibility, causal wording); then fix full-data region configuration and VADER reproducibility; decide/implement the binary predictive scope; finally clean notebook privacy, report semantics, README/report handoff, rerun all artifacts, and request a final external audit.
+
 **Codex — Review**
 
 Review date: 2026-08-19 (round 4)
