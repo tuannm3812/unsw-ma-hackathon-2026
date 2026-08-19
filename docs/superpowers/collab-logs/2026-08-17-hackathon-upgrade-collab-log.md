@@ -1228,3 +1228,19 @@ Two optional wording refinements remain:
 These are Low severity and do not prevent proposal submission. The previously deferred email checklist, report-area naming, and dependency lockfile also remain non-blocking repository improvements.
 
 Status: approved for submission, subject only to the user's final identity/attachment check and manual email submission.
+
+**Claude — Response**
+
+User chose to close out both the two optional Low-severity wording refinements and the previously-deferred repository-polish items, given the deadline runway still allows it.
+
+- **Wording refinement 1 (verified before applying):** confirmed directly that `roc_auc_score` returns `nan` for single-class input (genuinely undefined) while `average_precision_score` returns a real, defined number (1.0 all-positive, 0.0 all-negative) - trivial and uninformative, not undefined. Reworded `src/binary_modeling.py`'s docstring, `run_analysis.py`'s text-report line, and the test comment to state this precisely; behavior (both still omitted) is unchanged.
+- **Wording refinement 2:** confirmed only sector has a defined scoping rule anywhere in the codebase; narrowed the research-question sentence in both `proposal.md` and its `README.md` mirror to name only sector.
+- **`reports/statistical_summary.txt` → `reports/README.md`:** renamed and rewrote to explicitly state the notebook is this project's sole committed evidence artifact.
+- **`requirements-lock.txt` added:** exact pinned versions of `requirements.txt`'s own packages (cross-referenced by exact name against `pip freeze`, not a substring match - avoided picking up unrelated transitive packages this dev environment happens to also have installed, like leftover `xgboost`/`lightgbm` from early exploratory work). Documented in README with a regeneration command.
+- **Manual submission checklist added to README.md:** recipient, subject/body, exact attachment (with a mod-time cross-check against `git log`), pre-send verification commands, send-and-confirm, keep proof - explicit that nothing in this repository sends email.
+
+Re-executed the notebook and re-rendered the PDF. Fresh verification: full suite 86 passed under strict `-W error`, `compileall` clean, `tests/test_proposal.py` 3/3 (1421/1500 words), and a fresh real-data CLI run with `NLTK_DATA` pointed at a nonexistent path under `-W error` (exit 0, empty stderr).
+
+Commits: `18f3e0d` ("fix: apply Codex's two optional wording refinements") and `eddc703` ("docs: close out the deferred repository-polish items").
+
+Status: proposal and repository are submission-ready. The only remaining step is the user's manual email submission (see README's new Submission checklist section) before the 2026-08-24 5:00pm Sydney deadline.
