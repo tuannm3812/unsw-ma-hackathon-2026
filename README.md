@@ -5,21 +5,21 @@ Working repository for our submission to the **UNSW Marketing Analytics Hackatho
 ## Submission deadline and constraints
 
 - **Proposal due:** 2026-08-24, 5:00pm Sydney time (AEST/UTC+10), via email to `MA.Hackathon@unsw.edu.au`.
-- **Format:** five required proposal sections, 1,500-word maximum excluding references. The current draft (`proposal/proposal.md` / `proposal/proposal.pdf`) is submission-ready at 1,459 words excluding references.
+- **Format:** five required proposal sections, 1,500-word maximum excluding references. The current draft (`proposal/proposal.md` / `proposal/proposal.pdf`) is submission-ready at 1,417 words excluding references (via `tests/test_proposal.py`'s authoritative regex count - re-run that test rather than trust this number if the proposal changes again).
 - **Judging criteria (weighted):** insightfulness/originality 30%, analytical rigor/relevance 30%, strategic depth/evolutionary perspective 20%, feasibility 10%, clarity 10%.
 
 ## Research questions
 
-**Central question.** Which narrative choices accelerate funding, for whom, and when, after separating presentation from structural constraint?
+**Central question.** Which narrative choices are associated with faster funding, for whom, and when, after separating presentation from structural constraint?
 
-**Supporting questions.**
+**Supporting questions.** (kept in sync with `proposal/proposal.md`'s Project Aim section - see that file for the authoritative, current wording)
 
 - Which narrative characteristics — specificity, tone, beneficiary focus, agency, and thematic framing — are associated with funding speed after controlling for loan amount, term, sector, region, and borrower structure?
-- Do these associations differ by region, sector, gender classification, group status, or loan size?
+- Does that association differ across pre-specified segments — analysis period, region group, and loan-size band by default, with sector, gender, and group-status interactions as explicitly scoped extensions?
 - Did the narrative–speed association shift across the **pre-pandemic, pandemic-disruption, and post-pandemic** periods — the project's central **evolutionary-perspective** test?
 - How well do patterns learned on earlier loans predict later-period outcomes, and which controllable features carry the most practical opportunity?
 
-This project studies **aggregate, loan-level** patterns, not individual lender psychology, and reports **associations, never causal effects**. Every statistical claim in this repository uses association language ("associated with"), never "causes" or "proves."
+This project studies **aggregate, loan-level** patterns, not individual lender psychology, and reports **associations, never causal effects**. Every statistical claim in this repository uses association language ("associated with"), never "causes" or "proves." Both outcomes are defined only among loans that were **eventually funded** - see `proposal/proposal.md`'s Project Aim section for the outcome-boundary caveat this implies.
 
 ## Repository structure
 
@@ -40,6 +40,7 @@ unsw-ma-hackathon-2026/
 ├── reports/
 │   ├── generated/                 # Output of `python3 -m src.run_analysis` (git-ignored)
 │   └── statistical_summary.txt    # Superseded-report notice pointing to reports/generated/
+├── resources/nltk_data/sentiment/  # Vendored VADER lexicon + its upstream MIT license/provenance
 ├── src/
 │   ├── __init__.py
 │   ├── data_loader.py             # Loads the pickle, parses dates, derives the outcome
@@ -50,8 +51,9 @@ unsw-ma-hackathon-2026/
 │   ├── modeling.py                # Leakage-safe chronological baseline + Ridge evaluation
 │   ├── statistical_analysis.py    # Robust OLS/GLM explanatory (association) models
 │   ├── advanced_modeling.py       # Nonlinear (HistGradientBoostingRegressor) benchmark
+│   ├── binary_modeling.py         # Leakage-safe chronological classifier for the 24h outcome
 │   └── run_analysis.py            # CLI orchestrator: runs all stages, writes reports
-├── tests/                          # 10 test files, offline, no dataset or network required
+├── tests/                          # 11 test files, offline, no dataset or network required
 ├── .gitignore
 ├── requirements.txt
 └── README.md                       # This file
@@ -116,7 +118,7 @@ or open `notebooks/starter_eda.py` directly in VS Code / Spyder and run it as a 
 
 ## Chronological validation and leakage protections
 
-All evaluation is **chronological, not random**: models train on loans posted before a cutoff date and are scored only on loans posted on or after it, mirroring how a model would actually be used to score newly posted loans (`src/validation.py::chronological_holdout`). A dedicated `InsufficientDataError` distinguishes "this split has too little usable data" from unrelated bugs, so a too-small split degrades gracefully into a labeled diagnostic instead of a misleading number or a crash.
+All evaluation is **chronological, not random**: models train on loans posted before a cutoff date and are scored only on loans posted on or after it, mirroring how a model would actually be used to score newly posted loans (`src/validation.py::chronological_holdout`). `src/modeling.py`'s Ridge/baseline evaluation, `src/advanced_modeling.py`'s nonlinear regressor, and `src/binary_modeling.py`'s 24-hour classifier (reporting ROC AUC, average precision, and Brier score) all share this exact same split and preprocessing, not three separately derived ones. A dedicated `InsufficientDataError` distinguishes "this split has too little usable data" from unrelated bugs, so a too-small split degrades gracefully into a labeled diagnostic instead of a misleading number or a crash.
 
 Every learned transformation is fit on the training partition only and merely *applied*, never refit, to the holdout:
 
@@ -140,7 +142,7 @@ Predictors are selected via an **explicit allowlist, not a blocklist** (`src/mod
 - **Borrower:** `borrowerCount`, group-level `gender` classification (female, male, mixed, or unknown - missingness is preserved as its own category, never defaulted to female)
 - **Loan structure:** `loanAmount`, `lenderRepaymentTerm`, `repaymentInterval`
 - **Purpose:** `sector`, `activity`
-- **Geography/economic context:** `country_iso`, `region`, `country_ppp`
+- **Geography/economic context:** `country_iso`, `region`, `country_ppp`, and (explanatory models only) `region_group` - `region` collapsed to a fixed observation-count threshold (`src/features.py::MIN_REGION_OBSERVATIONS`), not a hardcoded region list, so it adapts automatically to whichever regions the data actually supports
 - **Time:** year, month, and `analysis_period` derived from `fundraisingDate` (2016-2019, 2020-2021, 2022-2025)
 
 **Excluded from the predictor allowlist** (leakage-sensitive or redundant):
@@ -154,19 +156,21 @@ Predictors are selected via an **explicit allowlist, not a blocklist** (`src/mod
 
 The proposal covers Days 1-7 below as a generic post-proposal analysis week (no fixed calendar dates), mapped to the pipeline's actual stages:
 
+Steps 1-2 and 5-6 below are manual analytical work each week's data requires, not automated pipeline stages; steps 3-4 and 7 reuse code already implemented and tested on the development sample unchanged (see `proposal/proposal.md`'s Expected Outcomes section for this same distinction).
+
 | Day | Focus | Deliverable |
 | :-- | :-- | :-- |
-| 1 | Data validation on the full competition dataset | Confirmed schema, missingness, outcome-validity audit against `src/data_loader.py` |
+| 1 | Full-dataset schema/coverage audit | Confirmed schema, missingness, outcome-validity audit against `src/data_loader.py`; freeze segment-grouping thresholds (`src/features.py::MIN_REGION_OBSERVATIONS`) against the audited counts |
 | 2 | Feature engineering at full scale | Narrative, borrower, and financial features (`src/features.py`) verified against the larger sample |
-| 3 | Chronological modeling | Baseline + Ridge + nonlinear benchmark re-run via `src/modeling.py` / `src/advanced_modeling.py` on the full-data chronological split |
-| 4 | Explanatory statistics | Full-data OLS/GLM refit (`src/statistical_analysis.py`); write and test the pre-specified region/loan-size/sector interaction formulas |
-| 5 | Nonlinear benchmark and comparison | Permutation-importance comparison against the explanatory-model coefficients; sensitivity check on `fundsLentInCountry` |
+| 3 | Chronological modeling | Baseline + Ridge + nonlinear benchmark + 24-hour classifier re-run via `src/modeling.py` / `src/advanced_modeling.py` / `src/binary_modeling.py` on the full-data chronological split |
+| 4 | Explanatory statistics | Full-data OLS/GLM refit (`src/statistical_analysis.py`); the period/region-group/loan-size interactions already run by default - write and test the one remaining opt-in interaction (narrative × sector, restricted to adequately represented sectors) |
+| 5 | Diagnostics and sensitivity | Permutation-importance comparison against the explanatory-model coefficients; sensitivity check on `fundsLentInCountry`; build the segment-by-framing managerial opportunity matrix |
 | 6 | CLI run and reporting | Full-dataset `python3 -m src.run_analysis` run; review `analysis_summary.json` / `association_summary.txt` for anomalies |
 | 7 | Notebook and final write-up | Refresh `notebooks/starter_eda.ipynb` against full-data results; prepare the final analysis write-up/presentation and managerial recommendations for submission (the proposal itself is already submitted by this point) |
 
 ## Proposal
 
-The submission-ready proposal lives at `proposal/proposal.md` (source, 1,459 words excluding references) and `proposal/proposal.pdf` (styled render). Team identity (team member name and affiliation) is **already filled in** in both files - Manh Tuan Nguyen, University of Technology Sydney - there is no outstanding placeholder to complete before submission.
+The submission-ready proposal lives at `proposal/proposal.md` (source, 1,417 words excluding references - see `tests/test_proposal.py` for the authoritative count) and `proposal/proposal.pdf` (styled render). Team identity (team member name and affiliation) is **already filled in** in both files - Manh Tuan Nguyen, University of Technology Sydney - there is no outstanding placeholder to complete before submission.
 
 ## Known limitation
 
