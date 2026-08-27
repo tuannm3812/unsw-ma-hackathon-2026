@@ -1,0 +1,17 @@
+{
+  "id": "tuannm3812/kiva-hackathon-starter-eda",
+  "title": "Kiva Hackathon Starter EDA",
+  "code_file": "00_starter_eda.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": false,
+  "dataset_sources": [
+    "tuannm3812/kiva-loans-hackathon-data",
+    "tuannm3812/kiva-hackathon-src"
+  ],
+  "competition_sources": [],
+  "kernel_sources": []
+}

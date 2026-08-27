@@ -14,14 +14,18 @@
 # ---
 
 # %% [markdown]
-# # UNSW Marketing Analytics Hackathon 2026 - Auditable Evidence Notebook
+# # UNSW Marketing Analytics Hackathon 2026 - Preliminary Evidence Notebook
 #
 # Every number below comes from the tested `src/` pipeline, called directly
 # - no modeling or feature logic is reimplemented here.
 #
-# **Sample data.** This run uses `data/Kiva_Loans_Sample.pkl`, a **100-row
-# illustrative sample**, not the full competition dataset - treat every
-# figure below as a pipeline demonstration, not final managerial evidence.
+# **Sample data - preliminary only.** This notebook runs on
+# `data/Kiva_Loans_Sample.pkl`, a **100-row illustrative sample**, not the
+# full competition dataset - treat every figure below as a pipeline
+# demonstration, not final managerial evidence. **For the real, full-dataset
+# findings (1.45M rows), see `01_full_dataset_eda.ipynb` and
+# `02_full_dataset_modeling.ipynb`** - those, not this notebook, back the
+# final presentation's numbers.
 
 # %% [markdown]
 # ## 1. Research question and association caveat
@@ -71,21 +75,34 @@ def _find_project_root(start: Path) -> Path:
     return start
 
 
-try:
-    # Running as a plain script: `__file__` is notebooks/starter_eda.py.
-    PROJECT_ROOT = Path(__file__).resolve().parents[1]
-except NameError:
-    # Running as a notebook: there is no `__file__`. Jupyter/nbconvert
-    # typically execute with cwd set to the notebook's own directory
-    # (notebooks/), but this also tolerates being launched from the
-    # repository root, so search upward rather than assuming either.
-    PROJECT_ROOT = _find_project_root(Path.cwd())
+KAGGLE_DATA_DIR = Path("/kaggle/input/kiva-loans-hackathon-data")
+KAGGLE_CODE_DIR = Path("/kaggle/input/kiva-hackathon-src")
 
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+if KAGGLE_DATA_DIR.exists():
+    # Running as a Kaggle kernel (see ../scripts/push_kaggle_kernel.sh and
+    # README.md's "Kaggle Workflow" section): both private datasets are
+    # mounted read-only under /kaggle/input/.
+    DATA_PATH = KAGGLE_DATA_DIR / "Kiva_Loans_Sample.pkl"
+    REPORTS_DIR = Path("/kaggle/working/reports")
+    if str(KAGGLE_CODE_DIR) not in sys.path:
+        sys.path.insert(0, str(KAGGLE_CODE_DIR))
+else:
+    try:
+        # Running as a plain script: `__file__` is notebooks/00_starter_eda.py.
+        PROJECT_ROOT = Path(__file__).resolve().parents[1]
+    except NameError:
+        # Running as a notebook: there is no `__file__`. Jupyter/nbconvert
+        # typically execute with cwd set to the notebook's own directory
+        # (notebooks/), but this also tolerates being launched from the
+        # repository root, so search upward rather than assuming either.
+        PROJECT_ROOT = _find_project_root(Path.cwd())
 
-DATA_PATH = PROJECT_ROOT / "data" / "Kiva_Loans_Sample.pkl"
-REPORTS_DIR = PROJECT_ROOT / "reports" / "generated"
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
+
+    DATA_PATH = PROJECT_ROOT / "data" / "Kiva_Loans_Sample.pkl"
+    REPORTS_DIR = PROJECT_ROOT / "reports" / "generated"
+
 HOLDOUT_START = "2024-01-01"
 N_TOPICS = 5
 

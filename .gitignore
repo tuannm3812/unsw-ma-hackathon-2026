@@ -155,11 +155,19 @@ Thumbs.db
 # if the team ever wants to, rather than committing every run's output).
 reports/generated/
 
-# Scratch, executed copies of the notebook produced while verifying it runs
+# Scratch, executed copies of a notebook produced while verifying it runs
 # end to end (e.g. via `jupytext --execute` / `nbconvert --execute --output
-# *.executed.ipynb`). The paired source notebook, notebooks/starter_eda.ipynb,
-# is intentionally committed and is NOT matched by this pattern.
+# *.executed.ipynb`). The paired source notebooks (notebooks/00_starter_eda.ipynb,
+# 01_full_dataset_eda.ipynb, 02_full_dataset_modeling.ipynb) are intentionally
+# committed and are NOT matched by this pattern.
 *.executed.ipynb
+
+# Kaggle kernel push copies (scripts/push_kaggle_kernel.sh): each
+# notebooks/kernels/<slug>/kernel-metadata.json is committed, but the
+# .ipynb the script copies alongside it every push is not - it's always a
+# fresh copy of the real source in notebooks/, so committing it would just
+# be a second, easily-stale version to keep in sync by hand.
+notebooks/kernels/*/*.ipynb
 
 # Large competition datasets (exclude big data files)
 data/**/*.csv
