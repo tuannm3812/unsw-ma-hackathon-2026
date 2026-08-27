@@ -157,8 +157,8 @@ reports/generated/
 
 # Scratch, executed copies of a notebook produced while verifying it runs
 # end to end (e.g. via `jupytext --execute` / `nbconvert --execute --output
-# *.executed.ipynb`). The paired source notebooks (notebooks/00_starter_eda.ipynb,
-# 01_full_dataset_eda.ipynb, 02_full_dataset_modeling.ipynb) are intentionally
+# *.executed.ipynb`). The paired source notebooks (notebooks/0_starter_eda.ipynb,
+# 1_full_dataset_eda.ipynb, 2_full_dataset_modeling.ipynb) are intentionally
 # committed and are NOT matched by this pattern.
 *.executed.ipynb
 

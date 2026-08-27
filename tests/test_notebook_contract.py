@@ -3,7 +3,7 @@ from pathlib import Path
 
 
 def test_notebook_script_has_portable_paths_and_no_duplicated_legacy_modeling():
-    text = Path("notebooks/00_starter_eda.py").read_text(encoding="utf-8")
+    text = Path("notebooks/0_starter_eda.py").read_text(encoding="utf-8")
     assert "F:/" not in text
     assert 'pkl_path = "../data/' not in text
     assert "train_test_split" not in text
@@ -26,7 +26,7 @@ def test_notebook_public_preview_excludes_borrower_identifiers():
     # specific enough to cross-reference a real loan on Kiva's own public
     # site - both are identifying in practice even though neither is an
     # "identifier column" by name.
-    text = Path("notebooks/00_starter_eda.py").read_text(encoding="utf-8")
+    text = Path("notebooks/0_starter_eda.py").read_text(encoding="utf-8")
     match = re.search(r"preview_cols = \[(.*?)\]", text, re.DOTALL)
     assert match, "notebook must define preview_cols for its Dataset Overview preview"
     preview_block = match.group(1)
@@ -52,7 +52,7 @@ def test_notebook_committed_output_has_no_machine_specific_absolute_paths():
     # real local username/directory structure into every future clone -
     # checked directly on the .ipynb JSON, not just the .py source, since
     # only the .ipynb carries committed output.
-    text = Path("notebooks/00_starter_eda.ipynb").read_text(encoding="utf-8")
+    text = Path("notebooks/0_starter_eda.ipynb").read_text(encoding="utf-8")
     assert "/Users/" not in text
     assert "C:\\" not in text and "C:/" not in text
     assert "file:///" not in text

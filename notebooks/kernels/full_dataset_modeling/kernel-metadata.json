@@ -1,16 +1,15 @@
 {
   "id": "tuannm3812/kiva-hackathon-full-dataset-modeling",
   "title": "Kiva Hackathon Full Dataset Modeling",
-  "code_file": "02_full_dataset_modeling.ipynb",
+  "code_file": "2_full_dataset_modeling.ipynb",
   "language": "python",
   "kernel_type": "notebook",
   "is_private": true,
   "enable_gpu": false,
   "enable_tpu": false,
-  "enable_internet": false,
+  "enable_internet": true,
   "dataset_sources": [
-    "tuannm3812/kiva-loans-hackathon-data",
-    "tuannm3812/kiva-hackathon-src"
+    "tuannm3812/kiva-loans-hackathon-data"
   ],
   "competition_sources": [],
   "kernel_sources": []

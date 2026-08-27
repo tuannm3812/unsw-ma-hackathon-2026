@@ -6,11 +6,19 @@
 # `kaggle kernels push`. The copied .ipynb is gitignored and regenerated
 # every run, so notebooks/ never has two versions to keep in sync by hand.
 #
-# Usage: scripts/push_kaggle_kernel.sh <starter_eda|eda|modeling>
+# Usage: scripts/push_kaggle_kernel.sh <eda|modeling>
 #
-# All three kernels are private (see README.md's "Kaggle Workflow"
-# section) - this is a hosted compute backend for the team, not a public
-# notebook. After pushing, check status with:
+# Only 1_full_dataset_eda and 2_full_dataset_modeling run on Kaggle -
+# both are self-contained (standard public packages only: pandas,
+# scikit-learn, statsmodels, nltk - no import of this repo's own src/
+# package, deliberately, so no private "code" dataset is needed; see
+# README.md's "Kaggle Workflow" section). 0_starter_eda stays local-only:
+# its whole purpose is to demonstrate the tested src/ pipeline runs
+# correctly, so it inherently needs that package, and it runs in seconds
+# on the 100-row sample anyway - it never needed Kaggle's compute.
+#
+# Both kernels are private - a hosted compute backend for the team, not
+# a public notebook. After pushing, check status with:
 #   kaggle kernels status <id-from-kernel-metadata.json>
 
 set -euo pipefail
@@ -19,20 +27,16 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 NOTEBOOKS_DIR="$REPO_ROOT/notebooks"
 
 case "${1:-}" in
-  starter_eda)
-    NOTEBOOK="00_starter_eda.ipynb"
-    KERNEL_DIR="$NOTEBOOKS_DIR/kernels/starter_eda"
-    ;;
   eda)
-    NOTEBOOK="01_full_dataset_eda.ipynb"
+    NOTEBOOK="1_full_dataset_eda.ipynb"
     KERNEL_DIR="$NOTEBOOKS_DIR/kernels/full_dataset_eda"
     ;;
   modeling)
-    NOTEBOOK="02_full_dataset_modeling.ipynb"
+    NOTEBOOK="2_full_dataset_modeling.ipynb"
     KERNEL_DIR="$NOTEBOOKS_DIR/kernels/full_dataset_modeling"
     ;;
   *)
-    echo "Usage: $0 <starter_eda|eda|modeling>" >&2
+    echo "Usage: $0 <eda|modeling>" >&2
     exit 1
     ;;
 esac

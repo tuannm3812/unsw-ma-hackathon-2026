@@ -62,9 +62,9 @@ unsw-ma-hackathon-2026/
 │   └── Kiva Data Dictionary.xlsx     # Field-level schema reference (git-ignored)
 ├── docs/superpowers/                  # Design spec, plan, and full collaboration log
 ├── notebooks/
-│   ├── 00_starter_eda.ipynb/.py      # Preliminary - 100-row sample, pipeline demonstration only
-│   ├── 01_full_dataset_eda.ipynb/.py # Real full-dataset EDA (descriptive only)
-│   ├── 02_full_dataset_modeling.ipynb/.py  # Real full-dataset modeling (the actual pipeline run)
+│   ├── 0_starter_eda.ipynb/.py            # Preliminary - 100-row sample, pipeline demonstration only
+│   ├── 1_full_dataset_eda.ipynb/.py       # Real full-dataset EDA (descriptive only)
+│   ├── 2_full_dataset_modeling.ipynb/.py  # Real full-dataset modeling (the actual pipeline run)
 │   └── kernels/<slug>/kernel-metadata.json  # Kaggle kernel definitions (see Kaggle Workflow)
 ├── proposal/
 │   ├── proposal.md                   # Submitted proposal (source)
@@ -132,40 +132,37 @@ Either command writes `analysis_summary.json` (machine-readable metrics, dataset
 To open and step through the notebook versions of the same analysis:
 
 ```bash
-jupyter notebook notebooks/00_starter_eda.ipynb          # preliminary, sample-only
-jupyter notebook notebooks/01_full_dataset_eda.ipynb     # real EDA, full dataset
-jupyter notebook notebooks/02_full_dataset_modeling.ipynb  # real modeling, full dataset
+jupyter notebook notebooks/0_starter_eda.ipynb          # preliminary, sample-only
+jupyter notebook notebooks/1_full_dataset_eda.ipynb     # real EDA, full dataset
+jupyter notebook notebooks/2_full_dataset_modeling.ipynb  # real modeling, full dataset
 ```
 
 or open any `.py` counterpart directly in VS Code / Spyder and run it as a percent-format script.
 
 ## Kaggle Workflow
 
-Two **private** Kaggle Datasets host the raw data and this project's `src/` code, so any of the three notebooks above can run as a **private Kaggle kernel** instead of locally - useful for the full-dataset modeling run in particular, which is CPU-heavy and slow to repeat on a laptop.
+`1_full_dataset_eda.ipynb` and `2_full_dataset_modeling.ipynb` can run as **private Kaggle kernels** instead of locally - useful for the modeling run in particular, which is CPU-heavy and slow to repeat on a laptop. Both are **self-contained**: standard public packages only (pandas, numpy, scikit-learn, statsmodels, patsy, nltk) - deliberately **no dependency on this repo's own `src/` package**, so there is no private "code" dataset to publish or keep in sync, and no risk of the notebook silently failing to find it. `0_starter_eda.ipynb` stays local-only - its whole purpose is to demonstrate the tested `src/` pipeline runs correctly, so it inherently needs that package, and it runs in seconds on the 100-row sample anyway.
 
-- `tuannm3812/kiva-loans-hackathon-data`: `Kiva_Loans.pkl`, `Kiva_Loans_Sample.pkl`, the data dictionary.
-- `tuannm3812/kiva-hackathon-src`: `src/`, `requirements.txt`, `resources/nltk_data/` (kernels run with `enable_internet: false`, so the vendored lexicon is required, not `nltk.download`).
+One **private** Kaggle Dataset (`tuannm3812/kiva-loans-hackathon-data`: `Kiva_Loans.pkl`, `Kiva_Loans_Sample.pkl`, the data dictionary) supplies the raw inputs - this is competition data used as a hosted compute backend for the team, not a public release. Both kernels run with `enable_internet: true` (only to fetch the public NLTK VADER lexicon on first run - `nltk.download("vader_lexicon")`, cached after that; no other network access happens).
 
-Both are **private** - this is competition data plus the team's own code used as a hosted compute backend, not a public release. (A separate, later decision - not yet made - is whether to publish a *public* Kaggle notebook after judging; see the collaboration log for that discussion.)
-
-**Publish/update a dataset** (only needed after changing `data/` or `src/`):
+**Publish/update the data** (only needed after `data/Kiva_Loans*.pkl` changes):
 
 ```bash
-scripts/publish_kaggle_dataset.sh data version "describe the change"
-scripts/publish_kaggle_dataset.sh code version "describe the change"
+scripts/publish_kaggle_dataset.sh version "describe the change"
 # first-time only: create instead of version
 ```
 
 **Push a notebook to its kernel and run it on Kaggle's compute:**
 
 ```bash
-scripts/push_kaggle_kernel.sh modeling       # notebooks/02_full_dataset_modeling.ipynb
-scripts/push_kaggle_kernel.sh eda            # notebooks/01_full_dataset_eda.ipynb
-scripts/push_kaggle_kernel.sh starter_eda    # notebooks/00_starter_eda.ipynb
+scripts/push_kaggle_kernel.sh modeling       # notebooks/2_full_dataset_modeling.ipynb
+scripts/push_kaggle_kernel.sh eda            # notebooks/1_full_dataset_eda.ipynb
 kaggle kernels status tuannm3812/kiva-hackathon-full-dataset-modeling   # poll until "complete"
 ```
 
-Each notebook auto-detects whether it's running locally or on Kaggle (checks for `/kaggle/input/...`) and resolves data/code paths accordingly - the same source file works in both places unchanged. Kaggle's Output tab offers `analysis_summary.json`/`association_summary.txt` for download once a kernel finishes; nothing here is GPU-accelerated (Ridge/HistGradientBoosting/statsmodels are all CPU), so `enable_gpu` is `false` on every kernel.
+Each notebook auto-detects whether it's running locally or on Kaggle (checks for `/kaggle/input/...`) and resolves the data path accordingly - the same source file works in both places unchanged. Kaggle's Output tab offers the printed metrics/summary tables for review once a kernel finishes; nothing here is GPU-accelerated (Ridge/HistGradientBoosting/statsmodels are all CPU), so `enable_gpu` is `false` on both kernels.
+
+**Note:** these two notebooks are a deliberately *simpler, streamlined* re-implementation of the same design ideas the tested `src/` pipeline uses (chronological split, robust HC3 standard errors, association-only language) - not a port of its exact code, so their numbers won't match `reports/generated_full_dataset/` exactly. `python3 -m src.run_analysis` (or `0_starter_eda.ipynb`/its full-dataset equivalent, run locally) remains the authoritative source for anything going into the final presentation.
 
 ## Chronological Validation and Leakage Protections
 
@@ -214,7 +211,7 @@ Verified 2026-08-27 against the real 1,453,846-row dataset (`reports/generated_f
 - Family/communal framing is associated with faster funding overall, but - a genuine, honestly-reported surprise relative to the proposal's working hypothesis - that association gets *weaker*, not stronger, during the pandemic-disruption period. Family framing's effect also varies substantially by sector (e.g. strongly slows funding in Water/Clean Energy, speeds it in Personal Use).
 - Urgency appeals are associated with faster funding and higher odds of within-24h funding, consistently across both models.
 
-These are the numbers backing the final slide deck - not the illustrative 100-row figures in `notebooks/00_starter_eda.ipynb` or the (now-submitted) `proposal/proposal.md`.
+These are the numbers backing the final slide deck - not the illustrative 100-row figures in `notebooks/0_starter_eda.ipynb` or the (now-submitted) `proposal/proposal.md`.
 
 ## Proposal (Submitted)
 
@@ -222,6 +219,6 @@ These are the numbers backing the final slide deck - not the illustrative 100-ro
 
 ## Known Limitations
 
-- `notebooks/00_starter_eda.ipynb` and `proposal/proposal.md` were both built against `data/Kiva_Loans_Sample.pkl`, a **100-row illustrative sample** - treat every number in either as a pipeline demonstration, not final evidence. The real findings are in [Full-Dataset Results](#full-dataset-results) above.
+- `notebooks/0_starter_eda.ipynb` and `proposal/proposal.md` were both built against `data/Kiva_Loans_Sample.pkl`, a **100-row illustrative sample** - treat every number in either as a pipeline demonstration, not final evidence. The real findings are in [Full-Dataset Results](#full-dataset-results) above.
 - Every result in this project is an **association**, never a causal claim - borrowers were not randomly assigned a narrative framing, loan amount, or gender composition.
 - `refunded`-status loans are included in the funding-speed analysis on the same footing as `funded` ones (they completed funding normally; the refund is a later, unrelated event) - see `reports/generated_full_dataset/association_summary.txt`'s audit trail for the exact counts this affects.
