@@ -46,6 +46,7 @@ REQUIRED_DETERMINISTIC_COLUMNS = [
     "borrowerCount",
     "loanAmount",
     "region",
+    "sector",
 ]
 
 # Narrative framing patterns. These are theory-guided keyword lists, not
@@ -325,17 +326,53 @@ def _add_region_group_feature(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+# Minimum observation count for a sector to keep its own level in
+# `sector_group` below. This mirrors `region_group`'s count-threshold
+# design above, but uses a much higher floor: the design spec requires the
+# narrative x sector interaction to be "restricted to adequately
+# represented sectors" specifically (unlike region and loan-size band,
+# which are unconditional defaults), and on a dataset the scale of the
+# full competition data (hundreds of thousands to millions of rows), "at
+# least 10 observations" is not a meaningful bar for trusting a whole
+# sector's interaction coefficient - it would let almost every sector
+# through, defeating the point of the restriction. 1,000 is a round,
+# conservative floor chosen to keep only sectors large enough to give a
+# reasonably narrow confidence interval on a per-100-word framing rate's
+# interaction term, while remaining a small fraction of a
+# hundreds-of-thousands-plus sample. Unlike MIN_REGION_OBSERVATIONS
+# (unconditional default), this constant is only relevant when a caller
+# opts into the sector interaction via `extra_interactions` - see
+# `src/statistical_analysis.py`.
+MIN_SECTOR_OBSERVATIONS = 1000
+
+
+def _add_sector_group_feature(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Add `sector_group`: `sector` collapsed the same way `region_group`
+    collapses `region` (see that function's docstring for the full
+    reasoning, including why this is safe only for a single fit-on-the-
+    whole-sample call, not a fit-train/apply-holdout split) - just with
+    `MIN_SECTOR_OBSERVATIONS` as the threshold instead of
+    `MIN_REGION_OBSERVATIONS`.
+    """
+    counts = df["sector"].value_counts()
+    major_sectors = counts[counts >= MIN_SECTOR_OBSERVATIONS].index
+    df["sector_group"] = df["sector"].where(df["sector"].isin(major_sectors), "Other")
+    return df
+
+
 def extract_financial_and_geography_features(df: pd.DataFrame) -> pd.DataFrame:
     """
     Compatibility wrapper: adds transparent, fixed-threshold loan-size
-    features and the fixed `region_group` allowlist by delegating to
-    focused deterministic helpers. Raw `region`/`sector`/etc. columns
-    themselves are left untouched for downstream pipelines to encode
-    after a train/validation split.
+    features and the fixed `region_group`/`sector_group` allowlists by
+    delegating to focused deterministic helpers. Raw `region`/`sector`/etc.
+    columns themselves are left untouched for downstream pipelines to
+    encode after a train/validation split.
     """
     df = df.copy()
     df = _add_financial_features(df)
     df = _add_region_group_feature(df)
+    df = _add_sector_group_feature(df)
     return df
 
 

@@ -27,6 +27,35 @@ def test_run_analysis_writes_auditable_reports(tmp_path, large_synthetic_kiva_df
     assert summary["data"]["date_min"] <= summary["data"]["date_max"]
 
 
+def test_refunded_status_rows_are_included_and_reported_separately(tmp_path, large_synthetic_kiva_df):
+    # The full competition dataset (unlike the 100-row dev sample, which is
+    # entirely "funded") also has a "refunded" status: a loan that
+    # completed funding (valid raisedDate, normal funding-speed
+    # distribution) but was later refunded to lenders - an unrelated,
+    # post-disbursal event. This project models funding speed, not
+    # repayment outcome, so refunded rows must be included on the same
+    # footing as funded ones (valid_completed_outcome doesn't look at
+    # status), and the audit trail must report the split so a reader can
+    # see the decision, not just its silent effect.
+    frame = large_synthetic_kiva_df.copy()
+    frame.iloc[0:3, frame.columns.get_loc("status")] = "refunded"
+    data_path = tmp_path / "sample.pkl"
+    _write_pickle(frame, data_path)
+    output_dir = tmp_path / "reports"
+
+    summary = run_analysis(data_path, output_dir, holdout_start="2024-01-01")
+    status_counts = summary["data"]["status_counts_among_valid"]
+
+    assert status_counts.get("refunded") == 3
+    assert status_counts.get("funded") == len(frame) - 3
+    # All rows in this fixture have a valid completed outcome regardless of
+    # status - refunded rows are not silently dropped.
+    assert summary["data"]["n_valid_completed_outcome"] == len(frame)
+
+    report_text = (output_dir / "association_summary.txt").read_text()
+    assert "refunded" in report_text
+
+
 def test_analysis_summary_json_has_no_nested_artifacts(tmp_path, large_synthetic_kiva_df):
     data_path = tmp_path / "sample.pkl"
     _write_pickle(large_synthetic_kiva_df, data_path)

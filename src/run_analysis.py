@@ -164,12 +164,28 @@ def _describe_dataset(df: pd.DataFrame, prepared: pd.DataFrame, holdout_start: s
         float(binary_outcomes.astype(int).mean()) if len(binary_outcomes) else None
     )
 
+    # On the 100-row development sample every row was `status == "funded"`;
+    # the full competition dataset also has a `"refunded"` status (a loan
+    # that *did* complete funding - has a valid `raisedDate` and a
+    # funding-speed distribution similar to `funded` rows - but was later
+    # refunded to lenders, an unrelated post-disbursal event). This project
+    # models funding *speed*, not loan repayment outcome, so `refunded`
+    # rows are deliberately included on the same footing as `funded` ones
+    # (`valid_completed_outcome` above is defined purely by having a valid,
+    # non-negative duration - it does not filter on `status` at all).
+    # Reported here, split out, so a reader can see exactly how many rows
+    # that decision affects and re-derive a funded-only comparison from
+    # this same audit trail if they want one.
+    status_counts_raw = prepared.loc[valid_mask, "status"].value_counts(dropna=False)
+    status_counts = {str(label): int(count) for label, count in status_counts_raw.items()}
+
     return {
         "source_path": str(source_path),
         "n_rows": n_rows,
         "n_valid_completed_outcome": n_valid,
         "n_excluded": n_rows - n_valid,
         "exclusion_reasons": exclusion_reasons,
+        "status_counts_among_valid": status_counts,
         "date_min": date_min,
         "date_max": date_max,
         "holdout_start": holdout_start,
@@ -265,7 +281,7 @@ def _run_binary_classifier(df: pd.DataFrame, holdout_start: str, n_topics: int, 
         }
 
 
-def _run_explanatory(df: pd.DataFrame) -> dict:
+def _run_explanatory(df: pd.DataFrame, extra_interactions=None) -> dict:
     """
     Run the robust explanatory (association) models (Task 5). Each of the
     duration/binary sub-models already degrades independently to a
@@ -293,7 +309,7 @@ def _run_explanatory(df: pd.DataFrame) -> dict:
     explicit for anyone who isn't.
     """
     try:
-        results = fit_explanatory_models(df)
+        results = fit_explanatory_models(df, extra_interactions=extra_interactions)
         duration_fitted = results["duration"] is not None
         binary_fitted = results["binary"] is not None
         both_fitted = duration_fitted and binary_fitted
@@ -344,6 +360,10 @@ def _format_audit_header(data_section: dict, versions: dict) -> "list[str]":
         f"Rows loaded: {data_section['n_rows']}",
         f"Rows with a valid completed outcome: {data_section['n_valid_completed_outcome']}",
         f"Rows excluded: {data_section['n_excluded']} ({data_section['exclusion_reasons']})",
+        f"Status among valid rows: {data_section['status_counts_among_valid']} - "
+        "'refunded' loans completed funding and are included on the same "
+        "footing as 'funded' ones; this project models funding speed, not "
+        "repayment outcome.",
         f"fundraisingDate range: {data_section['date_min']} to {data_section['date_max']}",
         f"Chronological holdout boundary: {data_section['holdout_start']}",
         f"Period counts: {data_section['period_counts']}",
@@ -386,7 +406,9 @@ def _format_binary_classifier_section(binary_classifier: dict) -> "list[str]":
     return lines
 
 
-def run_analysis(data_path, output_dir, holdout_start: str = "2024-01-01", n_topics: int = 5) -> dict:
+def run_analysis(
+    data_path, output_dir, holdout_start: str = "2024-01-01", n_topics: int = 5, extra_interactions=None,
+) -> dict:
     """
     Run the full Kiva funding-speed analysis (chronological baseline+Ridge,
     robust explanatory models, nonlinear benchmark) against the pickle at
@@ -397,6 +419,13 @@ def run_analysis(data_path, output_dir, holdout_start: str = "2024-01-01", n_top
     so a relative path is interpreted relative to the caller's current
     working directory - not to this module's location or any assumed repo
     root - exactly like a normal CLI tool.
+
+    `extra_interactions` is passed straight through to
+    `fit_explanatory_models` (`src/statistical_analysis.py`) - e.g. on a
+    sample large enough to define "adequately represented sectors"
+    (see `src/features.py::MIN_SECTOR_OBSERVATIONS`), pass
+    `["family_mentions_per_100_words:C(sector_group)"]` to activate the
+    sector interaction the default formula deliberately leaves opt-in.
 
     Returns the same JSON-serializable dict that is written to
     `analysis_summary.json` (no `_artifacts` key anywhere, including
@@ -416,7 +445,7 @@ def run_analysis(data_path, output_dir, holdout_start: str = "2024-01-01", n_top
     baseline_ridge = _run_baseline_ridge(df, holdout_start, n_topics)
 
     print("Fitting robust explanatory association models...")
-    explanatory_section, explanatory_raw = _run_explanatory(df)
+    explanatory_section, explanatory_raw = _run_explanatory(df, extra_interactions=extra_interactions)
 
     print("Attempting the nonlinear (gradient-boosted) benchmark...")
     nonlinear_benchmark = _run_nonlinear_benchmark(df, holdout_start, n_topics, random_state=42)
@@ -482,6 +511,22 @@ if __name__ == "__main__":
         default="2024-01-01",
         help="Chronological holdout boundary (ISO date), default 2024-01-01.",
     )
+    parser.add_argument(
+        "--extra-interaction",
+        action="append",
+        default=None,
+        help=(
+            "Extra patsy-formula interaction term to add to the explanatory "
+            "models, on top of the pre-specified defaults (period, region "
+            "group, loan-size band). Repeatable. E.g. "
+            "--extra-interaction 'family_mentions_per_100_words:C(sector_group)' "
+            "to activate the sector interaction on a sample large enough to "
+            "define 'adequately represented sectors' (see "
+            "src/features.py::MIN_SECTOR_OBSERVATIONS)."
+        ),
+    )
     args = parser.parse_args()
 
-    run_analysis(args.data, args.output_dir, holdout_start=args.holdout_start)
+    run_analysis(
+        args.data, args.output_dir, holdout_start=args.holdout_start, extra_interactions=args.extra_interaction,
+    )

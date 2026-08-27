@@ -4,7 +4,9 @@ import pytest
 import src.features as features_module
 from src.features import (
     MIN_REGION_OBSERVATIONS,
+    MIN_SECTOR_OBSERVATIONS,
     _add_region_group_feature,
+    _add_sector_group_feature,
     _add_sentiment_features,
     _vader_lexicon_available,
     classify_gender,
@@ -84,6 +86,47 @@ def test_region_group_wires_through_extract_deterministic_features(large_synthet
     result = extract_deterministic_features(large_synthetic_kiva_df)
     assert "Other" not in set(result["region_group"])
     assert set(result["region_group"]) == set(result["region"])
+
+
+def test_sector_group_keeps_a_sector_that_reaches_the_observation_threshold():
+    # sector_group (src/features.py) uses the same count-threshold design
+    # as region_group, but with MIN_SECTOR_OBSERVATIONS - a much higher
+    # floor, since the design spec requires the sector interaction
+    # specifically to be "restricted to adequately represented sectors"
+    # on data at the scale of the full competition dataset (hundreds of
+    # thousands to millions of rows), not just the ~10-row bar that's
+    # meaningful for region on a 100-row sample.
+    df = pd.DataFrame({
+        "sector": ["Retail"] * MIN_SECTOR_OBSERVATIONS + ["Arts"] * 2
+    })
+    result = _add_sector_group_feature(df.copy())
+    assert (result.loc[result["sector"] == "Retail", "sector_group"] == "Retail").all()
+    assert (result.loc[result["sector"] == "Arts", "sector_group"] == "Other").all()
+
+
+def test_sector_group_collapses_a_sector_just_under_the_observation_threshold():
+    df = pd.DataFrame({
+        "sector": ["Agriculture"] * MIN_SECTOR_OBSERVATIONS + ["Food"] * (MIN_SECTOR_OBSERVATIONS - 1)
+    })
+    result = _add_sector_group_feature(df.copy())
+    assert (result.loc[result["sector"] == "Agriculture", "sector_group"] == "Agriculture").all()
+    assert (result.loc[result["sector"] == "Food", "sector_group"] == "Other").all()
+
+
+def test_sector_group_maps_missing_sector_to_other():
+    df = pd.DataFrame({"sector": ["Retail"] * MIN_SECTOR_OBSERVATIONS + [None]})
+    result = _add_sector_group_feature(df.copy())
+    assert result["sector_group"].iloc[-1] == "Other"
+
+
+def test_sector_group_wires_through_extract_deterministic_features(large_synthetic_kiva_df):
+    # large_synthetic_kiva_df only has 120 rows total, far below
+    # MIN_SECTOR_OBSERVATIONS - every sector should collapse to "Other"
+    # here, which is the correct, intended behavior on a sample this
+    # small (mirrors how region_group behaves on the real ~100-row Kiva
+    # sample), not a bug.
+    result = extract_deterministic_features(large_synthetic_kiva_df)
+    assert set(result["sector_group"]) == {"Other"}
 
 
 def test_vader_lexicon_is_available_via_the_vendored_copy_alone(monkeypatch):
