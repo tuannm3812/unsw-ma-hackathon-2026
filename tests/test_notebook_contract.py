@@ -1,5 +1,8 @@
+import json
 import re
 from pathlib import Path
+
+import pytest
 
 
 def test_notebook_script_has_portable_paths_and_no_duplicated_legacy_modeling():
@@ -56,6 +59,36 @@ def test_notebook_committed_output_has_no_machine_specific_absolute_paths():
     assert "/Users/" not in text
     assert "C:\\" not in text and "C:/" not in text
     assert "file:///" not in text
+
+
+KAGGLE_NOTEBOOK_STEMS = ["1_full_dataset_eda", "2_full_dataset_modeling"]
+
+
+@pytest.mark.parametrize("notebook_stem", KAGGLE_NOTEBOOK_STEMS)
+def test_kaggle_notebook_source_has_no_hardcoded_absolute_paths(notebook_stem):
+    # These two notebooks are self-contained Kaggle kernels (see README's
+    # Kaggle Workflow section) - a hardcoded local path would silently
+    # break on Kaggle's infrastructure instead of failing loudly.
+    text = Path(f"notebooks/{notebook_stem}.py").read_text(encoding="utf-8")
+    assert "/Users/" not in text
+    assert "C:\\" not in text and "C:/" not in text
+
+
+@pytest.mark.parametrize("notebook_stem", KAGGLE_NOTEBOOK_STEMS)
+def test_kaggle_notebook_committed_copy_stays_output_free(notebook_stem):
+    # Policy: these two notebooks run as private Kaggle kernels against the
+    # full 1.45M-row dataset - a trusted run's real findings get written
+    # into the notebook's own Markdown insight cells (see the collab log),
+    # not left as stored cell output. Keeping the committed .ipynb
+    # output-free avoids re-baking a Kaggle run's absolute container paths
+    # or stale numbers into git history every time the notebook is edited
+    # and re-pushed.
+    notebook = json.loads(Path(f"notebooks/{notebook_stem}.ipynb").read_text(encoding="utf-8"))
+    for cell in notebook["cells"]:
+        if cell["cell_type"] != "code":
+            continue
+        assert cell.get("outputs") == [], f"{notebook_stem}.ipynb has stored cell output; policy is output-free"
+        assert cell.get("execution_count") is None
 
 
 def test_readme_documents_current_portable_workflow():

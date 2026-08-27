@@ -60,7 +60,9 @@ unsw-ma-hackathon-2026/
 │   ├── Kiva_Loans.pkl                # Full 1.45M-row dataset (git-ignored)
 │   ├── Kiva_Loans_Sample.pkl         # Original 100-row illustrative sample (git-ignored)
 │   └── Kiva Data Dictionary.xlsx     # Field-level schema reference (git-ignored)
-├── docs/superpowers/                  # Design spec, plan, and full collaboration log
+├── docs/
+│   ├── 0_coding_standards.md          # This project's coding standards (tailored from the shared baseline)
+│   └── superpowers/                   # Design spec, plan, and full collaboration log
 ├── notebooks/
 │   ├── 0_starter_eda.ipynb/.py            # Preliminary - 100-row sample, pipeline demonstration only
 │   ├── 1_full_dataset_eda.ipynb/.py       # Real full-dataset EDA (descriptive only)

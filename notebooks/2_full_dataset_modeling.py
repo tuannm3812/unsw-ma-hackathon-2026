@@ -426,7 +426,8 @@ print("Top 15 features by mean |SHAP value| (2,000-row holdout sample, boosted m
 print(mean_abs_shap.head(15).to_string())
 
 fig, ax = plt.subplots(figsize=(9, 6))
-mean_abs_shap.head(15).sort_values().plot(kind="barh", ax=ax, color="steelblue")
+top_15_sorted = mean_abs_shap.head(15).sort_values()
+ax.barh(top_15_sorted.index, top_15_sorted.to_numpy(), color=plt.cm.viridis(np.linspace(0.15, 0.85, len(top_15_sorted))))
 ax.set_xlabel("mean |SHAP value| (impact on predicted log funding speed)")
 ax.set_title("Top 15 features by SHAP importance - boosted model")
 plt.tight_layout()

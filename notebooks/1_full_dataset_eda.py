@@ -85,7 +85,7 @@ else:
         PROJECT_ROOT = _find_project_root(Path.cwd())
     DATA_PATH = PROJECT_ROOT / "data" / "Kiva_Loans.pkl"
 
-sns.set_theme(style="whitegrid")
+sns.set_theme(style="whitegrid", palette="viridis")
 plt.rcParams["figure.figsize"] = (10, 6)
 plt.rcParams["font.size"] = 12
 
@@ -147,10 +147,10 @@ print(f"Status among valid rows:\n{valid['status'].value_counts().to_string()}")
 
 # %%
 fig, axes = plt.subplots(1, 2, figsize=(14, 5))
-sns.histplot(valid["funding_speed_days"], kde=True, bins=50, color="darkblue", ax=axes[0])
+sns.histplot(valid["funding_speed_days"], kde=True, bins=50, color=plt.cm.viridis(0.25), ax=axes[0])
 axes[0].set_title("Funding speed (days) - valid outcomes, full dataset")
 
-sns.histplot(valid["log_funding_speed"], kde=True, bins=50, color="teal", ax=axes[1])
+sns.histplot(valid["log_funding_speed"], kde=True, bins=50, color=plt.cm.viridis(0.65), ax=axes[1])
 axes[1].set_title("log(1 + funding speed) - valid outcomes")
 plt.tight_layout()
 plt.show()
@@ -178,11 +178,13 @@ print(within_24h_by_period.to_string())
 fig, axes = plt.subplots(1, 2, figsize=(14, 5))
 sns.boxplot(
     data=valid, x="analysis_period", y="funding_speed_days",
-    hue="analysis_period", legend=False, color="steelblue", ax=axes[0],
+    hue="analysis_period", legend=False, palette="viridis", ax=axes[0],
 )
 axes[0].set_title("Funding speed by analysis period")
 
-within_24h_by_period.astype(float).plot(kind="bar", color="darkorange", ax=axes[1])
+within_24h_by_period.astype(float).plot(
+    kind="bar", color=plt.cm.viridis(np.linspace(0.2, 0.8, len(within_24h_by_period))), ax=axes[1]
+)
 axes[1].set_title("Share funded within 24 hours, by period")
 axes[1].tick_params(axis="x", rotation=0)
 plt.tight_layout()
