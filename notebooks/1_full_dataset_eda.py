@@ -16,39 +16,54 @@
 # %% [markdown]
 # # Kiva Loans: Full-Dataset EDA (1.45M loans)
 #
-# **Research question.** When a Kiva loan description leans on family/
-# communal appeals, competence/agency framing, or urgency language, is
-# that associated with getting funded faster - and does the association
-# hold steady, or does it shift with the economic backdrop (pre-pandemic
-# vs. pandemic-disruption vs. post-pandemic) and with the sector the loan
-# is in? This notebook is the descriptive first pass over the real,
-# complete dataset (not the 100-row illustrative sample the original
-# proposal was built on) - it establishes what the data actually looks
-# like before `2_full_dataset_modeling.ipynb` fits models to it.
+# **Who this notebook is for.** No data science background required. Every
+# statistic below is followed by a plain-language explanation of what it
+# means and why it matters. Technical terms are explained the first time
+# they're used (look for **"In plain terms"**).
 #
-# **Why this matters.** Kiva is a marketplace: a loan that funds slowly
-# sits unfunded longer, is more exposed to lapsing, and represents a
-# borrower waiting longer for capital. If narrative framing has a real,
-# consistent association with funding speed, that's an actionable lever
-# for how loan write-ups get coached or triaged - if it doesn't, or is
-# swamped by structural factors like loan size, that's just as important
-# a finding.
+# **The research question, in one sentence:** when a Kiva loan write-up
+# talks about family, sounds capable/independent, or sounds urgent, does
+# that loan get funded by lenders faster - and does the answer change
+# depending on the economic climate or the type of loan?
 #
-# **Self-contained**: uses only standard public packages (pandas, numpy,
-# matplotlib, seaborn, nltk) - no import of this repo's own `src/`
-# package. This is a deliberately simpler, streamlined re-implementation
-# of the same *ideas* the tested `src/` pipeline uses (chronological
-# periods, per-100-word framing rates, VADER sentiment), not a port of
-# its exact code - so treat this notebook's numbers as a fast, portable
-# read on the data, and `../reports/generated_full_dataset/` (produced by
-# the actual tested pipeline, `python3 -m src.run_analysis`) as the
-# authoritative source for anything going into the final presentation.
-# Every insight cell below quotes the real output from this notebook's
-# own verified Kaggle run (2026-08-27), not a placeholder.
+# **Research question (full version).** When a Kiva loan description leans
+# on family/communal appeals, competence/agency framing, or urgency
+# language, is that associated with getting funded faster - and does the
+# association hold steady, or does it shift with the economic backdrop
+# (pre-pandemic vs. pandemic-disruption vs. post-pandemic) and with the
+# sector the loan is in? This notebook is the descriptive first pass over
+# the real, complete dataset (not the 100-row illustrative sample the
+# original proposal was built on) - it establishes what the data actually
+# looks like before `2_full_dataset_modeling.ipynb` fits models to it.
 #
+# **Why this matters for a marketer.** Kiva is a marketplace: a loan that
+# sits unfunded longer is a worse experience for the borrower waiting on
+# it, and a worse use of a lender's attention. If *how a loan's story is
+# written* has a real, consistent link to how fast it gets funded, that's
+# a genuinely actionable lever - the kind of finding you could turn into
+# writing guidance for how loans get described. If it turns out framing
+# barely matters next to more structural things (like the loan amount),
+# that's just as useful to know before investing in a "better copywriting"
+# initiative.
+#
+# **How to read this notebook.** Each numbered section below does three
+# things, in order: (1) runs some analysis, (2) prints or plots the raw
+# result, (3) explains **"What this shows"** in plain language immediately
+# after. You can skim the numbered headers and the "What this shows"
+# paragraphs alone and get the full story without reading any code.
+#
+# **A technical note** (safe to skip): this notebook is self-contained -
+# standard public packages only (pandas, numpy, matplotlib, seaborn, nltk)
+# - and is a deliberately simpler, streamlined re-implementation of the
+# same *ideas* the project's tested internal pipeline uses, not a port of
+# its exact code. `../reports/generated_full_dataset/` (produced by the
+# actual tested pipeline) is the authoritative source for anything going
+# into the final presentation; treat this notebook as a fast, portable,
+# easy-to-read read on the same data. Every number below comes from this
+# notebook's own verified Kaggle run (2026-08-27), not a placeholder.
 # Designed to run as a private Kaggle kernel with internet enabled (only
-# to fetch the public NLTK VADER lexicon - no other network access) -
-# see `../scripts/push_kaggle_kernel.sh eda` and README.md's "Kaggle
+# to fetch the public NLTK sentiment dictionary - no other network access)
+# - see `../scripts/push_kaggle_kernel.sh eda` and README.md's "Kaggle
 # Workflow" section.
 
 # %%
@@ -90,26 +105,76 @@ plt.rcParams["figure.figsize"] = (10, 6)
 plt.rcParams["font.size"] = 12
 
 # %% [markdown]
-# ## 1. Load and derive the target
+# ## 1. What does the data actually look like?
 #
-# `funding_speed_days` = time from posting to fully funded. A negative or
-# missing value means the loan record is unusable for this analysis
-# (dropped, never imputed). `funded_within_24h` is the secondary binary
-# outcome. Both outcomes are only defined among loans that **were
-# eventually funded** - this cannot speak to whether a loan gets funded
-# at all, only how fast it did once it was (see README.md's Known
-# Limitations).
+# [Kiva](https://www.kiva.org) is a nonprofit lending platform: everyday
+# people ("lenders") each put in a small amount of money to fund a loan
+# for a borrower somewhere in the world, usually to grow a small business
+# or cover a household need. Once enough lenders chip in, the loan is
+# "fully funded" and the money is disbursed. **Every row in this dataset
+# is one loan.**
 
 # %%
 # The pickle is a list of row dicts, not a directly-pickled DataFrame
 # (pd.read_pickle would raise) - a plain stdlib pickle.load handles both
-# shapes, no custom package needed.
+# shapes, no custom package needed. Loaded once here and reused for
+# everything below - the full dataset is 1.6GB, so this is the notebook's
+# one real "wait" moment.
 import pickle  # noqa: E402
 
 with open(DATA_PATH, "rb") as handle:
     _raw = pickle.load(handle)
 df = pd.DataFrame(_raw) if isinstance(_raw, list) else _raw
+print(f"Shape: {df.shape[0]:,} loans x {df.shape[1]} raw columns")
 
+# %%
+# A real sample of rows, restricted to columns that describe the *loan*
+# rather than the *borrower* - deliberately excludes name/id/image_url
+# and free-text/exact-timestamp fields that can still identify a real
+# person even without a name column (the raw description usually opens
+# with the borrower's name and a short biography; an exact date is
+# specific enough to cross-reference a real loan on Kiva's own site).
+# This project only ever analyzes aggregate patterns, never individual
+# borrowers, so a preview shouldn't redistribute identifiable rows just
+# because the source data happens to include them.
+preview_cols = [
+    "gender", "borrowerCount", "loanAmount", "sector", "activity",
+    "region", "country_name", "repaymentInterval",
+]
+df[preview_cols].head(8)
+
+# %% [markdown]
+# **What this shows.** Each row is one real loan, with the loan and
+# borrower attributes you'd expect: who it's for (`gender`,
+# `borrowerCount`), how much (`loanAmount`, in USD), what it's for
+# (`sector`, `activity`), where (`region`, `country_name`), and the
+# repayment structure (`repaymentInterval`). Two more field groups exist
+# in the real data but aren't shown row-by-row above, for the privacy
+# reason in the code comment: a free-text description written for lenders
+# (illustrative opening only, not an actual row - *"Maria is a
+# hardworking small-business owner who has run her grocery store for five
+# years and is requesting a loan to buy more stock."*), and two dates -
+# when the loan was **posted** and when it became **fully funded**. The
+# gap between those two dates is this entire notebook's subject: how many
+# days it takes a loan to get funded, and what's associated with that
+# being faster or slower.
+
+# %% [markdown]
+# ## 2. Turning "two dates" into "funding speed"
+#
+# **In plain terms:** every loan has a posted date and a fully-funded
+# date. Subtract one from the other and you get `funding_speed_days` -
+# literally, how many days it took lenders to fully fund that loan. A
+# loan that funded the same day it posted scores close to 0; one that
+# took three weeks scores 21. A negative or missing value means the
+# record is unusable (bad data - dropped, never guessed at). This
+# notebook also tracks a simpler yes/no version: did the loan fund within
+# 24 hours (`funded_within_24h`)? Both measures only exist for loans that
+# **did eventually get funded** - this data can't tell us whether a loan
+# gets funded at all, only how fast it did once it succeeded (see
+# README.md's Known Limitations).
+
+# %%
 fundraising = pd.to_datetime(df["fundraisingDate"], errors="coerce", utc=True)
 raised = pd.to_datetime(df["raisedDate"], errors="coerce", utc=True)
 df["funding_speed_days"] = (raised - fundraising).dt.total_seconds() / 86400
@@ -133,17 +198,17 @@ print(f"Status among valid rows:\n{valid['status'].value_counts().to_string()}")
 # **What this shows.** The dataset is almost entirely usable: of
 # 1,453,846 loans, 1,453,840 (99.9996%) have a valid, non-negative
 # funding duration - only 6 rows are dropped, and those 6 are excluded
-# for a data-quality reason (a negative duration, i.e. `raisedDate`
-# before `fundraisingDate`), not because the analysis chose to ignore
-# them. Among the valid rows, 1,452,203 loans (99.89%) were `funded` and
-# 1,637 (0.11%) were `refunded` - refunded loans are kept on the same
-# footing as funded ones here, because a refund is a later, unrelated
-# event (a completed loan that was later cancelled/returned); the loan
-# still *did* complete its funding round, which is what
-# `funding_speed_days` measures. This near-total coverage is exactly why
-# the full-dataset run matters for the final deck: with 14,500x more
-# rows than the proposal-week sample, findings here are not an artifact
-# of small-sample noise.
+# for a data-quality reason (a negative duration, i.e. the "funded" date
+# came before the "posted" date - clearly a data error), not because the
+# analysis chose to ignore them. Among the valid rows, 1,452,203 loans
+# (99.89%) show status `funded` and 1,637 (0.11%) show `refunded` -
+# refunded loans are kept on the same footing as funded ones here,
+# because a refund is a later, unrelated event (a completed loan that was
+# later cancelled/returned); the loan still *did* get fully funded, which
+# is the thing this notebook measures. This near-total coverage is
+# exactly why the full-dataset run matters for the final deck: with
+# 14,500x more rows than the proposal-week sample, findings here are not
+# an artifact of small-sample noise.
 
 # %%
 fig, axes = plt.subplots(1, 2, figsize=(14, 5))
@@ -156,13 +221,25 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# ## 2. Funding behavior by period
+# **What this shows.** The left chart is the raw funding speed in days -
+# most loans fund very quickly (the tall bar near 0), with a long tail of
+# slower loans stretching out for weeks. The right chart is the same data
+# after a **log transform** (`log_funding_speed`). **In plain terms:** a
+# log transform squashes that long tail down so the chart looks more like
+# an even, symmetric bell shape - modeling techniques (used in notebook 2)
+# tend to work better on data shaped like the right chart than the
+# heavily lopsided shape on the left. You don't need to interpret the
+# log-scale numbers themselves; just know it's the same story, rescaled
+# for the math to work better later.
+
+# %% [markdown]
+# ## 3. Did funding speed change around the pandemic?
 #
 # Three eras, split by the year the loan started raising funds:
 # **pre_pandemic** (through 2019), **pandemic_disruption** (2020-2021),
 # and **post_pandemic** (2022 onward). The question: did COVID-era
 # disruption to global lending/logistics show up as slower funding, and
-# if so, has it recovered?
+# if so, has it recovered since?
 
 # %%
 period_counts = df["analysis_period"].value_counts(dropna=False).sort_index()
@@ -194,37 +271,39 @@ plt.show()
 # **What this shows - the headline finding of this notebook.** The share
 # of loans funded within 24 hours nearly *halved* and never recovered:
 # **46.0% pre-pandemic → 30.3% during pandemic disruption → 30.0%
-# post-pandemic.** Funding speed didn't just dip during 2020-2021 and
-# bounce back - it settled at a permanently slower baseline, even years
-# after the disruption itself ended (589,823 pre-pandemic loans vs.
-# 565,474 post-pandemic loans in this dataset, so this isn't a small,
-# noisy post-pandemic bucket either). That's a genuinely useful,
-# concrete story for the deck: something structural changed about the
-# marketplace's funding dynamics around 2020, and it persisted. It also
-# motivates the `analysis_period` interaction terms in the explanatory
-# model in notebook 2 - if the *level* of funding speed shifted this
-# much, the *association* between narrative framing and speed plausibly
-# shifted too, which is exactly what that model tests.
+# post-pandemic.** In plain terms: before 2020, almost half of all loans
+# were fully funded within a day of posting. Since 2020, that's dropped
+# to less than a third - and it has **stayed there**, years after the
+# pandemic disruption itself ended. This isn't a small blip either:
+# 589,823 loans fall in the "before" group and 565,474 in the "after"
+# group, so it's not a handful of unusual loans skewing the picture.
+# That's a genuinely useful, concrete story for the deck: something
+# structural changed about how this marketplace funds loans around 2020,
+# and it never bounced back. It also raises a natural follow-up question
+# that notebook 2 tests directly: if the overall *pace* of funding
+# shifted this much, did the *value of good loan-write-up framing* shift
+# with it?
 
 # %% [markdown]
-# ## 3. Narrative framing (simplified: 3 theory-guided keyword rates)
+# ## 4. Reading loan descriptions for narrative "framing"
 #
-# Vectorized `pandas.Series.str.count` over a compiled regex - no
-# per-row Python loop. Three theoretically distinct framing dimensions,
-# each grounded in prosocial-giving and persuasion research, normalized
-# per 100 words for comparability across description lengths (a longer
-# description isn't "more urgent" just because it's longer):
+# **In plain terms:** this section counts how often each loan's
+# description uses words from three different persuasion styles, then
+# checks whether using more of those words lines up with faster funding.
+# Three styles, each grounded in research on what makes an ask persuasive:
 #
-# - **Family/communal** - references to children, family roles (mother,
-#   father, spouse) - the classic "identifiable victim" / relatable-need
-#   framing.
-# - **Agency/competence** - references to deciding, managing, running a
-#   business independently - signals the borrower's capability rather
-#   than their need.
+# - **Family/communal** - mentions of children, family roles (mother,
+#   father, spouse) - a classic "this affects real people you can relate
+#   to" appeal.
+# - **Agency/competence** - mentions of deciding, managing, running a
+#   business independently - signals "I'm capable," not "I'm needy."
 # - **Urgency** - explicit urgency/emergency language - a time-pressure
-#   appeal.
+#   appeal ("today," "right now," "before it's too late").
 #
-# Same theoretical grounding as the tested pipeline, simpler patterns.
+# Each style is counted as a **rate per 100 words** rather than a raw
+# count, so a longer description doesn't automatically score as "more
+# urgent" just because it has more words in total - this makes
+# descriptions of different lengths fairly comparable to each other.
 
 # %%
 FAMILY_PATTERN = re.compile(r"\b(child|children|family|son|daughter|mother|father|wife|husband|school)\b", re.I)
@@ -244,12 +323,15 @@ valid["agency_mentions_per_100_words"] = _rate_per_100_words(AGENCY_PATTERN, des
 valid["urgency_mentions_per_100_words"] = _rate_per_100_words(URGENCY_PATTERN, description, word_count)
 
 # %% [markdown]
-# ## 4. Sentiment (VADER, public NLTK corpus)
+# ## 5. Scoring how positive each description sounds
 #
-# Requires internet once, to fetch the lexicon (not required if it's
-# already cached in this environment). Scored on a 20,000-row random
-# sample for speed in this descriptive-only notebook - the tested
-# pipeline scores every row (see `run_analysis`'s output for that).
+# **In plain terms:** this uses a well-known, off-the-shelf tool called
+# VADER - think of it as an automated "mood detector" for text. It reads
+# a description and outputs a single "sentiment" score from **-1 (very
+# negative)** to **+1 (very positive)**, the same way a simple star
+# rating summarizes a review. Scored on a random sample of 20,000
+# descriptions for speed in this quick-read notebook (the project's
+# tested pipeline scores every single row).
 
 # %%
 import nltk  # noqa: E402
@@ -272,18 +354,29 @@ print(sentiment_sample["sentiment_compound"].describe().to_string())
 
 # %% [markdown]
 # **What this shows.** Kiva loan descriptions are overwhelmingly
-# positive in tone: mean compound score **0.78** (scale runs -1 to +1),
-# median **0.88**, and the 25th percentile is still a strongly positive
-# **0.74**. Fewer than a quarter of descriptions read as anything but
-# clearly positive. That's a **ceiling effect worth flagging for the
-# deck**: because almost every description is already very positive,
-# sentiment has limited room to vary - which matters when interpreting
-# any sentiment coefficient in the explanatory model in notebook 2 (a
-# small, well-populated positive tail, not a balanced spread from
-# negative to positive).
+# positive in tone: the average score is **0.78** out of a possible 1.0,
+# and the typical (median) description scores an even higher **0.88**.
+# Even the more modestly-toned quarter of descriptions (25th percentile)
+# still score a strongly positive **0.74**. In plain terms: almost every
+# description on this platform is written in an upbeat, hopeful voice -
+# there's very little genuinely neutral or negative writing here. That's
+# worth flagging for the deck as a **ceiling effect**: when nearly
+# everything is already near the top of the scale, sentiment doesn't have
+# much room left to vary from loan to loan - which matters when
+# interpreting any sentiment-related result in notebook 2's model (it's
+# comparing "very positive" to "extremely positive," not "negative" to
+# "positive").
 
 # %% [markdown]
-# ## 5. Structural vs. narrative correlation with funding speed
+# ## 6. Which of these signals actually tracks with funding speed?
+#
+# **In plain terms:** a **correlation** is a simple score from -1 to +1
+# that says whether two things tend to move together. 0 means no
+# relationship at all; +1 means "when one goes up, the other always goes
+# up too"; -1 means "when one goes up, the other always goes down." This
+# section checks the raw, one-at-a-time correlation between funding speed
+# and each of: the three framing styles above, the loan amount, and the
+# repayment term (how long the borrower has to repay).
 
 # %%
 narrative_cols = ["family_mentions_per_100_words", "agency_mentions_per_100_words", "urgency_mentions_per_100_words"]
@@ -295,38 +388,44 @@ print("Correlation with funding speed (days):")
 print(corr_table.sort_values().to_string())
 
 # %% [markdown]
-# **What this shows.** In simple bivariate terms, **structural loan
-# characteristics dominate**: larger loan amounts (r = **+0.43**) and
-# longer repayment terms (r = **+0.28**) are the strongest correlates of
-# slower funding - unsurprising, a bigger ask takes longer to fill.
-# Narrative framing correlates are an order of magnitude weaker: family
-# framing r = **-0.019** (very weakly faster), urgency r = **+0.010**
-# (essentially flat), agency framing r = **+0.059** (weakly *slower*,
-# the opposite of what a naive "confidence framing helps" hypothesis
-# would predict). None of that means framing doesn't matter - a raw
-# correlation can't separate framing's own effect from the fact that,
-# say, larger loans might also happen to use different language. That
-# separation is exactly what the multivariate explanatory model in
-# `2_full_dataset_modeling.ipynb` is for, and its real result there is
-# more nuanced: family framing's association with speed turns out to
-# depend on *when* and *where* the loan was posted, not on a single flat
-# effect - see that notebook's own findings section.
+# **What this shows.** In these simple, one-at-a-time comparisons,
+# **loan structure dominates over narrative framing**: larger loan
+# amounts (r = **+0.43**) and longer repayment terms (r = **+0.28**) are
+# the strongest correlates of *slower* funding - which makes intuitive
+# sense, a bigger ask naturally takes longer to fill. The three framing
+# styles barely register by comparison - an order of magnitude weaker:
+# family framing r = **-0.019** (a whisper of a link to *faster*
+# funding), urgency r = **+0.010** (essentially no relationship either
+# way), agency framing r = **+0.059** (a whisper of a link to *slower*
+# funding - the opposite of what a naive "sound confident and it'll fund
+# faster" assumption would predict). This doesn't mean framing doesn't
+# matter at all - a simple one-at-a-time correlation can't separate
+# framing's own effect from other things that happen to travel together
+# with it (e.g. larger loans might also just happen to be written in a
+# different style). Untangling that is exactly what the full statistical
+# model in `2_full_dataset_modeling.ipynb` is for - and its real result
+# is more nuanced than a flat "framing doesn't matter": family framing's
+# link to speed turns out to depend heavily on *when* and *where* the
+# loan was posted, not on one single, constant effect. See that
+# notebook's own findings for the full story.
 
 # %% [markdown]
 # ## Key takeaways for the deck
 #
 # 1. **The dataset is complete and clean** - 1,453,840 of 1,453,846 loans
-#    (99.9996%) have a usable funding-speed outcome.
-# 2. **Funding got permanently slower after 2019** - the share funded
-#    within 24 hours fell from 46.0% to ~30% during the pandemic and has
-#    stayed there ever since, across hundreds of thousands of loans in
-#    every period. This is the single most concrete, presentation-ready
-#    finding in this notebook.
-# 3. **Descriptions are almost uniformly positive in tone** (median VADER
-#    compound 0.88) - a ceiling effect that limits how much sentiment
-#    alone can explain.
-# 4. **Loan size and repayment structure - not narrative framing - are
-#    the dominant simple correlates of funding speed.** Framing's real
-#    story is conditional (on period, on region, on sector), not a flat
-#    "mention family more, fund faster" effect - see notebook 2 for the
-#    model that actually tests that.
+#    (99.9996%) have a usable funding-speed outcome, so nothing here is
+#    limited by a small or messy sample.
+# 2. **Funding got permanently slower after 2019 - the single most
+#    concrete, presentation-ready finding here.** The share of loans
+#    funded within 24 hours fell from 46% to about 30% during the
+#    pandemic and has **never recovered**, across hundreds of thousands
+#    of loans in every period.
+# 3. **Loan descriptions are written in an almost uniformly upbeat tone**
+#    (typical sentiment score 0.88 out of 1.0) - there's a ceiling effect
+#    here that limits how much "positivity" alone can explain.
+# 4. **How a loan is structured (its size, its repayment terms) - not how
+#    its story is written - is the strongest simple driver of funding
+#    speed.** Narrative framing isn't a dead end, but its real story is
+#    conditional (it depends on the period, the region, the sector), not
+#    a flat "write it this way and it'll always fund faster" rule - see
+#    notebook 2 for the model that actually tests that in detail.
