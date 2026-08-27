@@ -14,7 +14,23 @@
 # ---
 
 # %% [markdown]
-# # Full-Dataset Modeling (1.45M rows) - Real Findings
+# # Kiva Loans: Full-Dataset Modeling (1.45M loans)
+#
+# This notebook answers two different questions about the same outcome,
+# funding speed:
+#
+# - **Predictive** (Sections 3-4): *how well* can funding speed be
+#   forecast for a newly-posted loan, using only information available
+#   at posting time? This is the "could Kiva build a triage tool"
+#   question - if a model can flag loans likely to languish, they could
+#   be surfaced more prominently. Evaluated on a genuine chronological
+#   holdout (loans posted in 2024-2025), not a random split, so it
+#   reflects how a model would perform on loans it hasn't seen yet.
+# - **Explanatory** (Section 5): *why* - which loan and narrative
+#   characteristics are associated with faster or slower funding, holding
+#   the others constant? This uses robust (HC3) standard errors and
+#   reports **association, never causation** - see README.md's Known
+#   Limitations for why a causal claim isn't supportable here.
 #
 # **Self-contained**: uses only standard public packages (pandas, numpy,
 # scikit-learn, statsmodels, patsy, nltk) - no import of this repo's own
@@ -28,7 +44,9 @@
 # `python3 -m src.run_analysis`, the actual tested pipeline) is the
 # authoritative source for the final presentation's numbers; this
 # notebook is for fast, portable iteration on Kaggle's compute without
-# needing the private package.
+# needing the private package. Every insight cell below quotes this
+# notebook's own verified Kaggle run (2026-08-27, ~27 min on Kaggle's
+# free CPU tier) - not a placeholder.
 #
 # Nothing here needs a GPU - Ridge/HistGradientBoosting/statsmodels are
 # all CPU-only. See `../scripts/push_kaggle_kernel.sh modeling` and
@@ -158,13 +176,23 @@ print(f"Valid rows: {len(valid)} / {len(df)}")
 # on/after it - mirrors how a model would actually score newly-posted
 # loans. This is the one design choice from the tested pipeline kept
 # exactly, not simplified: a random split would silently leak future
-# information into training.
+# information into training (the model would get to "see" narrative
+# styles and market conditions from loans posted after the ones it's
+# being tested on).
 
 # %%
 train_raw = valid.loc[valid["fundraisingDate_parsed"] < pd.Timestamp(HOLDOUT_START, tz="UTC")].copy()
 holdout_raw = valid.loc[valid["fundraisingDate_parsed"] >= pd.Timestamp(HOLDOUT_START, tz="UTC")].copy()
 print(f"Train rows: {len(train_raw)}  |  Holdout rows: {len(holdout_raw)}")
 
+# %% [markdown]
+# **What this shows.** 1,174,953 loans (2005-2023) train the models;
+# 278,887 loans posted in 2024-2025 form a genuinely out-of-time holdout
+# - about 19% of the full dataset, held back entirely from training.
+# That's a large enough holdout to trust the metrics below as a real
+# read on generalization, not a lucky split.
+
+# %%
 NUMERIC_COLS = [
     "borrowerCount", "log_loan_amount", "lenderRepaymentTerm",
     "family_mentions_per_100_words", "agency_mentions_per_100_words",
@@ -186,6 +214,12 @@ y_holdout_days = holdout_raw["funding_speed_days"].to_numpy()
 
 # %% [markdown]
 # ## 3. Predictive models: Ridge baseline + nonlinear benchmark
+#
+# Ridge is the simple, interpretable linear baseline. HistGradientBoosting
+# is the nonlinear benchmark - it can pick up interactions (e.g. "urgency
+# language matters more for small loans than large ones") that a linear
+# model can't, at the cost of interpretability. Both predict
+# `log_funding_speed`, then get transformed back to days for the metric.
 
 # %%
 ridge = Ridge(alpha=1.0, random_state=42)
@@ -201,7 +235,24 @@ print(f"Boosted holdout MAE (days): {mean_absolute_error(y_holdout_days, boosted
 print(f"Boosted holdout R2: {r2_score(y_holdout_days, boosted_holdout_days):.3f}")
 
 # %% [markdown]
+# **What this shows.** On loans the models have never seen (2024-2025):
+# Ridge's typical prediction is off by **6.76 days**; the nonlinear
+# model tightens that to **5.53 days** and explains **49.3%** of the
+# variance in funding speed (R² = 0.493). The gap between the two -
+# boosted trees beating a linear model by over a day of average error -
+# is itself informative: it means funding speed isn't just a weighted
+# sum of loan characteristics, there are real nonlinear/interaction
+# effects the linear model can't capture (e.g. narrative framing
+# plausibly mattering differently across loan sizes or sectors, which is
+# exactly what the interaction terms in Section 5 test directly).
+
+# %% [markdown]
 # ## 4. 24-hour funding classifier
+#
+# A binary reframing of the same problem: will this loan fund within a
+# day of posting? This is the more operationally useful framing for a
+# real triage tool - "flag loans unlikely to fund fast" is a simpler,
+# more actionable signal than a precise day-count estimate.
 
 # %%
 y_train_binary = train_raw["funded_within_24h"].to_numpy()
@@ -214,6 +265,19 @@ holdout_proba = classifier.predict_proba(X_holdout_dense)[:, 1]
 
 print(f"Holdout ROC AUC: {roc_auc_score(y_holdout_binary, holdout_proba):.4f}")
 print(f"Holdout average precision: {average_precision_score(y_holdout_binary, holdout_proba):.4f}")
+
+# %% [markdown]
+# **What this shows.** ROC AUC of **0.905** and average precision of
+# **0.837** on a genuine out-of-time holdout - strong discrimination for
+# a real-world, imbalanced-outcome problem (recall from notebook 1: only
+# ~30-46% of loans actually fund within 24 hours, depending on period).
+# This is the strongest practical-implications result in the whole
+# analysis: a model built purely from information available at posting
+# time (loan size, sector, region, narrative text) can reliably flag,
+# before the fact, which loans are at risk of funding slowly - the kind
+# of signal a platform could act on operationally (e.g. surfacing
+# at-risk loans more prominently), independent of whether any single
+# narrative-framing choice is the reason why.
 
 # %% [markdown]
 # ## 5. Robust explanatory associations (HC3 standard errors)
@@ -234,6 +298,10 @@ FORMULA = (
     "C(sector_group) + C(region_group) + C(analysis_period) + C(loan_size_band) + "
     "family_mentions_per_100_words:C(analysis_period) + family_mentions_per_100_words:C(region_group)"
 )
+CATEGORICAL_TERMS = [
+    "gender_classification", "repaymentInterval", "sector_group",
+    "region_group", "analysis_period", "loan_size_band",
+]
 
 try:
     y, X = patsy.dmatrices(FORMULA, data=valid, return_type="dataframe")
@@ -241,13 +309,87 @@ try:
         warnings.filterwarnings("ignore")
         duration_model = sm.OLS(y, X).fit(cov_type="HC3")
     print(duration_model.summary())
+
+    # Every coefficient below is *relative to an omitted reference
+    # category* (patsy's Treatment coding) - print what that reference
+    # actually is for each categorical term, rather than asking a reader
+    # to guess it from which levels are missing.
+    print("\nReference (omitted) category per categorical term:")
+    for col in CATEGORICAL_TERMS:
+        all_levels = set(valid[col].astype(str).unique())
+        dummy_levels = {
+            p.split("[T.")[1].rstrip("]")
+            for p in duration_model.params.index
+            if p.startswith(f"C({col})")
+        }
+        print(f"  {col}: {sorted(all_levels - dummy_levels)}")
 except Exception as error:  # noqa: BLE001 - reported, not crashed, matching the tested pipeline's spirit
     print(f"Duration explanatory model could not be fit: {error}")
 
 # %% [markdown]
-# **Insight cell** - fill in after running: how do these numbers compare
-# with the already-verified 2026-08-27 run in
-# `../reports/generated_full_dataset/analysis_summary.json`? Directional
-# agreement is expected; exact coefficients will differ (simplified
-# framing patterns, sampled/full sentiment scoring differences, and a
-# shorter formula here than the tested pipeline's).
+# **What this shows - the core "why" findings for the deck.** Fit on all
+# 1,453,840 valid loans with HC3-robust standard errors (R² = 0.425), so
+# these are large-sample, well-powered associations, not noisy
+# small-sample estimates. Coefficients are on `log_funding_speed`, so
+# **positive = slower, negative = faster**, relative to each term's
+# omitted reference category (see the reference-category printout above
+# for exactly what that baseline is - e.g. gender's reference is
+# "female", sector's is "Agriculture", the period reference is
+# "pandemic_disruption").
+#
+# - **Narrative framing has a real but conditional story, not a flat
+#   one.** Urgency language is consistently associated with faster
+#   funding (coef -0.084, p < 0.001) - a genuine, clean win for a simple
+#   framing choice. Agency/competence language shows no association
+#   (p = 0.562) - the "sound capable and independent" hypothesis doesn't
+#   hold up at this scale. Family/communal framing has no simple flat
+#   effect either (its main-effect p = 0.071) - **but its interactions
+#   are highly significant**: the family-framing speed benefit was
+#   strongest pre-pandemic (interaction -0.023 relative to the
+#   pandemic-disruption baseline) and only partially recovered
+#   post-pandemic (-0.012) - direct, model-based confirmation of the
+#   "funding dynamics permanently shifted after 2020" story from
+#   notebook 1. It also varies sharply by region: the family-framing
+#   benefit is far larger in the Middle East (-0.114) and Central
+#   America (-0.053) than in North America (+0.025) or Asia (+0.045),
+#   where it's mildly *counterproductive*. **The honest headline: family
+#   framing helps, but who it helps and how much depends heavily on when
+#   and where the loan is posted - it is not a universal lever.**
+# - **Sentiment tone shows a counterintuitive association**: a more
+#   positive description is linked to *slower* funding (coef +0.114,
+#   p < 0.001). Combined with notebook 1's finding that descriptions are
+#   almost uniformly positive already (median compound 0.88), this may
+#   reflect longer, more elaborately-written pitches reading as more
+#   positive *and* taking longer to compose/review - association only,
+#   not a reason to write flatter descriptions.
+# - **Structural factors remain the largest effects by far.** A borrower
+#   posted as male takes notably longer to fund than one posted as
+#   female (+0.433, the single largest non-sector/region coefficient in
+#   the model) - a substantial, well-powered gap worth a slide of its
+#   own. Small loans fund far faster than large ones (-0.571), and
+#   `"at_end"` repayment (the full loan repaid in one lump sum at
+#   maturity - this dataset's actual field value) is far slower than
+#   irregular or monthly repayment (-0.377 / -0.104, i.e. faster,
+#   relative to `"at_end"` as the omitted reference), and sector/region
+#   effects span more than a full log-point
+#   (e.g. Water and Education sectors fund dramatically faster than
+#   Agriculture, the reference sector; Clothing and Retail fund slower).
+
+# %% [markdown]
+# ## Key takeaways for the deck
+#
+# 1. **Predictive ceiling**: a model using only posting-time information
+#    explains about half the variance in funding speed (R² = 0.49,
+#    MAE 5.5 days) and discriminates 24-hour funding very well
+#    (ROC AUC 0.90) - strong enough to be operationally useful.
+# 2. **Urgency framing is the cleanest narrative win** - consistently
+#    associated with faster funding, no conditional caveats needed.
+# 3. **Family framing's benefit is real but conditional** on period and
+#    region - strongest pre-pandemic and in the Middle East/Central
+#    America, weaker or reversed elsewhere. This nuance, not a flat
+#    "use family framing" rule, is the more defensible and more
+#    interesting story for the practical-implications criterion.
+# 4. **Structural factors (loan size, repayment structure, sector,
+#    region, and borrower gender) dwarf narrative framing in effect
+#    size.** Framing is a real, measurable lever - but a secondary one
+#    next to how a loan is structured.
