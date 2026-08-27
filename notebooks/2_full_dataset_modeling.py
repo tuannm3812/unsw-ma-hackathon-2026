@@ -474,15 +474,18 @@ for col in CATEGORICAL_TERMS:
 #   may simply reflect that longer, more elaborately-written pitches read
 #   as more positive *and* naturally take longer to write and review - an
 #   association, not a reason to write flatter descriptions.
-# - **Structural factors remain the largest effects by far.** A loan
-#   posted under a male borrower takes notably longer to fund than one
-#   posted under a female borrower - the single largest factor in the
-#   whole model. Small loans fund far faster than large ones. Loans
-#   repaid as a single lump sum at the end of the term are far slower to
-#   fund than loans repaid irregularly or monthly. Sector and region
-#   matter enormously too - Water and Education-sector loans fund
-#   dramatically faster than Agriculture-sector loans, while Clothing and
-#   Retail loans fund slower.
+# - **Structural factors remain the largest effects by far.** The single
+#   biggest swings in the whole model come from sector and region - Water
+#   and Education-sector loans fund dramatically faster than
+#   Agriculture-sector loans, while Clothing and Retail loans fund
+#   slower, and the Middle East funds far faster than the model's
+#   reference region. A loan posted under a male borrower takes notably
+#   longer to fund than one posted under a female borrower - a smaller
+#   effect than the biggest sector/region gaps, but larger than the loan
+#   amount itself, and larger than every narrative-framing term combined.
+#   Small loans fund far faster than large ones. Loans repaid as a single
+#   lump sum at the end of the term are far slower to fund than loans
+#   repaid irregularly or monthly.
 
 # %% [markdown]
 # ## 8. Feature Importance
@@ -539,9 +542,10 @@ plt.show()
 # %% [markdown]
 # This second, independent check **confirms the top of the Explanatory
 # Modeling story**: loan amount and repayment term are, by a wide margin,
-# the two factors the flexible model relied on most - matching that
-# section's largest single linked factor. The time period (pre-pandemic
-# vs. not) and loan size also rank near the top, again agreeing with its
+# the two factors the flexible model relied on most - both were also
+# among Section 7's largest, most significant coefficients. The time
+# period (pre-pandemic vs. not) and loan size also rank near the top,
+# again agreeing with its
 # biggest effects.
 #
 # **The honest divergence worth stating plainly: narrative framing barely

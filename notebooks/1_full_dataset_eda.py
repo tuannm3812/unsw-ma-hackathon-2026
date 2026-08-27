@@ -252,9 +252,11 @@ print(valid.groupby("gender", observed=True)["funding_speed_days"].median().to_s
 # Loans posted under a **male** borrower take noticeably longer to fund
 # than loans posted under a **female** borrower, even in this simple,
 # one-factor view. This is worth keeping in mind heading into the
-# modeling notebook, where it turns out to be the single largest
-# individual factor in the full statistical model - this chart is the
-# first, simplest hint of that result.
+# modeling notebook, where the gap survives controlling for everything
+# else about the loan - smaller than the biggest sector and region
+# effects, but larger than the loan amount itself, and larger than every
+# narrative-framing term combined. This chart is the first, simplest hint
+# of that result.
 
 # %% [markdown]
 # ## 5. Categorical Features
@@ -517,11 +519,21 @@ plt.show()
 # This doesn't mean framing doesn't matter at all - a simple one-at-a-
 # time correlation can't separate framing's own effect from other things
 # that happen to travel together with it (e.g. larger loans might also
-# just happen to be written in a different style). Untangling that is
-# exactly what the statistical model in `2_full_dataset_modeling.ipynb`
-# is for, and its result is more nuanced than a flat "framing doesn't
-# matter": family framing's link to speed turns out to depend heavily on
-# when and where the loan was posted, not on one single, constant effect.
+# just happen to be written in a different style). **Urgency framing is
+# the clearest example of why this distinction matters**: its raw
+# correlation here is essentially zero (r = +0.010), but once the
+# modeling notebook accounts for loan size, sector, and everything else
+# at the same time, urgency language turns out to be one of the
+# strongest, most statistically significant predictors in the entire
+# model - consistently linked to faster funding. The raw correlation was
+# masking a real effect, not because urgency doesn't matter, but because
+# whatever else was going on (which loan types tend to use urgent
+# language) was cancelling it out in a simple one-factor view. Untangling
+# exactly this kind of confound is what the statistical model in
+# `2_full_dataset_modeling.ipynb` is for, and its results are more
+# nuanced across the board: family framing's link to speed turns out to
+# depend heavily on when and where the loan was posted, not on one
+# single, constant effect.
 
 # %% [markdown]
 # ## 10. Key Findings
