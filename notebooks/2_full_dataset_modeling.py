@@ -376,6 +376,96 @@ except Exception as error:  # noqa: BLE001 - reported, not crashed, matching the
 #   Agriculture, the reference sector; Clothing and Retail fund slower).
 
 # %% [markdown]
+# ## 6. What does the nonlinear model think matters? (SHAP)
+#
+# Section 5's OLS gives clean, testable coefficients, but by construction
+# it can only see the interactions it's explicitly told to look for
+# (`family_mentions × period`, `family_mentions × region`). The boosted
+# model from Section 3 learned whatever nonlinear patterns and
+# interactions were actually in the data, with no such restriction - but
+# on its own it's a black box. SHAP (SHapley Additive exPlanations)
+# opens it back up: for each prediction, it attributes "how much did
+# this feature push the prediction away from the average" in a way
+# that's additive and consistent across the whole model. Averaging the
+# absolute SHAP value per feature ranks what the nonlinear model
+# actually leaned on - a second, independent read on "what matters",
+# worth comparing against Section 5's explicit associations rather than
+# taking either one alone.
+#
+# `shap` ships in Kaggle's standard Python image; the `try/except`
+# below installs it on the rare environment where it's missing (this
+# repo's own `requirements.txt` doesn't need it - it's notebook-only
+# tooling, same status as `jupytext`/`nbconvert`). Computed on a random
+# 2,000-row sample of the holdout set with `TreeExplainer` (exact for
+# tree ensembles, no approximation) - the full 278,887-row holdout would
+# cost time for a negligibly different ranking.
+
+# %%
+try:
+    import shap
+except ImportError:
+    import subprocess
+    import sys
+
+    subprocess.run([sys.executable, "-m", "pip", "install", "-q", "shap"], check=True)
+    import shap
+
+import matplotlib.pyplot as plt  # noqa: E402
+
+FEATURE_NAMES = preprocessor.get_feature_names_out()
+shap_sample_idx = np.random.RandomState(42).choice(
+    X_holdout_dense.shape[0], size=min(2_000, X_holdout_dense.shape[0]), replace=False
+)
+X_shap_sample = X_holdout_dense[shap_sample_idx]
+
+tree_explainer = shap.TreeExplainer(boosted)
+shap_values = tree_explainer.shap_values(X_shap_sample)
+
+mean_abs_shap = pd.Series(np.abs(shap_values).mean(axis=0), index=FEATURE_NAMES).sort_values(ascending=False)
+print("Top 15 features by mean |SHAP value| (2,000-row holdout sample, boosted model):")
+print(mean_abs_shap.head(15).to_string())
+
+fig, ax = plt.subplots(figsize=(9, 6))
+mean_abs_shap.head(15).sort_values().plot(kind="barh", ax=ax, color="steelblue")
+ax.set_xlabel("mean |SHAP value| (impact on predicted log funding speed)")
+ax.set_title("Top 15 features by SHAP importance - boosted model")
+plt.tight_layout()
+plt.show()
+
+# %% [markdown]
+# **What this shows - partial agreement, one honest divergence.** SHAP
+# confirms the top of the OLS story: `log_loan_amount` (0.448) and
+# `lenderRepaymentTerm` (0.338) are the two most important features by
+# a wide margin - loan amount matches OLS's largest single coefficient,
+# and repayment term's outsized SHAP importance despite a modest
+# per-unit OLS coefficient (0.068) makes sense once you account for its
+# wide range (a few months to several years) rather than the small
+# per-month effect alone. `analysis_period_pre_pandemic` (0.218) and
+# `loan_size_band_small` (0.150) round out the top 4, again agreeing
+# with OLS's largest categorical effects.
+#
+# **The honest divergence: narrative framing barely registers here.**
+# None of `family_mentions_per_100_words`, `agency_mentions_per_100_words`,
+# or `urgency_mentions_per_100_words` make the top 15 by SHAP importance
+# at all (all below 0.021, the 15th-place value) - only
+# `desc_sentiment_compound` cracks the list, at #11 (0.035), well behind
+# individual sector and region categories. This doesn't contradict
+# Section 5's OLS findings - urgency framing's association (-0.084) and
+# family framing's period/region interactions are genuinely, robustly
+# significant at p < 0.001 - but it's a useful check on what
+# "significant" means at n = 1,453,840: HC3 standard errors shrink
+# enormously at this scale, so even a small, consistent effect clears
+# statistical significance easily. SHAP's importance ranking reflects
+# actual magnitude of contribution to predictions, not certainty - and
+# by that measure, narrative framing is real but genuinely minor next to
+# how a loan is structured. **Both things are true and worth saying on
+# the same slide**: framing has a statistically robust, direction-
+# consistent effect (the OLS story), and it's a small one in practical
+# terms next to loan size and repayment structure (the SHAP story) - the
+# honest, nuanced version of "does narrative framing matter" beats
+# either half alone for the practical-implications criterion.
+
+# %% [markdown]
 # ## Key takeaways for the deck
 #
 # 1. **Predictive ceiling**: a model using only posting-time information
@@ -393,3 +483,13 @@ except Exception as error:  # noqa: BLE001 - reported, not crashed, matching the
 #    region, and borrower gender) dwarf narrative framing in effect
 #    size.** Framing is a real, measurable lever - but a secondary one
 #    next to how a loan is structured.
+# 5. **A second, independent method agrees on the ranking.** SHAP
+#    importance from the nonlinear model (Section 6) - which measures
+#    contribution to predictions, not statistical certainty - confirms
+#    the same structural features dominate, and shows narrative framing
+#    features (family/agency/urgency mentions) don't crack the top 15 at
+#    all. Two different methods landing on the same "structure over
+#    framing" conclusion, from two different angles, is a stronger
+#    result than either alone - and a good example of statistical
+#    significance (OLS, at n = 1.45M) vs. practical importance (SHAP)
+#    not being the same thing.
