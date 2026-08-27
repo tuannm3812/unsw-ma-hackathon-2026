@@ -137,8 +137,7 @@ df[preview_cols].head(8)
 # and is dropped, never guessed at. `funded_within_24h` is a simpler
 # yes/no version of the same measure. **Both only exist for loans that
 # did eventually get funded** - this data can't speak to whether a loan
-# gets funded at all, only how fast it did once it succeeded (see
-# README.md's Known Limitations).
+# gets funded at all, only how fast it did once it succeeded.
 
 # %%
 fundraising = pd.to_datetime(df["fundraisingDate"], errors="coerce", utc=True)
@@ -366,8 +365,7 @@ valid["urgency_mentions_per_100_words"] = _rate_per_100_words(URGENCY_PATTERN, d
 # **VADER**, a well-established, off-the-shelf tool that reads text and
 # returns a single score from -1 (very negative) to +1 (very positive) -
 # the same idea as a star rating summarizing a review. Scored on a random
-# sample of 20,000 descriptions for speed in this quick-read notebook
-# (the project's tested pipeline scores every row).
+# sample of 20,000 descriptions for speed.
 
 # %%
 import nltk  # noqa: E402

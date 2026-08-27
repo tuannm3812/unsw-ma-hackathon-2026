@@ -30,8 +30,8 @@
 # - **Explanatory**: which loan and narrative characteristics are linked
 #   to faster or slower funding, once every other factor is held fixed?
 #   This reports **association, never causation** - a link between two
-#   things doesn't prove one causes the other (see README.md's Known
-#   Limitations).
+#   things doesn't prove one causes the other, since borrowers weren't
+#   randomly assigned a writing style, a loan amount, or a gender.
 #
 # **Glossary** - a quick reference for the terms used throughout:
 #
@@ -45,14 +45,6 @@
 # | Statistical significance (p-value) | How confident we can be that a link is real and not random noise; a very small p-value means high confidence. |
 # | Reference category | The baseline group every "how much faster/slower" comparison is measured against. |
 # | SHAP | A way of measuring which factors a complex model actually relied on to make its predictions. |
-#
-# Uses only standard public packages (pandas, numpy, scikit-learn,
-# statsmodels, patsy, nltk, shap) - a deliberately simpler, streamlined
-# re-implementation of the same design as the project's tested internal
-# pipeline (a fair, chronological train/test split; statistically robust,
-# association-only language), not a port of its exact code.
-# `../reports/generated_full_dataset/` is the authoritative source for
-# the final presentation's numbers.
 
 # %% [markdown]
 # ## 1. Setup
