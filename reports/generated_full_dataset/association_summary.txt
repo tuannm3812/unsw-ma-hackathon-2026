@@ -1,0 +1,166 @@
+UNSW Marketing Analytics Hackathon 2026 - Reproducible Analysis Report
+========================================================================
+
+Audit trail
+--------------------------------------------------------------
+Source file: /Users/tuannm3812/Documents/GitHub/4. Training/unsw-ma-hackathon-2026/data/Kiva_Loans.pkl
+Rows loaded: 1453846
+Rows with a valid completed outcome: 1453840
+Rows excluded: 6 ({'negative_duration': 6})
+Status among valid rows: {'funded': 1452203, 'refunded': 1637} - 'refunded' loans completed funding and are included on the same footing as 'funded' ones; this project models funding speed, not repayment outcome.
+fundraisingDate range: 2016-01-01T02:30:02+00:00 to 2025-12-31T20:30:25+00:00
+Chronological holdout boundary: 2024-01-01
+Period counts: {'pre_pandemic': 589823, 'post_pandemic': 565474, 'pandemic_disruption': 298549}
+Funded-within-24h share (valid outcomes): 0.36566265888956145
+Software versions: python=3.9.6, pandas=2.3.3, numpy=2.0.2, scikit_learn=1.6.1, statsmodels=0.14.6
+
+24-Hour Funding Classifier (leakage-safe chronological holdout)
+--------------------------------------------------------------
+Train rows: 1174953  |  Holdout rows: 278887
+Holdout ROC AUC: 0.8997
+Holdout average precision (AP): 0.8301
+Holdout Brier score: 0.1156
+Holdout accuracy: 0.8403
+Holdout class balance: {'funded_within_24h': 87466, 'not_within_24h': 191421}
+
+Explanatory Association Summary (robust HC3 standard errors)
+==============================================================
+
+Duration model: log(1 + funding speed in days) ~ pre-specified predictors, n = 1453840 loans with a valid completed outcome. OLS with HC3 heteroskedasticity-robust standard errors.
+Coefficients below describe how each pre-specified predictor is associated with funding speed, holding the other modeled predictors fixed. They describe statistical association, not a causal claim, and every pre-specified predictor is reported regardless of statistical significance.
+Dropped for lacking variation in this sample: sentiment_available
+
+  - C(gender_classification)[T.male]: coefficient 0.4301 (95% CI [0.4253, 0.4349], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(repaymentInterval)[T.irregularly]: coefficient -0.3779 (95% CI [-0.3887, -0.3671], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(repaymentInterval)[T.monthly]: coefficient -0.1166 (95% CI [-0.1241, -0.1092], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(sector)[T.Arts]: coefficient -0.5458 (95% CI [-0.5724, -0.5193], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(sector)[T.Clean Energy]: coefficient -1.0758 (95% CI [-1.0904, -1.0612], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(sector)[T.Clothing]: coefficient 0.2245 (95% CI [0.2063, 0.2426], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(sector)[T.Construction]: coefficient -0.3316 (95% CI [-0.3639, -0.2992], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(sector)[T.Education]: coefficient -1.3785 (95% CI [-1.4048, -1.3522], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(sector)[T.Entertainment]: coefficient -0.6812 (95% CI [-0.7773, -0.5852], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(sector)[T.Food]: coefficient 0.0932 (95% CI [0.0843, 0.1020], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(sector)[T.Health]: coefficient -0.4839 (95% CI [-0.5112, -0.4565], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(sector)[T.Housing]: coefficient -0.1234 (95% CI [-0.1406, -0.1062], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(sector)[T.Manufacturing]: coefficient -0.7615 (95% CI [-0.7912, -0.7317], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(sector)[T.Personal Use]: coefficient 0.1971 (95% CI [0.1774, 0.2168], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(sector)[T.Retail]: coefficient 0.2038 (95% CI [0.1944, 0.2131], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(sector)[T.Reuse & Recycle]: coefficient -0.0575 (95% CI [-0.0821, -0.0329], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(sector)[T.Sanitation & Hygiene]: coefficient -0.3487 (95% CI [-0.3893, -0.3080], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(sector)[T.Services]: coefficient -0.0330 (95% CI [-0.0482, -0.0177], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(sector)[T.Transportation]: coefficient -0.0275 (95% CI [-0.0519, -0.0032], p=0.0266) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(sector)[T.Water]: coefficient -1.6810 (95% CI [-1.7771, -1.5849], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(sector)[T.Wholesale]: coefficient -0.2338 (95% CI [-0.3279, -0.1398], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(region_group)[T.Asia]: coefficient -0.1989 (95% CI [-0.2060, -0.1917], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(region_group)[T.Central America]: coefficient -0.0384 (95% CI [-0.0531, -0.0238], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(region_group)[T.Middle East]: coefficient -1.1881 (95% CI [-1.2329, -1.1434], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(region_group)[T.North America]: coefficient -0.5626 (95% CI [-0.5883, -0.5369], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(region_group)[T.Oceania]: coefficient -0.3081 (95% CI [-0.3312, -0.2850], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(analysis_period)[T.pandemic_disruption]: coefficient 0.5453 (95% CI [0.5366, 0.5539], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(analysis_period)[T.post_pandemic]: coefficient 0.3460 (95% CI [0.3395, 0.3526], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(loan_size_band)[T.medium]: coefficient 0.6660 (95% CI [0.6578, 0.6742], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(loan_size_band)[T.large]: coefficient 0.5924 (95% CI [0.5784, 0.6063], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - log_loan_amount: coefficient 0.4345 (95% CI [0.4291, 0.4399], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - lenderRepaymentTerm: coefficient 0.0685 (95% CI [0.0678, 0.0692], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - is_group_loan: coefficient -0.0043 (95% CI [-0.0119, 0.0033], p=0.2628) is associated with funding speed, holding the other modeled predictors fixed.
+  - desc_word_count: coefficient -0.0004 (95% CI [-0.0005, -0.0004], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words: coefficient -0.0226 (95% CI [-0.0253, -0.0199], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(analysis_period)[T.pandemic_disruption]: coefficient 0.0218 (95% CI [0.0190, 0.0245], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(analysis_period)[T.post_pandemic]: coefficient 0.0135 (95% CI [0.0114, 0.0156], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(region_group)[T.Asia]: coefficient 0.0484 (95% CI [0.0462, 0.0506], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(region_group)[T.Central America]: coefficient -0.0531 (95% CI [-0.0598, -0.0465], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(region_group)[T.Middle East]: coefficient -0.0733 (95% CI [-0.0855, -0.0610], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(region_group)[T.North America]: coefficient 0.0393 (95% CI [0.0324, 0.0462], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(region_group)[T.Oceania]: coefficient 0.0311 (95% CI [0.0240, 0.0383], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(loan_size_band)[T.medium]: coefficient -0.0238 (95% CI [-0.0259, -0.0216], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(loan_size_band)[T.large]: coefficient -0.0139 (95% CI [-0.0167, -0.0110], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Arts]: coefficient 0.0160 (95% CI [0.0069, 0.0250], p=0.0006) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Clean Energy]: coefficient 0.1249 (95% CI [0.1191, 0.1306], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Clothing]: coefficient 0.0141 (95% CI [0.0081, 0.0201], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Construction]: coefficient 0.0344 (95% CI [0.0237, 0.0451], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Education]: coefficient 0.0690 (95% CI [0.0642, 0.0739], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Food]: coefficient 0.0015 (95% CI [-0.0014, 0.0045], p=0.3088) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Health]: coefficient -0.0244 (95% CI [-0.0320, -0.0169], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Housing]: coefficient -0.0115 (95% CI [-0.0163, -0.0068], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Manufacturing]: coefficient 0.0286 (95% CI [0.0181, 0.0390], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Other]: coefficient 0.0630 (95% CI [0.0362, 0.0899], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Personal Use]: coefficient -0.0744 (95% CI [-0.0809, -0.0678], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Retail]: coefficient -0.0007 (95% CI [-0.0038, 0.0024], p=0.6526) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Reuse & Recycle]: coefficient -0.0093 (95% CI [-0.0176, -0.0010], p=0.0274) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Sanitation & Hygiene]: coefficient -0.0492 (95% CI [-0.0614, -0.0370], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Services]: coefficient 0.0338 (95% CI [0.0284, 0.0393], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Transportation]: coefficient 0.0877 (95% CI [0.0796, 0.0957], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Water]: coefficient 0.3299 (95% CI [0.2898, 0.3699], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - agency_mentions_per_100_words: coefficient 0.0010 (95% CI [-0.0009, 0.0028], p=0.3090) is associated with funding speed, holding the other modeled predictors fixed.
+  - urgency_mentions_per_100_words: coefficient -0.0627 (95% CI [-0.0797, -0.0458], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - desc_sentiment_compound: coefficient 0.1360 (95% CI [0.1292, 0.1429], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+
+24-hour funding model: funded within 24 hours ~ pre-specified predictors, n = 1453840 loans with a known 24-hour funding outcome. Binomial GLM (log-odds scale) with HC3 heteroskedasticity-robust standard errors.
+Coefficients below describe how each pre-specified predictor is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed. They describe statistical association, not a causal claim, and every pre-specified predictor is reported regardless of statistical significance.
+Dropped for lacking variation in this sample: sentiment_available
+
+  - C(gender_classification)[T.male]: coefficient -0.9702 (95% CI [-0.9849, -0.9556], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(repaymentInterval)[T.irregularly]: coefficient 0.7378 (95% CI [0.7050, 0.7707], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(repaymentInterval)[T.monthly]: coefficient 0.1927 (95% CI [0.1708, 0.2145], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(sector)[T.Arts]: coefficient 0.8477 (95% CI [0.7703, 0.9252], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(sector)[T.Clean Energy]: coefficient 3.3372 (95% CI [3.2753, 3.3991], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(sector)[T.Clothing]: coefficient -0.6034 (95% CI [-0.6539, -0.5528], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(sector)[T.Construction]: coefficient 0.4811 (95% CI [0.3815, 0.5807], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(sector)[T.Education]: coefficient 2.8816 (95% CI [2.8060, 2.9573], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(sector)[T.Entertainment]: coefficient 0.9674 (95% CI [0.6506, 1.2843], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(sector)[T.Food]: coefficient -0.3432 (95% CI [-0.3663, -0.3202], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(sector)[T.Health]: coefficient 0.7176 (95% CI [0.6282, 0.8070], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(sector)[T.Housing]: coefficient 0.3028 (95% CI [0.2521, 0.3535], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(sector)[T.Manufacturing]: coefficient 1.0449 (95% CI [0.9440, 1.1458], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(sector)[T.Personal Use]: coefficient -0.9967 (95% CI [-1.0622, -0.9313], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(sector)[T.Retail]: coefficient -0.5244 (95% CI [-0.5484, -0.5005], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(sector)[T.Reuse & Recycle]: coefficient -0.1879 (95% CI [-0.2557, -0.1202], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(sector)[T.Sanitation & Hygiene]: coefficient 0.5221 (95% CI [0.3519, 0.6924], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(sector)[T.Services]: coefficient -0.1763 (95% CI [-0.2185, -0.1341], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(sector)[T.Transportation]: coefficient -0.1056 (95% CI [-0.1730, -0.0383], p=0.0021) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(sector)[T.Water]: coefficient 2.2668 (95% CI [1.8897, 2.6439], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(sector)[T.Wholesale]: coefficient -0.0030 (95% CI [-0.3143, 0.3083], p=0.9850) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(region_group)[T.Asia]: coefficient 0.3005 (95% CI [0.2806, 0.3204], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(region_group)[T.Central America]: coefficient 0.2119 (95% CI [0.1652, 0.2585], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(region_group)[T.Middle East]: coefficient 2.3605 (95% CI [2.1620, 2.5590], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(region_group)[T.North America]: coefficient 0.4949 (95% CI [0.4122, 0.5775], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(region_group)[T.Oceania]: coefficient 1.1617 (95% CI [1.0984, 1.2249], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(analysis_period)[T.pandemic_disruption]: coefficient -1.1979 (95% CI [-1.2219, -1.1739], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(analysis_period)[T.post_pandemic]: coefficient -0.9147 (95% CI [-0.9324, -0.8970], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(loan_size_band)[T.medium]: coefficient -0.4892 (95% CI [-0.5109, -0.4674], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - C(loan_size_band)[T.large]: coefficient 0.2996 (95% CI [0.2578, 0.3413], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - log_loan_amount: coefficient -1.5581 (95% CI [-1.5750, -1.5413], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - lenderRepaymentTerm: coefficient -0.2111 (95% CI [-0.2134, -0.2088], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - is_group_loan: coefficient -0.1527 (95% CI [-0.1749, -0.1306], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - desc_word_count: coefficient 0.0011 (95% CI [0.0009, 0.0012], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words: coefficient 0.0535 (95% CI [0.0459, 0.0612], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(analysis_period)[T.pandemic_disruption]: coefficient -0.0416 (95% CI [-0.0491, -0.0341], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(analysis_period)[T.post_pandemic]: coefficient -0.0032 (95% CI [-0.0090, 0.0025], p=0.2729) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(region_group)[T.Asia]: coefficient -0.0766 (95% CI [-0.0826, -0.0707], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(region_group)[T.Central America]: coefficient 0.0761 (95% CI [0.0559, 0.0962], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(region_group)[T.Middle East]: coefficient 0.1750 (95% CI [0.1238, 0.2263], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(region_group)[T.North America]: coefficient -0.0258 (95% CI [-0.0484, -0.0033], p=0.0247) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(region_group)[T.Oceania]: coefficient -0.1101 (95% CI [-0.1294, -0.0908], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(loan_size_band)[T.medium]: coefficient 0.0110 (95% CI [0.0052, 0.0168], p=0.0002) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(loan_size_band)[T.large]: coefficient 0.0044 (95% CI [-0.0056, 0.0144], p=0.3882) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Arts]: coefficient -0.0516 (95% CI [-0.0786, -0.0245], p=0.0002) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Clean Energy]: coefficient -0.2260 (95% CI [-0.2505, -0.2014], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Clothing]: coefficient -0.0444 (95% CI [-0.0612, -0.0276], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Construction]: coefficient -0.1123 (95% CI [-0.1458, -0.0788], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Education]: coefficient -0.1112 (95% CI [-0.1246, -0.0977], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Food]: coefficient -0.0135 (95% CI [-0.0211, -0.0059], p=0.0005) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Health]: coefficient 0.0466 (95% CI [0.0216, 0.0716], p=0.0003) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Housing]: coefficient -0.0355 (95% CI [-0.0495, -0.0216], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Manufacturing]: coefficient -0.0811 (95% CI [-0.1150, -0.0472], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Other]: coefficient -0.1503 (95% CI [-0.2401, -0.0605], p=0.0010) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Personal Use]: coefficient 0.2994 (95% CI [0.2784, 0.3204], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Retail]: coefficient -0.0083 (95% CI [-0.0162, -0.0005], p=0.0375) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Reuse & Recycle]: coefficient -0.0087 (95% CI [-0.0315, 0.0141], p=0.4529) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Sanitation & Hygiene]: coefficient 0.1245 (95% CI [0.0710, 0.1781], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Services]: coefficient -0.0604 (95% CI [-0.0756, -0.0452], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Transportation]: coefficient -0.1444 (95% CI [-0.1653, -0.1235], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - family_mentions_per_100_words:C(sector_group)[T.Water]: coefficient -0.5040 (95% CI [-0.6495, -0.3585], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - agency_mentions_per_100_words: coefficient 0.0226 (95% CI [0.0178, 0.0274], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - urgency_mentions_per_100_words: coefficient 0.2219 (95% CI [0.1706, 0.2732], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+  - desc_sentiment_compound: coefficient -0.1860 (95% CI [-0.2054, -0.1666], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
+

@@ -1,0 +1,2129 @@
+{
+  "generated_at": "2026-08-27T03:30:41.984497+00:00",
+  "software_versions": {
+    "python": "3.9.6",
+    "pandas": "2.3.3",
+    "numpy": "2.0.2",
+    "scikit_learn": "1.6.1",
+    "statsmodels": "0.14.6"
+  },
+  "data": {
+    "source_path": "/Users/tuannm3812/Documents/GitHub/4. Training/unsw-ma-hackathon-2026/data/Kiva_Loans.pkl",
+    "n_rows": 1453846,
+    "n_valid_completed_outcome": 1453840,
+    "n_excluded": 6,
+    "exclusion_reasons": {
+      "negative_duration": 6
+    },
+    "status_counts_among_valid": {
+      "funded": 1452203,
+      "refunded": 1637
+    },
+    "date_min": "2016-01-01T02:30:02+00:00",
+    "date_max": "2025-12-31T20:30:25+00:00",
+    "holdout_start": "2024-01-01",
+    "period_counts": {
+      "pre_pandemic": 589823,
+      "post_pandemic": 565474,
+      "pandemic_disruption": 298549
+    },
+    "funded_within_24h_share": 0.36566265888956145
+  },
+  "baseline_ridge": {
+    "holdout_start": "2024-01-01",
+    "train_rows": 1174953,
+    "holdout_rows": 278887,
+    "numeric_features": [
+      "borrowerCount",
+      "log_loan_amount",
+      "desc_word_count",
+      "desc_char_count",
+      "desc_sentence_count",
+      "desc_avg_word_length",
+      "desc_avg_sentence_length",
+      "description_missing",
+      "use_missing",
+      "whySpecial_missing",
+      "number_token_count",
+      "age_pattern_count",
+      "years_in_business_count",
+      "family_mentions_per_100_words",
+      "basic_needs_mentions_per_100_words",
+      "business_mentions_per_100_words",
+      "agency_mentions_per_100_words",
+      "gratitude_mentions_per_100_words",
+      "urgency_mentions_per_100_words",
+      "first_person_mentions_per_100_words",
+      "third_person_mentions_per_100_words",
+      "desc_sentiment_compound",
+      "desc_sentiment_pos",
+      "desc_sentiment_neg",
+      "desc_sentiment_neu",
+      "sentiment_available",
+      "is_group_loan",
+      "lenderRepaymentTerm",
+      "country_ppp",
+      "fundraising_year",
+      "fundraising_month",
+      "topic_0",
+      "topic_1",
+      "topic_2",
+      "topic_3",
+      "topic_4"
+    ],
+    "categorical_features": [
+      "gender_classification",
+      "loan_size_band",
+      "repaymentInterval",
+      "sector",
+      "activity",
+      "country_iso",
+      "region",
+      "analysis_period"
+    ],
+    "feature_names": [
+      "numeric__borrowerCount",
+      "numeric__log_loan_amount",
+      "numeric__desc_word_count",
+      "numeric__desc_char_count",
+      "numeric__desc_sentence_count",
+      "numeric__desc_avg_word_length",
+      "numeric__desc_avg_sentence_length",
+      "numeric__description_missing",
+      "numeric__use_missing",
+      "numeric__whySpecial_missing",
+      "numeric__number_token_count",
+      "numeric__age_pattern_count",
+      "numeric__years_in_business_count",
+      "numeric__family_mentions_per_100_words",
+      "numeric__basic_needs_mentions_per_100_words",
+      "numeric__business_mentions_per_100_words",
+      "numeric__agency_mentions_per_100_words",
+      "numeric__gratitude_mentions_per_100_words",
+      "numeric__urgency_mentions_per_100_words",
+      "numeric__first_person_mentions_per_100_words",
+      "numeric__third_person_mentions_per_100_words",
+      "numeric__desc_sentiment_compound",
+      "numeric__desc_sentiment_pos",
+      "numeric__desc_sentiment_neg",
+      "numeric__desc_sentiment_neu",
+      "numeric__sentiment_available",
+      "numeric__is_group_loan",
+      "numeric__lenderRepaymentTerm",
+      "numeric__country_ppp",
+      "numeric__fundraising_year",
+      "numeric__fundraising_month",
+      "numeric__topic_0",
+      "numeric__topic_1",
+      "numeric__topic_2",
+      "numeric__topic_3",
+      "numeric__topic_4",
+      "categorical__gender_classification_female",
+      "categorical__gender_classification_male",
+      "categorical__loan_size_band_large",
+      "categorical__loan_size_band_medium",
+      "categorical__loan_size_band_small",
+      "categorical__repaymentInterval_at_end",
+      "categorical__repaymentInterval_irregularly",
+      "categorical__repaymentInterval_monthly",
+      "categorical__sector_Agriculture",
+      "categorical__sector_Arts",
+      "categorical__sector_Clean Energy",
+      "categorical__sector_Clothing",
+      "categorical__sector_Construction",
+      "categorical__sector_Education",
+      "categorical__sector_Entertainment",
+      "categorical__sector_Food",
+      "categorical__sector_Health",
+      "categorical__sector_Housing",
+      "categorical__sector_Manufacturing",
+      "categorical__sector_Personal Use",
+      "categorical__sector_Retail",
+      "categorical__sector_Reuse & Recycle",
+      "categorical__sector_Sanitation & Hygiene",
+      "categorical__sector_Services",
+      "categorical__sector_Transportation",
+      "categorical__sector_Water",
+      "categorical__sector_Wholesale",
+      "categorical__activity_Adult Care",
+      "categorical__activity_Agriculture",
+      "categorical__activity_Air Conditioning",
+      "categorical__activity_Animal Sales",
+      "categorical__activity_Aquaculture",
+      "categorical__activity_Arts",
+      "categorical__activity_Auto Repair",
+      "categorical__activity_Bakery",
+      "categorical__activity_Balut-Making",
+      "categorical__activity_Barber Shop",
+      "categorical__activity_Beauty Salon",
+      "categorical__activity_Beekeeping",
+      "categorical__activity_Beverages",
+      "categorical__activity_Bicycle Repair",
+      "categorical__activity_Bicycle Sales",
+      "categorical__activity_Blacksmith",
+      "categorical__activity_Bookbinding",
+      "categorical__activity_Bookstore",
+      "categorical__activity_Bricks",
+      "categorical__activity_Butcher Shop",
+      "categorical__activity_Cafe",
+      "categorical__activity_Call Center",
+      "categorical__activity_Carpentry",
+      "categorical__activity_Catering",
+      "categorical__activity_Cattle",
+      "categorical__activity_Celebrations",
+      "categorical__activity_Cement",
+      "categorical__activity_Cereals",
+      "categorical__activity_Charcoal Sales",
+      "categorical__activity_Cheese Making",
+      "categorical__activity_Child Care",
+      "categorical__activity_Cleaning Services",
+      "categorical__activity_Cloth & Dressmaking Supplies",
+      "categorical__activity_Clothing",
+      "categorical__activity_Clothing Sales",
+      "categorical__activity_Cobbler",
+      "categorical__activity_Communications",
+      "categorical__activity_Community Water Distribution",
+      "categorical__activity_Computer",
+      "categorical__activity_Computers",
+      "categorical__activity_Construction",
+      "categorical__activity_Construction Supplies",
+      "categorical__activity_Consumer Goods",
+      "categorical__activity_Cosmetics Sales",
+      "categorical__activity_Crafts",
+      "categorical__activity_Dairy",
+      "categorical__activity_Decorations Sales",
+      "categorical__activity_Dental",
+      "categorical__activity_Education provider",
+      "categorical__activity_Electrical Goods",
+      "categorical__activity_Electrician",
+      "categorical__activity_Electronics Repair",
+      "categorical__activity_Electronics Sales",
+      "categorical__activity_Embroidery",
+      "categorical__activity_Entertainment",
+      "categorical__activity_Event Planning",
+      "categorical__activity_Farm Supplies",
+      "categorical__activity_Farming",
+      "categorical__activity_Film",
+      "categorical__activity_Fish Selling",
+      "categorical__activity_Fishing",
+      "categorical__activity_Florist",
+      "categorical__activity_Flowers",
+      "categorical__activity_Food",
+      "categorical__activity_Food Market",
+      "categorical__activity_Food Production/Sales",
+      "categorical__activity_Food Stall",
+      "categorical__activity_Fruits & Vegetables",
+      "categorical__activity_Fuel/Firewood",
+      "categorical__activity_Funerals",
+      "categorical__activity_Furniture Making",
+      "categorical__activity_Games",
+      "categorical__activity_General Store",
+      "categorical__activity_Goods Distribution",
+      "categorical__activity_Grocery Store",
+      "categorical__activity_Hardware",
+      "categorical__activity_Health",
+      "categorical__activity_Higher education costs",
+      "categorical__activity_Home Appliances",
+      "categorical__activity_Home Products Sales",
+      "categorical__activity_Hotel",
+      "categorical__activity_Internet Cafe",
+      "categorical__activity_Jewelry",
+      "categorical__activity_Knitting",
+      "categorical__activity_Land Rental",
+      "categorical__activity_Landscaping / Gardening",
+      "categorical__activity_Laundry",
+      "categorical__activity_Liquor Store / Off-License",
+      "categorical__activity_Livestock",
+      "categorical__activity_Machine Shop",
+      "categorical__activity_Machinery Rental",
+      "categorical__activity_Manufacturing",
+      "categorical__activity_Medical Clinic",
+      "categorical__activity_Metal Shop",
+      "categorical__activity_Milk Sales",
+      "categorical__activity_Mobile Phones",
+      "categorical__activity_Mobile Transactions",
+      "categorical__activity_Motorcycle Repair",
+      "categorical__activity_Motorcycle Transport",
+      "categorical__activity_Movie Tapes & DVDs",
+      "categorical__activity_Music Discs & Tapes",
+      "categorical__activity_Musical Instruments",
+      "categorical__activity_Musical Performance",
+      "categorical__activity_Natural Medicines",
+      "categorical__activity_Office Supplies",
+      "categorical__activity_Other Renewable Energy",
+      "categorical__activity_Paper Sales",
+      "categorical__activity_Party Supplies",
+      "categorical__activity_Patchwork",
+      "categorical__activity_Perfumes",
+      "categorical__activity_Personal Care Products",
+      "categorical__activity_Personal Expenses",
+      "categorical__activity_Personal Housing Expenses",
+      "categorical__activity_Personal Medical Expenses",
+      "categorical__activity_Personal Products Sales",
+      "categorical__activity_Pharmacy",
+      "categorical__activity_Phone Accessories",
+      "categorical__activity_Phone Repair",
+      "categorical__activity_Phone Use Sales",
+      "categorical__activity_Photography",
+      "categorical__activity_Pigs",
+      "categorical__activity_Plastics Sales",
+      "categorical__activity_Poultry",
+      "categorical__activity_Primary/secondary school costs",
+      "categorical__activity_Printing",
+      "categorical__activity_Property",
+      "categorical__activity_Pub",
+      "categorical__activity_Quarrying",
+      "categorical__activity_Recycled Materials",
+      "categorical__activity_Recycling Services",
+      "categorical__activity_Religious Articles",
+      "categorical__activity_Restaurant",
+      "categorical__activity_Retail",
+      "categorical__activity_Rickshaw",
+      "categorical__activity_Secretarial Services",
+      "categorical__activity_Services",
+      "categorical__activity_Sewing",
+      "categorical__activity_Shoe Sales",
+      "categorical__activity_Solar Home Systems",
+      "categorical__activity_Souvenir Sales",
+      "categorical__activity_Spare Parts",
+      "categorical__activity_Sporting Good Sales",
+      "categorical__activity_Tailoring",
+      "categorical__activity_Taxi",
+      "categorical__activity_Technology",
+      "categorical__activity_Textiles",
+      "categorical__activity_Timber Sales",
+      "categorical__activity_Tourism",
+      "categorical__activity_Transportation",
+      "categorical__activity_Traveling Sales",
+      "categorical__activity_Upholstery",
+      "categorical__activity_Used Clothing",
+      "categorical__activity_Used Shoes",
+      "categorical__activity_Utilities",
+      "categorical__activity_Vehicle",
+      "categorical__activity_Vehicle Repairs",
+      "categorical__activity_Veterinary Sales",
+      "categorical__activity_Waste Management",
+      "categorical__activity_Water Pumps & Irrigation",
+      "categorical__activity_Weaving",
+      "categorical__activity_Wedding Expenses",
+      "categorical__activity_Wholesale",
+      "categorical__country_iso_AF",
+      "categorical__country_iso_BD",
+      "categorical__country_iso_BF",
+      "categorical__country_iso_BI",
+      "categorical__country_iso_BJ",
+      "categorical__country_iso_CD",
+      "categorical__country_iso_CI",
+      "categorical__country_iso_CM",
+      "categorical__country_iso_EG",
+      "categorical__country_iso_GH",
+      "categorical__country_iso_HN",
+      "categorical__country_iso_HT",
+      "categorical__country_iso_IN",
+      "categorical__country_iso_KE",
+      "categorical__country_iso_KG",
+      "categorical__country_iso_KH",
+      "categorical__country_iso_LA",
+      "categorical__country_iso_LR",
+      "categorical__country_iso_LS",
+      "categorical__country_iso_MG",
+      "categorical__country_iso_ML",
+      "categorical__country_iso_MM",
+      "categorical__country_iso_MW",
+      "categorical__country_iso_MZ",
+      "categorical__country_iso_NG",
+      "categorical__country_iso_NI",
+      "categorical__country_iso_NP",
+      "categorical__country_iso_PG",
+      "categorical__country_iso_PH",
+      "categorical__country_iso_PK",
+      "categorical__country_iso_PS",
+      "categorical__country_iso_RW",
+      "categorical__country_iso_SB",
+      "categorical__country_iso_SL",
+      "categorical__country_iso_SN",
+      "categorical__country_iso_SO",
+      "categorical__country_iso_SS",
+      "categorical__country_iso_TG",
+      "categorical__country_iso_TJ",
+      "categorical__country_iso_TL",
+      "categorical__country_iso_TZ",
+      "categorical__country_iso_UG",
+      "categorical__country_iso_VU",
+      "categorical__country_iso_YE",
+      "categorical__country_iso_ZM",
+      "categorical__country_iso_ZW",
+      "categorical__region_Africa",
+      "categorical__region_Asia",
+      "categorical__region_Central America",
+      "categorical__region_Middle East",
+      "categorical__region_North America",
+      "categorical__region_Oceania",
+      "categorical__analysis_period_pandemic_disruption",
+      "categorical__analysis_period_post_pandemic",
+      "categorical__analysis_period_pre_pandemic"
+    ],
+    "metrics": {
+      "baseline": {
+        "train_mae_days": 8.784764884586712,
+        "holdout_mae_days": 8.72339662505516,
+        "train_medae_days": 2.6603356481481484,
+        "holdout_medae_days": 2.6156944444444443,
+        "train_r2": -0.29721001769329547,
+        "holdout_r2": -0.33956890650294413
+      },
+      "ridge": {
+        "train_mae_days": 7.018456285084072,
+        "holdout_mae_days": 6.632280709932681,
+        "train_medae_days": 2.8992688697806432,
+        "holdout_medae_days": 3.275240462804543,
+        "train_r2": -3.8176285854208887,
+        "holdout_r2": -0.015800034564763754
+      }
+    },
+    "attempted": true,
+    "succeeded": true,
+    "error": null
+  },
+  "nonlinear_benchmark": {
+    "holdout_start": "2024-01-01",
+    "train_rows": 1174953,
+    "holdout_rows": 278887,
+    "feature_names": [
+      "numeric__borrowerCount",
+      "numeric__log_loan_amount",
+      "numeric__desc_word_count",
+      "numeric__desc_char_count",
+      "numeric__desc_sentence_count",
+      "numeric__desc_avg_word_length",
+      "numeric__desc_avg_sentence_length",
+      "numeric__description_missing",
+      "numeric__use_missing",
+      "numeric__whySpecial_missing",
+      "numeric__number_token_count",
+      "numeric__age_pattern_count",
+      "numeric__years_in_business_count",
+      "numeric__family_mentions_per_100_words",
+      "numeric__basic_needs_mentions_per_100_words",
+      "numeric__business_mentions_per_100_words",
+      "numeric__agency_mentions_per_100_words",
+      "numeric__gratitude_mentions_per_100_words",
+      "numeric__urgency_mentions_per_100_words",
+      "numeric__first_person_mentions_per_100_words",
+      "numeric__third_person_mentions_per_100_words",
+      "numeric__desc_sentiment_compound",
+      "numeric__desc_sentiment_pos",
+      "numeric__desc_sentiment_neg",
+      "numeric__desc_sentiment_neu",
+      "numeric__sentiment_available",
+      "numeric__is_group_loan",
+      "numeric__lenderRepaymentTerm",
+      "numeric__country_ppp",
+      "numeric__fundraising_year",
+      "numeric__fundraising_month",
+      "numeric__topic_0",
+      "numeric__topic_1",
+      "numeric__topic_2",
+      "numeric__topic_3",
+      "numeric__topic_4",
+      "categorical__gender_classification_female",
+      "categorical__gender_classification_male",
+      "categorical__loan_size_band_large",
+      "categorical__loan_size_band_medium",
+      "categorical__loan_size_band_small",
+      "categorical__repaymentInterval_at_end",
+      "categorical__repaymentInterval_irregularly",
+      "categorical__repaymentInterval_monthly",
+      "categorical__sector_Agriculture",
+      "categorical__sector_Arts",
+      "categorical__sector_Clean Energy",
+      "categorical__sector_Clothing",
+      "categorical__sector_Construction",
+      "categorical__sector_Education",
+      "categorical__sector_Entertainment",
+      "categorical__sector_Food",
+      "categorical__sector_Health",
+      "categorical__sector_Housing",
+      "categorical__sector_Manufacturing",
+      "categorical__sector_Personal Use",
+      "categorical__sector_Retail",
+      "categorical__sector_Reuse & Recycle",
+      "categorical__sector_Sanitation & Hygiene",
+      "categorical__sector_Services",
+      "categorical__sector_Transportation",
+      "categorical__sector_Water",
+      "categorical__sector_Wholesale",
+      "categorical__activity_Adult Care",
+      "categorical__activity_Agriculture",
+      "categorical__activity_Air Conditioning",
+      "categorical__activity_Animal Sales",
+      "categorical__activity_Aquaculture",
+      "categorical__activity_Arts",
+      "categorical__activity_Auto Repair",
+      "categorical__activity_Bakery",
+      "categorical__activity_Balut-Making",
+      "categorical__activity_Barber Shop",
+      "categorical__activity_Beauty Salon",
+      "categorical__activity_Beekeeping",
+      "categorical__activity_Beverages",
+      "categorical__activity_Bicycle Repair",
+      "categorical__activity_Bicycle Sales",
+      "categorical__activity_Blacksmith",
+      "categorical__activity_Bookbinding",
+      "categorical__activity_Bookstore",
+      "categorical__activity_Bricks",
+      "categorical__activity_Butcher Shop",
+      "categorical__activity_Cafe",
+      "categorical__activity_Call Center",
+      "categorical__activity_Carpentry",
+      "categorical__activity_Catering",
+      "categorical__activity_Cattle",
+      "categorical__activity_Celebrations",
+      "categorical__activity_Cement",
+      "categorical__activity_Cereals",
+      "categorical__activity_Charcoal Sales",
+      "categorical__activity_Cheese Making",
+      "categorical__activity_Child Care",
+      "categorical__activity_Cleaning Services",
+      "categorical__activity_Cloth & Dressmaking Supplies",
+      "categorical__activity_Clothing",
+      "categorical__activity_Clothing Sales",
+      "categorical__activity_Cobbler",
+      "categorical__activity_Communications",
+      "categorical__activity_Community Water Distribution",
+      "categorical__activity_Computer",
+      "categorical__activity_Computers",
+      "categorical__activity_Construction",
+      "categorical__activity_Construction Supplies",
+      "categorical__activity_Consumer Goods",
+      "categorical__activity_Cosmetics Sales",
+      "categorical__activity_Crafts",
+      "categorical__activity_Dairy",
+      "categorical__activity_Decorations Sales",
+      "categorical__activity_Dental",
+      "categorical__activity_Education provider",
+      "categorical__activity_Electrical Goods",
+      "categorical__activity_Electrician",
+      "categorical__activity_Electronics Repair",
+      "categorical__activity_Electronics Sales",
+      "categorical__activity_Embroidery",
+      "categorical__activity_Entertainment",
+      "categorical__activity_Event Planning",
+      "categorical__activity_Farm Supplies",
+      "categorical__activity_Farming",
+      "categorical__activity_Film",
+      "categorical__activity_Fish Selling",
+      "categorical__activity_Fishing",
+      "categorical__activity_Florist",
+      "categorical__activity_Flowers",
+      "categorical__activity_Food",
+      "categorical__activity_Food Market",
+      "categorical__activity_Food Production/Sales",
+      "categorical__activity_Food Stall",
+      "categorical__activity_Fruits & Vegetables",
+      "categorical__activity_Fuel/Firewood",
+      "categorical__activity_Funerals",
+      "categorical__activity_Furniture Making",
+      "categorical__activity_Games",
+      "categorical__activity_General Store",
+      "categorical__activity_Goods Distribution",
+      "categorical__activity_Grocery Store",
+      "categorical__activity_Hardware",
+      "categorical__activity_Health",
+      "categorical__activity_Higher education costs",
+      "categorical__activity_Home Appliances",
+      "categorical__activity_Home Products Sales",
+      "categorical__activity_Hotel",
+      "categorical__activity_Internet Cafe",
+      "categorical__activity_Jewelry",
+      "categorical__activity_Knitting",
+      "categorical__activity_Land Rental",
+      "categorical__activity_Landscaping / Gardening",
+      "categorical__activity_Laundry",
+      "categorical__activity_Liquor Store / Off-License",
+      "categorical__activity_Livestock",
+      "categorical__activity_Machine Shop",
+      "categorical__activity_Machinery Rental",
+      "categorical__activity_Manufacturing",
+      "categorical__activity_Medical Clinic",
+      "categorical__activity_Metal Shop",
+      "categorical__activity_Milk Sales",
+      "categorical__activity_Mobile Phones",
+      "categorical__activity_Mobile Transactions",
+      "categorical__activity_Motorcycle Repair",
+      "categorical__activity_Motorcycle Transport",
+      "categorical__activity_Movie Tapes & DVDs",
+      "categorical__activity_Music Discs & Tapes",
+      "categorical__activity_Musical Instruments",
+      "categorical__activity_Musical Performance",
+      "categorical__activity_Natural Medicines",
+      "categorical__activity_Office Supplies",
+      "categorical__activity_Other Renewable Energy",
+      "categorical__activity_Paper Sales",
+      "categorical__activity_Party Supplies",
+      "categorical__activity_Patchwork",
+      "categorical__activity_Perfumes",
+      "categorical__activity_Personal Care Products",
+      "categorical__activity_Personal Expenses",
+      "categorical__activity_Personal Housing Expenses",
+      "categorical__activity_Personal Medical Expenses",
+      "categorical__activity_Personal Products Sales",
+      "categorical__activity_Pharmacy",
+      "categorical__activity_Phone Accessories",
+      "categorical__activity_Phone Repair",
+      "categorical__activity_Phone Use Sales",
+      "categorical__activity_Photography",
+      "categorical__activity_Pigs",
+      "categorical__activity_Plastics Sales",
+      "categorical__activity_Poultry",
+      "categorical__activity_Primary/secondary school costs",
+      "categorical__activity_Printing",
+      "categorical__activity_Property",
+      "categorical__activity_Pub",
+      "categorical__activity_Quarrying",
+      "categorical__activity_Recycled Materials",
+      "categorical__activity_Recycling Services",
+      "categorical__activity_Religious Articles",
+      "categorical__activity_Restaurant",
+      "categorical__activity_Retail",
+      "categorical__activity_Rickshaw",
+      "categorical__activity_Secretarial Services",
+      "categorical__activity_Services",
+      "categorical__activity_Sewing",
+      "categorical__activity_Shoe Sales",
+      "categorical__activity_Solar Home Systems",
+      "categorical__activity_Souvenir Sales",
+      "categorical__activity_Spare Parts",
+      "categorical__activity_Sporting Good Sales",
+      "categorical__activity_Tailoring",
+      "categorical__activity_Taxi",
+      "categorical__activity_Technology",
+      "categorical__activity_Textiles",
+      "categorical__activity_Timber Sales",
+      "categorical__activity_Tourism",
+      "categorical__activity_Transportation",
+      "categorical__activity_Traveling Sales",
+      "categorical__activity_Upholstery",
+      "categorical__activity_Used Clothing",
+      "categorical__activity_Used Shoes",
+      "categorical__activity_Utilities",
+      "categorical__activity_Vehicle",
+      "categorical__activity_Vehicle Repairs",
+      "categorical__activity_Veterinary Sales",
+      "categorical__activity_Waste Management",
+      "categorical__activity_Water Pumps & Irrigation",
+      "categorical__activity_Weaving",
+      "categorical__activity_Wedding Expenses",
+      "categorical__activity_Wholesale",
+      "categorical__country_iso_AF",
+      "categorical__country_iso_BD",
+      "categorical__country_iso_BF",
+      "categorical__country_iso_BI",
+      "categorical__country_iso_BJ",
+      "categorical__country_iso_CD",
+      "categorical__country_iso_CI",
+      "categorical__country_iso_CM",
+      "categorical__country_iso_EG",
+      "categorical__country_iso_GH",
+      "categorical__country_iso_HN",
+      "categorical__country_iso_HT",
+      "categorical__country_iso_IN",
+      "categorical__country_iso_KE",
+      "categorical__country_iso_KG",
+      "categorical__country_iso_KH",
+      "categorical__country_iso_LA",
+      "categorical__country_iso_LR",
+      "categorical__country_iso_LS",
+      "categorical__country_iso_MG",
+      "categorical__country_iso_ML",
+      "categorical__country_iso_MM",
+      "categorical__country_iso_MW",
+      "categorical__country_iso_MZ",
+      "categorical__country_iso_NG",
+      "categorical__country_iso_NI",
+      "categorical__country_iso_NP",
+      "categorical__country_iso_PG",
+      "categorical__country_iso_PH",
+      "categorical__country_iso_PK",
+      "categorical__country_iso_PS",
+      "categorical__country_iso_RW",
+      "categorical__country_iso_SB",
+      "categorical__country_iso_SL",
+      "categorical__country_iso_SN",
+      "categorical__country_iso_SO",
+      "categorical__country_iso_SS",
+      "categorical__country_iso_TG",
+      "categorical__country_iso_TJ",
+      "categorical__country_iso_TL",
+      "categorical__country_iso_TZ",
+      "categorical__country_iso_UG",
+      "categorical__country_iso_VU",
+      "categorical__country_iso_YE",
+      "categorical__country_iso_ZM",
+      "categorical__country_iso_ZW",
+      "categorical__region_Africa",
+      "categorical__region_Asia",
+      "categorical__region_Central America",
+      "categorical__region_Middle East",
+      "categorical__region_North America",
+      "categorical__region_Oceania",
+      "categorical__analysis_period_pandemic_disruption",
+      "categorical__analysis_period_post_pandemic",
+      "categorical__analysis_period_pre_pandemic"
+    ],
+    "metrics": {
+      "mae_days": 5.203114192747133,
+      "medae_days": 2.7466357270112005,
+      "rmse_days": 8.0744656332667,
+      "r2": 0.5420440688851657
+    },
+    "importance": [
+      {
+        "feature": "numeric__log_loan_amount",
+        "permutation_importance": 3.117551847169781
+      },
+      {
+        "feature": "numeric__lenderRepaymentTerm",
+        "permutation_importance": 1.608277213794389
+      },
+      {
+        "feature": "numeric__country_ppp",
+        "permutation_importance": 0.22044760143341743
+      },
+      {
+        "feature": "categorical__loan_size_band_small",
+        "permutation_importance": 0.1915356057849502
+      },
+      {
+        "feature": "categorical__sector_Retail",
+        "permutation_importance": 0.14036655992549446
+      },
+      {
+        "feature": "numeric__fundraising_month",
+        "permutation_importance": 0.1338646555855732
+      },
+      {
+        "feature": "categorical__gender_classification_female",
+        "permutation_importance": 0.12557195925178596
+      },
+      {
+        "feature": "numeric__topic_0",
+        "permutation_importance": 0.09480401461850488
+      },
+      {
+        "feature": "categorical__sector_Food",
+        "permutation_importance": 0.06569566987443931
+      },
+      {
+        "feature": "numeric__borrowerCount",
+        "permutation_importance": 0.05693235967703423
+      },
+      {
+        "feature": "categorical__sector_Education",
+        "permutation_importance": 0.05119321169307618
+      },
+      {
+        "feature": "categorical__country_iso_KE",
+        "permutation_importance": 0.034407173792880205
+      },
+      {
+        "feature": "categorical__sector_Clean Energy",
+        "permutation_importance": 0.03117611889209897
+      },
+      {
+        "feature": "categorical__gender_classification_male",
+        "permutation_importance": 0.030998118925025332
+      },
+      {
+        "feature": "categorical__country_iso_SN",
+        "permutation_importance": 0.027794705526510022
+      },
+      {
+        "feature": "categorical__country_iso_TJ",
+        "permutation_importance": 0.02682716892347816
+      },
+      {
+        "feature": "categorical__sector_Health",
+        "permutation_importance": 0.02095940852980842
+      },
+      {
+        "feature": "categorical__sector_Arts",
+        "permutation_importance": 0.017564774673367544
+      },
+      {
+        "feature": "numeric__basic_needs_mentions_per_100_words",
+        "permutation_importance": 0.01696458109477774
+      },
+      {
+        "feature": "categorical__sector_Manufacturing",
+        "permutation_importance": 0.01639312657189116
+      },
+      {
+        "feature": "categorical__sector_Sanitation & Hygiene",
+        "permutation_importance": 0.016142397588530245
+      },
+      {
+        "feature": "categorical__region_Asia",
+        "permutation_importance": 0.015963925156542123
+      },
+      {
+        "feature": "categorical__activity_Farming",
+        "permutation_importance": 0.014075731342847142
+      },
+      {
+        "feature": "categorical__country_iso_NI",
+        "permutation_importance": 0.013171055178120384
+      },
+      {
+        "feature": "categorical__sector_Agriculture",
+        "permutation_importance": 0.012825619587264825
+      },
+      {
+        "feature": "categorical__country_iso_UG",
+        "permutation_importance": 0.011933382225229393
+      },
+      {
+        "feature": "numeric__topic_1",
+        "permutation_importance": 0.011146255211998302
+      },
+      {
+        "feature": "categorical__region_Africa",
+        "permutation_importance": 0.011088067558340242
+      },
+      {
+        "feature": "categorical__sector_Clothing",
+        "permutation_importance": 0.01080821943059469
+      },
+      {
+        "feature": "numeric__topic_2",
+        "permutation_importance": 0.010645171341411875
+      },
+      {
+        "feature": "categorical__activity_Agriculture",
+        "permutation_importance": 0.010610444244443152
+      },
+      {
+        "feature": "categorical__country_iso_GH",
+        "permutation_importance": 0.010600403737046982
+      },
+      {
+        "feature": "categorical__region_Middle East",
+        "permutation_importance": 0.009402248344797925
+      },
+      {
+        "feature": "categorical__activity_Primary/secondary school costs",
+        "permutation_importance": 0.006941854552910876
+      },
+      {
+        "feature": "categorical__repaymentInterval_at_end",
+        "permutation_importance": 0.006672303477866315
+      },
+      {
+        "feature": "categorical__country_iso_PS",
+        "permutation_importance": 0.006228451542633273
+      },
+      {
+        "feature": "numeric__gratitude_mentions_per_100_words",
+        "permutation_importance": 0.006038774779058365
+      },
+      {
+        "feature": "categorical__country_iso_IN",
+        "permutation_importance": 0.005921839898337033
+      },
+      {
+        "feature": "categorical__loan_size_band_medium",
+        "permutation_importance": 0.005510797991433591
+      },
+      {
+        "feature": "categorical__country_iso_CI",
+        "permutation_importance": 0.005364437135327016
+      },
+      {
+        "feature": "categorical__sector_Housing",
+        "permutation_importance": 0.004933487680425586
+      },
+      {
+        "feature": "numeric__topic_3",
+        "permutation_importance": 0.004846337860608685
+      },
+      {
+        "feature": "categorical__activity_Beauty Salon",
+        "permutation_importance": 0.004683798861995214
+      },
+      {
+        "feature": "categorical__activity_Solar Home Systems",
+        "permutation_importance": 0.0043407049750934235
+      },
+      {
+        "feature": "numeric__desc_char_count",
+        "permutation_importance": 0.004334967069030959
+      },
+      {
+        "feature": "numeric__desc_sentiment_neg",
+        "permutation_importance": 0.004208403523059801
+      },
+      {
+        "feature": "numeric__desc_avg_sentence_length",
+        "permutation_importance": 0.0027900240871506555
+      },
+      {
+        "feature": "categorical__country_iso_PG",
+        "permutation_importance": 0.002777222266936441
+      },
+      {
+        "feature": "categorical__region_Central America",
+        "permutation_importance": 0.0026576289190550994
+      },
+      {
+        "feature": "categorical__country_iso_RW",
+        "permutation_importance": 0.0024448453375812917
+      },
+      {
+        "feature": "numeric__desc_sentiment_pos",
+        "permutation_importance": 0.00241067455989441
+      },
+      {
+        "feature": "categorical__activity_Aquaculture",
+        "permutation_importance": 0.002255073286695186
+      },
+      {
+        "feature": "categorical__repaymentInterval_monthly",
+        "permutation_importance": 0.0021572403606899826
+      },
+      {
+        "feature": "categorical__country_iso_EG",
+        "permutation_importance": 0.001915314343196428
+      },
+      {
+        "feature": "numeric__desc_sentiment_compound",
+        "permutation_importance": 0.001889341872382566
+      },
+      {
+        "feature": "categorical__country_iso_ZM",
+        "permutation_importance": 0.0018792864031535572
+      },
+      {
+        "feature": "numeric__desc_sentiment_neu",
+        "permutation_importance": 0.0018444386287880476
+      },
+      {
+        "feature": "categorical__activity_Pigs",
+        "permutation_importance": 0.0017601761259594894
+      },
+      {
+        "feature": "numeric__desc_sentence_count",
+        "permutation_importance": 0.0016863527243884846
+      },
+      {
+        "feature": "categorical__country_iso_KG",
+        "permutation_importance": 0.0016637335567864398
+      },
+      {
+        "feature": "categorical__repaymentInterval_irregularly",
+        "permutation_importance": 0.0016277253800717872
+      },
+      {
+        "feature": "categorical__sector_Water",
+        "permutation_importance": 0.0014670383507835894
+      },
+      {
+        "feature": "categorical__country_iso_CD",
+        "permutation_importance": 0.0013706482008483789
+      },
+      {
+        "feature": "categorical__activity_Beekeeping",
+        "permutation_importance": 0.0010497830513331863
+      },
+      {
+        "feature": "categorical__country_iso_MW",
+        "permutation_importance": 0.0010116994263261957
+      },
+      {
+        "feature": "categorical__activity_Bakery",
+        "permutation_importance": 0.0009789622806106735
+      },
+      {
+        "feature": "categorical__activity_Livestock",
+        "permutation_importance": 0.0009731872625456717
+      },
+      {
+        "feature": "categorical__country_iso_TG",
+        "permutation_importance": 0.0009559408322816765
+      },
+      {
+        "feature": "numeric__desc_word_count",
+        "permutation_importance": 0.0008313046231950949
+      },
+      {
+        "feature": "categorical__activity_Medical Clinic",
+        "permutation_importance": 0.0007303162495503557
+      },
+      {
+        "feature": "categorical__activity_Sewing",
+        "permutation_importance": 0.0007184726915767214
+      },
+      {
+        "feature": "categorical__country_iso_MG",
+        "permutation_importance": 0.0006628940486539392
+      },
+      {
+        "feature": "categorical__activity_Pharmacy",
+        "permutation_importance": 0.0006446397254181946
+      },
+      {
+        "feature": "categorical__country_iso_SB",
+        "permutation_importance": 0.0006220203465652219
+      },
+      {
+        "feature": "categorical__activity_Fishing",
+        "permutation_importance": 0.0006083508403738946
+      },
+      {
+        "feature": "categorical__sector_Construction",
+        "permutation_importance": 0.0005801287043691872
+      },
+      {
+        "feature": "categorical__activity_Personal Housing Expenses",
+        "permutation_importance": 0.0005629040258970264
+      },
+      {
+        "feature": "categorical__country_iso_NP",
+        "permutation_importance": 0.0005544547438669056
+      },
+      {
+        "feature": "categorical__activity_Beverages",
+        "permutation_importance": 0.000518250679470178
+      },
+      {
+        "feature": "categorical__activity_Embroidery",
+        "permutation_importance": 0.0005181068742109218
+      },
+      {
+        "feature": "categorical__activity_Poultry",
+        "permutation_importance": 0.0005028373650647566
+      },
+      {
+        "feature": "numeric__age_pattern_count",
+        "permutation_importance": 0.0004988498202166625
+      },
+      {
+        "feature": "categorical__activity_Grocery Store",
+        "permutation_importance": 0.0004670704368749057
+      },
+      {
+        "feature": "categorical__activity_Clothing Sales",
+        "permutation_importance": 0.000413836259305711
+      },
+      {
+        "feature": "categorical__activity_Bicycle Repair",
+        "permutation_importance": 0.0003686579024082093
+      },
+      {
+        "feature": "categorical__country_iso_ML",
+        "permutation_importance": 0.00033181440008167584
+      },
+      {
+        "feature": "categorical__activity_Home Appliances",
+        "permutation_importance": 0.0002987277589694415
+      },
+      {
+        "feature": "categorical__activity_Weaving",
+        "permutation_importance": 0.00027144237691967277
+      },
+      {
+        "feature": "categorical__activity_Sporting Good Sales",
+        "permutation_importance": 0.00025624088860602966
+      },
+      {
+        "feature": "categorical__activity_Recycled Materials",
+        "permutation_importance": 0.00024790503844815957
+      },
+      {
+        "feature": "numeric__years_in_business_count",
+        "permutation_importance": 0.00021615697759020948
+      },
+      {
+        "feature": "categorical__activity_Dairy",
+        "permutation_importance": 0.00017154898330211664
+      },
+      {
+        "feature": "categorical__sector_Entertainment",
+        "permutation_importance": 0.00013925188869396977
+      },
+      {
+        "feature": "categorical__country_iso_BD",
+        "permutation_importance": 0.00013499821051450312
+      },
+      {
+        "feature": "numeric__agency_mentions_per_100_words",
+        "permutation_importance": 0.00012196125890167054
+      },
+      {
+        "feature": "categorical__activity_Education provider",
+        "permutation_importance": 0.0001173904005396409
+      },
+      {
+        "feature": "categorical__activity_Bookstore",
+        "permutation_importance": 8.58533923597804e-05
+      },
+      {
+        "feature": "categorical__activity_Bicycle Sales",
+        "permutation_importance": 8.379820020429918e-05
+      },
+      {
+        "feature": "categorical__activity_Pub",
+        "permutation_importance": 6.716074125989735e-05
+      },
+      {
+        "feature": "categorical__country_iso_MZ",
+        "permutation_importance": 5.712306899052777e-05
+      },
+      {
+        "feature": "categorical__activity_Cloth & Dressmaking Supplies",
+        "permutation_importance": 4.027409889495459e-05
+      },
+      {
+        "feature": "categorical__country_iso_ZW",
+        "permutation_importance": 9.637457586464392e-06
+      },
+      {
+        "feature": "categorical__country_iso_BF",
+        "permutation_importance": 9.06961184838906e-06
+      },
+      {
+        "feature": "categorical__activity_Personal Expenses",
+        "permutation_importance": 8.242158365412421e-06
+      },
+      {
+        "feature": "numeric__urgency_mentions_per_100_words",
+        "permutation_importance": 2.1837054934081833e-06
+      },
+      {
+        "feature": "numeric__use_missing",
+        "permutation_importance": 4.162780902206009e-07
+      },
+      {
+        "feature": "categorical__activity_Party Supplies",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Perfumes",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Patchwork",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Quarrying",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__analysis_period_pandemic_disruption",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Paper Sales",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Other Renewable Energy",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Office Supplies",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Recycling Services",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Religious Articles",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Personal Care Products",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Property",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__analysis_period_post_pandemic",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Retail",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Printing",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Personal Medical Expenses",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Personal Products Sales",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__region_North America",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Plastics Sales",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Photography",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Phone Use Sales",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Phone Repair",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Phone Accessories",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Restaurant",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Taxi",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Rickshaw",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__country_iso_HT",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Wholesale",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__country_iso_AF",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__country_iso_BI",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__country_iso_BJ",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__country_iso_YE",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__country_iso_TL",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__country_iso_SS",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Secretarial Services",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__country_iso_SO",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__country_iso_LA",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__country_iso_LS",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Musical Performance",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__country_iso_MM",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__country_iso_PH",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Water Pumps & Irrigation",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Waste Management",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Veterinary Sales",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Vehicle Repairs",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Utilities",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Used Shoes",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Upholstery",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Traveling Sales",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Transportation",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Tourism",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Timber Sales",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Textiles",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Technology",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Spare Parts",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Souvenir Sales",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Shoe Sales",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Services",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Natural Medicines",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__analysis_period_pre_pandemic",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Musical Instruments",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "numeric__first_person_mentions_per_100_words",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "numeric__family_mentions_per_100_words",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Charcoal Sales",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Cheese Making",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Child Care",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Cleaning Services",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Clothing",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Cobbler",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Communications",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Community Water Distribution",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Music Discs & Tapes",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Computer",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Computers",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Construction",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Construction Supplies",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Consumer Goods",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "numeric__whySpecial_missing",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Crafts",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "numeric__description_missing",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__sector_Reuse & Recycle",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Cement",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Celebrations",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Electrical Goods",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "numeric__sentiment_available",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__loan_size_band_large",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__sector_Wholesale",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Adult Care",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Air Conditioning",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Animal Sales",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Arts",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Auto Repair",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Balut-Making",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "numeric__fundraising_year",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Barber Shop",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Blacksmith",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Bookbinding",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Bricks",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Butcher Shop",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Cafe",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "numeric__is_group_loan",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Call Center",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Carpentry",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Catering",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Dental",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Decorations Sales",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Electrician",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Liquor Store / Off-License",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Health",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Home Products Sales",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Hotel",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Internet Cafe",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Jewelry",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Knitting",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Land Rental",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Landscaping / Gardening",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Laundry",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Machine Shop",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Goods Distribution",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Machinery Rental",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Manufacturing",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Metal Shop",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Milk Sales",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Mobile Phones",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Mobile Transactions",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Motorcycle Repair",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Motorcycle Transport",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Movie Tapes & DVDs",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Electronics Repair",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Hardware",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "numeric__desc_avg_word_length",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Food Market",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Electronics Sales",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Entertainment",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Event Planning",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Farm Supplies",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Film",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Florist",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Games",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Food",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Flowers",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Food Production/Sales",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Food Stall",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Fruits & Vegetables",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Fuel/Firewood",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Funerals",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__activity_Furniture Making",
+        "permutation_importance": 0.0
+      },
+      {
+        "feature": "categorical__country_iso_CM",
+        "permutation_importance": -3.2577841537317907e-06
+      },
+      {
+        "feature": "categorical__activity_Fish Selling",
+        "permutation_importance": -7.033679043288999e-06
+      },
+      {
+        "feature": "categorical__activity_Tailoring",
+        "permutation_importance": -4.032536273879117e-05
+      },
+      {
+        "feature": "categorical__activity_Cosmetics Sales",
+        "permutation_importance": -5.023373567603073e-05
+      },
+      {
+        "feature": "categorical__country_iso_KH",
+        "permutation_importance": -5.0584658611541046e-05
+      },
+      {
+        "feature": "categorical__sector_Services",
+        "permutation_importance": -8.886792119540132e-05
+      },
+      {
+        "feature": "categorical__country_iso_TZ",
+        "permutation_importance": -9.496001280471234e-05
+      },
+      {
+        "feature": "categorical__sector_Transportation",
+        "permutation_importance": -0.00014229894491606386
+      },
+      {
+        "feature": "categorical__activity_Wedding Expenses",
+        "permutation_importance": -0.00017182783508626898
+      },
+      {
+        "feature": "numeric__third_person_mentions_per_100_words",
+        "permutation_importance": -0.00021426794158649898
+      },
+      {
+        "feature": "categorical__activity_Vehicle",
+        "permutation_importance": -0.00057255607036506
+      },
+      {
+        "feature": "categorical__activity_Cereals",
+        "permutation_importance": -0.0005897906629426686
+      },
+      {
+        "feature": "categorical__activity_General Store",
+        "permutation_importance": -0.0006212049663147923
+      },
+      {
+        "feature": "categorical__country_iso_NG",
+        "permutation_importance": -0.0006413191179591493
+      },
+      {
+        "feature": "categorical__region_Oceania",
+        "permutation_importance": -0.0006645902378419777
+      },
+      {
+        "feature": "categorical__country_iso_HN",
+        "permutation_importance": -0.0007069839886542084
+      },
+      {
+        "feature": "categorical__activity_Cattle",
+        "permutation_importance": -0.0007261303453827139
+      },
+      {
+        "feature": "categorical__activity_Used Clothing",
+        "permutation_importance": -0.0008305186483937632
+      },
+      {
+        "feature": "categorical__country_iso_LR",
+        "permutation_importance": -0.0008867702720184667
+      },
+      {
+        "feature": "categorical__sector_Personal Use",
+        "permutation_importance": -0.0009763851761501741
+      },
+      {
+        "feature": "numeric__number_token_count",
+        "permutation_importance": -0.0013506280946501193
+      },
+      {
+        "feature": "categorical__activity_Higher education costs",
+        "permutation_importance": -0.0014407369190855945
+      },
+      {
+        "feature": "numeric__business_mentions_per_100_words",
+        "permutation_importance": -0.002286607812825281
+      },
+      {
+        "feature": "numeric__topic_4",
+        "permutation_importance": -0.0027241627776598775
+      },
+      {
+        "feature": "categorical__country_iso_VU",
+        "permutation_importance": -0.003981552500973429
+      },
+      {
+        "feature": "categorical__country_iso_SL",
+        "permutation_importance": -0.0041910031403652685
+      },
+      {
+        "feature": "categorical__country_iso_PK",
+        "permutation_importance": -0.007397933090473785
+      }
+    ],
+    "attempted": true,
+    "succeeded": true,
+    "error": null
+  },
+  "binary_classifier": {
+    "holdout_start": "2024-01-01",
+    "train_rows": 1174953,
+    "holdout_rows": 278887,
+    "feature_names": [
+      "numeric__borrowerCount",
+      "numeric__log_loan_amount",
+      "numeric__desc_word_count",
+      "numeric__desc_char_count",
+      "numeric__desc_sentence_count",
+      "numeric__desc_avg_word_length",
+      "numeric__desc_avg_sentence_length",
+      "numeric__description_missing",
+      "numeric__use_missing",
+      "numeric__whySpecial_missing",
+      "numeric__number_token_count",
+      "numeric__age_pattern_count",
+      "numeric__years_in_business_count",
+      "numeric__family_mentions_per_100_words",
+      "numeric__basic_needs_mentions_per_100_words",
+      "numeric__business_mentions_per_100_words",
+      "numeric__agency_mentions_per_100_words",
+      "numeric__gratitude_mentions_per_100_words",
+      "numeric__urgency_mentions_per_100_words",
+      "numeric__first_person_mentions_per_100_words",
+      "numeric__third_person_mentions_per_100_words",
+      "numeric__desc_sentiment_compound",
+      "numeric__desc_sentiment_pos",
+      "numeric__desc_sentiment_neg",
+      "numeric__desc_sentiment_neu",
+      "numeric__sentiment_available",
+      "numeric__is_group_loan",
+      "numeric__lenderRepaymentTerm",
+      "numeric__country_ppp",
+      "numeric__fundraising_year",
+      "numeric__fundraising_month",
+      "numeric__topic_0",
+      "numeric__topic_1",
+      "numeric__topic_2",
+      "numeric__topic_3",
+      "numeric__topic_4",
+      "categorical__gender_classification_female",
+      "categorical__gender_classification_male",
+      "categorical__loan_size_band_large",
+      "categorical__loan_size_band_medium",
+      "categorical__loan_size_band_small",
+      "categorical__repaymentInterval_at_end",
+      "categorical__repaymentInterval_irregularly",
+      "categorical__repaymentInterval_monthly",
+      "categorical__sector_Agriculture",
+      "categorical__sector_Arts",
+      "categorical__sector_Clean Energy",
+      "categorical__sector_Clothing",
+      "categorical__sector_Construction",
+      "categorical__sector_Education",
+      "categorical__sector_Entertainment",
+      "categorical__sector_Food",
+      "categorical__sector_Health",
+      "categorical__sector_Housing",
+      "categorical__sector_Manufacturing",
+      "categorical__sector_Personal Use",
+      "categorical__sector_Retail",
+      "categorical__sector_Reuse & Recycle",
+      "categorical__sector_Sanitation & Hygiene",
+      "categorical__sector_Services",
+      "categorical__sector_Transportation",
+      "categorical__sector_Water",
+      "categorical__sector_Wholesale",
+      "categorical__activity_Adult Care",
+      "categorical__activity_Agriculture",
+      "categorical__activity_Air Conditioning",
+      "categorical__activity_Animal Sales",
+      "categorical__activity_Aquaculture",
+      "categorical__activity_Arts",
+      "categorical__activity_Auto Repair",
+      "categorical__activity_Bakery",
+      "categorical__activity_Balut-Making",
+      "categorical__activity_Barber Shop",
+      "categorical__activity_Beauty Salon",
+      "categorical__activity_Beekeeping",
+      "categorical__activity_Beverages",
+      "categorical__activity_Bicycle Repair",
+      "categorical__activity_Bicycle Sales",
+      "categorical__activity_Blacksmith",
+      "categorical__activity_Bookbinding",
+      "categorical__activity_Bookstore",
+      "categorical__activity_Bricks",
+      "categorical__activity_Butcher Shop",
+      "categorical__activity_Cafe",
+      "categorical__activity_Call Center",
+      "categorical__activity_Carpentry",
+      "categorical__activity_Catering",
+      "categorical__activity_Cattle",
+      "categorical__activity_Celebrations",
+      "categorical__activity_Cement",
+      "categorical__activity_Cereals",
+      "categorical__activity_Charcoal Sales",
+      "categorical__activity_Cheese Making",
+      "categorical__activity_Child Care",
+      "categorical__activity_Cleaning Services",
+      "categorical__activity_Cloth & Dressmaking Supplies",
+      "categorical__activity_Clothing",
+      "categorical__activity_Clothing Sales",
+      "categorical__activity_Cobbler",
+      "categorical__activity_Communications",
+      "categorical__activity_Community Water Distribution",
+      "categorical__activity_Computer",
+      "categorical__activity_Computers",
+      "categorical__activity_Construction",
+      "categorical__activity_Construction Supplies",
+      "categorical__activity_Consumer Goods",
+      "categorical__activity_Cosmetics Sales",
+      "categorical__activity_Crafts",
+      "categorical__activity_Dairy",
+      "categorical__activity_Decorations Sales",
+      "categorical__activity_Dental",
+      "categorical__activity_Education provider",
+      "categorical__activity_Electrical Goods",
+      "categorical__activity_Electrician",
+      "categorical__activity_Electronics Repair",
+      "categorical__activity_Electronics Sales",
+      "categorical__activity_Embroidery",
+      "categorical__activity_Entertainment",
+      "categorical__activity_Event Planning",
+      "categorical__activity_Farm Supplies",
+      "categorical__activity_Farming",
+      "categorical__activity_Film",
+      "categorical__activity_Fish Selling",
+      "categorical__activity_Fishing",
+      "categorical__activity_Florist",
+      "categorical__activity_Flowers",
+      "categorical__activity_Food",
+      "categorical__activity_Food Market",
+      "categorical__activity_Food Production/Sales",
+      "categorical__activity_Food Stall",
+      "categorical__activity_Fruits & Vegetables",
+      "categorical__activity_Fuel/Firewood",
+      "categorical__activity_Funerals",
+      "categorical__activity_Furniture Making",
+      "categorical__activity_Games",
+      "categorical__activity_General Store",
+      "categorical__activity_Goods Distribution",
+      "categorical__activity_Grocery Store",
+      "categorical__activity_Hardware",
+      "categorical__activity_Health",
+      "categorical__activity_Higher education costs",
+      "categorical__activity_Home Appliances",
+      "categorical__activity_Home Products Sales",
+      "categorical__activity_Hotel",
+      "categorical__activity_Internet Cafe",
+      "categorical__activity_Jewelry",
+      "categorical__activity_Knitting",
+      "categorical__activity_Land Rental",
+      "categorical__activity_Landscaping / Gardening",
+      "categorical__activity_Laundry",
+      "categorical__activity_Liquor Store / Off-License",
+      "categorical__activity_Livestock",
+      "categorical__activity_Machine Shop",
+      "categorical__activity_Machinery Rental",
+      "categorical__activity_Manufacturing",
+      "categorical__activity_Medical Clinic",
+      "categorical__activity_Metal Shop",
+      "categorical__activity_Milk Sales",
+      "categorical__activity_Mobile Phones",
+      "categorical__activity_Mobile Transactions",
+      "categorical__activity_Motorcycle Repair",
+      "categorical__activity_Motorcycle Transport",
+      "categorical__activity_Movie Tapes & DVDs",
+      "categorical__activity_Music Discs & Tapes",
+      "categorical__activity_Musical Instruments",
+      "categorical__activity_Musical Performance",
+      "categorical__activity_Natural Medicines",
+      "categorical__activity_Office Supplies",
+      "categorical__activity_Other Renewable Energy",
+      "categorical__activity_Paper Sales",
+      "categorical__activity_Party Supplies",
+      "categorical__activity_Patchwork",
+      "categorical__activity_Perfumes",
+      "categorical__activity_Personal Care Products",
+      "categorical__activity_Personal Expenses",
+      "categorical__activity_Personal Housing Expenses",
+      "categorical__activity_Personal Medical Expenses",
+      "categorical__activity_Personal Products Sales",
+      "categorical__activity_Pharmacy",
+      "categorical__activity_Phone Accessories",
+      "categorical__activity_Phone Repair",
+      "categorical__activity_Phone Use Sales",
+      "categorical__activity_Photography",
+      "categorical__activity_Pigs",
+      "categorical__activity_Plastics Sales",
+      "categorical__activity_Poultry",
+      "categorical__activity_Primary/secondary school costs",
+      "categorical__activity_Printing",
+      "categorical__activity_Property",
+      "categorical__activity_Pub",
+      "categorical__activity_Quarrying",
+      "categorical__activity_Recycled Materials",
+      "categorical__activity_Recycling Services",
+      "categorical__activity_Religious Articles",
+      "categorical__activity_Restaurant",
+      "categorical__activity_Retail",
+      "categorical__activity_Rickshaw",
+      "categorical__activity_Secretarial Services",
+      "categorical__activity_Services",
+      "categorical__activity_Sewing",
+      "categorical__activity_Shoe Sales",
+      "categorical__activity_Solar Home Systems",
+      "categorical__activity_Souvenir Sales",
+      "categorical__activity_Spare Parts",
+      "categorical__activity_Sporting Good Sales",
+      "categorical__activity_Tailoring",
+      "categorical__activity_Taxi",
+      "categorical__activity_Technology",
+      "categorical__activity_Textiles",
+      "categorical__activity_Timber Sales",
+      "categorical__activity_Tourism",
+      "categorical__activity_Transportation",
+      "categorical__activity_Traveling Sales",
+      "categorical__activity_Upholstery",
+      "categorical__activity_Used Clothing",
+      "categorical__activity_Used Shoes",
+      "categorical__activity_Utilities",
+      "categorical__activity_Vehicle",
+      "categorical__activity_Vehicle Repairs",
+      "categorical__activity_Veterinary Sales",
+      "categorical__activity_Waste Management",
+      "categorical__activity_Water Pumps & Irrigation",
+      "categorical__activity_Weaving",
+      "categorical__activity_Wedding Expenses",
+      "categorical__activity_Wholesale",
+      "categorical__country_iso_AF",
+      "categorical__country_iso_BD",
+      "categorical__country_iso_BF",
+      "categorical__country_iso_BI",
+      "categorical__country_iso_BJ",
+      "categorical__country_iso_CD",
+      "categorical__country_iso_CI",
+      "categorical__country_iso_CM",
+      "categorical__country_iso_EG",
+      "categorical__country_iso_GH",
+      "categorical__country_iso_HN",
+      "categorical__country_iso_HT",
+      "categorical__country_iso_IN",
+      "categorical__country_iso_KE",
+      "categorical__country_iso_KG",
+      "categorical__country_iso_KH",
+      "categorical__country_iso_LA",
+      "categorical__country_iso_LR",
+      "categorical__country_iso_LS",
+      "categorical__country_iso_MG",
+      "categorical__country_iso_ML",
+      "categorical__country_iso_MM",
+      "categorical__country_iso_MW",
+      "categorical__country_iso_MZ",
+      "categorical__country_iso_NG",
+      "categorical__country_iso_NI",
+      "categorical__country_iso_NP",
+      "categorical__country_iso_PG",
+      "categorical__country_iso_PH",
+      "categorical__country_iso_PK",
+      "categorical__country_iso_PS",
+      "categorical__country_iso_RW",
+      "categorical__country_iso_SB",
+      "categorical__country_iso_SL",
+      "categorical__country_iso_SN",
+      "categorical__country_iso_SO",
+      "categorical__country_iso_SS",
+      "categorical__country_iso_TG",
+      "categorical__country_iso_TJ",
+      "categorical__country_iso_TL",
+      "categorical__country_iso_TZ",
+      "categorical__country_iso_UG",
+      "categorical__country_iso_VU",
+      "categorical__country_iso_YE",
+      "categorical__country_iso_ZM",
+      "categorical__country_iso_ZW",
+      "categorical__region_Africa",
+      "categorical__region_Asia",
+      "categorical__region_Central America",
+      "categorical__region_Middle East",
+      "categorical__region_North America",
+      "categorical__region_Oceania",
+      "categorical__analysis_period_pandemic_disruption",
+      "categorical__analysis_period_post_pandemic",
+      "categorical__analysis_period_pre_pandemic"
+    ],
+    "metrics": {
+      "roc_auc": 0.8997080625176485,
+      "average_precision": 0.8301490806510436,
+      "brier_score": 0.11557610251087982,
+      "holdout_accuracy": 0.8402937390412605,
+      "single_class_holdout": false,
+      "holdout_class_balance": {
+        "funded_within_24h": 87466,
+        "not_within_24h": 191421
+      }
+    },
+    "attempted": true,
+    "succeeded": true,
+    "error": null
+  },
+  "explanatory": {
+    "attempted": true,
+    "succeeded": true,
+    "status": "success",
+    "error": null,
+    "n_duration": 1453840,
+    "n_binary": 1453840,
+    "duration_model_n": 1453840,
+    "binary_model_n": 1453840,
+    "duration_fitted": true,
+    "binary_fitted": true,
+    "duration_error": null,
+    "binary_error": null,
+    "duration_formula": "log_funding_speed ~ log_loan_amount + lenderRepaymentTerm + is_group_loan + C(gender_classification) + desc_word_count + family_mentions_per_100_words + agency_mentions_per_100_words + urgency_mentions_per_100_words + desc_sentiment_compound + C(repaymentInterval) + C(sector) + C(region_group) + C(analysis_period) + C(loan_size_band) + family_mentions_per_100_words:C(analysis_period) + family_mentions_per_100_words:C(region_group) + family_mentions_per_100_words:C(loan_size_band) + family_mentions_per_100_words:C(sector_group)",
+    "binary_formula": "funded_within_24h ~ log_loan_amount + lenderRepaymentTerm + is_group_loan + C(gender_classification) + desc_word_count + family_mentions_per_100_words + agency_mentions_per_100_words + urgency_mentions_per_100_words + desc_sentiment_compound + C(repaymentInterval) + C(sector) + C(region_group) + C(analysis_period) + C(loan_size_band) + family_mentions_per_100_words:C(analysis_period) + family_mentions_per_100_words:C(region_group) + family_mentions_per_100_words:C(loan_size_band) + family_mentions_per_100_words:C(sector_group)",
+    "duration_dropped_terms": [
+      "sentiment_available"
+    ],
+    "binary_dropped_terms": [
+      "sentiment_available"
+    ]
+  }
+}
