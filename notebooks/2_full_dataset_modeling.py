@@ -557,10 +557,11 @@ plt.show()
 # it's genuinely one of that section's largest coefficients too.
 # Repayment term is a little different: its per-unit coefficient (+0.068)
 # looks modest next to a sector or region dummy, but the term itself
-# varies widely from loan to loan (a handful of months up to a couple of
-# years), so the *cumulative* swing across that range is large - exactly
-# what SHAP measures, and something a single per-unit coefficient doesn't
-# show on its own. The time period
+# spans a huge range across loans - most cluster between 8 and 14 months
+# (the middle 50%), but it runs from 2 months to a long tail past 130 -
+# so the *cumulative* swing across that range is large, exactly what SHAP
+# measures and something a single per-unit coefficient doesn't show on
+# its own. The time period
 # (pre-pandemic vs. not) and loan size also rank near the top, again
 # agreeing with Section 7's biggest effects.
 #
