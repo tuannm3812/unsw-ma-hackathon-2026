@@ -407,7 +407,8 @@ FORMULA = (
     "C(gender_classification) + family_mentions_per_100_words + agency_mentions_per_100_words + "
     "urgency_mentions_per_100_words + desc_sentiment_compound + C(repaymentInterval) + "
     "C(sector_group) + C(region_group) + C(analysis_period) + C(loan_size_band) + "
-    "family_mentions_per_100_words:C(analysis_period) + family_mentions_per_100_words:C(region_group)"
+    "family_mentions_per_100_words:C(analysis_period) + family_mentions_per_100_words:C(region_group) + "
+    "family_mentions_per_100_words:C(loan_size_band)"
 )
 CATEGORICAL_TERMS = [
     "gender_classification", "repaymentInterval", "sector_group",
@@ -455,18 +456,27 @@ for col in CATEGORICAL_TERMS:
 #   manage...") shows no real link either way - the "sound capable and
 #   independent" hypothesis doesn't hold up at this scale.
 # - **Family/communal framing** has a small but real *slower*-funding
-#   link during the pandemic-disruption period specifically (its main
-#   effect, p = 0.002) - but that's dominated by much larger interaction
-#   effects that flip the direction before and after: pre-pandemic, the
-#   combined effect is a clear net *faster*-funding link, and
-#   post-pandemic it's still net faster but less than half as strong -
-#   direct, model-based confirmation of the EDA notebook's "funding
-#   dynamics permanently shifted after 2020" finding. It also varies
-#   sharply by region: the benefit is far larger in the Middle East and
-#   Central America than in North America or Asia, where it's mildly
-#   counterproductive. **Family framing helps, but who it helps and how
-#   much depends heavily on when and where the loan is posted - it isn't
-#   a universal lever.**
+#   link at its baseline - large loans, during the pandemic-disruption
+#   period, in Africa (its main effect, p < 0.001) - but that baseline is
+#   dominated by much larger interaction effects along three separate
+#   dimensions:
+#   - **Timing**: pre-pandemic, the combined effect flips to a clear net
+#     *faster*-funding link; post-pandemic it's still net faster but less
+#     than half as strong - direct, model-based confirmation of the EDA
+#     notebook's "funding dynamics permanently shifted after 2020"
+#     finding.
+#   - **Region**: the benefit is far larger in the Middle East and
+#     Central America than in North America or Asia, where it's mildly
+#     counterproductive.
+#   - **Loan size**: medium-sized loans get a genuine net speed *benefit*
+#     from family framing; large and small loans don't - the interaction
+#     is significant for medium loans (p < 0.001) but not for small ones,
+#     so this isn't a smooth "bigger loan, bigger effect" gradient, it's
+#     specifically medium-sized loans that benefit most.
+#
+#   **Family framing helps, but who it helps and how much depends on
+#   when, where, and what size the loan is - it isn't a universal
+#   lever.**
 # - **Sentiment tone** shows a counterintuitive association: a more
 #   positive-sounding description is linked to **slower** funding, and
 #   this isn't noise either (p < 0.001). Combined with the EDA notebook's
@@ -492,7 +502,8 @@ for col in CATEGORICAL_TERMS:
 #
 # Explanatory Modeling's statistical model is easy to interpret, but by
 # design it can only check the specific combinations it's told to look
-# for (framing x period, framing x region). The boosted model from
+# for (framing x period, framing x region, framing x loan size). The
+# boosted model from
 # Regression Modeling learned whatever patterns were actually in the
 # data, with no such restriction - but on its own it's a black box that
 # doesn't explain itself. **SHAP** opens it back up: for every
@@ -574,11 +585,11 @@ plt.show()
 # - Urgency framing shows a consistent, statistically robust link to
 #   faster funding (p < 0.001); agency framing shows none.
 # - Family framing's main effect is small but statistically significant
-#   (p = 0.002) - slightly slower funding during the pandemic-disruption
-#   baseline period specifically - and is dominated by much larger
-#   interaction effects with time period and region that flip the net
-#   direction to faster before and after that period; the effect is real
-#   but conditional, not flat.
+#   (p < 0.001) - slightly slower funding at its baseline (large loans,
+#   pandemic-disruption period, Africa) - and is dominated by much larger
+#   interaction effects across three separate dimensions (time period,
+#   region, and loan size) that each flip or reshape the net direction;
+#   the effect is real but conditional on all three, not flat.
 # - Structural factors (loan size, repayment terms, sector, region,
 #   borrower gender) have coefficients several times larger than any
 #   narrative-framing term.
@@ -595,8 +606,9 @@ plt.show()
 # - **Urgency language is a safe, general-purpose writing recommendation**
 #   - it helps consistently, with no caveats about timing or region.
 # - **Family framing needs targeted guidance, not a blanket rule** - it
-#   pays off most pre-pandemic and in the Middle East/Central America,
-#   and is close to neutral or counterproductive in North America/Asia.
+#   pays off most pre-pandemic, in the Middle East/Central America, and
+#   for medium-sized loans specifically; it's close to neutral or
+#   counterproductive in North America/Asia and for large or small loans.
 #   A one-size-fits-all "always mention family" recommendation would be
 #   wrong for a meaningful share of loans.
 # - **Don't over-invest in copywriting at the expense of loan structure**

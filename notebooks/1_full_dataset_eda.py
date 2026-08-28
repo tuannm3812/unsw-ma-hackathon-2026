@@ -52,6 +52,8 @@ import pandas as pd
 import seaborn as sns
 
 SEED = 42
+MIN_REGION_OBSERVATIONS = 10
+MIN_SECTOR_OBSERVATIONS = 1000
 
 KAGGLE_DATA_DIR = Path("/kaggle/input/datasets/tuannm3812/kiva-loans-hackathon-data")
 if not KAGGLE_DATA_DIR.exists():
@@ -263,46 +265,56 @@ print(valid.groupby("gender", observed=True)["funding_speed_days"].median().to_s
 #
 # A wider sweep across the remaining categorical fields: **sector** (what
 # the loan is for), **region**, and **repayment interval** (how the
-# borrower repays). Each chart shows the average funding speed per
-# category, sorted fastest to slowest, with a dashed line marking the
-# overall average.
+# borrower repays). Sector and region are collapsed first so that any
+# category with too few loans to trust - fewer than
+# `MIN_SECTOR_OBSERVATIONS` (1,000) for sector, `MIN_REGION_OBSERVATIONS`
+# (10) for region - is folded into `"Other"` rather than charted on its
+# own; the same rule the modeling notebook uses, so a single thin, noisy
+# category can't produce a misleadingly dramatic bar. Every chart also
+# labels each bar with its loan count (`n=`), so a fast- or slow-funding
+# category can be checked against how much data actually backs it, not
+# just how the bar looks.
 
 # %%
 overall_avg_speed = valid["funding_speed_days"].mean()
 
+
+def _barh_avg_speed_with_counts(series_grouped_by: pd.Series, ax, title: str, show_legend: bool = False) -> None:
+    """Horizontal bar chart of mean funding speed per category, each bar labeled with its loan count."""
+    stats = valid.groupby(series_grouped_by, observed=True)["funding_speed_days"].agg(["mean", "count"]).sort_values("mean")
+    stats["mean"].plot(kind="barh", color=plt.cm.viridis(np.linspace(0.1, 0.9, len(stats))), legend=False, ax=ax)
+    avg_line = ax.axvline(overall_avg_speed, color="red", linestyle="--", linewidth=1, label="Overall average")
+    for i, (mean_val, count_val) in enumerate(zip(stats["mean"], stats["count"])):
+        ax.text(mean_val, i, f"  n={count_val:,}", va="center", fontsize=8, color="dimgray")
+    ax.set_xlabel("Average funding speed (days)")
+    ax.set_title(title)
+    if show_legend:
+        ax.legend(handles=[avg_line])
+
+
+for col, min_obs, new_col in [("sector", MIN_SECTOR_OBSERVATIONS, "sector_group"), ("region", MIN_REGION_OBSERVATIONS, "region_group")]:
+    counts = valid[col].value_counts()
+    major = counts[counts >= min_obs].index
+    valid[new_col] = valid[col].where(valid[col].isin(major), "Other")
+
 fig, ax = plt.subplots(figsize=(9, 8))
-speed_by_sector = valid.groupby("sector", observed=True)["funding_speed_days"].mean().sort_values()
-speed_by_sector.plot(kind="barh", color=plt.cm.viridis(np.linspace(0.1, 0.9, len(speed_by_sector))), ax=ax)
-ax.axvline(overall_avg_speed, color="red", linestyle="--", linewidth=1, label="Overall average")
-ax.set_xlabel("Average funding speed (days)")
-ax.set_title("Average funding speed by sector")
-ax.legend()
+_barh_avg_speed_with_counts(valid["sector_group"], ax, "Average funding speed by sector", show_legend=True)
 plt.tight_layout()
 plt.show()
 
 # %%
 fig, axes = plt.subplots(1, 2, figsize=(14, 6))
-
-speed_by_region = valid.groupby("region", observed=True)["funding_speed_days"].mean().sort_values()
-speed_by_region.plot(kind="barh", color=plt.cm.viridis(np.linspace(0.1, 0.9, len(speed_by_region))), ax=axes[0])
-axes[0].axvline(overall_avg_speed, color="red", linestyle="--", linewidth=1)
-axes[0].set_xlabel("Average funding speed (days)")
-axes[0].set_title("Average funding speed by region")
-
-speed_by_repayment = valid.groupby("repaymentInterval", observed=True)["funding_speed_days"].mean().sort_values()
-speed_by_repayment.plot(kind="barh", color=plt.cm.viridis(np.linspace(0.1, 0.9, len(speed_by_repayment))), ax=axes[1])
-axes[1].axvline(overall_avg_speed, color="red", linestyle="--", linewidth=1)
-axes[1].set_xlabel("Average funding speed (days)")
-axes[1].set_title("Average funding speed by repayment interval")
-
+_barh_avg_speed_with_counts(valid["region_group"], axes[0], "Average funding speed by region")
+_barh_avg_speed_with_counts(valid["repaymentInterval"], axes[1], "Average funding speed by repayment interval")
 plt.tight_layout()
 plt.show()
 
 # %% [markdown]
 # - **Sector matters enormously** - the gap between the fastest- and
 #   slowest-funding sectors dwarfs anything narrative framing produces on
-#   its own, and directly foreshadows the modeling notebook's sector
-#   findings.
+#   its own, and every sector shown is backed by well over a thousand
+#   loans, so the gap isn't a thin-sample artifact. Directly foreshadows
+#   the modeling notebook's sector findings.
 # - **Region shows a similarly wide spread** - funding speed varies
 #   substantially by where the borrower is located, independent of
 #   anything about how the loan is written.
@@ -444,6 +456,8 @@ fig, ax = plt.subplots(figsize=(10, 6))
 topic_speed["mean"].plot(
     kind="barh", color=plt.cm.viridis(np.linspace(0.1, 0.9, len(topic_speed))), ax=ax,
 )
+for i, (mean_val, count_val) in enumerate(zip(topic_speed["mean"], topic_speed["count"])):
+    ax.text(mean_val, i, f"  n={count_val:,}", va="center", fontsize=8, color="dimgray")
 ax.set_yticks(range(len(topic_speed)))
 ax.set_yticklabels([f"Topic {i}" for i in topic_speed.index])
 ax.set_xlabel("Average funding speed (days)")
@@ -463,11 +477,14 @@ plt.show()
 # The funding-speed gap between topics is large - the sanitary/health
 # topic funds in **1.5 days on average**, almost nine times faster than
 # the solar/group-lending topic's **13.5 days**. That's a bigger swing
-# than any single narrative-framing signal produces. But every topic here
-# spans a mix of sectors and loan sizes, so **this is a starting point
-# for a deeper dive, not a standalone conclusion** - a topic effect could
-# still just be tracking which sectors happen to write about which
-# subjects, the same caveat that applies to the framing correlations
+# than any single narrative-framing signal produces, and every topic
+# above is backed by several hundred to several thousand loans (see the
+# `n=` label on each bar) - not a handful of outliers driving the gap.
+# But every topic here spans a mix of sectors and loan sizes, so **this
+# is a starting point for a deeper dive, not a standalone conclusion** -
+# a topic effect could still just be tracking which sectors happen to
+# write about which subjects, the same caveat that applies to the
+# framing correlations
 # below.
 
 # %% [markdown]
