@@ -315,7 +315,10 @@ def _check_well_identified(
         )
 
 
-def _fit_one_model(kind: str, formula: str, data: pd.DataFrame, model_label: str):
+def _fit_one_model(
+    kind: str, formula: str, data: pd.DataFrame, model_label: str,
+    cov_type: str = "HC3", cluster_col: "str | None" = None,
+):
     """
     Fit one explanatory model (OLS for `kind == "ols"`, binomial GLM for
     `kind == "glm"`) and return `(results, error_message)`.
@@ -338,12 +341,27 @@ def _fit_one_model(kind: str, formula: str, data: pd.DataFrame, model_label: str
     patsy/statsmodels integration bug, say), and that must propagate
     rather than being relabeled as "this model couldn't be fit" and
     silently reported as a data-insufficiency diagnostic.
+
+    `cov_type`/`cluster_col` let a caller refit the identical formula with
+    cluster-robust standard errors (`cov_type="cluster"`) instead of HC3 -
+    used by `fit_explanatory_models`'s `cluster_sensitivity_col` for a
+    sensitivity check on HC3's independence assumption. `cluster_col` must
+    name a column in `data`; the groups array passed to statsmodels is
+    aligned to `X.index` (the rows patsy actually retained), not `data`'s
+    full index, since patsy silently drops rows with a missing predictor
+    and a misaligned groups array would silently mismatch observations to
+    the wrong cluster instead of raising.
     """
     try:
         y, X = _fit_design(formula, data, model_label)
         separation_detected = False
+        fit_kwargs = {"cov_type": cov_type}
+        if cov_type == "cluster":
+            if not cluster_col:
+                raise ValueError("cluster_col is required when cov_type='cluster'")
+            fit_kwargs["cov_kwds"] = {"groups": data.loc[X.index, cluster_col]}
         if kind == "ols":
-            results = sm.OLS(y, X).fit(cov_type="HC3")
+            results = sm.OLS(y, X).fit(**fit_kwargs)
         else:
             # Quasi-complete separation in the intentionally engineered
             # test scenarios this module is designed to catch (see
@@ -361,7 +379,7 @@ def _fit_one_model(kind: str, formula: str, data: pd.DataFrame, model_label: str
             with warnings.catch_warnings(record=True) as caught:
                 warnings.simplefilter("always")
                 warnings.filterwarnings("ignore", category=RuntimeWarning)
-                results = sm.GLM(y, X, family=sm.families.Binomial()).fit(cov_type="HC3")
+                results = sm.GLM(y, X, family=sm.families.Binomial()).fit(**fit_kwargs)
             separation_detected = any(
                 issubclass(w.category, PerfectSeparationWarning) for w in caught
             )
@@ -386,7 +404,9 @@ def _fit_one_model(kind: str, formula: str, data: pd.DataFrame, model_label: str
         return None, str(error)
 
 
-def fit_explanatory_models(df: pd.DataFrame, extra_interactions=None) -> "dict[str, object]":
+def fit_explanatory_models(
+    df: pd.DataFrame, extra_interactions=None, cluster_sensitivity_col: "str | None" = None,
+) -> "dict[str, object]":
     """
     Fit the two robust explanatory (association) models of Kiva funding
     behavior:
@@ -418,13 +438,30 @@ def fit_explanatory_models(df: pd.DataFrame, extra_interactions=None) -> "dict[s
     fit does this function raise, since there would be nothing left to
     report.
 
+    `cluster_sensitivity_col` optionally names a column (e.g.
+    `"country_name"`) to refit both models a second time with cluster-
+    robust standard errors instead of HC3, as a sensitivity check: HC3
+    corrects for heteroskedasticity but still assumes independent
+    observations, and loans sharing a country may share unobserved
+    influences (field-partner writing templates, local conditions) that
+    make them correlated rather than independent. Both refits use the
+    exact same formula and data as the primary HC3 fit - only the
+    covariance estimator differs - so a coefficient that stays
+    significant under both is a materially more trustworthy finding than
+    one that is only significant under HC3's stricter independence
+    assumption. When `None` (the default), no extra fitting happens and
+    the returned dict omits the `*_clustered*` keys entirely.
+
     Returns a dict with `duration`/`binary` results objects (or `None`),
     `duration_error`/`binary_error` diagnostic strings (or `None` when
     that model fit successfully), `n_duration`/`n_binary` row counts
     attempted, the exact formulas fit, and any pre-specified terms dropped
     for lacking variation in that particular sample (see the module
     docstring for why `sentiment_available` is a common one to see
-    dropped).
+    dropped). When `cluster_sensitivity_col` is given, also includes
+    `duration_clustered`/`binary_clustered` (results objects or `None`),
+    `duration_clustered_error`/`binary_clustered_error`, and
+    `cluster_sensitivity_col` itself (echoed back for a formatter to use).
     """
     prepared = prepare_analysis_data(df)
     featured = extract_deterministic_features(prepared)
@@ -458,7 +495,7 @@ def fit_explanatory_models(df: pd.DataFrame, extra_interactions=None) -> "dict[s
             f"duration - {duration_error}; binary - {binary_error}"
         )
 
-    return {
+    result = {
         "duration": duration_results,
         "binary": binary_results,
         "duration_error": duration_error,
@@ -481,6 +518,27 @@ def fit_explanatory_models(df: pd.DataFrame, extra_interactions=None) -> "dict[s
         "duration_dropped_terms": duration_dropped,
         "binary_dropped_terms": binary_dropped,
     }
+
+    if cluster_sensitivity_col:
+        # Same formula, same data, same rows - only the covariance
+        # estimator differs, so any change in which coefficients clear
+        # p < 0.05 is attributable to the independence assumption, not to
+        # a different model.
+        duration_clustered, duration_clustered_error = _fit_one_model(
+            "ols", duration_formula, duration_data, "Duration (OLS, cluster-robust)",
+            cov_type="cluster", cluster_col=cluster_sensitivity_col,
+        )
+        binary_clustered, binary_clustered_error = _fit_one_model(
+            "glm", binary_formula, binary_data, "24-hour funding (GLM, cluster-robust)",
+            cov_type="cluster", cluster_col=cluster_sensitivity_col,
+        )
+        result["duration_clustered"] = duration_clustered
+        result["binary_clustered"] = binary_clustered
+        result["duration_clustered_error"] = duration_clustered_error
+        result["binary_clustered_error"] = binary_clustered_error
+        result["cluster_sensitivity_col"] = cluster_sensitivity_col
+
+    return result
 
 
 def _format_coefficient_lines(results, dependent_label: str) -> "list[str]":
@@ -605,6 +663,87 @@ def format_association_summary(results: "dict[str, object]") -> str:
             )
         lines.append("")
         lines.extend(_format_coefficient_lines(binary_results, "the log-odds of funding within 24 hours"))
+
+    return "\n".join(lines)
+
+
+def _significance_comparison_lines(hc3_results, clustered_results) -> "list[str]":
+    """
+    For every coefficient in `hc3_results`, compare its p < 0.05 call under
+    HC3 against the same coefficient's call under `clustered_results` - the
+    identical model, refit with cluster-robust standard errors. Every
+    coefficient is reported, not only ones where the call changes: a
+    reader should be able to see the full comparison, not a pre-filtered
+    subset this function decided was interesting.
+    """
+    lines = []
+    for name in hc3_results.params.index:
+        if name == "Intercept":
+            continue
+        p_hc3 = hc3_results.pvalues[name]
+        hc3_sig = p_hc3 < 0.05
+        if name in clustered_results.pvalues.index:
+            p_clustered = clustered_results.pvalues[name]
+            clustered_sig = p_clustered < 0.05
+            agreement = "same conclusion" if hc3_sig == clustered_sig else "CONCLUSION CHANGES"
+            lines.append(
+                f"  - {name}: HC3 p={p_hc3:.4f} ({'significant' if hc3_sig else 'not significant'}); "
+                f"clustered p={p_clustered:.4f} ({'significant' if clustered_sig else 'not significant'}) "
+                f"[{agreement}]"
+            )
+        else:
+            lines.append(f"  - {name}: HC3 p={p_hc3:.4f}; dropped from the clustered refit (see its dropped-terms list)")
+    return lines
+
+
+def format_cluster_sensitivity_summary(results: "dict[str, object]") -> str:
+    """
+    Render `fit_explanatory_models`'s cluster-robust sensitivity check (when
+    `cluster_sensitivity_col` was passed) as a human-readable comparison
+    against the primary HC3 fit. Returns an explanatory sentence and, for
+    every coefficient, whether p < 0.05 agrees between HC3 and the cluster-
+    robust refit - the point is not "which numbers changed" but "does the
+    significance conclusion survive relaxing HC3's independence
+    assumption." Returns an empty string if no sensitivity check was run
+    (`cluster_sensitivity_col` not in `results`), so a caller can safely
+    call this unconditionally and skip appending it when empty.
+    """
+    cluster_col = results.get("cluster_sensitivity_col")
+    if not cluster_col:
+        return ""
+
+    lines = [
+        "Cluster-Robust Sensitivity Check",
+        "=" * 62,
+        "",
+        f"HC3 standard errors correct for heteroskedasticity but still assume "
+        f"independent observations. Loans sharing a {cluster_col} may share "
+        "unobserved influences (field-partner writing templates, local "
+        "conditions) that HC3 cannot see. This refits the identical duration "
+        f"and 24-hour formulas with standard errors clustered by {cluster_col} "
+        "instead, and compares which coefficients clear p < 0.05 under each - "
+        "a coefficient significant under both is a materially more "
+        "trustworthy finding than one that only clears HC3's stricter "
+        "independence assumption.",
+        "",
+    ]
+
+    duration_hc3, duration_clustered = results.get("duration"), results.get("duration_clustered")
+    lines.append("Duration model (log funding speed):")
+    if duration_hc3 is None or duration_clustered is None:
+        error = results.get("duration_clustered_error") or results.get("duration_error")
+        lines.append(f"  Could not compare: {error}")
+    else:
+        lines.extend(_significance_comparison_lines(duration_hc3, duration_clustered))
+    lines.append("")
+
+    binary_hc3, binary_clustered = results.get("binary"), results.get("binary_clustered")
+    lines.append("24-hour funding model (log-odds):")
+    if binary_hc3 is None or binary_clustered is None:
+        error = results.get("binary_clustered_error") or results.get("binary_error")
+        lines.append(f"  Could not compare: {error}")
+    else:
+        lines.extend(_significance_comparison_lines(binary_hc3, binary_clustered))
 
     return "\n".join(lines)
 

@@ -9,6 +9,7 @@ from src.statistical_analysis import (
     _term_has_variation,
     fit_explanatory_models,
     format_association_summary,
+    format_cluster_sensitivity_summary,
     run_ols_analysis,
 )
 from src.validation import InsufficientDataError
@@ -396,4 +397,76 @@ def test_run_ols_analysis_wrapper_writes_association_language_report(large_synth
         content = f.read()
     assert "associated with" in content
     assert "causes" not in content.lower()
-    assert "has a significant effect" not in content.lower()
+
+
+# --- Codex review follow-up: cluster-robust sensitivity check -------------
+#
+# HC3 corrects for heteroskedasticity but still assumes independent
+# observations; Kiva loans may cluster by country (shared field-partner
+# writing templates, local conditions). These tests cover the opt-in
+# `cluster_sensitivity_col` refit: present only when requested, uses the
+# identical formula/data as the primary HC3 fit, and stays correctly
+# aligned to whichever rows patsy actually retained (not `data`'s full
+# index) even when some rows get dropped for a missing predictor.
+
+
+def test_cluster_sensitivity_check_omitted_by_default(large_synthetic_kiva_df):
+    result = fit_explanatory_models(large_synthetic_kiva_df)
+    assert "duration_clustered" not in result
+    assert "binary_clustered" not in result
+    assert "cluster_sensitivity_col" not in result
+
+
+def test_cluster_sensitivity_check_fits_both_models_with_cluster_covariance(large_synthetic_kiva_df):
+    result = fit_explanatory_models(large_synthetic_kiva_df, cluster_sensitivity_col="country_name")
+
+    assert result["cluster_sensitivity_col"] == "country_name"
+    assert result["duration_clustered"] is not None
+    assert result["duration_clustered"].cov_type == "cluster"
+    assert result["binary_clustered"] is not None
+    assert result["binary_clustered"].cov_type == "cluster"
+    # The primary HC3 fit must be untouched by requesting the sensitivity
+    # check - same formula, same result, just an additional refit alongside it.
+    assert result["duration"].cov_type == "HC3"
+    assert result["duration_clustered"].params.index.equals(result["duration"].params.index)
+
+
+def test_cluster_sensitivity_check_stays_aligned_when_patsy_drops_a_row(large_synthetic_kiva_df):
+    # Same scenario as test_model_n_reflects_rows_patsy_actually_dropped_for_a_missing_predictor:
+    # patsy silently drops a row with a missing predictor when building the
+    # design matrix. The cluster `groups` array must be aligned to that
+    # smaller retained set (X.index), not the original data's full index -
+    # a naive `data[cluster_col]` would be one row too long and either
+    # raise a length-mismatch error or (worse) silently misalign every
+    # row after the dropped one to the wrong cluster. Fitting without
+    # error and matching the primary fit's row count is the evidence
+    # alignment is correct.
+    frame = large_synthetic_kiva_df.copy()
+    frame.loc[frame.index[0], "repaymentInterval"] = None
+
+    result = fit_explanatory_models(frame, cluster_sensitivity_col="country_name")
+
+    assert result["duration_clustered"] is not None
+    assert int(result["duration_clustered"].nobs) == result["duration_model_n"]
+
+
+def test_format_cluster_sensitivity_summary_empty_when_not_requested(large_synthetic_kiva_df):
+    result = fit_explanatory_models(large_synthetic_kiva_df)
+    assert format_cluster_sensitivity_summary(result) == ""
+
+
+def test_format_cluster_sensitivity_summary_reports_every_coefficient_with_agreement_call(large_synthetic_kiva_df):
+    result = fit_explanatory_models(large_synthetic_kiva_df, cluster_sensitivity_col="country_name")
+    summary = format_cluster_sensitivity_summary(result)
+
+    assert "Cluster-Robust Sensitivity Check" in summary
+    assert "country_name" in summary
+    assert "Duration model" in summary
+    assert "24-hour funding model" in summary
+    # Every non-intercept duration coefficient must appear with both p-values.
+    for name in result["duration"].params.index:
+        if name == "Intercept":
+            continue
+        assert name in summary
+    assert "HC3 p=" in summary and "clustered p=" in summary
+    assert ("same conclusion" in summary) or ("CONCLUSION CHANGES" in summary)

@@ -285,3 +285,37 @@ def test_run_analysis_writes_files_atomically_no_partial_leftover(tmp_path, larg
 
     leftovers = [p for p in output_dir.iterdir() if p.name.startswith(".") or p.suffix == ".tmp"]
     assert leftovers == []
+
+
+def test_run_analysis_appends_cluster_sensitivity_check_when_requested(tmp_path, large_synthetic_kiva_df):
+    # Codex review follow-up: confirms the full CLI-to-report wiring for
+    # the cluster-robust sensitivity check, not just the underlying
+    # statistical_analysis.py functions (already covered directly in
+    # tests/test_statistical_analysis.py).
+    data_path = tmp_path / "sample.pkl"
+    _write_pickle(large_synthetic_kiva_df, data_path)
+    output_dir = tmp_path / "reports"
+
+    summary = run_analysis(
+        data_path, output_dir, holdout_start="2024-01-01", cluster_sensitivity_col="country_name",
+    )
+
+    assert summary["explanatory"]["cluster_sensitivity_col"] == "country_name"
+    assert summary["explanatory"]["duration_clustered_fitted"] is True
+    assert summary["explanatory"]["binary_clustered_fitted"] is True
+
+    report_text = (output_dir / "association_summary.txt").read_text()
+    assert "Cluster-Robust Sensitivity Check" in report_text
+    assert "country_name" in report_text
+
+
+def test_run_analysis_omits_cluster_sensitivity_section_by_default(tmp_path, large_synthetic_kiva_df):
+    data_path = tmp_path / "sample.pkl"
+    _write_pickle(large_synthetic_kiva_df, data_path)
+    output_dir = tmp_path / "reports"
+
+    summary = run_analysis(data_path, output_dir, holdout_start="2024-01-01")
+
+    assert "cluster_sensitivity_col" not in summary["explanatory"]
+    report_text = (output_dir / "association_summary.txt").read_text()
+    assert "Cluster-Robust Sensitivity Check" not in report_text

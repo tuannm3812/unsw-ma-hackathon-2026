@@ -56,14 +56,22 @@ try:
     from src.binary_modeling import evaluate_chronological_binary_classifier
     from src.data_loader import load_kiva_pickle, prepare_analysis_data
     from src.modeling import evaluate_chronological_models
-    from src.statistical_analysis import fit_explanatory_models, format_association_summary
+    from src.statistical_analysis import (
+        fit_explanatory_models,
+        format_association_summary,
+        format_cluster_sensitivity_summary,
+    )
     from src.validation import InsufficientDataError
 except ModuleNotFoundError:
     from advanced_modeling import evaluate_boosted_model
     from binary_modeling import evaluate_chronological_binary_classifier
     from data_loader import load_kiva_pickle, prepare_analysis_data
     from modeling import evaluate_chronological_models
-    from statistical_analysis import fit_explanatory_models, format_association_summary
+    from statistical_analysis import (
+        fit_explanatory_models,
+        format_association_summary,
+        format_cluster_sensitivity_summary,
+    )
     from validation import InsufficientDataError
 
 
@@ -180,7 +188,15 @@ def _describe_dataset(df: pd.DataFrame, prepared: pd.DataFrame, holdout_start: s
     status_counts = {str(label): int(count) for label, count in status_counts_raw.items()}
 
     return {
-        "source_path": str(source_path),
+        # Relative to the caller's cwd (via `_display_path`), not the
+        # resolved absolute path: this is a committed audit artifact
+        # (`reports/generated_full_dataset/analysis_summary.json`), and a
+        # repo-relative path is a more genuinely useful provenance record
+        # for it than one machine's home-directory path - anyone who
+        # clones the repo and runs the documented command reproduces the
+        # same value, whereas an absolute path is only meaningful on the
+        # machine that produced it (Codex review, 2026-08-28).
+        "source_path": _display_path(source_path),
         "n_rows": n_rows,
         "n_valid_completed_outcome": n_valid,
         "n_excluded": n_rows - n_valid,
@@ -281,7 +297,7 @@ def _run_binary_classifier(df: pd.DataFrame, holdout_start: str, n_topics: int, 
         }
 
 
-def _run_explanatory(df: pd.DataFrame, extra_interactions=None) -> dict:
+def _run_explanatory(df: pd.DataFrame, extra_interactions=None, cluster_sensitivity_col=None) -> dict:
     """
     Run the robust explanatory (association) models (Task 5). Each of the
     duration/binary sub-models already degrades independently to a
@@ -307,13 +323,23 @@ def _run_explanatory(df: pd.DataFrame, extra_interactions=None) -> dict:
     result as a clean one. `duration_fitted`/`binary_fitted` were already
     present for anyone reading closely; `status` makes the tri-state
     explicit for anyone who isn't.
+
+    `cluster_sensitivity_col` is passed straight through to
+    `fit_explanatory_models`; when given, this function's returned summary
+    dict also records whether each model's cluster-robust refit succeeded
+    (`duration_clustered_fitted`/`binary_clustered_fitted`) - a lightweight,
+    JSON-serializable digest, not the full statsmodels results objects
+    (those live only in the second, raw-results return value, same as the
+    primary HC3 fit already does).
     """
     try:
-        results = fit_explanatory_models(df, extra_interactions=extra_interactions)
+        results = fit_explanatory_models(
+            df, extra_interactions=extra_interactions, cluster_sensitivity_col=cluster_sensitivity_col,
+        )
         duration_fitted = results["duration"] is not None
         binary_fitted = results["binary"] is not None
         both_fitted = duration_fitted and binary_fitted
-        return {
+        summary = {
             "attempted": True,
             "succeeded": both_fitted,
             "status": "success" if both_fitted else "partial_success",
@@ -330,7 +356,14 @@ def _run_explanatory(df: pd.DataFrame, extra_interactions=None) -> dict:
             "binary_formula": results["binary_formula"],
             "duration_dropped_terms": results["duration_dropped_terms"],
             "binary_dropped_terms": results["binary_dropped_terms"],
-        }, results
+        }
+        if cluster_sensitivity_col:
+            summary["cluster_sensitivity_col"] = cluster_sensitivity_col
+            summary["duration_clustered_fitted"] = results.get("duration_clustered") is not None
+            summary["binary_clustered_fitted"] = results.get("binary_clustered") is not None
+            summary["duration_clustered_error"] = results.get("duration_clustered_error")
+            summary["binary_clustered_error"] = results.get("binary_clustered_error")
+        return summary, results
     except InsufficientDataError as error:
         return {
             "attempted": True,
@@ -408,6 +441,7 @@ def _format_binary_classifier_section(binary_classifier: dict) -> "list[str]":
 
 def run_analysis(
     data_path, output_dir, holdout_start: str = "2024-01-01", n_topics: int = 5, extra_interactions=None,
+    cluster_sensitivity_col=None,
 ) -> dict:
     """
     Run the full Kiva funding-speed analysis (chronological baseline+Ridge,
@@ -419,6 +453,14 @@ def run_analysis(
     so a relative path is interpreted relative to the caller's current
     working directory - not to this module's location or any assumed repo
     root - exactly like a normal CLI tool.
+
+    `cluster_sensitivity_col` optionally names a column (e.g.
+    `"country_name"`) to additionally refit the explanatory models with
+    cluster-robust standard errors, as a sensitivity check on whether HC3's
+    independence assumption changes which coefficients clear p < 0.05 - see
+    `src/statistical_analysis.py::fit_explanatory_models`. When given, the
+    comparison is appended to `association_summary.txt`; `None` (the
+    default) skips it entirely, so existing callers/reports are unaffected.
 
     `extra_interactions` is passed straight through to
     `fit_explanatory_models` (`src/statistical_analysis.py`) - e.g. on a
@@ -445,7 +487,9 @@ def run_analysis(
     baseline_ridge = _run_baseline_ridge(df, holdout_start, n_topics)
 
     print("Fitting robust explanatory association models...")
-    explanatory_section, explanatory_raw = _run_explanatory(df, extra_interactions=extra_interactions)
+    explanatory_section, explanatory_raw = _run_explanatory(
+        df, extra_interactions=extra_interactions, cluster_sensitivity_col=cluster_sensitivity_col,
+    )
 
     print("Attempting the nonlinear (gradient-boosted) benchmark...")
     nonlinear_benchmark = _run_nonlinear_benchmark(df, holdout_start, n_topics, random_state=42)
@@ -477,6 +521,10 @@ def run_analysis(
     text_lines.extend(_format_binary_classifier_section(binary_classifier))
     if explanatory_raw is not None:
         text_lines.append(format_association_summary(explanatory_raw))
+        cluster_summary = format_cluster_sensitivity_summary(explanatory_raw)
+        if cluster_summary:
+            text_lines.append("")
+            text_lines.append(cluster_summary)
     else:
         text_lines.append(
             "Explanatory Association Summary (robust HC3 standard errors)\n"
@@ -525,8 +573,19 @@ if __name__ == "__main__":
             "src/features.py::MIN_SECTOR_OBSERVATIONS)."
         ),
     )
+    parser.add_argument(
+        "--cluster-sensitivity-column",
+        default=None,
+        help=(
+            "Column to cluster standard errors by (e.g. 'country_name'), refit "
+            "alongside the primary HC3 models as a sensitivity check on "
+            "whether HC3's independence assumption changes which coefficients "
+            "clear p < 0.05. Omit to skip the check entirely (default)."
+        ),
+    )
     args = parser.parse_args()
 
     run_analysis(
         args.data, args.output_dir, holdout_start=args.holdout_start, extra_interactions=args.extra_interaction,
+        cluster_sensitivity_col=args.cluster_sensitivity_column,
     )
