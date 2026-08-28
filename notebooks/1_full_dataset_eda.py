@@ -403,7 +403,7 @@ print(sentiment_sample["sentiment_compound"].describe().to_string())
 # %% [markdown]
 # Kiva loan descriptions are **overwhelmingly positive in tone**: the
 # average score is 0.78 out of a possible 1.0, and the typical (median)
-# description scores an even higher 0.88; even the more modestly-toned
+# description scores an even higher 0.89; even the more modestly-toned
 # quarter of descriptions still scores a strongly positive 0.74. Almost
 # every description on this platform is written in an upbeat, hopeful
 # voice, with very little genuinely neutral or negative writing. That's a
@@ -475,7 +475,7 @@ plt.show()
 # categories tested earlier.
 #
 # The funding-speed gap between topics is large - the sanitary/health
-# topic funds in **1.5 days on average**, almost nine times faster than
+# topic funds in **1.5 days on average**, over nine times faster than
 # the solar/group-lending topic's **13.5 days**. That's a bigger swing
 # than any single narrative-framing signal produces, and every topic
 # above is backed by several hundred to several thousand loans (see the
@@ -550,11 +550,17 @@ plt.show()
 # no longer distinguishable from no association. **Two rounds of
 # "controlling for more" changed the answer twice** - first making
 # urgency look important, then showing that importance doesn't survive a
-# more conservative check. What survives both rounds without
-# qualification: family framing's link to speed specifically in the
-# Middle East and Central America - a narrower, more specific finding
-# than "timing, region, and loan size all matter," which is what an
-# analysis stopping after just the first round would have concluded.
+# more conservative check. A third round - testing the *right* quantity,
+# not just testing it robustly (that notebook's Section 7.2) - narrowed it
+# further still. What is left standing is specific: more family language
+# is associated with faster funding in **four countries** (Palestine,
+# Yemen, Honduras, Nicaragua), a result that survives clustering and
+# replicates across three independently specified models - but which
+# rests on only two countries per regional group, so it is exploratory
+# rather than a region-level rule. That is a far more specific, and more
+# cautionary, finding than "timing, region, and loan size all matter,"
+# which is what an analysis stopping after the first round would have
+# concluded.
 # Sentiment tone's association is a genuinely open question rather than a
 # third survivor - it holds up in this project's richer authoritative
 # model but not in the modeling notebook's simpler one, a disagreement the
@@ -573,7 +579,7 @@ plt.show()
 #   share funded within 24 hours fell from 46% to about 30% and has not
 #   recovered.
 # - Loan descriptions cluster tightly at the positive end of the
-#   sentiment scale (median 0.88/1.0), limiting how much sentiment alone
+#   sentiment scale (median 0.89/1.0), limiting how much sentiment alone
 #   can explain.
 # - Loan structure (amount, repayment term) correlates with funding speed
 #   an order of magnitude more strongly than any single narrative-framing
@@ -583,14 +589,20 @@ plt.show()
 #   7.1) substantially revised the narrative-framing picture: urgency
 #   framing's apparent association, and most of family framing's
 #   conditional structure, don't survive standard errors clustered by
-#   country. What survives without qualification: family framing's link to
-#   speed in the Middle East and Central America specifically. Sentiment
-#   tone's association is a genuinely open question, not a confirmed
-#   survivor - it holds up in this project's richer authoritative model
-#   but not in the modeling notebook's own simpler one.
+#   country. Tested with the correct within-region contrast (that
+#   notebook's Section 7.2), one result survives everywhere it's checked:
+#   family framing is associated with
+#   faster funding in the Middle East and Central America - but those are
+#   two countries each (Palestine/Yemen; Honduras/Nicaragua), so it's an
+#   exploratory four-country result, not a region-level rule. Elsewhere
+#   (Africa, North America, Oceania) no association survives; Asia is
+#   significant in one model and not in another. Sentiment tone's
+#   association is a genuinely open question, not a confirmed survivor -
+#   it holds up in this project's richer authoritative model but not in
+#   the modeling notebook's own simpler one.
 # - Topic modeling on the loan descriptions surfaces coherent real-world
 #   themes (livestock, sanitary/health, clean water, farming, general
-#   retail); funding speed varies nearly ninefold across topics (1.5 to
+#   retail); funding speed varies more than ninefold across topics (1.5 to
 #   13.5 days on average) - the largest single gap found anywhere in this
 #   notebook, though it likely tracks sector/loan-type differences as
 #   much as writing style.
@@ -611,8 +623,9 @@ plt.show()
 #   change on an existing loan, but they're useful for setting realistic
 #   funding-time expectations, and they suggest more value in a
 #   structural review than in narrative-framing coaching alone.
-# - **What a loan is for and where it's from moves the needle more than
-#   how it's written** - the sector, region, and topic-modeling sweeps
+# - **What a loan is for and where it's from is linked to funding speed
+#   more strongly than how it's written** - the sector, region, and
+#   topic-modeling sweeps
 #   all show swings far larger than any narrative-framing signal. A
 #   platform-level "why do some loan types fund so much slower" review
 #   would likely pay off more than writing-style coaching alone.
@@ -621,9 +634,11 @@ plt.show()
 #   modeling notebook's robustness check shows urgency's apparent link to
 #   speed doesn't survive a stricter standard-error assumption, and
 #   neither does most of family framing's conditional structure. What
-#   remains defensible after testing: family framing's association in the
-#   Middle East and Central America specifically - narrower than a blanket
-#   writing-style rule, but genuinely tested rather than assumed. Even
+#   remains defensible after testing is narrow rather than a writing rule:
+#   family framing is associated with faster funding in four specific
+#   countries (Palestine, Yemen, Honduras, Nicaragua) and nowhere else
+#   that survives scrutiny - so a blanket "mention family" recommendation
+#   isn't supported for the vast majority of loans in this dataset. Even
 #   sentiment tone's (counterintuitive) association, which looked like a
 #   second survivor, turned out to depend on exactly which model is
 #   fitted - a reminder to keep testing rather than stop at the first

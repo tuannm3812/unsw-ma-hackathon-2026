@@ -305,3 +305,36 @@ Duration model (log funding speed):
   - agency_mentions_per_100_words: HC3 p=0.0000 (significant); clustered p=0.2045 (not significant) [CONCLUSION CHANGES]
   - urgency_mentions_per_100_words: HC3 p=0.0000 (significant); clustered p=0.2233 (not significant) [CONCLUSION CHANGES]
   - desc_sentiment_compound: HC3 p=0.0000 (significant); clustered p=0.0190 (significant) [same conclusion]
+Average Within-Region Family-Framing Slopes, generated 2026-08-29
+--------------------------------------------------------------
+SUPERSEDES an earlier "Simple-Slope Contrasts" section generated 2026-08-28, which was withdrawn as incorrect. That section computed `family main effect + region interaction`. Because family_mentions_per_100_words is interacted with FOUR moderators in this pipeline (analysis_period, region_group, loan_size_band, sector_group), its main effect is the family slope only when ALL of the others sit at their reference levels - here pre_pandemic x small x Agriculture. That contrast therefore described one unrepresentative cell, not the region. The same mistake in kind as reading an interaction coefficient as a within-region association, one level up.
+
+This section reports the correct quantity: for each region, the family-framing slope AVERAGED over that region's own distribution of period, loan size and sector. Each average is a weighted sum of coefficients, hence still a single linear contrast, so HC3 and country-clustered standard errors apply to it exactly as to any coefficient.
+
+Sign conventions are OPPOSITE between the two models: the duration model is log(1 + days), so NEGATIVE = faster funding; the 24-hour model is log-odds of funding within 24h, so POSITIVE = faster funding.
+
+Countries per region group (48 total): Africa 27, Asia 12, Oceania 4, Central America 2 (Honduras, Nicaragua), Middle East 2 (Palestine, Yemen), North America 1 (Haiti). A region's slope is identified only by the countries within it; with two (or one), the estimate cannot separate a family-framing association from whatever else is idiosyncratic about those specific countries - which is the confound clustering by country exists to take seriously.
+
+Duration model (log funding speed; NEGATIVE = faster):
+  - Africa: estimate=-0.0158 HC3 p=0.0000 | clustered p=0.3225 [not significant under both]
+  - Asia: estimate=+0.0234 HC3 p=0.0000 | clustered p=0.0846 [not significant under both]
+  - Central America: estimate=-0.0742 HC3 p=0.0000 | clustered p=0.0000 [significant under both]
+  - Middle East: estimate=-0.0729 HC3 p=0.0000 | clustered p=0.0000 [significant under both]
+  - North America: estimate=+0.0127 HC3 p=0.0002 | clustered p=0.0094 [significant under both]
+  - Oceania: estimate=+0.0050 HC3 p=0.1584 | clustered p=0.8949 [not significant under both]
+
+24-hour funding model (log-odds; POSITIVE = faster):
+  - Africa: estimate=+0.0271 HC3 p=0.0000 | clustered p=0.4075 [not significant under both]
+  - Asia: estimate=-0.0304 HC3 p=0.0000 | clustered p=0.2860 [not significant under both]
+  - Central America: estimate=+0.1025 HC3 p=0.0000 | clustered p=0.0000 [significant under both]
+  - Middle East: estimate=+0.1753 HC3 p=0.0000 | clustered p=0.0040 [significant under both]
+  - North America: estimate=+0.0032 HC3 p=0.7759 | clustered p=0.6570 [not significant under both]
+  - Oceania: estimate=-0.0723 HC3 p=0.0000 | clustered p=0.4284 [not significant under both]
+
+Interpretation: only Middle East and Central America are significant under clustering in BOTH models here, in the faster-funding direction in both, and they are also significant in the simpler notebook model (notebooks/2_full_dataset_modeling.ipynb section 7.2: -0.1236 and -0.0618, both clustered p<0.0001). That is 3 of 3 fits agreeing in sign and significance - the strongest narrative-framing evidence in this project.
+
+Two cautions attach to it. First, magnitude is specification-sensitive even where significance is not: the Middle East estimate is -0.0729 here and -0.1236 in the notebook's simpler model (~1.7x), mostly because this pipeline additionally interacts family framing with sector. Second, and more important, Middle East and Central America are two countries each, so this is best described as a four-country association (Palestine, Yemen, Honduras, Nicaragua - about 5% of all loans), exploratory in scope, not a regional rule.
+
+Asia is NOT significant in any of the three fits (clustered p=0.0846 duration, 0.2860 binary here; 0.0535 in the notebook). An earlier version of this analysis reported Asia as significant in the opposite direction; that was an artifact of the withdrawn reference-cell contrast described above, not a specification disagreement.
+
+North America is significant in this pipeline's duration model only (clustered p=0.0094) and in neither of the other two fits (0.6570 here, 0.0621 in the notebook). It is a single country (Haiti), i.e. one cluster, so it is reported for completeness and explicitly not claimed as a finding.

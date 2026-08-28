@@ -1,11 +1,52 @@
 # `reports/`
 
-This directory holds no committed evidence artifact itself - the
-notebook (`notebooks/starter_eda.ipynb`) is the sole committed evidence
-artifact for this project, with real, current output from the last
-execution baked into its cells. Anything under `reports/` is either
-generated fresh from the source data or a stale, explicitly-superseded
-leftover kept only as a pointer (this file).
+`reports/generated_full_dataset/` **is** a committed evidence artifact -
+a deliberate, labeled snapshot of `src.run_analysis` run against the real
+full 1,453,846-row dataset (see below). It, together with
+`notebooks/0_starter_eda.ipynb` (real output baked into 9 of its 13 code
+cells, from the 100-row sample), is this project's committed *executed*
+evidence. `notebooks/1_full_dataset_eda.ipynb`/
+`notebooks/2_full_dataset_modeling.ipynb` are different: their code cells
+carry zero stored output (they're committed as output-free sources, kept
+in sync with their `.py` pairs) - their real numbers are verified by
+executing them on Kaggle and cross-checking the run log, not by anything
+baked into the committed `.ipynb` file itself; their narrative
+conclusions are committed prose, not executed evidence. Everything else
+under `reports/` is generated fresh from the source data and gitignored.
+
+## `reports/generated_full_dataset/` (committed)
+
+`analysis_summary.json` and `association_summary.txt` here are the
+authoritative source for the full-dataset numbers in `README.md`'s
+"Full-Dataset Results" section - produced by `python3 -m src.run_analysis`
+against `data/Kiva_Loans.pkl`, **not** by either full-dataset notebook
+(those are a deliberately simpler, self-contained re-implementation for
+Kaggle; see `README.md`'s Kaggle Workflow section). Note that a few
+figures in that README section are deliberately quoted from the
+*notebooks'* own models instead - they are labelled as such inline, and
+exist to document where the two implementations disagree (family framing
+in Asia, and sentiment tone). Those numbers will not be found in the
+files here; the Kaggle run logs are their source.
+
+`association_summary.txt` carries **two appended addendum sections**
+beyond the original run, each labelled with its own generation date since
+`analysis_summary.json`'s single top-level `generated_at` field does not
+cover them:
+
+1. **Cluster-Robust Sensitivity Check** - HC3 vs. country-clustered
+   standard errors for every coefficient in both explanatory models.
+2. **Simple-Slope Contrasts** - the within-region family-framing slopes,
+   which is what the project's headline narrative-framing claim actually
+   rests on. An interaction coefficient alone does not establish a
+   within-region association; this section is the correct test.
+
+Both were produced by calling `fit_explanatory_models(...,
+cluster_sensitivity_col="country_name")` directly against the same data
+and formulas, spliced in rather than regenerated via a full pipeline
+re-run since no other stage changed. **A regeneration that omits
+`--cluster-sensitivity-column country_name` will drop the first section
+and the inputs the second depends on** - see `README.md`'s reproduction
+command, which includes the flag for exactly this reason.
 
 ## Regenerating a report
 

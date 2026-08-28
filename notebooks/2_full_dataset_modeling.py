@@ -466,6 +466,9 @@ else:
 # switch, plus a count across every coefficient in the model.
 
 # %%
+# Initialised before the guard so Section 7.2 can check whether this refit
+# actually happened, instead of raising NameError if it didn't.
+duration_model_clustered = None
 if duration_model is None:
     print("Skipping cluster-robust sensitivity check - the duration model above did not fit.")
 else:
@@ -508,10 +511,16 @@ else:
 # - **Family framing's timing and loan-size interactions don't survive
 #   either** - p-values move from well under 0.001 under HC3 to well
 #   above 0.2 clustered. **Its Middle East and Central America regional
-#   interactions do survive** (clustered p ≈ 0.0002 and 0.0070) - these
-#   two specific regional patterns are the one piece of narrative-framing
-#   evidence in this section that holds up under the stricter test.
-#   Family's Asia and North America interactions do not survive.
+#   interactions do survive** (clustered p ≈ 0.0002 and 0.0070); Asia,
+#   North America and Oceania's interactions do not. **But read these
+#   interaction results with the caution Section 7.2 spells out**: an
+#   interaction term only tests whether a region's slope differs from the
+#   Africa baseline's slope - it does *not* test whether family framing
+#   does anything within that region. Section 7.2 runs that second,
+#   more relevant test - and in this notebook's model it surfaces a
+#   *slower*-funding slope for Asia that this interaction row hides,
+#   though that one does not replicate in the authoritative pipeline and
+#   so is not claimed as a finding (see 7.2).
 # - **Agency framing's null result is unchanged** - it wasn't significant
 #   under HC3 either (p ≈ 0.46), so clustering doesn't change the
 #   conclusion; there was never a case for it.
@@ -531,20 +540,18 @@ else:
 # **Cross-check against this project's separate, authoritative modeling
 # pipeline** (`src/statistical_analysis.py`, run independently on the same
 # full dataset with a richer formula that also interacts family framing
-# with sector): structural factors survive clustering there too, most
-# narrative-framing interactions don't, and family's Middle East and
-# Central America interactions survive there as well. Two results
-# genuinely **disagree** between the two independently-specified models:
-# family's Asia interaction survives in that richer pipeline but not here,
-# and **sentiment's association survives there (clustered p ≈ 0.01 in both
-# of that pipeline's models) but not in this notebook's simpler one**.
-# Both disagreements point the same direction - a result that depends on
-# which other terms share the formula is a *weaker* result than one that
-# doesn't, even when one of the two specifications shows significance.
-# **The Key Findings below only assert the Middle East and Central America
-# family-framing results as reliably supported; Asia's status and
-# sentiment's status are both left genuinely uncertain rather than claimed
-# either way.**
+# with sector, and fitting a 24-hour binary model alongside the duration
+# one): structural factors survive clustering there too, and most
+# narrative-framing interactions don't - the same pattern as here.
+# **Sentiment's association genuinely disagrees across the two
+# pipelines**: it survives in both of the richer pipeline's models
+# (clustered p ≈ 0.01 duration, ≈ 0.02 for the 24-hour model) but not in
+# this notebook's simpler one (clustered p ≈ 0.25). A result that depends
+# on which other terms share the formula is a weaker result than one that
+# doesn't, even when one specification shows significance, so sentiment's
+# status is left genuinely uncertain rather than claimed either way.
+# Section 7.2 carries the region-by-region comparison, which is where the
+# cross-check actually matters.
 #
 # **Why this matters more than any individual coefficient**: a model that
 # only reports HC3 p-values on 1.45 million rows will find almost
@@ -552,15 +559,162 @@ else:
 # tiny even when the underlying association is fragile. Checking whether
 # a result survives a structurally different, more conservative
 # assumption about independence - and whether it survives a different but
-# equally reasonable model specification - is what separates a real,
+# equally reasonable model specification, and whether the *quantity being
+# tested is even the right one* (Section 7.2) - is what separates a real,
 # useable pattern from one that is numerically precise but practically
 # unreliable. **The honest bottom line: narrative framing's
 # strongest-looking HC3 result (urgency) doesn't hold up, most of family
 # framing's conditional structure doesn't hold up, sentiment's association
-# is genuinely uncertain rather than confirmed, and what remains standing
-# without qualification is family framing's effectiveness in two specific
-# regions - real, but far narrower than the raw HC3 read above
-# suggested.**
+# is genuinely uncertain rather than confirmed, and family framing's real
+# story - once tested with the correct within-region contrast in
+# Section 7.2 - narrows to four specific countries rather than any
+# generalizable writing rule.**
+
+# %% [markdown]
+# ### 7.2 What Family Framing Is Associated With *Within* Each Region
+#
+# The interaction coefficients above answer a narrower question than they
+# look like they answer. `family_mentions_per_100_words:C(region_group)[T.X]`
+# tests whether family framing's slope **in region X differs from the
+# reference region's slope** (Africa) - it does *not* say the slope inside
+# region X is itself different from zero. A significant interaction is
+# compatible with family framing doing nothing at all in region X, as long
+# as "nothing" is far enough from whatever Africa does.
+#
+# Getting the within-region quantity right takes one more step than it
+# first appears, because **family framing is interacted with three
+# moderators here, not one** (period, region, and loan size). Its main
+# effect is therefore the family slope only when period *and* loan size
+# both sit at their own reference levels - `pandemic_disruption` and
+# `large`, a combination covering only a few percent of loans. So
+# "main effect + region term" would still be a slope at one unrepresentative
+# corner of the data, not a description of the region.
+#
+# What this computes instead is the **average within-region slope**: for
+# each region, family framing's slope averaged over that region's *own*
+# mix of periods and loan sizes. Because that average is a weighted sum of
+# coefficients, it is still a single linear contrast, so `t_test` gives it
+# the same HC3 and cluster-robust treatment as any coefficient. The
+# `countries` column is printed alongside because a region's slope is
+# identified only by the countries in it - and clustering by country is
+# exactly what stops same-country loans counting as independent evidence.
+
+# %%
+FAMILY = "family_mentions_per_100_words"
+
+if duration_model is None or duration_model_clustered is None:
+    print("Skipping within-region slopes - the duration model or its cluster refit did not run.")
+else:
+    param_names = list(duration_model.params.index)
+    # Family framing is interacted with THREE moderators, not just region.
+    # Its main effect is therefore the slope only when period AND loan size
+    # both sit at their reference levels - so a contrast of
+    # `main + region[X]` alone would silently condition on that one cell
+    # (here: pandemic_disruption x large, a few percent of all loans).
+    # To get the slope that actually describes region X, average over
+    # region X's OWN distribution of the other moderators: weight each
+    # non-reference dummy by the share of that region's rows sitting at
+    # that level. The result is a proper linear contrast, so `t_test`
+    # gives it the same HC3 / cluster-robust treatment as any coefficient.
+    other_moderator_terms = [
+        name for name in param_names
+        if name.startswith(f"{FAMILY}:C(") and ":C(region_group)[" not in name
+    ]
+    region_terms = {
+        name.split("[T.")[1].rstrip("]"): name
+        for name in param_names
+        if name.startswith(f"{FAMILY}:C(region_group)[T.")
+    }
+    fitted_rows = valid.loc[X.index]
+
+    print(f"{'region':<17}{'countries':>10}{'loans':>9}   average family-framing slope within that region")
+    for level in sorted(fitted_rows["region_group"].astype(str).unique()):
+        sub = fitted_rows.loc[fitted_rows["region_group"].astype(str) == level]
+        pieces = [FAMILY]
+        if level in region_terms:  # the reference region has no term of its own
+            pieces.append(region_terms[level])
+        for term in other_moderator_terms:
+            column = term.split(":C(")[1].split(")[T.")[0]
+            moderator_level = term.split(")[T.")[1].rstrip("]")
+            weight = float((sub[column].astype(str) == moderator_level).mean())
+            if weight > 0:
+                pieces.append(f"{weight:.10f} * {term}")
+        contrast = " + ".join(pieces) + " = 0"
+
+        t_hc3 = duration_model.t_test(contrast)
+        t_clu = duration_model_clustered.t_test(contrast)
+        est = float(np.ravel(t_hc3.effect)[0])
+        p_hc3_c = float(np.ravel(t_hc3.pvalue)[0])
+        p_clu_c = float(np.ravel(t_clu.pvalue)[0])
+        verdict = "significant under BOTH" if (p_hc3_c < 0.05 and p_clu_c < 0.05) else "not significant under both"
+        print(
+            f"  {level:<15}{sub['country_name'].nunique():>10}{len(sub):>9}   "
+            f"estimate={est:+.4f}  HC3 p={p_hc3_c:.4f}  clustered p={p_clu_c:.4f}  [{verdict}]"
+        )
+
+# %% [markdown]
+# **Averaged properly over each region's own composition, the picture is
+# simpler and narrower than the interaction table above suggests: exactly
+# two regions show an association that survives clustering, and both point
+# the same way.** Sign convention: **negative = faster funding, positive =
+# slower.**
+#
+# - **Middle East: -0.1236, clustered p < 0.0001.** More family language
+#   is associated with *faster* funding. The largest narrative-framing
+#   association anywhere in this analysis.
+# - **Central America: -0.0618, clustered p < 0.0001.** Same direction,
+#   about half the magnitude.
+# - **Asia: +0.0338, clustered p = 0.0535 - not significant**, though only
+#   just, and worth stating plainly because an earlier version of this
+#   analysis got it wrong. Computing the slope at the model's reference
+#   cell instead of averaging over Asia's own composition made this look
+#   significant (p = 0.0070) and pointing the opposite way from the
+#   surviving regions. It was an artifact of evaluating the slope at an
+#   unrepresentative corner of the data (`pandemic_disruption` x `large`),
+#   not a real finding - and the corrected value agrees with this
+#   project's separate authoritative pipeline, which never found Asia
+#   significant.
+# - **Africa (p = 0.5536), North America (p = 0.0621) and Oceania
+#   (p = 0.6305)** show no association surviving clustering. Africa is the
+#   reference region and the largest by country count, so the absence
+#   there matters: there is no general "family framing helps" effect that
+#   the two surviving regions are merely a strong version of.
+#
+# **Cross-checked against the authoritative pipeline, the two surviving
+# results hold in all three fits.** Recomputing the same averaged
+# within-region slopes through `src/statistical_analysis.py` (richer
+# formula, plus a separate 24-hour binary model) gives Middle East
+# -0.0729 (duration, clustered p < 0.0001) and +0.1753 (24-hour,
+# p = 0.0040), and Central America -0.0742 (p < 0.0001) and +0.1025
+# (p < 0.0001) - remembering the 24-hour model's sign convention is
+# inverted, so positive there also means faster. Three fits, same two
+# regions, same direction. Asia is non-significant in all three
+# (p = 0.0535 / 0.0846 / 0.2860), which is what resolved the earlier
+# contradiction. Note that magnitude is more specification-sensitive than
+# significance: Middle East is -0.1236 here and -0.0729 there, roughly a
+# 1.7x difference, mostly because that pipeline also interacts family
+# framing with sector. North America turns up significant in that
+# pipeline's duration model alone (p = 0.0094) and in neither other fit -
+# it is a single country (Haiti), one cluster, and is not claimed.
+#
+# **The `countries` column is where the real limitation lives.** "Middle
+# East" in this dataset is **Palestine and Yemen** - two countries.
+# "Central America" is **Honduras and Nicaragua** - two countries. "North
+# America" is Haiti alone. Mechanically the clustered covariance still
+# uses all 48 country clusters, so these standard errors are not computed
+# from two clusters; but each region's slope is *identified* only by the
+# countries inside it. With two, the estimate cannot separate "family
+# framing is associated with faster funding" from "something else is
+# different about Palestine and Yemen" - which is precisely the confound
+# clustering was introduced to take seriously.
+#
+# **So the honest reading is narrow and exploratory: in these four
+# specific countries, more family language is associated with faster
+# funding.** It is not a claim about the Middle East or Central America as
+# regions, and not a writing rule to roll out. All of this is association
+# within this sample - clustering adjusts for within-country dependence,
+# it does not remove country-level confounding or license a causal
+# reading.
 
 # %% [markdown]
 # Fit on all 1,453,840 valid loans (R² = 0.426, meaning the fitted model
@@ -605,16 +759,27 @@ else:
 #   timing/loan size" as not supported by this data at a rigorous
 #   standard, even though they were the two headline results a
 #   single-standard-error read would have reported.
-# - **Family framing's Middle East and Central America regional
-#   interactions are the exception** - the one piece of narrative-framing
-#   evidence that stays significant under both HC3 and clustering, and is
-#   independently confirmed by this project's separate full pipeline.
-#   Everywhere else, and for every other narrative-framing term, the
-#   HC3-only significance above is not a reliable finding on its own.
-# - **Agency/competence language never showed a real link either way**,
-#   under HC3 or clustered - the "sound capable and independent"
-#   hypothesis doesn't hold up at this scale under either standard-error
-#   method.
+# - **Family framing's regional pattern is the exception that survives.**
+#   Tested with the correct within-region contrast (Section 7.2), family
+#   framing is associated with *faster* funding in the Middle East and
+#   Central America - significant under clustering in all three
+#   independently specified fits (this notebook's, plus the authoritative
+#   pipeline's duration and 24-hour models). But each of those "regions"
+#   is two countries (Palestine/Yemen; Honduras/Nicaragua), so it is a
+#   narrow, exploratory result about four countries, not a region-level
+#   finding. Everywhere else, and for every other narrative-framing term,
+#   the HC3-only significance above is not a reliable finding on its own.
+# - **Agency/competence language shows no real link in this notebook's
+#   model, under HC3 or clustered** - the "sound capable and independent"
+#   hypothesis doesn't hold up here under either standard-error method.
+#   Worth flagging so this isn't read as a universal null: this project's
+#   separate, richer pipeline's 24-hour funding model *did* show agency as
+#   HC3-significant (p < 0.001) before failing to survive clustering
+#   (p ≈ 0.20) - the identical apparent-but-fragile pattern urgency shows
+#   above. That model isn't reproduced in this notebook (only a duration
+#   model is fit here), so it can't be cross-checked directly, but agency
+#   isn't a clean, universal non-finding either - it's null here and
+#   fragile there.
 
 # %% [markdown]
 # ## 8. Feature Importance
@@ -672,8 +837,10 @@ plt.show()
 # This second, independent check **confirms the top of the Explanatory
 # Modeling story, with one nuance worth spelling out**: loan amount and
 # repayment term are, by a wide margin, the two factors the flexible
-# model relied on most. Loan amount lines up directly with Section 7 -
-# it's genuinely one of that section's largest coefficients too.
+# model relied on most. Loan amount lines up directly with Section 7 - its
+# coefficient there is solidly large (near-tied with gender, and bigger
+# than every narrative-framing term), though Section 7 itself ranks the
+# biggest sector and region swings above it, not below.
 # Repayment term is a little different: its per-unit coefficient (+0.068)
 # looks modest next to a sector or region dummy, but the term itself
 # spans a huge range across loans - most cluster between 8 and 14 months
@@ -733,11 +900,34 @@ plt.show()
 #   errors are clustered by country instead of assumed independent.
 #   Urgency framing's apparent association does not survive; neither does
 #   most of family framing's time-period and loan-size structure.
-# - What survives the stricter check without qualification: **family
-#   framing's Middle East and Central America regional interactions
-#   specifically** - independently confirmed by this project's separate,
-#   authoritative full pipeline. Agency framing shows no association
-#   either way, before or after clustering.
+# - **Testing the right quantity mattered as much as testing it
+#   robustly.** The interaction coefficients above only test whether a
+#   region's slope differs from the Africa baseline - not whether family
+#   framing does anything *within* a region. The within-region averages in
+#   Section 7.2 test the latter, averaging each region's slope over its
+#   own mix of periods and loan sizes. Only two regions survive: family
+#   framing is associated with **faster** funding in the Middle East
+#   (-0.124, clustered p < 0.0001) and Central America (-0.062,
+#   clustered p < 0.0001).
+# - **Getting that quantity right mattered, and an earlier version of
+#   this analysis got it wrong.** Evaluating the slope at the model's
+#   reference cell rather than averaging over each region's composition
+#   made Asia look significant in the opposite direction (p = 0.0070).
+#   Corrected, Asia is not significant (+0.034, p = 0.0535) - and now
+#   agrees with the authoritative pipeline, which never found it
+#   significant. Africa (p = 0.5536), North America (p = 0.0621) and
+#   Oceania (p = 0.6305) show no association surviving clustering.
+# - **The surviving result is about four countries, not two regions** -
+#   "Middle East" here is Palestine and Yemen; "Central America" is
+#   Honduras and Nicaragua. Since clustering by country is precisely what
+#   stops same-country loans counting as independent evidence, a
+#   two-cluster group carries very little of it. Robust across
+#   specifications, but narrow and exploratory in scope.
+# - Agency framing shows no association either way in this notebook's
+#   model - though the authoritative pipeline's separate 24-hour model
+#   shows agency following the same apparent-but-fragile pattern as
+#   urgency (HC3-significant, doesn't survive clustering), so it isn't a
+#   clean null everywhere tested.
 # - **Sentiment tone's association is genuinely unresolved, not
 #   confirmed** - it survives clustering in the authoritative pipeline's
 #   richer model (clustered p ≈ 0.01) but not in this notebook's simpler
@@ -763,17 +953,29 @@ plt.show()
 #   a stricter, more realistic check for how loans from the same country
 #   relate to each other. Recommending it platform-wide would be advice
 #   built on a fragile statistical artifact, not a tested pattern.
-# - **Family framing isn't a general-purpose recommendation either, but
-#   it has one specific, tested use**: mentioning family shows a genuine,
-#   robustly-tested association with faster funding for loans from the
-#   Middle East and Central America specifically. Outside those regions -
-#   and for the timing- or loan-size-based patterns this analysis
-#   initially flagged - the evidence doesn't hold up to scrutiny, and
-#   neither should the recommendation.
-# - **Structure, not copywriting, is the dominant lever** - loan size,
-#   repayment terms, sector, and region move funding speed far more than
-#   any narrative choice, and this conclusion only got stronger once the
-#   framing findings were stress-tested rather than taken at face value.
+# - **Do not issue a platform-wide "mention family" recommendation.**
+#   Across Africa (27 countries), Asia (12), North America and Oceania -
+#   together ~95% of all loans - no association survives clustering. The
+#   only place the evidence holds up is four specific countries covering
+#   the remaining ~5%.
+# - **Where it does hold up, the defensible action is a localized test,
+#   not a rollout.** Family framing's link to faster funding in Palestine,
+#   Yemen, Honduras and Nicaragua survives the correct contrast, country
+#   clustering, and three independent specifications - genuinely the
+#   strongest narrative-framing result in this project. But two countries
+#   per group is thin evidence precisely because clustering is what stops
+#   same-country loans counting separately. Treat it as a hypothesis worth
+#   an A/B test in those countries, not a finding to deploy platform-wide,
+#   and don't generalize it to "the Middle East" or "Central America."
+# - **Structure, not copywriting, is the strongest association by far** -
+#   loan size, repayment terms, sector, and region are linked to funding
+#   speed far more strongly than any narrative choice, and this conclusion
+#   only got stronger once the framing findings were stress-tested rather
+#   than taken at face value. These structural factors aren't something a
+#   platform can change on an existing loan, but they're worth a
+#   structural review in their own right - a genuinely different kind of
+#   action than writing-style coaching, not a "lever" in the same sense
+#   narrative framing is.
 # - **The broader takeaway is as much about process as writing style**: a
 #   typical single-standard-error analysis on this dataset would have
 #   confidently recommended urgency language across the board. Testing
