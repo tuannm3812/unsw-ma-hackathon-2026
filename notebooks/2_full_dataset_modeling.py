@@ -260,7 +260,7 @@ holdout_raw = valid.loc[valid["fundraisingDate_parsed"] >= pd.Timestamp(HOLDOUT_
 print(f"Train rows: {len(train_raw)}  |  Holdout rows: {len(holdout_raw)}")
 
 # %% [markdown]
-# **1,174,953 loans** (2005-2023) train the models; **278,887 loans**
+# **1,174,953 loans** (2016-2023) train the models; **278,887 loans**
 # posted in 2024-2025 - genuinely never seen during training - test them.
 # That holdout group is about 19% of the whole dataset, large enough to
 # trust as a real read on generalization, not a lucky handful of loans.
@@ -339,12 +339,13 @@ plt.show()
 # %% [markdown]
 # Tested on loans neither model had seen (2024-2025): the simple
 # scorecard model (Ridge) is off by **6.76 days** on average. The more
-# flexible model tightens that to **5.56 days** and explains **49.0%** of
-# why funding speed varies from loan to loan (R² = 0.490) - roughly half
-# the story of "why did this loan take as long as it did" can be
-# explained from what's known at posting time; the rest comes down to
-# things this data doesn't capture (how compelling individual lenders
-# found it, timing luck, and so on). The scatter plot above shows this
+# flexible model tightens that to **5.56 days** and accounts for **49.0%**
+# of the predictive variation in funding speed (R² = 0.490) - roughly half
+# of how much loans differ in funding speed lines up with what's knowable
+# at posting time; the rest comes down to things this data doesn't
+# capture (how compelling individual lenders found it, timing luck, and
+# so on) - or simply isn't predictable from these factors alone. The
+# scatter plot above shows this
 # directly: points cluster along the dashed "perfect prediction" line for
 # fast-funding loans, and spread out further for slower ones - the model
 # is more confident and accurate on the common, fast-funding case than on
@@ -399,7 +400,10 @@ print(f"Holdout average precision: {average_precision_score(y_holdout_binary, ho
 # **association, never a cause** - borrowers weren't randomly assigned a
 # writing style, a loan amount, or a gender. If the model can't be fit
 # for a technical reason, that's reported as a clear message instead of a
-# crash.
+# crash. The p-values below use HC3 standard errors, which correct for
+# uneven variance but still assume every loan is statistically
+# independent of every other loan - Section 7.1 checks that assumption
+# directly and substantially revises which of these results hold up.
 
 # %%
 FORMULA = (
@@ -415,6 +419,10 @@ CATEGORICAL_TERMS = [
     "region_group", "analysis_period", "loan_size_band",
 ]
 
+# `duration_model` starts as None so the reference-category cell below
+# can check whether the fit actually succeeded instead of assuming it did
+# and crashing with a NameError if this try block's except branch ran.
+duration_model = None
 try:
     y, X = patsy.dmatrices(FORMULA, data=valid, return_type="dataframe")
     with warnings.catch_warnings():
@@ -431,63 +439,148 @@ except Exception as error:  # noqa: BLE001 - reported clearly, not left as a cra
 # for a reader to infer from which levels are missing.
 
 # %%
-print("Reference (omitted) category per categorical term:")
-for col in CATEGORICAL_TERMS:
-    all_levels = set(valid[col].astype(str).unique())
-    dummy_levels = {
-        p.split("[T.")[1].rstrip("]")
-        for p in duration_model.params.index
-        if p.startswith(f"C({col})")
-    }
-    print(f"  {col}: {sorted(all_levels - dummy_levels)}")
+if duration_model is None:
+    print("Skipping reference-category report - the duration model above did not fit.")
+else:
+    print("Reference (omitted) category per categorical term:")
+    for col in CATEGORICAL_TERMS:
+        all_levels = set(valid[col].astype(str).unique())
+        dummy_levels = {
+            p.split("[T.")[1].rstrip("]")
+            for p in duration_model.params.index
+            if p.startswith(f"C({col})")
+        }
+        print(f"  {col}: {sorted(all_levels - dummy_levels)}")
 
 # %% [markdown]
-# Fit on all 1,453,840 valid loans (R² = 0.426, meaning this model
-# explains 42.6% of why funding speed varies). With this much data, these
-# are well-powered, trustworthy findings, not noisy guesses from a small
-# sample. **Negative coefficients are associated with faster funding,
-# positive with slower**, each compared against the reference category
-# printed above.
+# ### 7.1 Cluster-Robust Sensitivity Check
 #
-# - **Urgency language** (words like "urgent," "emergency," "right now")
-#   is consistently linked to **faster** funding, and the effect is not a
-#   coincidence (p < 0.001) - a clean win for a simple writing choice.
-# - **Agency/competence language** ("I run my own business," "I
-#   manage...") shows no real link either way - the "sound capable and
-#   independent" hypothesis doesn't hold up at this scale.
-# - **Family/communal framing** has a small but real *slower*-funding
-#   link at its baseline - large loans, during the pandemic-disruption
-#   period, in Africa (its main effect, p < 0.001) - but that baseline is
-#   dominated by much larger interaction effects along three separate
-#   dimensions:
-#   - **Timing**: pre-pandemic, the combined effect flips to a clear net
-#     *faster*-funding link; post-pandemic it's still net faster but less
-#     than half as strong - direct, model-based confirmation of the EDA
-#     notebook's "funding dynamics permanently shifted after 2020"
-#     finding.
-#   - **Region**: the benefit is far larger in the Middle East and
-#     Central America than in North America or Asia, where it's mildly
-#     counterproductive.
-#   - **Loan size**: medium-sized loans get a genuine net speed *benefit*
-#     from family framing; large and small loans don't - the interaction
-#     is significant for medium loans (p < 0.001) but not for small ones,
-#     so this isn't a smooth "bigger loan, bigger effect" gradient, it's
-#     specifically medium-sized loans that benefit most.
+# HC3 corrects for uneven variance across loans, but still assumes every
+# loan is an independent observation. Loans from the same country may
+# share unobserved influences (a field partner's writing template, local
+# conditions) that HC3 can't see - if enough of that dependence exists,
+# some of the small p-values above could be more confident than the data
+# really supports. This refits the identical design with standard errors
+# clustered by `country_name` instead, and checks whether each narrative-
+# framing term's significance conclusion (p < 0.05 or not) survives the
+# switch, plus a count across every coefficient in the model.
+
+# %%
+if duration_model is None:
+    print("Skipping cluster-robust sensitivity check - the duration model above did not fit.")
+else:
+    duration_model_clustered = sm.OLS(y, X).fit(
+        cov_type="cluster", cov_kwds={"groups": valid.loc[X.index, "country_name"]}
+    )
+
+    framing_terms = [
+        name for name in duration_model.params.index
+        if "mentions_per_100_words" in name or name == "desc_sentiment_compound"
+    ]
+    print("Narrative-framing and sentiment terms, HC3 vs. cluster-robust:")
+    for name in framing_terms:
+        p_hc3 = duration_model.pvalues[name]
+        p_clustered = duration_model_clustered.pvalues[name]
+        agreement = "same conclusion" if (p_hc3 < 0.05) == (p_clustered < 0.05) else "CONCLUSION CHANGES"
+        print(f"  {name}: HC3 p={p_hc3:.4f}, clustered p={p_clustered:.4f} [{agreement}]")
+
+    all_terms = [name for name in duration_model.params.index if name != "Intercept"]
+    n_flip = sum(
+        (duration_model.pvalues[name] < 0.05) != (duration_model_clustered.pvalues[name] < 0.05)
+        for name in all_terms
+    )
+    print(f"\nAcross all {len(all_terms)} coefficients, {n_flip} change significance conclusion under clustering.")
+
+# %% [markdown]
+# **This is the most consequential check in the notebook, and it
+# substantially revises the picture a reader would take from the raw HC3
+# output above.** Comparing each term's significance conclusion
+# (p < 0.05 or not) between HC3 and country-clustered standard errors:
 #
-#   **Family framing helps, but who it helps and how much depends on
-#   when, where, and what size the loan is - it isn't a universal
-#   lever.**
-# - **Sentiment tone** shows a counterintuitive association: a more
-#   positive-sounding description is linked to **slower** funding, and
-#   this isn't noise either (p < 0.001). Combined with the EDA notebook's
-#   finding that descriptions are almost uniformly positive already, this
-#   may simply reflect that longer, more elaborately-written pitches read
-#   as more positive *and* naturally take longer to write and review - an
-#   association, not a reason to write flatter descriptions.
-# - **Structural factors remain the largest effects by far.** The single
-#   biggest swings in the whole model come from sector and region - Water
-#   and Education-sector loans fund dramatically faster than
-#   Agriculture-sector loans, while Clothing and Retail loans fund
+# - **Urgency framing's apparent "clean win" does not survive.** HC3
+#   p ≈ 0.000 looked decisive; clustered by country, p rises to roughly
+#   0.44 - no longer distinguishable from no association at all. The
+#   correlation in this sample isn't fabricated, but HC3 was overconfident
+#   about how precisely it's pinned down, because it can't see that loans
+#   from the same country share unobserved influences (a field partner's
+#   writing template, local conditions, a partner's typical loan mix)
+#   that make them less independent than HC3 assumes.
+# - **Family framing's timing and loan-size interactions don't survive
+#   either** - p-values move from well under 0.001 under HC3 to well
+#   above 0.2 clustered. **Its Middle East and Central America regional
+#   interactions do survive** (clustered p ≈ 0.0002 and 0.0070) - these
+#   two specific regional patterns are the one piece of narrative-framing
+#   evidence in this section that holds up under the stricter test.
+#   Family's Asia and North America interactions do not survive.
+# - **Agency framing's null result is unchanged** - it wasn't significant
+#   under HC3 either (p ≈ 0.46), so clustering doesn't change the
+#   conclusion; there was never a case for it.
+# - **Sentiment tone's association does not survive in this model either**
+#   - HC3 p ≈ 0.000, clustered p ≈ 0.25. This is worth stating plainly
+#     because it's the one place this notebook's own result disagrees with
+#     this project's separate, richer pipeline (next paragraph) - a
+#     reminder that "survives clustering" can itself depend on exactly
+#     which other terms are in the model, not just on the finding being
+#     tested.
+# - Overall, **20 of this model's 45 coefficients (44%) change their
+#   significance conclusion under clustering** - concentrated in the
+#   narrative-framing and sentiment terms, while the structural terms
+#   (sector, region, loan size, gender, repayment structure) mostly don't
+#   move.
+#
+# **Cross-check against this project's separate, authoritative modeling
+# pipeline** (`src/statistical_analysis.py`, run independently on the same
+# full dataset with a richer formula that also interacts family framing
+# with sector): structural factors survive clustering there too, most
+# narrative-framing interactions don't, and family's Middle East and
+# Central America interactions survive there as well. Two results
+# genuinely **disagree** between the two independently-specified models:
+# family's Asia interaction survives in that richer pipeline but not here,
+# and **sentiment's association survives there (clustered p ≈ 0.01 in both
+# of that pipeline's models) but not in this notebook's simpler one**.
+# Both disagreements point the same direction - a result that depends on
+# which other terms share the formula is a *weaker* result than one that
+# doesn't, even when one of the two specifications shows significance.
+# **The Key Findings below only assert the Middle East and Central America
+# family-framing results as reliably supported; Asia's status and
+# sentiment's status are both left genuinely uncertain rather than claimed
+# either way.**
+#
+# **Why this matters more than any individual coefficient**: a model that
+# only reports HC3 p-values on 1.45 million rows will find almost
+# anything "significant," because that much data makes standard errors
+# tiny even when the underlying association is fragile. Checking whether
+# a result survives a structurally different, more conservative
+# assumption about independence - and whether it survives a different but
+# equally reasonable model specification - is what separates a real,
+# useable pattern from one that is numerically precise but practically
+# unreliable. **The honest bottom line: narrative framing's
+# strongest-looking HC3 result (urgency) doesn't hold up, most of family
+# framing's conditional structure doesn't hold up, sentiment's association
+# is genuinely uncertain rather than confirmed, and what remains standing
+# without qualification is family framing's effectiveness in two specific
+# regions - real, but far narrower than the raw HC3 read above
+# suggested.**
+
+# %% [markdown]
+# Fit on all 1,453,840 valid loans (R² = 0.426, meaning the fitted model
+# accounts for 42.6% of the variation in funding speed). At this sample
+# size, standard errors are precise - the estimates below are not noisy
+# small-sample guesses - but precision is not the same as certainty about
+# cause, or even about how precise an estimate really is: a large N
+# sharpens a point estimate, but if nearby loans share unobserved
+# influences, the textbook HC3 formula can overstate how confident that
+# estimate should be. Section 7.1 checks this directly; the summary below
+# already reflects what survives that check, not the raw HC3 read.
+# **Negative coefficients are associated with faster funding, positive
+# with slower**, each compared against the reference category printed
+# above.
+#
+# - **Structural factors are the largest effects by far, and this
+#   conclusion is unaffected by the robustness check in Section 7.1.**
+#   The single biggest swings in the whole model come from sector and
+#   region - Water and Education-sector loans fund dramatically faster
+#   than Agriculture-sector loans, while Clothing and Retail loans fund
 #   slower, and the Middle East funds far faster than the model's
 #   reference region. A loan posted under a male borrower takes notably
 #   longer to fund than one posted under a female borrower - a smaller
@@ -496,6 +589,32 @@ for col in CATEGORICAL_TERMS:
 #   Small loans fund far faster than large ones. Loans repaid as a single
 #   lump sum at the end of the term are far slower to fund than loans
 #   repaid irregularly or monthly.
+# - **Sentiment tone's association looks precise under HC3 alone, but
+#   Section 7.1 shows it doesn't survive clustering in this model** (p
+#   rises from p < 0.001 to roughly 0.25) - even though it does survive in
+#   this project's separate, richer pipeline. Treat it as genuinely
+#   uncertain rather than confirmed. Worth noting anyway: the direction is
+#   a more positive-sounding description linked to **slower** funding -
+#   counterintuitive, and, combined with the EDA notebook's finding that
+#   descriptions are almost uniformly positive already, plausibly just
+#   reflects that longer, more elaborately-written pitches read as more
+#   positive *and* naturally take longer to write and review.
+# - **Urgency, and most of family framing's conditional structure, looked
+#   significant under HC3 alone - Section 7.1 shows that doesn't survive
+#   clustering.** Treat "urgency helps" and "family framing depends on
+#   timing/loan size" as not supported by this data at a rigorous
+#   standard, even though they were the two headline results a
+#   single-standard-error read would have reported.
+# - **Family framing's Middle East and Central America regional
+#   interactions are the exception** - the one piece of narrative-framing
+#   evidence that stays significant under both HC3 and clustering, and is
+#   independently confirmed by this project's separate full pipeline.
+#   Everywhere else, and for every other narrative-framing term, the
+#   HC3-only significance above is not a reliable finding on its own.
+# - **Agency/competence language never showed a real link either way**,
+#   under HC3 or clustered - the "sound capable and independent"
+#   hypothesis doesn't hold up at this scale under either standard-error
+#   method.
 
 # %% [markdown]
 # ## 8. Feature Importance
@@ -566,18 +685,32 @@ plt.show()
 # agreeing with Section 7's biggest effects.
 #
 # **The honest divergence worth stating plainly: narrative framing barely
-# registers here.** None of the family, agency, or urgency framing scores
-# make it into the top 15 factors this more flexible model actually
-# relied on - only overall sentiment tone cracks the list, in 11th place,
-# well behind individual sector and region categories. This doesn't
-# contradict the Explanatory Modeling section - urgency framing's link to
-# speed, and family framing's timing/location pattern, are both
-# genuinely, robustly real. But it's a useful check on what
-# "statistically confident" means with 1.45 million loans: even a small,
-# consistent effect becomes easy to detect with that much data. This
-# check measures something different - **actual size of impact, not
-# confidence that an effect is real** - and by that measure, narrative
-# framing is real but genuinely minor next to how a loan is structured.
+# registers here, and this broadly lines up with Section 7.1's robustness
+# check even though the two are completely independent methods.** None of
+# the family, agency, or urgency framing scores make it into the top 15
+# factors this more flexible model actually relied on - matching 7.1's
+# finding that urgency's HC3 significance and most of family framing's
+# conditional structure don't survive clustering. Only overall sentiment
+# tone cracks the list, in 11th place, well behind individual sector and
+# region categories - a more interesting case, because 7.1 found
+# sentiment's *statistical significance* doesn't reliably survive
+# clustering either (it depends on which other terms are in the model),
+# even though it clearly carries some real predictive weight here. That's
+# not a contradiction - SHAP importance (how much a feature actually moves
+# predictions) and clustered-standard-error significance (how confident
+# the association's *sign and size* are) measure genuinely different
+# things, and sentiment is the one term in this analysis where they don't
+# point the same way. **Two independent methods agree that urgency and
+# most of family framing's conditional structure are much smaller than
+# Section 7's raw HC3 p-values suggested; sentiment's real-world weight is
+# small but non-trivial, even though this analysis can't confidently call
+# its statistical significance robust.** This is also a useful reminder of
+# what "statistically significant" means with 1.45 million rows: even a
+# fragile, non-robust pattern can produce a tiny HC3 p-value simply
+# because there's so much data. This check measures something different -
+# **actual size of impact, not confidence that an association is real** -
+# and by that measure, narrative framing (family/agency/urgency) is minor
+# next to how a loan is structured.
 
 # %% [markdown]
 # ## 9. Key Findings
@@ -585,23 +718,39 @@ plt.show()
 # %% [markdown]
 # ### 9.1 Technical Interpretation
 #
-# - A model using only posting-time information explains about half the
-#   variance in funding speed (R² = 0.49, MAE 5.6 days) and discriminates
-#   24-hour funding strongly (ROC AUC 0.91).
-# - Urgency framing shows a consistent, statistically robust link to
-#   faster funding (p < 0.001); agency framing shows none.
-# - Family framing's main effect is small but statistically significant
-#   (p < 0.001) - slightly slower funding at its baseline (large loans,
-#   pandemic-disruption period, Africa) - and is dominated by much larger
-#   interaction effects across three separate dimensions (time period,
-#   region, and loan size) that each flip or reshape the net direction;
-#   the effect is real but conditional on all three, not flat.
+# - A model using only posting-time information accounts for about half
+#   the predictive variation in funding speed (R² = 0.49, MAE 5.6 days)
+#   and discriminates 24-hour funding strongly (ROC AUC 0.91) - this
+#   predictive result doesn't depend on any narrative-framing claim and is
+#   unaffected by everything below.
 # - Structural factors (loan size, repayment terms, sector, region,
 #   borrower gender) have coefficients several times larger than any
-#   narrative-framing term.
-# - SHAP feature importance from the independently-trained boosted model
-#   corroborates the same ranking: structural features dominate, and
-#   narrative-framing features fall outside the top 15.
+#   narrative-framing term, and this ranking is unaffected by the
+#   cluster-robust check in Section 7.1.
+# - **A cluster-robust sensitivity check (Section 7.1) substantially
+#   revised the narrative-framing picture**: 20 of this model's 45
+#   coefficients (44%) change their significance conclusion when standard
+#   errors are clustered by country instead of assumed independent.
+#   Urgency framing's apparent association does not survive; neither does
+#   most of family framing's time-period and loan-size structure.
+# - What survives the stricter check without qualification: **family
+#   framing's Middle East and Central America regional interactions
+#   specifically** - independently confirmed by this project's separate,
+#   authoritative full pipeline. Agency framing shows no association
+#   either way, before or after clustering.
+# - **Sentiment tone's association is genuinely unresolved, not
+#   confirmed** - it survives clustering in the authoritative pipeline's
+#   richer model (clustered p ≈ 0.01) but not in this notebook's simpler
+#   one (clustered p ≈ 0.25). Rather than pick whichever number is more
+#   convenient, this analysis reports the disagreement: sentiment's
+#   direction (more positive language links to slower funding) is
+#   consistent everywhere tested, but its statistical robustness is not.
+# - SHAP feature importance from an independently-trained boosted model
+#   (Section 8) corroborates the cluster-robust check for urgency and
+#   family framing from a completely different angle: those features fall
+#   outside its top 15 factors. Sentiment does crack the top 15 there
+#   (11th place) despite its fragile significance - a reminder that
+#   predictive weight and statistical robustness are different questions.
 
 # %% [markdown]
 # ### 9.2 Business Impact
@@ -609,17 +758,25 @@ plt.show()
 # - **A 24-hour-funding risk flag is buildable today** - ROC AUC 0.91 is
 #   strong enough to support a real "surface this loan more prominently"
 #   feature, without needing any narrative-framing insight at all.
-# - **Urgency language is a safe, general-purpose writing recommendation**
-#   - its effect was strong and clear enough as a simple, flat association
-#   that (unlike family framing) this model didn't need to test it against
-#   time or region to find a reliable signal.
-# - **Family framing needs targeted guidance, not a blanket rule** - it
-#   pays off most pre-pandemic, in the Middle East/Central America, and
-#   for medium-sized loans specifically; it's close to neutral or
-#   counterproductive in North America/Asia and for large or small loans.
-#   A one-size-fits-all "always mention family" recommendation would be
-#   wrong for a meaningful share of loans.
-# - **Don't over-invest in copywriting at the expense of loan structure**
-#   - loan size, repayment terms, sector, and region move funding speed
-#   far more than any narrative choice. Framing is a real, secondary
-#   lever worth using well, not the primary driver of funding speed.
+# - **Don't recommend urgency language as a general rule.** Its raw HC3
+#   association looked like a clean, simple win, but that doesn't survive
+#   a stricter, more realistic check for how loans from the same country
+#   relate to each other. Recommending it platform-wide would be advice
+#   built on a fragile statistical artifact, not a tested pattern.
+# - **Family framing isn't a general-purpose recommendation either, but
+#   it has one specific, tested use**: mentioning family shows a genuine,
+#   robustly-tested association with faster funding for loans from the
+#   Middle East and Central America specifically. Outside those regions -
+#   and for the timing- or loan-size-based patterns this analysis
+#   initially flagged - the evidence doesn't hold up to scrutiny, and
+#   neither should the recommendation.
+# - **Structure, not copywriting, is the dominant lever** - loan size,
+#   repayment terms, sector, and region move funding speed far more than
+#   any narrative choice, and this conclusion only got stronger once the
+#   framing findings were stress-tested rather than taken at face value.
+# - **The broader takeaway is as much about process as writing style**: a
+#   typical single-standard-error analysis on this dataset would have
+#   confidently recommended urgency language across the board. Testing
+#   that recommendation against a more conservative assumption changed
+#   the answer. Any narrative-framing recommendation drawn from a large
+#   dataset is worth checking the same way before it's acted on.

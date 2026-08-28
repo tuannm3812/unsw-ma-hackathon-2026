@@ -7,9 +7,25 @@ New to this project? Read this file top to bottom once - it's written to get you
 ## Project Status
 
 - **Proposal round: done.** The proposal (`proposal/proposal.md` / `proposal/proposal.pdf`) was submitted and **the team was selected as one of 8 finalist teams**.
-- **Final round: in progress.** Final presentation **slides** (no written report required) are due **2026-09-03, 5:00pm Sydney time**. The organizers provided the full competition dataset and said presentation format/logistics details would follow separately.
+- **Final round: in progress.** Final presentation **slides** (no written report required) are due **2026-09-03, 5:00pm Sydney time**. Format and logistics arrived from the organizer on 2026-08-28 - see [Final Presentation Logistics](#final-presentation-logistics) below.
 - **Final-round judging** (fetched from the organizers' page): a judging panel scores **80%** (originality of research question 20%, analytical approach/execution 20%, insights and communication 20%, practical implications for borrowers/platforms/stakeholders 20%), plus **20%** live audience-choice voting.
 - **Full-dataset analysis: done and verified.** The complete pipeline has been run against the real 1,453,846-row dataset (not just the 100-row illustrative sample the proposal round used) - see [Full-Dataset Results](#full-dataset-results) below. Current focus is building the slide deck from these verified numbers.
+
+## Final Presentation Logistics
+
+From Dr Songting Dong (final organizer), received 2026-08-28. Full original email kept in the team's inbox; this is the operative summary for slide-building and event-day prep.
+
+- **Format**: 10 minutes to present, **strictly timed** (cut off when time is up), followed by 10 minutes of Q&A - up to 3 audience questions first, then judges' questions. Presentation order is drawn randomly and announced right before the final starts.
+- **What the slides should contain**: key methods (only what's needed to understand the results), key findings (the most useful/impressive results), and recommendations/implications. **Quality over quantity of findings** - this is an explicit judging instruction, not just a style preference.
+- **What to leave out**: no background/introduction slide - the organizer opens the session by introducing Kiva and the dataset to everyone, so a scene-setting slide would waste the 10-minute budget on content already covered.
+- **Deliverable**: PowerPoint or PDF only, no written report, emailed to the organizer by **2026-09-03, 5:00pm Sydney time** (same deadline as before, now confirmed as the hard submission channel). A **team group photo** is due by the same deadline, for use at the award ceremony.
+- **Event**: 2026-09-04, 09:30-15:00, UNSW Business School (Level 6, Business Lounge). In-person attendance is strongly encouraged; remote teams present over Microsoft Teams from their own quiet room, camera on the presenter throughout. Meeting details (link/ID/passcode) are in the organizer's email - not reproduced here since this repository is public.
+- **Whole event, not just your slot**: all team members stay on camera and online for all eight teams' presentations, not only their own. A panel discussion and the award ceremony follow after lunch.
+
+**Action items for the team (not something this repo can do for you):**
+- [ ] Reply to the organizer by **2026-09-01** confirming in-person vs. remote attendance (needed for catering).
+- [ ] Send the team's group photo alongside the slides by **2026-09-03, 5:00pm**.
+- [ ] If presenting remotely, book a quiet room and test screen-share/camera over Teams beforehand.
 
 ## Getting Started
 
@@ -204,14 +220,16 @@ Predictors are selected via an **explicit allowlist, not a blocklist** (`src/mod
 
 ## Full-Dataset Results
 
-Verified 2026-08-27 against the real 1,453,846-row dataset (`reports/generated_full_dataset/`, committed as a labeled snapshot - see `reports/README.md`). Full detail, including the independent cross-check of these numbers, is in the collaboration log; headline results:
+Verified 2026-08-27 against the real 1,453,846-row dataset (`reports/generated_full_dataset/`, committed as a labeled snapshot - see `reports/README.md`); the cluster-robust sensitivity check below was verified 2026-08-28 against the same committed pipeline and data. Full detail, including the independent cross-check of these numbers, is in the collaboration log; headline results:
 
 - **Both explanatory models fit successfully** (duration OLS and the 24-hour binary GLM) - at the 100-row sample, the binary model hit quasi-complete separation and could only report a diagnostic.
 - **Predictive holdout performance** (2024-2025 holdout): Ridge MAE 6.63 days (the sample's catastrophic R² = -12.2 was a small-sample artifact, confirmed); the nonlinear (HistGradientBoosting) benchmark reaches **MAE 5.20 days, R² = 0.54**.
 - **24-hour classifier:** ROC AUC 0.90, average precision 0.83.
 - Loan amount and repayment term dominate predictive importance, but a narrative topic cluster ranks 8th among ~290 features - a controllable feature genuinely competing with structural ones.
-- Family/communal framing is associated with faster funding overall, but - a genuine, honestly-reported surprise relative to the proposal's working hypothesis - that association gets *weaker*, not stronger, during the pandemic-disruption period. Family framing's effect also varies substantially by sector (e.g. strongly slows funding in Water/Clean Energy, speeds it in Personal Use).
-- Urgency appeals are associated with faster funding and higher odds of within-24h funding, consistently across both models.
+- **A cluster-robust sensitivity check (standard errors clustered by `country_name` instead of assumed independent) substantially revises the narrative-framing findings below.** Half of all coefficients across both explanatory models (64 of 128) change their significance conclusion under clustering - concentrated almost entirely in narrative-framing terms; structural terms (loan size, sector, region, gender, repayment structure) mostly don't move.
+- **Urgency framing's apparent association does not survive.** Significant under HC3 in both models (p < 0.001); not significant under clustering in either (p ≈ 0.22-0.49). Treat "urgency appeals speed up funding" as not supported at a rigorous standard, despite how it looked under the standard-error method used alone.
+- **Family/communal framing's association is real but far narrower than a first pass suggested.** Its link to the pandemic-disruption period, and most of its sector- and region-level variation, do not survive clustering. What survives in *both* the duration and 24-hour models: family framing's association in the **Middle East and Central America** regions, and in **Water- and Construction-sector** loans specifically. (A few more patterns - Asia, Clean Energy, Education - survive in the duration model only, not the binary one, so they're treated as genuinely uncertain rather than asserted either way.) Everywhere else this analysis initially flagged a sector, region, or period pattern, treat it as not robustly supported.
+- Sentiment tone's association survives clustering in both models too, despite being counterintuitive - more positive-sounding language is linked to *slower* funding.
 
 These are the numbers backing the final slide deck - not the illustrative 100-row figures in `notebooks/0_starter_eda.ipynb` or the (now-submitted) `proposal/proposal.md`.
 

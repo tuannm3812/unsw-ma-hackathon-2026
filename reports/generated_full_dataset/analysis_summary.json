@@ -8,7 +8,7 @@
     "statsmodels": "0.14.6"
   },
   "data": {
-    "source_path": "/Users/tuannm3812/Documents/GitHub/4. Training/unsw-ma-hackathon-2026/data/Kiva_Loans.pkl",
+    "source_path": "data/Kiva_Loans.pkl",
     "n_rows": 1453846,
     "n_valid_completed_outcome": 1453840,
     "n_excluded": 6,
@@ -2124,6 +2124,11 @@
     ],
     "binary_dropped_terms": [
       "sentiment_available"
-    ]
+    ],
+    "cluster_sensitivity_col": "country_name",
+    "duration_clustered_fitted": true,
+    "binary_clustered_fitted": true,
+    "duration_clustered_error": null,
+    "binary_clustered_error": null
   }
 }

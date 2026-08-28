@@ -536,21 +536,30 @@ plt.show()
 # This doesn't mean framing doesn't matter at all - a simple one-at-a-
 # time correlation can't separate framing's own effect from other things
 # that happen to travel together with it (e.g. larger loans might also
-# just happen to be written in a different style). **Urgency framing is
-# the clearest example of why this distinction matters**: its raw
-# correlation here is essentially zero (r = +0.010), but once the
-# modeling notebook accounts for loan size, sector, and everything else
-# at the same time, urgency language turns out to be one of the
-# strongest, most statistically significant predictors in the entire
-# model - consistently linked to faster funding. The raw correlation was
-# masking a real effect, not because urgency doesn't matter, but because
-# whatever else was going on (which loan types tend to use urgent
-# language) was cancelling it out in a simple one-factor view. Untangling
-# exactly this kind of confound is what the statistical model in
-# `2_full_dataset_modeling.ipynb` is for, and its results are more
-# nuanced across the board: family framing's link to speed turns out to
-# depend heavily on when and where the loan was posted, not on one
-# single, constant effect.
+# just happen to be written in a different style). **Urgency framing
+# turned out to be a cautionary tale about stopping the analysis too
+# early.** Its raw correlation here is essentially zero (r = +0.010).
+# Controlling for loan size, sector, and everything else at once (the
+# modeling notebook's first-pass regression) made urgency look like a
+# strong, precise association with faster funding - a classic
+# "confound was masking a real effect" story. But a stricter check -
+# refitting with standard errors clustered by country instead of
+# assuming every loan is independent - showed that apparent association
+# doesn't hold up either (full detail in `2_full_dataset_modeling.ipynb`
+# Section 7.1): its p-value rises from well under 0.001 to roughly 0.44,
+# no longer distinguishable from no association. **Two rounds of
+# "controlling for more" changed the answer twice** - first making
+# urgency look important, then showing that importance doesn't survive a
+# more conservative check. What survives both rounds without
+# qualification: family framing's link to speed specifically in the
+# Middle East and Central America - a narrower, more specific finding
+# than "timing, region, and loan size all matter," which is what an
+# analysis stopping after just the first round would have concluded.
+# Sentiment tone's association is a genuinely open question rather than a
+# third survivor - it holds up in this project's richer authoritative
+# model but not in the modeling notebook's simpler one, a disagreement the
+# modeling notebook reports directly rather than picking whichever result
+# looks better.
 
 # %% [markdown]
 # ## 10. Key Findings
@@ -570,6 +579,15 @@ plt.show()
 #   an order of magnitude more strongly than any single narrative-framing
 #   signal; gender shows a visible gap even before controlling for
 #   anything else.
+# - A cluster-robust robustness check in the modeling notebook (Section
+#   7.1) substantially revised the narrative-framing picture: urgency
+#   framing's apparent association, and most of family framing's
+#   conditional structure, don't survive standard errors clustered by
+#   country. What survives without qualification: family framing's link to
+#   speed in the Middle East and Central America specifically. Sentiment
+#   tone's association is a genuinely open question, not a confirmed
+#   survivor - it holds up in this project's richer authoritative model
+#   but not in the modeling notebook's own simpler one.
 # - Topic modeling on the loan descriptions surfaces coherent real-world
 #   themes (livestock, sanitary/health, clean water, farming, general
 #   retail); funding speed varies nearly ninefold across topics (1.5 to
@@ -585,17 +603,28 @@ plt.show()
 #   that a "things will bounce back" assumption doesn't hold. Worth
 #   investigating operationally, not just noting.
 # - **A ceiling effect in sentiment means "sound more positive" is
-#   unlikely to be a useful lever** - almost every loan is already
+#   unlikely to be worth coaching for** - almost every loan is already
 #   written in an upbeat voice, so there's little room left to
 #   differentiate on tone alone.
-# - **Loan size and repayment terms are the biggest levers on speed by
-#   far** - any operational effort to speed up funding should prioritize
-#   these before investing in narrative-framing coaching.
+# - **Loan size and repayment terms are the strongest structural
+#   predictors of speed by far** - they're not something a platform can
+#   change on an existing loan, but they're useful for setting realistic
+#   funding-time expectations, and they suggest more value in a
+#   structural review than in narrative-framing coaching alone.
 # - **What a loan is for and where it's from moves the needle more than
 #   how it's written** - the sector, region, and topic-modeling sweeps
 #   all show swings far larger than any narrative-framing signal. A
 #   platform-level "why do some loan types fund so much slower" review
 #   would likely pay off more than writing-style coaching alone.
-# - **Narrative framing isn't a dead end, but it's conditional** - the
-#   modeling notebook shows its real value depends on timing, region, and
-#   loan size, not a one-size-fits-all writing rule.
+# - **Narrative framing's value is narrower than a first-pass model
+#   suggested, and it's worth stress-testing before acting on it** - the
+#   modeling notebook's robustness check shows urgency's apparent link to
+#   speed doesn't survive a stricter standard-error assumption, and
+#   neither does most of family framing's conditional structure. What
+#   remains defensible after testing: family framing's association in the
+#   Middle East and Central America specifically - narrower than a blanket
+#   writing-style rule, but genuinely tested rather than assumed. Even
+#   sentiment tone's (counterintuitive) association, which looked like a
+#   second survivor, turned out to depend on exactly which model is
+#   fitted - a reminder to keep testing rather than stop at the first
+#   result that looks robust.
