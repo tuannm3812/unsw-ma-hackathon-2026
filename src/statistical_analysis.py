@@ -350,7 +350,13 @@ def _fit_one_model(
     aligned to `X.index` (the rows patsy actually retained), not `data`'s
     full index, since patsy silently drops rows with a missing predictor
     and a misaligned groups array would silently mismatch observations to
-    the wrong cluster instead of raising.
+    the wrong cluster instead of raising. A missing value in `cluster_col`
+    (statsmodels' sandwich-covariance code chokes with an unhandled
+    `TypeError` on a mix of `None`/strings) or fewer than 2 distinct groups
+    among the fitted rows (an unhandled `ZeroDivisionError` from the
+    small-sample correction) is caught here and reported as an
+    `InsufficientDataError` instead, matching every other fit-failure path
+    in this function.
     """
     try:
         y, X = _fit_design(formula, data, model_label)
@@ -359,7 +365,36 @@ def _fit_one_model(
         if cov_type == "cluster":
             if not cluster_col:
                 raise ValueError("cluster_col is required when cov_type='cluster'")
-            fit_kwargs["cov_kwds"] = {"groups": data.loc[X.index, cluster_col]}
+            if cluster_col not in data.columns:
+                # A caller/config mistake (e.g. a typo in
+                # --cluster-sensitivity-column), not a property of the
+                # sample - so a plain ValueError that propagates, matching
+                # the `cluster_col is required` check above. Deliberately
+                # NOT InsufficientDataError: that type means "this sample
+                # is too small/unsuitable" and is caught below to degrade
+                # gracefully, which would bury a typo in a report instead
+                # of surfacing it.
+                raise ValueError(
+                    f"{model_label}: cannot cluster standard errors by {cluster_col!r} - "
+                    f"no such column in the data (available: {len(data.columns)} columns)."
+                )
+            groups = data.loc[X.index, cluster_col]
+            if groups.isna().any():
+                raise InsufficientDataError(
+                    f"{model_label}: cannot cluster standard errors by {cluster_col!r} - "
+                    f"{int(groups.isna().sum())} of {len(groups)} fitted rows have a "
+                    "missing value in that column. Clustering requires every fitted "
+                    "row to have a valid group label."
+                )
+            n_groups = groups.nunique()
+            if n_groups < 2:
+                raise InsufficientDataError(
+                    f"{model_label}: cannot cluster standard errors by {cluster_col!r} - "
+                    f"only {n_groups} distinct group(s) among the fitted rows. "
+                    "Clustering requires at least 2 groups to estimate a sandwich "
+                    "covariance."
+                )
+            fit_kwargs["cov_kwds"] = {"groups": groups}
         if kind == "ols":
             results = sm.OLS(y, X).fit(**fit_kwargs)
         else:

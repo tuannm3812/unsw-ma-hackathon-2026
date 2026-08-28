@@ -6,6 +6,7 @@ import pytest
 import src.statistical_analysis as statistical_analysis_module
 from src.statistical_analysis import (
     _check_well_identified,
+    _significance_comparison_lines,
     _term_has_variation,
     fit_explanatory_models,
     format_association_summary,
@@ -24,6 +25,19 @@ class _FakeGlmResults:
 
     def __init__(self, bse):
         self.bse = pd.Series(bse)
+
+
+class _FakeSignificanceResults:
+    """Minimal stand-in exposing just `.params.index` and `.pvalues`, so
+    `_significance_comparison_lines`'s per-coefficient agreement label can
+    be tested against known, hand-picked p-values on both sides - not just
+    checked for the presence of either output string somewhere in a real
+    fit's output, which a same/CHANGES sign flip cannot be told apart
+    from."""
+
+    def __init__(self, pvalues):
+        self.pvalues = pd.Series(pvalues)
+        self.params = pd.Series(0.0, index=self.pvalues.index)
 
 
 def test_default_interaction_tests_narrative_framing_by_period_not_gender(large_synthetic_kiva_df):
@@ -448,6 +462,119 @@ def test_cluster_sensitivity_check_stays_aligned_when_patsy_drops_a_row(large_sy
 
     assert result["duration_clustered"] is not None
     assert int(result["duration_clustered"].nobs) == result["duration_model_n"]
+
+
+def test_fit_one_model_clusters_align_to_the_row_patsy_kept_not_a_positional_slice():
+    # test_cluster_sensitivity_check_stays_aligned_when_patsy_drops_a_row
+    # only checks that the clustered fit's row count (nobs) matches - but
+    # a naive `data[cluster_col].iloc[:len(X)]` (or plain `data[cluster_col]`)
+    # is the *same length* as the correctly-aligned `data.loc[X.index,
+    # cluster_col]` whenever exactly one row is dropped, so a count-only
+    # check cannot tell a same-length positional shift apart from correct
+    # alignment. This asserts on the actual group labels statsmodels
+    # received (`results.cov_kwds["groups"]`), which a shifted array gets
+    # wrong even though it has the right length.
+    data = pd.DataFrame({
+        "y": [1.0, 2.0, None, 11.0, 3.0, 12.0],  # row index 2 is dropped by patsy
+        "x": [1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
+        "grp": ["A", "A", "B", "B", "A", "B"],
+    })
+
+    results, error = statistical_analysis_module._fit_one_model(
+        "ols", "y ~ x", data, "test_model", cov_type="cluster", cluster_col="grp"
+    )
+
+    assert error is None
+    assert results is not None
+    expected_groups = data.loc[[0, 1, 3, 4, 5], "grp"]
+    pd.testing.assert_series_equal(
+        results.cov_kwds["groups"], expected_groups, check_names=False
+    )
+
+
+def test_fit_one_model_raises_for_an_unknown_cluster_column_instead_of_degrading():
+    # A typo'd cluster column is a caller/config mistake, not an
+    # unsuitable sample - so it must propagate as a plain ValueError
+    # rather than being caught and buried in a report as an
+    # InsufficientDataError diagnostic (which is what every genuine
+    # data-insufficiency path here does). Without the guard this surfaces
+    # as a raw pandas KeyError from deep inside .loc instead.
+    data = pd.DataFrame({
+        "y": [1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
+        "x": [1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
+    })
+
+    with pytest.raises(ValueError, match="no such column") as excinfo:
+        statistical_analysis_module._fit_one_model(
+            "ols", "y ~ x", data, "test_model", cov_type="cluster", cluster_col="does_not_exist"
+        )
+    assert not isinstance(excinfo.value, InsufficientDataError)
+
+
+def test_fit_one_model_reports_insufficient_data_for_a_cluster_column_with_missing_values():
+    data = pd.DataFrame({
+        "y": [1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
+        "x": [1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
+        "grp": ["A", "A", None, "B", "B", "B"],
+    })
+
+    results, error = statistical_analysis_module._fit_one_model(
+        "ols", "y ~ x", data, "test_model", cov_type="cluster", cluster_col="grp"
+    )
+
+    assert results is None
+    assert error is not None
+    assert "missing value" in error
+
+
+def test_fit_one_model_reports_insufficient_data_for_a_single_cluster_group():
+    data = pd.DataFrame({
+        "y": [1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
+        "x": [1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
+        "grp": ["A", "A", "A", "A", "A", "A"],
+    })
+
+    results, error = statistical_analysis_module._fit_one_model(
+        "ols", "y ~ x", data, "test_model", cov_type="cluster", cluster_col="grp"
+    )
+
+    assert results is None
+    assert error is not None
+    assert "1 distinct group" in error
+
+
+def test_significance_comparison_lines_labels_each_coefficient_correctly():
+    # A prior version of this file's coverage only checked that either
+    # "same conclusion" or "CONCLUSION CHANGES" appeared *somewhere* in
+    # the formatted output - a tautology that a flipped `==`/`!=` in the
+    # agreement computation cannot fail (with >=1 coefficient, one of the
+    # two fixed strings is essentially guaranteed to appear regardless of
+    # whether labels are attached to the right coefficient). This asserts
+    # the exact label for four hand-picked p-value combinations covering
+    # every case: (significant, significant), (not, not), and both
+    # directions of a flip.
+    hc3 = _FakeSignificanceResults({
+        "Intercept": 0.001,  # must be skipped, not compared
+        "both_significant": 0.001,
+        "both_not_significant": 0.5,
+        "flips_to_not_significant": 0.001,
+        "flips_to_significant": 0.5,
+    })
+    clustered = _FakeSignificanceResults({
+        "both_significant": 0.001,
+        "both_not_significant": 0.5,
+        "flips_to_not_significant": 0.5,
+        "flips_to_significant": 0.001,
+    })
+
+    lines = _significance_comparison_lines(hc3, clustered)
+    by_name = {line.split(":")[0].strip("  - "): line for line in lines}
+
+    assert "Intercept" not in by_name
+    assert "[same conclusion]" in by_name["both_significant"]
+    assert "[same conclusion]" in by_name["both_not_significant"]
+    assert "[CONCLUSION CHANGES]" in by_name["flips_to_not_significant"]
+    assert "[CONCLUSION CHANGES]" in by_name["flips_to_significant"]
 
 
 def test_format_cluster_sensitivity_summary_empty_when_not_requested(large_synthetic_kiva_df):
