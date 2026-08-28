@@ -529,7 +529,7 @@ plt.show()
 # - **The three framing styles barely register by comparison** - an
 #   order of magnitude weaker: family framing r = -0.019 (a whisper of a
 #   link to faster funding), urgency r = +0.010 (essentially no
-#   relationship either way), agency framing r = +0.059 (a whisper of a
+#   relationship either way), agency framing r = +0.058 (a whisper of a
 #   link to *slower* funding - the opposite of what a naive "sound
 #   confident and it'll fund faster" assumption would predict).
 #
@@ -580,10 +580,10 @@ plt.show()
 # %% [markdown]
 # ### 10.2 Business Impact
 #
-# - **The pandemic-era slowdown is a durable, presentation-ready
-#   finding** - something changed structurally about this marketplace
-#   around 2020 that a "things will bounce back" assumption doesn't hold.
-#   Worth investigating operationally, not just noting.
+# - **The pandemic-era slowdown is a durable, concrete finding** -
+#   something changed structurally about this marketplace around 2020
+#   that a "things will bounce back" assumption doesn't hold. Worth
+#   investigating operationally, not just noting.
 # - **A ceiling effect in sentiment means "sound more positive" is
 #   unlikely to be a useful lever** - almost every loan is already
 #   written in an upbeat voice, so there's little room left to
@@ -598,4 +598,4 @@ plt.show()
 #   would likely pay off more than writing-style coaching alone.
 # - **Narrative framing isn't a dead end, but it's conditional** - the
 #   modeling notebook shows its real value depends on timing, region, and
-#   sector, not a one-size-fits-all writing rule.
+#   loan size, not a one-size-fits-all writing rule.

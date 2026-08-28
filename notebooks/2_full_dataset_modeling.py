@@ -421,7 +421,7 @@ try:
         warnings.filterwarnings("ignore")
         duration_model = sm.OLS(y, X).fit(cov_type="HC3")
     print(duration_model.summary())
-except Exception as error:  # noqa: BLE001 - reported, not crashed, matching the tested pipeline's spirit
+except Exception as error:  # noqa: BLE001 - reported clearly, not left as a crash
     print(f"Duration explanatory model could not be fit: {error}")
 
 # %% [markdown]
@@ -442,8 +442,8 @@ for col in CATEGORICAL_TERMS:
     print(f"  {col}: {sorted(all_levels - dummy_levels)}")
 
 # %% [markdown]
-# Fit on all 1,453,840 valid loans (R² = 0.425, meaning this model
-# explains 42.5% of why funding speed varies). With this much data, these
+# Fit on all 1,453,840 valid loans (R² = 0.426, meaning this model
+# explains 42.6% of why funding speed varies). With this much data, these
 # are well-powered, trustworthy findings, not noisy guesses from a small
 # sample. **Negative coefficients are associated with faster funding,
 # positive with slower**, each compared against the reference category
@@ -513,10 +513,9 @@ for col in CATEGORICAL_TERMS:
 # Explanatory Modeling findings, not a replacement for them.
 #
 # `shap` ships in Kaggle's standard Python image; the fallback below
-# installs it on the rare environment where it's missing (this project's
-# base requirements don't need it - it's notebook-only tooling). Computed
-# on a random sample of 2,000 holdout loans for speed - a larger sample
-# would take longer for a negligibly different ranking.
+# installs it on the rare environment where it's missing. Computed on a
+# random sample of 2,000 holdout loans for speed - a larger sample would
+# take longer for a negligibly different ranking.
 
 # %%
 try:
@@ -552,12 +551,18 @@ plt.show()
 
 # %% [markdown]
 # This second, independent check **confirms the top of the Explanatory
-# Modeling story**: loan amount and repayment term are, by a wide margin,
-# the two factors the flexible model relied on most - both were also
-# among Section 7's largest, most significant coefficients. The time
-# period (pre-pandemic vs. not) and loan size also rank near the top,
-# again agreeing with its
-# biggest effects.
+# Modeling story, with one nuance worth spelling out**: loan amount and
+# repayment term are, by a wide margin, the two factors the flexible
+# model relied on most. Loan amount lines up directly with Section 7 -
+# it's genuinely one of that section's largest coefficients too.
+# Repayment term is a little different: its per-unit coefficient (+0.068)
+# looks modest next to a sector or region dummy, but the term itself
+# varies widely from loan to loan (a handful of months up to a couple of
+# years), so the *cumulative* swing across that range is large - exactly
+# what SHAP measures, and something a single per-unit coefficient doesn't
+# show on its own. The time period
+# (pre-pandemic vs. not) and loan size also rank near the top, again
+# agreeing with Section 7's biggest effects.
 #
 # **The honest divergence worth stating plainly: narrative framing barely
 # registers here.** None of the family, agency, or urgency framing scores
@@ -604,7 +609,9 @@ plt.show()
 #   strong enough to support a real "surface this loan more prominently"
 #   feature, without needing any narrative-framing insight at all.
 # - **Urgency language is a safe, general-purpose writing recommendation**
-#   - it helps consistently, with no caveats about timing or region.
+#   - its effect was strong and clear enough as a simple, flat association
+#   that (unlike family framing) this model didn't need to test it against
+#   time or region to find a reliable signal.
 # - **Family framing needs targeted guidance, not a blanket rule** - it
 #   pays off most pre-pandemic, in the Middle East/Central America, and
 #   for medium-sized loans specifically; it's close to neutral or
