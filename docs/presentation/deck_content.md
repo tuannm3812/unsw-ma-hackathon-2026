@@ -21,7 +21,7 @@ Checked against the proposal's central and supporting questions before writing a
 - Pandemic-era shift — **Answered**
 - Predictive value — **Answered**
 
-**One thing to know before building slides:** two sets of numbers exist in this repo — the `authoritative` full pipeline (`reports/generated_full_dataset/`) and the `notebook` versions (self-contained Kaggle notebooks, built for readability). They agree directionally on most findings, but they do **not** always agree on statistical significance — two results (family framing in Asia, and sentiment tone) are significant in one pipeline and not the other. Where they disagree, this brief reports the disagreement rather than picking a side. **Use the authoritative numbers on slides** — the reference table at the bottom of this document has both, clearly marked.
+**One thing to know before building slides:** two sets of numbers exist in this repo — the `authoritative` full pipeline (`reports/generated_full_dataset/`) and the `notebook` versions (self-contained Kaggle notebooks, built for readability). They agree directionally on most findings, but they do **not** always agree on statistical significance — sentiment tone is significant in one pipeline and not the other (the corrected within-region family slopes agree in all fits: Asia is non-significant everywhere). Where they disagree, this brief reports the disagreement rather than picking a side. **Use the authoritative numbers on slides** — the reference table at the bottom of this document has both, clearly marked.
 
 ## §1 · Proposed slide sequence
 
@@ -41,20 +41,20 @@ Checked against the proposal's central and supporting questions before writing a
 
 ### Slide 3 · How we made sure findings are real
 
-- Trained only on the past, tested only on loans posted in 2024–2025 — no peeking at the future.
-- Two independent methods (statistical regression + machine learning) had to agree before a finding made the deck.
-- Every "significant" result was re-tested under a stricter, more conservative statistical assumption — several headline-looking results didn't survive (Slide 6).
+- **Predictive claims**: trained only on the past, tested only on loans posted in 2024–2025 — no peeking at the future. (This validates the forecasting models, not the framing findings — those come from a separate full-sample statistical model.)
+- **Framing claims**: every "significant" result was re-tested under a stricter, more conservative statistical assumption — several headline-looking results didn't survive (Slide 6).
+- A machine-learning importance ranking (SHAP) is shown as complementary predictive evidence — it measures what the forecasting model relied on, and cannot by itself confirm or refute the statistical findings.
 
 Source: modeling notebook, §4 Data Split + §7.1 Cluster-Robust Sensitivity Check
 
 Kept to methods only, on the organizer's instruction not to re-cover dataset background they're already introducing.
 
-### Slide 4 · A marketplace that never recovered
+### Slide 4 · A marketplace that hasn't recovered
 
 46% → 30% → 30% funded within 24 hours
 
 - Pre-pandemic, almost half of all loans funded within a day.
-- Since 2020, under a third do — and it has **never** recovered, years after the disruption ended.
+- Since 2020, under a third do — and through the end of the data (2025) it has **not** recovered. That's persistence to date, not proof it never will.
 - 589,823 loans "before" vs. 565,474 "after" — not a small, noisy sample.
 
 Source: EDA notebook, §4 Categorical Trends (period chart)
@@ -74,12 +74,12 @@ Source: EDA notebook, §5 Categorical Features + §9 Feature Correlations
 ~Half of "significant" framing results don't survive a stricter test
 
 - A standard model made **urgency language** look like a clean, universal win. Re-tested under a stricter, more conservative assumption (standard errors clustered by country, not treated as fully independent), that result doesn't hold up — **we're not recommending it.**
-- **Family framing** mostly doesn't survive either — and the piece that does is narrower than it first looked. Our original test asked the wrong question (does this region differ from Africa?) instead of the right one (does family framing do anything *here*?). Re-tested correctly, it holds up in **four countries — Palestine, Yemen, Honduras, Nicaragua** (significant under clustering in all three model fits, both pipelines). Strong evidence, but it is not "the Middle East and Central America" as regions, and it is not a platform-wide writing rule — those four countries are ~5% of all loans.
+- **Family framing** mostly doesn't survive either — and the piece that does is narrower than it first looked. Our original test asked the wrong question (does this region differ from Africa?) instead of the right one (does family framing do anything *here*?). Re-tested correctly, it holds up in **two pooled two-country categories — Middle East (Palestine + Yemen) and Central America (Honduras + Nicaragua)**, significant under clustering in all three model fits, both pipelines. Strong evidence, but the estimate is *pooled*: it is not "the Middle East" as a region, and not a finding about any single country either — a pooled result can be driven by one of the pair. Those categories are ~5% of all loans.
 - **Sentiment tone** — counterintuitively, more positive language links to slower funding, but even this finding's significance is model-sensitive: it survives clustering in the authoritative pipeline, not in the simpler notebook model. Reported as genuinely open, not a third confirmed survivor.
 - **Competence/agency language** — no link survives the stricter test. (It did look significant in one of the authoritative pipeline's two models before clustering, then failed — the same fragile pattern as urgency, so don't present it as a clean universal null.)
 - A second, completely different technique (SHAP feature importance from the machine-learning model) independently agrees on urgency and family framing — neither cracks its top 15 factors. Sentiment does (11th place) despite its disputed significance above: real predictive weight and statistical robustness turn out to be different questions.
 
-Source: modeling notebook, §7.2 within-region slopes (the four-country claim) + §7.1 cluster check + §8 Feature Importance
+Source: modeling notebook, §7.2 within-region slopes (the pooled-category claim) + §7.1 cluster check + §8 Feature Importance
 
 The most important slide in the deck. Not "framing doesn't matter" — "we tested harder than a typical analysis would, and this is what's actually real." Your answer to "how do we know this isn't a fluke."
 
@@ -97,9 +97,9 @@ Good "we went further than keyword-spotting" beat for originality. First trim ca
 ### Slide 8 · What this means in practice
 
 - Don't recommend urgency language platform-wide — it looked like a safe, universal tip, but doesn't survive rigorous testing.
-- Family-framing guidance should be a localized A/B test in four countries (Palestine, Yemen, Honduras, Nicaragua) — not a blanket writing rule. Two countries per group is thin evidence, and everywhere else the association vanishes under scrutiny.
+- Family-framing guidance should be a *country-stratified* A/B test in the two surviving pooled categories (Palestine + Yemen; Honduras + Nicaragua) — designed to show which countries, if any, drive the pooled association. Not a blanket writing rule: everywhere else the association vanishes under scrutiny.
 - A structural review (why some sectors/regions fund so much slower) still likely outperforms copywriting coaching alone.
-- A same-day-funding risk flag is buildable *today* — strong enough (ROC AUC ≈ 0.90) to surface at-risk loans before they stall, no framing insight required.
+- A same-day-funding risk flag is worth *piloting* — holdout ROC AUC ≈ 0.90 shows a strong ranking signal, no framing insight required. A rollout still needs a threshold, calibration at it, capacity/fairness checks, and a prospective test that surfacing actually helps.
 
 This is the practical-implications slide — spend real time here. "Test before you recommend" is itself a practical takeaway, not just a methods footnote.
 
@@ -113,8 +113,8 @@ One slide, said plainly, builds more trust than skipping it. Second trim candida
 
 ### Slide 10 · Closing
 
-"The story helps — where it's tested.\
-The structure decides."
+"In this data, the story barely registers.\
+The structure carries the signal."
 
 - Thank you — questions.
 

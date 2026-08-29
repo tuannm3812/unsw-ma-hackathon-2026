@@ -145,7 +145,8 @@ df.info()
 # models below to fit well), plus the simpler `funded_within_24h` yes/no
 # version. `analysis_period` buckets each loan into pre-pandemic,
 # pandemic-disruption, or post-pandemic eras by posting year, since the
-# EDA notebook found funding speed shifted permanently around 2020.
+# EDA notebook found funding speed shifted lastingly around 2020 (slower
+# through the end of the data, 2025).
 
 # %%
 fundraising = pd.to_datetime(df["fundraisingDate"], errors="coerce", utc=True)
@@ -567,8 +568,8 @@ else:
 # framing's conditional structure doesn't hold up, sentiment's association
 # is genuinely uncertain rather than confirmed, and family framing's real
 # story - once tested with the correct within-region contrast in
-# Section 7.2 - narrows to four specific countries rather than any
-# generalizable writing rule.**
+# Section 7.2 - narrows to two pooled two-country categories rather than
+# any generalizable writing rule.**
 
 # %% [markdown]
 # ### 7.2 What Family Framing Is Associated With *Within* Each Region
@@ -708,10 +709,13 @@ else:
 # different about Palestine and Yemen" - which is precisely the confound
 # clustering was introduced to take seriously.
 #
-# **So the honest reading is narrow and exploratory: in these four
-# specific countries, more family language is associated with faster
-# funding.** It is not a claim about the Middle East or Central America as
-# regions, and not a writing rule to roll out. All of this is association
+# **So the honest reading is narrow and exploratory: within these two
+# pooled categories, more family language is associated with faster
+# funding on average.** It is not a claim about the Middle East or
+# Central America as regions; it is not a claim about any individual
+# country either - the model estimates one pooled slope per category, and
+# a pooled result can be driven mostly by one constituent country; and it
+# is not a writing rule to roll out. All of this is association
 # within this sample - clustering adjusts for within-country dependence,
 # it does not remove country-level confounding or license a causal
 # reading.
@@ -762,12 +766,13 @@ else:
 # - **Family framing's regional pattern is the exception that survives.**
 #   Tested with the correct within-region contrast (Section 7.2), family
 #   framing is associated with *faster* funding in the Middle East and
-#   Central America - significant under clustering in all three
-#   independently specified fits (this notebook's, plus the authoritative
-#   pipeline's duration and 24-hour models). But each of those "regions"
-#   is two countries (Palestine/Yemen; Honduras/Nicaragua), so it is a
-#   narrow, exploratory result about four countries, not a region-level
-#   finding. Everywhere else, and for every other narrative-framing term,
+#   Central America categories - significant under clustering in all
+#   three same-data fits (this notebook's, plus the authoritative
+#   pipeline's duration and 24-hour models; related specifications, not
+#   independent replications). But each category is two countries
+#   (Palestine/Yemen; Honduras/Nicaragua) and each estimate is pooled
+#   across its pair, so this is a narrow, exploratory pooled-category
+#   result - not a region-level finding, and not a per-country one. Everywhere else, and for every other narrative-framing term,
 #   the HC3-only significance above is not a reliable finding on its own.
 # - **Agency/competence language shows no real link in this notebook's
 #   model, under HC3 or clustered** - the "sound capable and independent"
@@ -875,7 +880,8 @@ plt.show()
 # what "statistically significant" means with 1.45 million rows: even a
 # fragile, non-robust pattern can produce a tiny HC3 p-value simply
 # because there's so much data. This check measures something different -
-# **actual size of impact, not confidence that an association is real** -
+# **predictive contribution in the boosted model, not statistical
+# confidence in an inferential association** -
 # and by that measure, narrative framing (family/agency/urgency) is minor
 # next to how a loan is structured.
 
@@ -917,12 +923,14 @@ plt.show()
 #   agrees with the authoritative pipeline, which never found it
 #   significant. Africa (p = 0.5536), North America (p = 0.0621) and
 #   Oceania (p = 0.6305) show no association surviving clustering.
-# - **The surviving result is about four countries, not two regions** -
-#   "Middle East" here is Palestine and Yemen; "Central America" is
-#   Honduras and Nicaragua. Since clustering by country is precisely what
+# - **The surviving result is two pooled two-country categories, not two
+#   regions and not four separate country findings** - "Middle East" here
+#   is Palestine and Yemen; "Central America" is Honduras and Nicaragua;
+#   the model estimates one pooled slope per category and none for any
+#   individual country. Since clustering by country is precisely what
 #   stops same-country loans counting as independent evidence, a
-#   two-cluster group carries very little of it. Robust across
-#   specifications, but narrow and exploratory in scope.
+#   two-cluster group carries very little of it. Robust across our
+#   related, same-data specifications, but narrow and exploratory.
 # - Agency framing shows no association either way in this notebook's
 #   model - though the authoritative pipeline's separate 24-hour model
 #   shows agency following the same apparent-but-fragile pattern as
@@ -945,9 +953,12 @@ plt.show()
 # %% [markdown]
 # ### 9.2 Business Impact
 #
-# - **A 24-hour-funding risk flag is buildable today** - ROC AUC 0.91 is
-#   strong enough to support a real "surface this loan more prominently"
-#   feature, without needing any narrative-framing insight at all.
+# - **A 24-hour-funding risk flag is worth piloting** - holdout ROC AUC
+#   0.91 shows a strong ranking signal, without needing any
+#   narrative-framing insight at all. Discrimination alone doesn't settle
+#   deployment: a rollout still needs a chosen threshold, calibration at
+#   that threshold, capacity and fairness checks, and a prospective test
+#   that surfacing flagged loans actually helps them fund.
 # - **Don't recommend urgency language as a general rule.** Its raw HC3
 #   association looked like a clean, simple win, but that doesn't survive
 #   a stricter, more realistic check for how loans from the same country
@@ -956,17 +967,20 @@ plt.show()
 # - **Do not issue a platform-wide "mention family" recommendation.**
 #   Across Africa (27 countries), Asia (12), North America and Oceania -
 #   together ~95% of all loans - no association survives clustering. The
-#   only place the evidence holds up is four specific countries covering
-#   the remaining ~5%.
-# - **Where it does hold up, the defensible action is a localized test,
-#   not a rollout.** Family framing's link to faster funding in Palestine,
-#   Yemen, Honduras and Nicaragua survives the correct contrast, country
-#   clustering, and three independent specifications - genuinely the
-#   strongest narrative-framing result in this project. But two countries
-#   per group is thin evidence precisely because clustering is what stops
-#   same-country loans counting separately. Treat it as a hypothesis worth
-#   an A/B test in those countries, not a finding to deploy platform-wide,
-#   and don't generalize it to "the Middle East" or "Central America."
+#   only place the evidence holds up is the two pooled Middle East and
+#   Central America categories covering the remaining ~5%.
+# - **Where it does hold up, the defensible action is a country-stratified
+#   test, not a rollout.** Family framing's link to faster funding in the
+#   pooled Middle East and Central America categories survives the correct
+#   contrast, country clustering, and all three of our same-data fits -
+#   genuinely the strongest narrative-framing result in this project. But
+#   the estimate is pooled: it cannot say which constituent country drives
+#   it, and two countries per category is thin evidence precisely because
+#   clustering is what stops same-country loans counting separately. Treat
+#   it as a hypothesis for an A/B test *stratified by country* in those
+#   markets - designed to locate any real heterogeneity - not a finding to
+#   deploy, and don't generalize it to "the Middle East" or "Central
+#   America."
 # - **Structure, not copywriting, is the strongest association by far** -
 #   loan size, repayment terms, sector, and region are linked to funding
 #   speed far more strongly than any narrative choice, and this conclusion

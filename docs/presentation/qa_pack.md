@@ -1,6 +1,5 @@
 <!-- Markdown rendering of docs/presentation/qa_pack.html (the "Question Time" artifact).
-     The HTML file is the styled original; this file is the same content for reading on GitHub.
-     Regenerate by converting the HTML (pandoc -f html -t gfm) and re-applying the cleanup in the commit that added this. -->
+     The HTML file is the styled original; this file is the same content for reading on GitHub. -->
 
 Final-round briefing · UNSW Marketing Analytics Hackathon 2026 · Team Cultural Blend
 
@@ -16,7 +15,7 @@ The full analysis report, and prepared answers for the 10-minute Q&A that follow
 
 ### Executive summary
 
-We asked whether the way a Kiva borrower's story is written — family appeals, competence language, urgency, tone — is associated with how fast the loan funds, across 1,453,846 real loans (2016–2025). The answer that survives serious testing: **structure dominates story.** What a loan is for, where it's from, how big it is, and how it's repaid are linked to funding speed roughly an order of magnitude more strongly than any writing choice. Narrative framing has exactly one association that survives every test we could throw at it — family framing and faster funding in **four specific countries** (Palestine, Yemen, Honduras, Nicaragua, ~5% of loans) — and even that is exploratory, because each "region" there is only two countries.
+We asked whether the way a Kiva borrower's story is written — family appeals, competence language, urgency, tone — is associated with how fast the loan funds, across 1,453,846 real loans (2016–2025). The answer that survives serious testing: **structure dominates story.** What a loan is for, where it's from, how big it is, and how it's repaid are linked to funding speed roughly an order of magnitude more strongly than any writing choice. Narrative framing has exactly one association that survived every robustness test we ran — family framing and faster funding in **two pooled two-country categories** (Middle East = Palestine + Yemen; Central America = Honduras + Nicaragua; together ~5% of loans) — and even that is exploratory: each estimate pools its pair of countries, so it isn't evidence about any single country, and two clusters is a thin base.
 
 The methodological arc is the differentiator: a standard analysis of this dataset would have confidently recommended urgency language platform-wide. We tested that recommendation three times over, and it failed. What we present is what's left standing after we tried hard to kill it.
 
@@ -29,12 +28,12 @@ When a borrower's story leans on family, competence, or urgency — does the loa
 - **1,453,840 of 1,453,846 loans usable** (99.9996%) — outcome is days from posting to full funding, log-transformed; plus a funded-within-24h yes/no version.
 - **Leakage-safe chronological validation**: models train on 2016–2023 (1,174,953 loans), tested only on 2024–2025 (278,887 loans) they never saw. Imputers, encoders and text vectorizers fit on training data only.
 - **Association-only language, enforced in code**: the pipeline's own report generator never writes "causes" or "proves". Borrowers weren't randomly assigned a writing style.
-- **Two independent implementations**: an authoritative tested pipeline (`authoritative`, `src/` + committed report snapshot) and self-contained Kaggle notebooks (`notebook`). Where they disagree, we report the disagreement.
+- **Two separately built implementations (same data)**: an authoritative tested pipeline (`authoritative`, `src/` + committed report snapshot) and self-contained Kaggle notebooks (`notebook`). Where they disagree, we report the disagreement.
 
 ### Predictive results (the uncontroversial half)
 
 - Gradient-boosted model: **MAE 5.20 days, R² = 0.54** on the never-seen holdout (authoritative; notebook: 5.56 / 0.49). Ridge baseline: MAE 6.63 days.
-- 24-hour funding classifier: **ROC AUC 0.90, average precision 0.83** — strong enough to build a real "surface this at-risk loan" feature today, no framing insight required.
+- 24-hour funding classifier: **ROC AUC 0.90, average precision 0.83** — a strong ranking signal for an at-risk-loan flag, no framing insight required; piloting recommended (threshold, calibration, prospective test) rather than "buildable today".
 - SHAP on the boosted model: loan amount and repayment term dominate; no family/agency/urgency feature reaches the top 15. Only sentiment appears (11th).
 
 ### The verification arc — three rounds, each changing the answer
@@ -62,9 +61,9 @@ An interaction coefficient tests difference-from-Africa, not "does framing do an
 | Claim | Evidence | Status |
 |----|----|----|
 | Structure dominates: sector, region, loan size, repayment, gender carry the largest associations | e.g. Water −1.12, ME region −1.07, male +0.43 (notebook, log-days); the largest terms survive clustering in both pipelines | `robust` |
-| Pandemic-era slowdown is permanent: share funded in 24h fell 46.0% → 30.3% and stayed at 30.0% | 589,823 / 298,549 / 565,474 loans per era | `robust` |
+| Pandemic-era slowdown persists through 2025: share funded in 24h fell 46.0% → 30.3% and stayed at 30.0% | 589,823 / 298,549 / 565,474 loans per era | `robust` |
 | Gender gap: female-posted median 2.3 days vs male-posted 7.7 | +0.43 coefficient holding all else fixed; survives clustering | `robust` |
-| Family framing ↔ faster funding in Palestine, Yemen, Honduras, Nicaragua | Significant under clustering in all 3 fits (−0.124/−0.073 duration; +0.175 24h-odds for ME) | `exploratory — 2 countries per group` |
+| Family framing ↔ faster funding in two pooled categories (Palestine+Yemen; Honduras+Nicaragua) — pooled, not per-country | Significant under clustering in all 3 fits (−0.124/−0.073 duration; +0.175 24h-odds for ME) | `exploratory — 2 countries per group` |
 | Urgency framing helps | HC3 p\<0.001 → clustered p≈0.44 (notebook) · 0.49 / 0.22 (authoritative) | `does not survive` |
 | Family framing depends on timing / loan size | All period & size interactions fail clustering | `does not survive` |
 | Agency/competence language helps | Null in notebook; fragile (HC3-only) in authoritative 24h model | `no reliable link` |
@@ -77,15 +76,15 @@ An interaction coefficient tests difference-from-Africa, not "does framing do an
 
 - **Association, never causation.** No borrower was randomly assigned a writing style.
 - **Speed among funded loans**, not whether a loan funds at all — the dataset contains completed loans.
-- **Four countries is four countries.** A two-cluster region cannot separate "family framing works here" from "something else is different about Palestine and Yemen".
+- **Pooled categories, not countries.** Each surviving estimate pools two countries; it cannot separate "family framing works here" from "something else is different about Palestine and Yemen", and cannot say which of the pair drives it.
 - **Framing measured by transparent dictionaries**, not a claim to capture all persuasion. Topic modeling and sentiment complement, not complete, the picture.
 - **Magnitudes are specification-sensitive even where significance is not** (Middle East slope: −0.124 vs −0.073 across our two model families, ~1.7×).
 
 ### Recommendations
 
-- **Build the risk flag.** AUC 0.90 supports surfacing at-risk loans the day they're posted — the highest-confidence, lowest-risk action available.
+- **Pilot the risk flag.** Holdout AUC 0.90 shows a strong ranking signal for surfacing at-risk loans; a pilot should pick a threshold, check calibration at it (holdout Brier 0.116), and prospectively test that surfacing helps before any rollout.
 - **Don't ship writing rules from this data.** Urgency advice would have been wrong; family advice has no supporting evidence for ~95% of loans.
-- **A/B test family framing in the four countries** where the association survived everything — as a hypothesis, not a rollout.
+- **Run a country-stratified A/B test of family framing** in the two pooled categories where the association survived — designed to locate which constituent countries, if any, drive it. A hypothesis, not a rollout.
 - **Investigate structure, not copy**: why Water and Education loans fund in a fraction of the time Agriculture does is a platform question worth more than any style guide.
 - **Adopt the test-before-recommending discipline** — the process finding is itself the practical implication.
 
@@ -99,7 +98,7 @@ Format: up to three audience questions first, then judges. Audience questions sk
 
 **Answer:**
 
-Far less than everyone assumes — and that's the finding. How a loan is structured — its size, sector, country, repayment plan — is linked to funding speed about ten times more strongly than any writing choice. We found exactly one writing pattern that survived every robustness test: mentioning family is associated with faster funding in four specific countries. Everywhere else, the writing-style effects that looked significant at first collapsed when we tested them properly. So: polish the structure conversation before the copywriting one.
+Far less than everyone assumes — and that's the finding. How a loan is structured — its size, sector, country, repayment plan — is linked to funding speed about ten times more strongly than any writing choice. We found exactly one writing pattern that survived every robustness test: mentioning family is associated with faster funding in two small pooled country-groups — Palestine with Yemen, and Honduras with Nicaragua. Everywhere else, the writing-style effects that looked significant at first collapsed when we tested them properly. So: polish the structure conversation before the copywriting one.
 
 **Backup:**
 
@@ -111,7 +110,7 @@ Raw correlations: loan amount r = +0.43, repayment term r = +0.28, vs family r =
 
 **Answer:**
 
-Our data can't hand a borrower a winning script — and we think saying so is more useful than pretending otherwise. A typical analysis of this dataset would tell every borrower to add urgent language; we tested that and it doesn't hold up. Our honest advice is boring: write a clear, complete description — not because our data shows it speeds funding, but because nothing we tested beats it — and let the platform work on what is actually linked to speed — how loans are sized, categorized and surfaced. If you're a borrower in Honduras, Nicaragua, Palestine or Yemen, mentioning your family is associated with faster funding — but even there we'd call it worth trying, not proven.
+Our data can't hand a borrower a winning script — and we think saying so is more useful than pretending otherwise. A typical analysis of this dataset would tell every borrower to add urgent language; we tested that and it doesn't hold up. Our honest advice is boring: write a clear, complete description — not because our data shows it speeds funding, but because nothing we tested beats it — and let the platform work on what is actually linked to speed — how loans are sized, categorized and surfaced. In the two small country-groups where the family-framing association held up (Palestine+Yemen, Honduras+Nicaragua), it's a pooled average — worth knowing about, but not per-country evidence, and not proven advice for any individual borrower.
 
 **Trap:** a questioner may want a tip they can tweet. Resist inventing one — "we tested the popular tip and it failed" is the memorable answer.
 
@@ -131,7 +130,7 @@ Pre-pandemic, 46% of loans funded within a day. During the disruption that fell 
 
 **Answer:**
 
-You've named the exact limitation we'd point to ourselves, and it's why we call this exploratory. In our data "Middle East" is Palestine and Yemen; "Central America" is Honduras and Nicaragua. Because we cluster standard errors by country — treating same-country loans as related, not independent — a two-country group carries little independent evidence, and the estimate can't separate "family framing works here" from "these two countries are unusual." What stops us discarding it: it's significant under clustering in all three model fits we ran, in the same direction, in both our independent implementations. So our recommendation is scoped to match the evidence: an A/B test in those four countries, not a claim about regions.
+You've named the exact limitation we'd point to ourselves, and it's why we call this exploratory. In our data "Middle East" is Palestine and Yemen; "Central America" is Honduras and Nicaragua. Because we cluster standard errors by country — treating same-country loans as related, not independent — a two-country group carries little independent evidence, and the estimate can't separate "family framing works here" from "these two countries are unusual." What stops us discarding it: it's significant under clustering in all three model fits we ran, in the same direction, in both our separately built implementations - related same-data specifications, so consistency, not independent replication. And one more honesty: the estimate is pooled per pair — it can't say whether Palestine or Yemen drives it. So our recommendation is scoped to match the evidence: a country-stratified A/B test in those markets, not a claim about regions or about any single country.
 
 **Backup:**
 
@@ -143,7 +142,7 @@ ME: −0.124 (notebook), −0.073 (authoritative duration), +0.175 (authoritativ
 
 **Answer:**
 
-In the four countries where it survives: each additional family mention per hundred words is associated with roughly 6–12% faster funding — the range depends on which of our two model specifications you use, which is itself worth noting: the significance is stable across specifications, the magnitude less so. For scale, that's real but modest next to structure: in our notebook model a Water-sector loan is associated with funding in roughly a third of the time an Agriculture loan takes.
+In the two pooled categories where it survives: each additional family mention per hundred words is associated with roughly 6–12% faster funding on average across each pair of countries — the range depends on which of our two model specifications you use, which is itself worth noting: the significance is stable across specifications, the magnitude less so. For scale, that's real but modest next to structure: in our notebook model a Water-sector loan is associated with funding in roughly a third of the time an Agriculture loan takes.
 
 **Backup:**
 
@@ -153,7 +152,7 @@ Slope on log(1+days) per mention/100 words: Middle East −0.124 / −0.073 → 
 
 **Answer:**
 
-Yes — and we can't rule that out, which is exactly why we won't call it causal. Palestine and Yemen are conflict-affected; lenders may respond differently to family language in that context, or the field partners there may write differently, or something else entirely may travel with those countries. Clustering by country adjusts the uncertainty for within-country dependence, but no amount of statistics separates the framing from the country when the group only contains two of them. That's what the A/B test recommendation is for: it's the design that *would* separate them.
+Yes — and we can't rule that out, which is exactly why we won't call it causal. Worse for the country framing: the estimate pools each pair, so we can't even say which of the two countries drives it. Palestine and Yemen are conflict-affected; lenders may respond differently to family language in that context, or the field partners there may write differently, or something else entirely may travel with those countries. Clustering by country adjusts the uncertainty for within-country dependence, but no amount of statistics separates the framing from the country when the group only contains two of them. That's what the A/B test recommendation is for: it's the design that *would* separate them.
 
 ### The robustness story
 
@@ -209,7 +208,7 @@ Because round three is the only one that was independently verified three differ
 
 **Answer:**
 
-Fair concern, and three things answer it. First, the model was pre-specified — one formula, no stepwise searching, every coefficient reported whether significant or not, so there's no garden of forking paths behind the survivors. Second, the clustering correction itself removed the mass false-positive problem: it's what took us from "almost everything significant" to a handful. Third — and most directly — the survivors aren't marginal. The four-country result sits at p ≤ 0.004 in every fit and below 0.0001 in most of them; under a Bonferroni correction across all 18 within-region tests, five of its six tests still clear the adjusted threshold, and the sixth sits just at the line. And where a result *was* marginal — a single-fit p = 0.009 for Haiti — we didn't claim it, which is the multiple-comparisons discipline applied rather than described.
+Fair concern, and three things answer it. First, the regression formula itself was pre-specified — one formula, no stepwise searching, every coefficient reported whether significant or not. We'll be candid that the within-region *averaging* analysis came later, developed through review rounds, so we treat it as post-estimation and exploratory rather than pretending the whole inferential path was fixed in advance. Second, the clustering correction itself removed the mass false-positive problem: it's what took us from "almost everything significant" to a handful. Third — and most directly — the survivors aren't marginal. The pooled-category result sits at p ≤ 0.004 in every fit and below 0.0001 in most of them; under a Bonferroni correction across all 18 within-region tests, five of its six tests still clear the adjusted threshold, and the sixth sits just at the line. And where a result *was* marginal — a single-fit p = 0.009 for Haiti — we didn't claim it, which is the multiple-comparisons discipline applied rather than described.
 
 **Backup:**
 
@@ -305,7 +304,7 @@ One is the authoritative tested pipeline — versioned, unit-tested, source of t
 
 **Answer:**
 
-Four things, in order. Run the A/B test in the four countries — it's the only way to turn our one surviving framing association into something actionable. Get expired and unfunded loans into the data, so we can model funding success, not just speed. Get a field-partner identifier, which would let us cluster at the true dependence level and probably explain part of what "country" currently absorbs. And add LLM-scored narrative dimensions alongside our transparent dictionaries — with a validation protocol, so they'd meet the same auditability bar as everything else here.
+Four things, in order. Run the country-stratified A/B test in the two surviving pooled categories — it's the only way to locate which countries, if any, actually drive the pooled association and turn it into something actionable. Get expired and unfunded loans into the data, so we can model funding success, not just speed. Get a field-partner identifier, which would let us cluster at the true dependence level and probably explain part of what "country" currently absorbs. And add LLM-scored narrative dimensions alongside our transparent dictionaries — with a validation protocol, so they'd meet the same auditability bar as everything else here.
 
 ## Part III · Numbers crib sheet
 
@@ -327,12 +326,12 @@ One table to re-read before the session. Sign conventions: duration models predi
 | Family within Asia (corrected) | p = 0.0535 / 0.0846 / 0.2860 — not significant | 3 fits |
 | Family within North America (Haiti) | sig in 1 of 3 fits only (p = 0.0094 auth. duration) — 1 country, not claimed | 3 fits |
 | Country counts per group | Africa 27 · Asia 12 · Oceania 4 · CA 2 · ME 2 · NA 1 (48 total) | raw data |
-| Four-country loan share | 74,337 loans ≈ 5.1% (ME 14,946 + CA 59,391) | raw data |
+| Pooled ME + CA loan share | 74,337 loans ≈ 5.1% (ME 14,946 + CA 59,391) | raw data |
 | Biggest structural coefs (dur) | Water −1.12 · ME region −1.07 · male +0.43 · log-amount +0.43 · term +0.068/mo | notebook |
 | Sentiment | median 0.89 · clustered p 0.01/0.02 authoritative vs 0.25 notebook — open | both |
 | Topic-modeling swing | 1.5 → 13.5 days across 8 topics (\>9×) | notebook (EDA) |
 | Repayment term spread | 2–133 months, middle 50% between 8–14 | raw data |
 
-**The one-sentence close, if a question goes sideways:** "The honest summary is that we tested our own best findings three times, killed most of them, and what's left — structure dominates, and one narrow four-country framing result — is what we'd stake the recommendation on."
+**The one-sentence close, if a question goes sideways:** "The honest summary is that we tested our own best findings three times, killed most of them, and what's left — structure dominates, plus one narrow pooled-category framing result — is what we'd stake the recommendation on."
 
 Compiled 2026-08-29 from verified runs: Kaggle kernels v10 (EDA) and v13 (modeling), the committed `reports/generated_full_dataset/` snapshot, and the authoritative pipeline's within-region average recomputation. Companion to the deck-content brief "Beyond a Good Story".

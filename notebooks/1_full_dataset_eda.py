@@ -553,11 +553,13 @@ plt.show()
 # more conservative check. A third round - testing the *right* quantity,
 # not just testing it robustly (that notebook's Section 7.2) - narrowed it
 # further still. What is left standing is specific: more family language
-# is associated with faster funding in **four countries** (Palestine,
-# Yemen, Honduras, Nicaragua), a result that survives clustering and
-# replicates across three independently specified models - but which
-# rests on only two countries per regional group, so it is exploratory
-# rather than a region-level rule. That is a far more specific, and more
+# is associated with faster funding in **two pooled region categories** -
+# Middle East (Palestine + Yemen) and Central America (Honduras +
+# Nicaragua) - a result that survives clustering and holds in all three
+# same-data model fits we ran. Two cautions bound it: each category is
+# only two countries, and the model estimates one pooled slope per
+# category, never a slope for any individual country - so it is
+# exploratory rather than a region-level or country-level rule. That is a far more specific, and more
 # cautionary, finding than "timing, region, and loan size all matter,"
 # which is what an analysis stopping after the first round would have
 # concluded.
@@ -575,9 +577,10 @@ plt.show()
 #
 # - The dataset is complete and clean - 1,453,840 of 1,453,846 loans
 #   (99.9996%) have a usable funding-speed outcome.
-# - Funding speed shifted to a permanently slower regime after 2019: the
+# - Funding speed shifted to a persistently slower regime after 2019: the
 #   share funded within 24 hours fell from 46% to about 30% and has not
-#   recovered.
+#   recovered through the end of the data (2025) - persistence to date,
+#   not a claim it can never recover.
 # - Loan descriptions cluster tightly at the positive end of the
 #   sentiment scale (median 0.89/1.0), limiting how much sentiment alone
 #   can explain.
@@ -591,12 +594,13 @@ plt.show()
 #   conditional structure, don't survive standard errors clustered by
 #   country. Tested with the correct within-region contrast (that
 #   notebook's Section 7.2), one result survives everywhere it's checked:
-#   family framing is associated with
-#   faster funding in the Middle East and Central America - but those are
-#   two countries each (Palestine/Yemen; Honduras/Nicaragua), so it's an
-#   exploratory four-country result, not a region-level rule. Elsewhere
-#   (Africa, North America, Oceania) no association survives; Asia is
-#   significant in one model and not in another. Sentiment tone's
+#   family framing is associated with faster funding in two pooled
+#   region categories - Middle East (Palestine + Yemen) and Central
+#   America (Honduras + Nicaragua). Each is two countries, and the
+#   estimate is pooled per category, not per country - exploratory, not a
+#   region-level or country-level rule. Elsewhere (Africa, Asia, North
+#   America, Oceania) no association survives the corrected test in any
+#   fit. Sentiment tone's
 #   association is a genuinely open question, not a confirmed survivor -
 #   it holds up in this project's richer authoritative model but not in
 #   the modeling notebook's own simpler one.
@@ -635,10 +639,12 @@ plt.show()
 #   speed doesn't survive a stricter standard-error assumption, and
 #   neither does most of family framing's conditional structure. What
 #   remains defensible after testing is narrow rather than a writing rule:
-#   family framing is associated with faster funding in four specific
-#   countries (Palestine, Yemen, Honduras, Nicaragua) and nowhere else
-#   that survives scrutiny - so a blanket "mention family" recommendation
-#   isn't supported for the vast majority of loans in this dataset. Even
+#   family framing is associated with faster funding in two pooled
+#   two-country categories (Middle East = Palestine + Yemen; Central
+#   America = Honduras + Nicaragua) and nowhere else that survives
+#   scrutiny - so a blanket "mention family" recommendation isn't
+#   supported for the vast majority of loans in this dataset, and even
+#   there the evidence is pooled, not per-country. Even
 #   sentiment tone's (counterintuitive) association, which looked like a
 #   second survivor, turned out to depend on exactly which model is
 #   fitted - a reminder to keep testing rather than stop at the first
