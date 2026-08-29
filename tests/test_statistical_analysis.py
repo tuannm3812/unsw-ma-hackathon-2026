@@ -5,12 +5,14 @@ import pytest
 
 import src.statistical_analysis as statistical_analysis_module
 from src.statistical_analysis import (
+    _average_group_slopes,
     _check_well_identified,
     _significance_comparison_lines,
     _term_has_variation,
     fit_explanatory_models,
     format_association_summary,
     format_cluster_sensitivity_summary,
+    format_within_region_slopes,
     run_ols_analysis,
 )
 from src.validation import InsufficientDataError
@@ -575,6 +577,82 @@ def test_significance_comparison_lines_labels_each_coefficient_correctly():
     assert "[same conclusion]" in by_name["both_not_significant"]
     assert "[CONCLUSION CHANGES]" in by_name["flips_to_not_significant"]
     assert "[CONCLUSION CHANGES]" in by_name["flips_to_significant"]
+
+
+def _brute_force_group_slopes(results, frame, focal, group_factor):
+    """Independent oracle: the analytic d(outcome)/d(focal) for each fitted
+    row (main effect + every interaction dummy that row activates),
+    averaged within each group level. The production code must reproduce
+    this exactly via its weighted linear contrast."""
+    params = results.params
+    labels = results.model.data.row_labels
+    fitted = frame.loc[labels] if labels is not None else frame
+    expected = {}
+    for level in sorted(fitted[group_factor].astype(str).unique()):
+        subset = fitted.loc[fitted[group_factor].astype(str) == level]
+        slopes = []
+        for _, row in subset.iterrows():
+            slope = params[focal]
+            for name in params.index:
+                if not name.startswith(f"{focal}:C("):
+                    continue
+                column = name.split(":C(")[1].split(")[T.")[0]
+                lvl = name.split(")[T.")[1].rstrip("]")
+                if column in subset.columns and str(row[column]) == lvl:
+                    slope += params[name]
+            slopes.append(slope)
+        expected[level] = sum(slopes) / len(slopes)
+    return expected
+
+
+def test_average_group_slopes_match_brute_force_rowwise_average(large_synthetic_kiva_df):
+    # The weighted-contrast estimate must equal the row-wise average of the
+    # analytic derivative for EVERY group level - including the reference
+    # level, which has no interaction term of its own but still needs the
+    # other moderators' weighted terms. This is the oracle that fails if
+    # the weights, the reference-category path, or the term parsing break.
+    from src.data_loader import prepare_analysis_data
+    from src.features import extract_deterministic_features
+
+    result = fit_explanatory_models(large_synthetic_kiva_df, cluster_sensitivity_col="country_name")
+    frame = extract_deterministic_features(prepare_analysis_data(large_synthetic_kiva_df))
+    frame = frame.loc[frame["valid_completed_outcome"]]
+
+    digest = result["within_region_slopes"]["duration"]
+    assert isinstance(digest, list) and digest, digest
+    expected = _brute_force_group_slopes(
+        result["duration"], frame, "family_mentions_per_100_words", "region_group"
+    )
+    assert {row["group"] for row in digest} == set(expected)
+    for row in digest:
+        assert row["estimate"] == pytest.approx(expected[row["group"]], abs=1e-9)
+
+
+def test_within_region_slopes_omitted_without_cluster_sensitivity(large_synthetic_kiva_df):
+    result = fit_explanatory_models(large_synthetic_kiva_df)
+    assert "within_region_slopes" not in result
+    assert format_within_region_slopes(result) == ""
+
+
+def test_format_within_region_slopes_reports_every_group_with_cluster_counts(large_synthetic_kiva_df):
+    result = fit_explanatory_models(large_synthetic_kiva_df, cluster_sensitivity_col="country_name")
+    summary = format_within_region_slopes(result)
+
+    assert "Average Within-Region Family-Framing Slopes" in summary
+    assert "Duration model" in summary and "24-hour funding model" in summary
+    for row in result["within_region_slopes"]["duration"]:
+        assert row["group"] in summary
+        assert row["n_clusters"] is not None  # country_name is present in the frame
+    assert "clustered p=" in summary and "HC3 p=" in summary
+
+
+def test_average_group_slopes_reports_error_string_when_focal_term_absent():
+    class _Fake:
+        pass
+    fake = _Fake()
+    fake.params = pd.Series({"Intercept": 1.0, "x": 2.0})
+    out = _average_group_slopes(fake, fake, pd.DataFrame({"g": ["a"]}), "missing_term", "g", "c")
+    assert isinstance(out, str) and "missing_term" in out
 
 
 def test_format_cluster_sensitivity_summary_empty_when_not_requested(large_synthetic_kiva_df):

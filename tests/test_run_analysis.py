@@ -308,6 +308,23 @@ def test_run_analysis_appends_cluster_sensitivity_check_when_requested(tmp_path,
     assert "Cluster-Robust Sensitivity Check" in report_text
     assert "country_name" in report_text
 
+    # Codex review follow-up (round 2): the average within-region slopes -
+    # the quantity the project's headline narrative-framing claim rests
+    # on - must be a generated part of the report and the JSON, not an
+    # out-of-band manual addendum that regeneration deletes.
+    assert "Average Within-Region Family-Framing Slopes" in report_text
+    digest = summary["explanatory"]["within_region_slopes"]
+    assert digest["focal_term"] == "family_mentions_per_100_words"
+    assert isinstance(digest["duration"], list) and digest["duration"]
+    assert isinstance(digest["binary"], list) and digest["binary"]
+    for row in digest["duration"]:
+        assert {"group", "n_loans", "n_clusters", "estimate", "hc3_p", "clustered_p", "significant_under_both"} <= set(row)
+
+    # And the digest must survive the JSON round-trip on disk.
+    import json
+    on_disk = json.loads((output_dir / "analysis_summary.json").read_text())
+    assert on_disk["explanatory"]["within_region_slopes"]["duration"] == digest["duration"]
+
 
 def test_run_analysis_omits_cluster_sensitivity_section_by_default(tmp_path, large_synthetic_kiva_df):
     data_path = tmp_path / "sample.pkl"
@@ -317,5 +334,6 @@ def test_run_analysis_omits_cluster_sensitivity_section_by_default(tmp_path, lar
     summary = run_analysis(data_path, output_dir, holdout_start="2024-01-01")
 
     assert "cluster_sensitivity_col" not in summary["explanatory"]
+    assert "within_region_slopes" not in summary["explanatory"]
     report_text = (output_dir / "association_summary.txt").read_text()
     assert "Cluster-Robust Sensitivity Check" not in report_text

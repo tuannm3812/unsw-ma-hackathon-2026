@@ -60,6 +60,7 @@ try:
         fit_explanatory_models,
         format_association_summary,
         format_cluster_sensitivity_summary,
+        format_within_region_slopes,
     )
     from src.validation import InsufficientDataError
 except ModuleNotFoundError:
@@ -71,6 +72,7 @@ except ModuleNotFoundError:
         fit_explanatory_models,
         format_association_summary,
         format_cluster_sensitivity_summary,
+        format_within_region_slopes,
     )
     from validation import InsufficientDataError
 
@@ -363,6 +365,10 @@ def _run_explanatory(df: pd.DataFrame, extra_interactions=None, cluster_sensitiv
             summary["binary_clustered_fitted"] = results.get("binary_clustered") is not None
             summary["duration_clustered_error"] = results.get("duration_clustered_error")
             summary["binary_clustered_error"] = results.get("binary_clustered_error")
+            # Already JSON-safe by construction (plain floats/ints/strings)
+            # - the machine-readable counterpart of the report's "Average
+            # Within-Region Family-Framing Slopes" section.
+            summary["within_region_slopes"] = results.get("within_region_slopes")
         return summary, results
     except InsufficientDataError as error:
         return {
@@ -525,6 +531,10 @@ def run_analysis(
         if cluster_summary:
             text_lines.append("")
             text_lines.append(cluster_summary)
+        slopes_summary = format_within_region_slopes(explanatory_raw)
+        if slopes_summary:
+            text_lines.append("")
+            text_lines.append(slopes_summary)
     else:
         text_lines.append(
             "Explanatory Association Summary (robust HC3 standard errors)\n"

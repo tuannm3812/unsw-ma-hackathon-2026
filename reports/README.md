@@ -24,29 +24,37 @@ against `data/Kiva_Loans.pkl`, **not** by either full-dataset notebook
 Kaggle; see `README.md`'s Kaggle Workflow section). Note that a few
 figures in that README section are deliberately quoted from the
 *notebooks'* own models instead - they are labelled as such inline, and
-exist to document where the two implementations disagree (family framing
-in Asia, and sentiment tone). Those numbers will not be found in the
-files here; the Kaggle run logs are their source.
+exist to document where the two implementations differ (sentiment tone's
+significance is the genuine disagreement; the family-framing
+within-region averages agree across all fits). Those numbers will not be
+found in the files here; the Kaggle run logs are their source.
 
-`association_summary.txt` carries **two appended addendum sections**
-beyond the original run, each labelled with its own generation date since
-`analysis_summary.json`'s single top-level `generated_at` field does not
-cover them:
+Beyond the audit trail, classifier metrics and coefficient tables,
+`association_summary.txt` contains **two pipeline-generated sections**
+(both produced by `run_analysis` itself when
+`--cluster-sensitivity-column country_name` is passed; both also have
+machine-readable counterparts under `analysis_summary.json`'s
+`explanatory` key):
 
 1. **Cluster-Robust Sensitivity Check** - HC3 vs. country-clustered
    standard errors for every coefficient in both explanatory models.
-2. **Simple-Slope Contrasts** - the within-region family-framing slopes,
-   which is what the project's headline narrative-framing claim actually
-   rests on. An interaction coefficient alone does not establish a
-   within-region association; this section is the correct test.
+2. **Average Within-Region Family-Framing Slopes** - each region
+   category's family-framing slope averaged over that category's own
+   moderator composition, which is what the project's headline
+   narrative-framing claim actually rests on. An interaction coefficient
+   alone does not establish a within-region association, and
+   "main effect + region term" is a slope at one unrepresentative cell -
+   this section is the correct quantity, computed and tested in
+   `src/statistical_analysis.py` (see
+   `test_average_group_slopes_match_brute_force_rowwise_average`).
 
-Both were produced by calling `fit_explanatory_models(...,
-cluster_sensitivity_col="country_name")` directly against the same data
-and formulas, spliced in rather than regenerated via a full pipeline
-re-run since no other stage changed. **A regeneration that omits
-`--cluster-sensitivity-column country_name` will drop the first section
-and the inputs the second depends on** - see `README.md`'s reproduction
-command, which includes the flag for exactly this reason.
+**A regeneration that omits `--cluster-sensitivity-column country_name`
+will drop both sections** - see `README.md`'s reproduction command, which
+includes the flag for exactly this reason. (Earlier snapshots of this
+directory carried these results as manually appended addenda, one of
+which - a "Simple-Slope Contrasts" section computing slopes at a single
+reference cell - was withdrawn as incorrect; both are now first-class
+pipeline output.)
 
 ## Regenerating a report
 

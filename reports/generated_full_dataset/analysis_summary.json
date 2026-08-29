@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-27T03:30:41.984497+00:00",
+  "generated_at": "2026-08-29T07:18:50.976973+00:00",
   "software_versions": {
     "python": "3.9.6",
     "pandas": "2.3.3",
@@ -2129,6 +2129,122 @@
     "duration_clustered_fitted": true,
     "binary_clustered_fitted": true,
     "duration_clustered_error": null,
-    "binary_clustered_error": null
+    "binary_clustered_error": null,
+    "within_region_slopes": {
+      "focal_term": "family_mentions_per_100_words",
+      "group_factor": "region_group",
+      "duration": [
+        {
+          "group": "Africa",
+          "n_loans": 610368,
+          "n_clusters": 27,
+          "estimate": -0.015792784403520582,
+          "hc3_p": 1.5246165905686798e-88,
+          "clustered_p": 0.3224600938206005,
+          "significant_under_both": false
+        },
+        {
+          "group": "Asia",
+          "n_loans": 738191,
+          "n_clusters": 12,
+          "estimate": 0.023448686886635955,
+          "hc3_p": 3.3280326215961055e-232,
+          "clustered_p": 0.08456212491834257,
+          "significant_under_both": false
+        },
+        {
+          "group": "Central America",
+          "n_loans": 59391,
+          "n_clusters": 2,
+          "estimate": -0.07421196719281065,
+          "hc3_p": 5.6132009124373e-115,
+          "clustered_p": 2.115969518819319e-26,
+          "significant_under_both": true
+        },
+        {
+          "group": "Middle East",
+          "n_loans": 14946,
+          "n_clusters": 2,
+          "estimate": -0.07293242033002335,
+          "hc3_p": 8.901570970772844e-33,
+          "clustered_p": 1.7139967183343458e-07,
+          "significant_under_both": true
+        },
+        {
+          "group": "North America",
+          "n_loans": 7559,
+          "n_clusters": 1,
+          "estimate": 0.012723377910642767,
+          "hc3_p": 0.00015532222198833516,
+          "clustered_p": 0.009378608072229093,
+          "significant_under_both": true
+        },
+        {
+          "group": "Oceania",
+          "n_loans": 23385,
+          "n_clusters": 4,
+          "estimate": 0.004971777941828945,
+          "hc3_p": 0.15837221337845842,
+          "clustered_p": 0.8948859801024867,
+          "significant_under_both": false
+        }
+      ],
+      "binary": [
+        {
+          "group": "Africa",
+          "n_loans": 610368,
+          "n_clusters": 27,
+          "estimate": 0.02707941699664501,
+          "hc3_p": 1.466738429052274e-31,
+          "clustered_p": 0.4074847462769231,
+          "significant_under_both": false
+        },
+        {
+          "group": "Asia",
+          "n_loans": 738191,
+          "n_clusters": 12,
+          "estimate": -0.03040196054776094,
+          "hc3_p": 1.9689946757079853e-57,
+          "clustered_p": 0.2859599612179998,
+          "significant_under_both": false
+        },
+        {
+          "group": "Central America",
+          "n_loans": 59391,
+          "n_clusters": 2,
+          "estimate": 0.10253855070215284,
+          "hc3_p": 5.06514667129979e-25,
+          "clustered_p": 1.5176153417227844e-05,
+          "significant_under_both": true
+        },
+        {
+          "group": "Middle East",
+          "n_loans": 14946,
+          "n_clusters": 2,
+          "estimate": 0.1753209065783521,
+          "hc3_p": 9.522870911968009e-12,
+          "clustered_p": 0.003960173730704055,
+          "significant_under_both": true
+        },
+        {
+          "group": "North America",
+          "n_loans": 7559,
+          "n_clusters": 1,
+          "estimate": 0.003167495408044032,
+          "hc3_p": 0.7759418707828751,
+          "clustered_p": 0.6570001948065362,
+          "significant_under_both": false
+        },
+        {
+          "group": "Oceania",
+          "n_loans": 23385,
+          "n_clusters": 4,
+          "estimate": -0.07225422970880922,
+          "hc3_p": 2.409953539472417e-14,
+          "clustered_p": 0.4283985764096532,
+          "significant_under_both": false
+        }
+      ]
+    }
   }
 }

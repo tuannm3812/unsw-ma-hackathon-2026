@@ -573,7 +573,113 @@ def fit_explanatory_models(
         result["binary_clustered_error"] = binary_clustered_error
         result["cluster_sensitivity_col"] = cluster_sensitivity_col
 
+        # Average within-group slopes for the focal narrative measure.
+        # An interaction coefficient only tests whether a group's slope
+        # differs from the reference group's; and because the focal term
+        # is interacted with several moderators at once, "main effect +
+        # group term" is the slope only at the OTHER moderators' reference
+        # levels - one unrepresentative cell. The quantity a group-level
+        # claim actually needs is the slope averaged over that group's own
+        # observed moderator composition, which is what this computes (see
+        # `_average_group_slopes`). Gated on `cluster_sensitivity_col`
+        # because the whole point is reporting it under both HC3 and the
+        # cluster-robust covariance.
+        result["within_region_slopes"] = {
+            "focal_term": WITHIN_GROUP_FOCAL_TERM,
+            "group_factor": WITHIN_GROUP_FACTOR,
+            "duration": _average_group_slopes(
+                duration_results, duration_clustered, duration_data,
+                WITHIN_GROUP_FOCAL_TERM, WITHIN_GROUP_FACTOR, cluster_sensitivity_col,
+            ),
+            "binary": _average_group_slopes(
+                binary_results, binary_clustered, binary_data,
+                WITHIN_GROUP_FOCAL_TERM, WITHIN_GROUP_FACTOR, cluster_sensitivity_col,
+            ),
+        }
+
     return result
+
+
+# The focal continuous measure and grouping factor for the average
+# within-group slope report. Module constants (not per-call arguments on
+# `fit_explanatory_models`) because they are part of this project's
+# pre-specified design - the family-framing-by-region question - not a
+# free parameter a caller should vary run to run.
+WITHIN_GROUP_FOCAL_TERM = "family_mentions_per_100_words"
+WITHIN_GROUP_FACTOR = "region_group"
+
+
+def _average_group_slopes(
+    hc3_results, clustered_results, data: pd.DataFrame,
+    focal_term: str, group_factor: str, cluster_col: str,
+):
+    """
+    For each level of `group_factor`, compute the slope of the outcome in
+    `focal_term`, averaged over that group's own observed composition of
+    every OTHER moderator `focal_term` is interacted with - as a single
+    weighted linear contrast, so `t_test` applies the fitted covariance
+    (HC3 or cluster-robust) to it exactly as to any coefficient.
+
+    Returns a list of JSON-safe dicts (one per group level, sorted), or a
+    string error message when the inputs cannot support the calculation
+    (either model missing, or the focal term pruned from the fit). The
+    reference group has no interaction term of its own; its average slope
+    is the focal main effect plus its weighted non-group interactions.
+
+    Weights come from the rows the model actually fitted
+    (`results.model.data.row_labels`), not the caller's full frame - patsy
+    silently drops rows with a missing predictor, and composition weights
+    must describe the fitted sample.
+    """
+    if hc3_results is None or clustered_results is None:
+        return "not computed - the model or its cluster-robust refit did not fit"
+    param_names = list(hc3_results.params.index)
+    if focal_term not in param_names:
+        return f"not computed - {focal_term!r} is not in the fitted model"
+
+    row_labels = hc3_results.model.data.row_labels
+    fitted = data.loc[row_labels] if row_labels is not None else data
+
+    group_terms = {}
+    other_moderator_terms = []
+    group_prefix = f"{focal_term}:C({group_factor})[T."
+    for name in param_names:
+        if name.startswith(group_prefix):
+            group_terms[name[len(group_prefix):].rstrip("]")] = name
+        elif name.startswith(f"{focal_term}:C("):
+            other_moderator_terms.append(name)
+
+    rows = []
+    for level in sorted(fitted[group_factor].astype(str).unique()):
+        subset = fitted.loc[fitted[group_factor].astype(str) == level]
+        pieces = [focal_term]
+        if level in group_terms:
+            pieces.append(group_terms[level])
+        for term in other_moderator_terms:
+            column = term.split(":C(")[1].split(")[T.")[0]
+            moderator_level = term.split(")[T.")[1].rstrip("]")
+            if column not in subset.columns:
+                continue
+            weight = float((subset[column].astype(str) == moderator_level).mean())
+            if weight > 0:
+                pieces.append(f"{weight:.10f} * {term}")
+        contrast = " + ".join(pieces) + " = 0"
+
+        t_hc3 = hc3_results.t_test(contrast)
+        t_clustered = clustered_results.t_test(contrast)
+        estimate = float(np.ravel(t_hc3.effect)[0])
+        hc3_p = float(np.ravel(t_hc3.pvalue)[0])
+        clustered_p = float(np.ravel(t_clustered.pvalue)[0])
+        rows.append({
+            "group": level,
+            "n_loans": int(len(subset)),
+            "n_clusters": int(subset[cluster_col].nunique()) if cluster_col in subset.columns else None,
+            "estimate": estimate,
+            "hc3_p": hc3_p,
+            "clustered_p": clustered_p,
+            "significant_under_both": bool(hc3_p < 0.05 and clustered_p < 0.05),
+        })
+    return rows
 
 
 def _format_coefficient_lines(results, dependent_label: str) -> "list[str]":
@@ -757,9 +863,9 @@ def format_cluster_sensitivity_summary(results: "dict[str, object]") -> str:
         "conditions) that HC3 cannot see. This refits the identical duration "
         f"and 24-hour formulas with standard errors clustered by {cluster_col} "
         "instead, and compares which coefficients clear p < 0.05 under each - "
-        "a coefficient significant under both is a materially more "
-        "trustworthy finding than one that only clears HC3's stricter "
-        "independence assumption.",
+        "a same-data specification-robustness check: a coefficient "
+        "significant under both is robust to relaxing HC3's independence "
+        "assumption, while one significant only under HC3 is not.",
         "",
     ]
 
@@ -780,6 +886,69 @@ def format_cluster_sensitivity_summary(results: "dict[str, object]") -> str:
     else:
         lines.extend(_significance_comparison_lines(binary_hc3, binary_clustered))
 
+    return "\n".join(lines)
+
+
+def format_within_region_slopes(results: "dict[str, object]") -> str:
+    """
+    Render `fit_explanatory_models`'s average within-group slopes (computed
+    when `cluster_sensitivity_col` was passed) as a human-readable section.
+    Returns an empty string when the digest is absent, so a caller can
+    append it unconditionally the same way as
+    `format_cluster_sensitivity_summary`.
+    """
+    digest = results.get("within_region_slopes")
+    if not digest:
+        return ""
+    focal = digest["focal_term"]
+    group_factor = digest["group_factor"]
+    cluster_col = results.get("cluster_sensitivity_col", "cluster")
+
+    lines = [
+        "Average Within-Region Family-Framing Slopes",
+        "=" * 62,
+        "",
+        f"An interaction coefficient only tests whether a {group_factor} level's "
+        f"{focal} slope differs from the reference level's. It does NOT test "
+        "whether the focal measure is associated with the outcome WITHIN that "
+        "group - and because the focal term is interacted with several "
+        "moderators at once, 'main effect + group term' is the slope only at "
+        "the other moderators' reference levels, one unrepresentative cell. "
+        "This section reports the correct quantity: each group's slope "
+        "averaged over that group's own observed composition of the other "
+        "moderators, as a weighted linear contrast, under both HC3 and "
+        f"{cluster_col}-clustered standard errors.",
+        "",
+        "Sign conventions are OPPOSITE between the two models: the duration "
+        "model is log(1 + days), so NEGATIVE = faster funding; the 24-hour "
+        "model is log-odds of funding within 24h, so POSITIVE = faster.",
+        "",
+        "A group's slope is identified only by the clusters within it; a "
+        "group containing very few clusters cannot separate the focal "
+        "association from whatever else is idiosyncratic about those "
+        "specific clusters, and its estimate pools the whole group - it is "
+        "not evidence about any individual constituent cluster.",
+        "",
+    ]
+
+    def _section(title, key):
+        lines.append(title)
+        section = digest.get(key)
+        if isinstance(section, str) or section is None:
+            lines.append(f"  {section or 'not computed'}")
+            return
+        for row in section:
+            verdict = "significant under both" if row["significant_under_both"] else "not significant under both"
+            clusters = f", {row['n_clusters']} {cluster_col} cluster(s)" if row.get("n_clusters") is not None else ""
+            lines.append(
+                f"  - {row['group']} ({row['n_loans']} loans{clusters}): "
+                f"estimate={row['estimate']:.4f} HC3 p={row['hc3_p']:.4f} | "
+                f"clustered p={row['clustered_p']:.4f} [{verdict}]"
+            )
+
+    _section("Duration model (log funding speed; NEGATIVE = faster):", "duration")
+    lines.append("")
+    _section("24-hour funding model (log-odds; POSITIVE = faster):", "binary")
     return "\n".join(lines)
 
 

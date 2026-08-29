@@ -164,15 +164,10 @@ Dropped for lacking variation in this sample: sentiment_available
   - urgency_mentions_per_100_words: coefficient 0.2219 (95% CI [0.1706, 0.2732], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
   - desc_sentiment_compound: coefficient -0.1860 (95% CI [-0.2054, -0.1666], p=0.0000) is associated with the log-odds of funding within 24 hours, holding the other modeled predictors fixed.
 
-
-Addendum, generated 2026-08-28
---------------------------------------------------------------
-Generated via a direct fit_explanatory_models(..., cluster_sensitivity_col="country_name") call against the same source data and formulas as the sections above, rather than a full run_analysis.py re-run (no other pipeline stage changed). See docs/superpowers/collab-logs/2026-08-17-hackathon-upgrade-collab-log.md for the discussion this responds to.
-
 Cluster-Robust Sensitivity Check
 ==============================================================
 
-HC3 standard errors correct for heteroskedasticity but still assume independent observations. Loans sharing a country_name may share unobserved influences (field-partner writing templates, local conditions) that HC3 cannot see. This refits the identical duration and 24-hour formulas with standard errors clustered by country_name instead, and compares which coefficients clear p < 0.05 under each - a coefficient significant under both is a materially more trustworthy finding than one that only clears HC3's stricter independence assumption.
+HC3 standard errors correct for heteroskedasticity but still assume independent observations. Loans sharing a country_name may share unobserved influences (field-partner writing templates, local conditions) that HC3 cannot see. This refits the identical duration and 24-hour formulas with standard errors clustered by country_name instead, and compares which coefficients clear p < 0.05 under each - a same-data specification-robustness check: a coefficient significant under both is robust to relaxing HC3's independence assumption, while one significant only under HC3 is not.
 
 Duration model (log funding speed):
   - C(gender_classification)[T.male]: HC3 p=0.0000 (significant); clustered p=0.0000 (significant) [same conclusion]
@@ -305,36 +300,29 @@ Duration model (log funding speed):
   - agency_mentions_per_100_words: HC3 p=0.0000 (significant); clustered p=0.2045 (not significant) [CONCLUSION CHANGES]
   - urgency_mentions_per_100_words: HC3 p=0.0000 (significant); clustered p=0.2233 (not significant) [CONCLUSION CHANGES]
   - desc_sentiment_compound: HC3 p=0.0000 (significant); clustered p=0.0190 (significant) [same conclusion]
-Average Within-Region Family-Framing Slopes, generated 2026-08-29
---------------------------------------------------------------
-SUPERSEDES an earlier "Simple-Slope Contrasts" section generated 2026-08-28, which was withdrawn as incorrect. That section computed `family main effect + region interaction`. Because family_mentions_per_100_words is interacted with FOUR moderators in this pipeline (analysis_period, region_group, loan_size_band, sector_group), its main effect is the family slope only when ALL of the others sit at their reference levels - here pre_pandemic x small x Agriculture. That contrast therefore described one unrepresentative cell, not the region. The same mistake in kind as reading an interaction coefficient as a within-region association, one level up.
 
-This section reports the correct quantity: for each region, the family-framing slope AVERAGED over that region's own distribution of period, loan size and sector. Each average is a weighted sum of coefficients, hence still a single linear contrast, so HC3 and country-clustered standard errors apply to it exactly as to any coefficient.
+Average Within-Region Family-Framing Slopes
+==============================================================
 
-Sign conventions are OPPOSITE between the two models: the duration model is log(1 + days), so NEGATIVE = faster funding; the 24-hour model is log-odds of funding within 24h, so POSITIVE = faster funding.
+An interaction coefficient only tests whether a region_group level's family_mentions_per_100_words slope differs from the reference level's. It does NOT test whether the focal measure is associated with the outcome WITHIN that group - and because the focal term is interacted with several moderators at once, 'main effect + group term' is the slope only at the other moderators' reference levels, one unrepresentative cell. This section reports the correct quantity: each group's slope averaged over that group's own observed composition of the other moderators, as a weighted linear contrast, under both HC3 and country_name-clustered standard errors.
 
-Countries per region group (48 total): Africa 27, Asia 12, Oceania 4, Central America 2 (Honduras, Nicaragua), Middle East 2 (Palestine, Yemen), North America 1 (Haiti). A region's slope is identified only by the countries within it; with two (or one), the estimate cannot separate a family-framing association from whatever else is idiosyncratic about those specific countries - which is the confound clustering by country exists to take seriously.
+Sign conventions are OPPOSITE between the two models: the duration model is log(1 + days), so NEGATIVE = faster funding; the 24-hour model is log-odds of funding within 24h, so POSITIVE = faster.
+
+A group's slope is identified only by the clusters within it; a group containing very few clusters cannot separate the focal association from whatever else is idiosyncratic about those specific clusters, and its estimate pools the whole group - it is not evidence about any individual constituent cluster.
 
 Duration model (log funding speed; NEGATIVE = faster):
-  - Africa: estimate=-0.0158 HC3 p=0.0000 | clustered p=0.3225 [not significant under both]
-  - Asia: estimate=+0.0234 HC3 p=0.0000 | clustered p=0.0846 [not significant under both]
-  - Central America: estimate=-0.0742 HC3 p=0.0000 | clustered p=0.0000 [significant under both]
-  - Middle East: estimate=-0.0729 HC3 p=0.0000 | clustered p=0.0000 [significant under both]
-  - North America: estimate=+0.0127 HC3 p=0.0002 | clustered p=0.0094 [significant under both]
-  - Oceania: estimate=+0.0050 HC3 p=0.1584 | clustered p=0.8949 [not significant under both]
+  - Africa (610368 loans, 27 country_name cluster(s)): estimate=-0.0158 HC3 p=0.0000 | clustered p=0.3225 [not significant under both]
+  - Asia (738191 loans, 12 country_name cluster(s)): estimate=0.0234 HC3 p=0.0000 | clustered p=0.0846 [not significant under both]
+  - Central America (59391 loans, 2 country_name cluster(s)): estimate=-0.0742 HC3 p=0.0000 | clustered p=0.0000 [significant under both]
+  - Middle East (14946 loans, 2 country_name cluster(s)): estimate=-0.0729 HC3 p=0.0000 | clustered p=0.0000 [significant under both]
+  - North America (7559 loans, 1 country_name cluster(s)): estimate=0.0127 HC3 p=0.0002 | clustered p=0.0094 [significant under both]
+  - Oceania (23385 loans, 4 country_name cluster(s)): estimate=0.0050 HC3 p=0.1584 | clustered p=0.8949 [not significant under both]
 
 24-hour funding model (log-odds; POSITIVE = faster):
-  - Africa: estimate=+0.0271 HC3 p=0.0000 | clustered p=0.4075 [not significant under both]
-  - Asia: estimate=-0.0304 HC3 p=0.0000 | clustered p=0.2860 [not significant under both]
-  - Central America: estimate=+0.1025 HC3 p=0.0000 | clustered p=0.0000 [significant under both]
-  - Middle East: estimate=+0.1753 HC3 p=0.0000 | clustered p=0.0040 [significant under both]
-  - North America: estimate=+0.0032 HC3 p=0.7759 | clustered p=0.6570 [not significant under both]
-  - Oceania: estimate=-0.0723 HC3 p=0.0000 | clustered p=0.4284 [not significant under both]
+  - Africa (610368 loans, 27 country_name cluster(s)): estimate=0.0271 HC3 p=0.0000 | clustered p=0.4075 [not significant under both]
+  - Asia (738191 loans, 12 country_name cluster(s)): estimate=-0.0304 HC3 p=0.0000 | clustered p=0.2860 [not significant under both]
+  - Central America (59391 loans, 2 country_name cluster(s)): estimate=0.1025 HC3 p=0.0000 | clustered p=0.0000 [significant under both]
+  - Middle East (14946 loans, 2 country_name cluster(s)): estimate=0.1753 HC3 p=0.0000 | clustered p=0.0040 [significant under both]
+  - North America (7559 loans, 1 country_name cluster(s)): estimate=0.0032 HC3 p=0.7759 | clustered p=0.6570 [not significant under both]
+  - Oceania (23385 loans, 4 country_name cluster(s)): estimate=-0.0723 HC3 p=0.0000 | clustered p=0.4284 [not significant under both]
 
-Interpretation: only Middle East and Central America are significant under clustering in BOTH models here, in the faster-funding direction in both, and they are also significant in the simpler notebook model (notebooks/2_full_dataset_modeling.ipynb section 7.2: -0.1236 and -0.0618, both clustered p<0.0001). That is 3 of 3 fits agreeing in sign and significance - the strongest narrative-framing evidence in this project.
-
-Two cautions attach to it. First, magnitude is specification-sensitive even where significance is not: the Middle East estimate is -0.0729 here and -0.1236 in the notebook's simpler model (~1.7x), mostly because this pipeline additionally interacts family framing with sector. Second, and more important, Middle East and Central America are two countries each, so this is best described as a four-country association (Palestine, Yemen, Honduras, Nicaragua - about 5% of all loans), exploratory in scope, not a regional rule.
-
-Asia is NOT significant in any of the three fits (clustered p=0.0846 duration, 0.2860 binary here; 0.0535 in the notebook). An earlier version of this analysis reported Asia as significant in the opposite direction; that was an artifact of the withdrawn reference-cell contrast described above, not a specification disagreement.
-
-North America is significant in this pipeline's duration model only (clustered p=0.0094) and in neither of the other two fits (0.6570 here, 0.0621 in the notebook). It is a single country (Haiti), i.e. one cluster, so it is reported for completeness and explicitly not claimed as a finding.
