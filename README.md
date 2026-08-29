@@ -78,6 +78,7 @@ unsw-ma-hackathon-2026/
 │   └── Kiva Data Dictionary.xlsx     # Field-level schema reference (git-ignored)
 ├── docs/
 │   ├── 0_coding_standards.md          # This project's coding standards (tailored from the shared baseline)
+│   ├── presentation/                  # Final-round materials: deck content brief + Q&A prep (each as .html original + .md rendering)
 │   └── superpowers/                   # Design spec, plan, and full collaboration log
 ├── notebooks/
 │   ├── 0_starter_eda.ipynb/.py            # Preliminary - 100-row sample, pipeline demonstration only

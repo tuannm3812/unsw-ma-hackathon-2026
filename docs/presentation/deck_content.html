@@ -1,0 +1,462 @@
+<!doctype html>
+<title>Beyond a Good Story</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    --paper: #faf7f0;
+    --ink: #1e2a2f;
+    --primary: #1f4e5f;
+    --primary-ink: #ffffff;
+    --accent: #c97b3d;
+    --accent-ink: #241305;
+    --line: #dcd3c0;
+    --muted: #6e6a5e;
+    --card: #ffffff;
+    --tag-authoritative: #2f6b45;
+    --tag-authoritative-bg: #e3efe4;
+    --tag-notebook: #6b4fa0;
+    --tag-notebook-bg: #ece5f5;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #14181a;
+      --ink: #ede7da;
+      --primary: #6fa8b8;
+      --primary-ink: #0d1f24;
+      --accent: #e3a468;
+      --accent-ink: #241305;
+      --line: #2b322f;
+      --muted: #9b9587;
+      --card: #1b2124;
+      --tag-authoritative: #8fd6a4;
+      --tag-authoritative-bg: #1c2e21;
+      --tag-notebook: #c6b3ea;
+      --tag-notebook-bg: #291f38;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #14181a;
+    --ink: #ede7da;
+    --primary: #6fa8b8;
+    --primary-ink: #0d1f24;
+    --accent: #e3a468;
+    --accent-ink: #241305;
+    --line: #2b322f;
+    --muted: #9b9587;
+    --card: #1b2124;
+    --tag-authoritative: #8fd6a4;
+    --tag-authoritative-bg: #1c2e21;
+    --tag-notebook: #c6b3ea;
+    --tag-notebook-bg: #291f38;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Source Sans 3", system-ui, -apple-system, sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  ::selection { background: var(--accent); color: var(--accent-ink); }
+
+  .wrap { max-width: 860px; margin: 0 auto; padding: 4rem 1.5rem 6rem; }
+
+  h1, h2, h3 { font-family: "Fraunces", Georgia, serif; text-wrap: balance; margin: 0; }
+
+  header.masthead {
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 2.5rem;
+  }
+  .eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.9rem;
+  }
+  header.masthead h1 {
+    font-size: clamp(2.3rem, 5vw, 3.1rem);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  header.masthead .subtitle {
+    font-size: 1.15rem;
+    color: var(--muted);
+    margin-top: 0.7rem;
+    max-width: 40rem;
+  }
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.6rem;
+    margin-top: 1.8rem;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  .meta-row strong { color: var(--ink); font-weight: 600; }
+
+  section { margin-bottom: 3.2rem; }
+  h2.section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+  h2.section-title .num {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.95rem;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  p.lede { color: var(--muted); max-width: 42rem; margin: 0 0 1.4rem; }
+
+  /* --- Coverage audit strip --- */
+  .audit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .audit-cell {
+    background: var(--card);
+    padding: 1.1rem 1.2rem;
+  }
+  .audit-cell .label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+  }
+  .audit-cell .status {
+    font-weight: 600;
+    color: var(--tag-authoritative);
+    font-size: 0.95rem;
+  }
+  .audit-cell .status::before { content: "✓  "; }
+
+  /* --- Slide cards --- */
+  .slide-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 1.8rem 2rem 2rem;
+    margin-bottom: 1.3rem;
+    position: relative;
+  }
+  .slide-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    margin-bottom: 0.9rem;
+  }
+  .slide-num {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.85rem;
+    color: var(--primary-ink);
+    background: var(--primary);
+    padding: 0.15rem 0.55rem;
+    border-radius: 5px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .slide-head h3 { font-size: 1.35rem; font-weight: 600; }
+
+  .stat-callout {
+    font-family: "Fraunces", serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: var(--accent);
+    margin: 0.6rem 0 1rem;
+    line-height: 1.3;
+  }
+  .stat-callout .unit { font-size: 1rem; color: var(--muted); font-family: "Source Sans 3", sans-serif; font-weight: 500; }
+
+  .slide-card ul { margin: 0.6rem 0 1rem; padding-left: 1.2rem; }
+  .slide-card li { margin-bottom: 0.45rem; }
+  .slide-card li::marker { color: var(--accent); }
+
+  .visual-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.76rem;
+    color: var(--primary);
+    background: color-mix(in srgb, var(--primary) 10%, var(--card));
+    border: 1px solid color-mix(in srgb, var(--primary) 30%, var(--card));
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    margin-top: 0.4rem;
+  }
+  .speaker-note {
+    margin-top: 0.9rem;
+    padding-top: 0.9rem;
+    border-top: 1px dashed var(--line);
+    font-size: 0.92rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+  .speaker-note strong { font-style: normal; color: var(--ink); }
+
+  /* --- Numbers reference table --- */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.92rem; min-width: 640px; }
+  thead th {
+    text-align: left;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: color-mix(in srgb, var(--line) 40%, var(--paper));
+    padding: 0.7rem 0.9rem;
+    border-bottom: 1px solid var(--line);
+  }
+  tbody td { padding: 0.65rem 0.9rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  td.num { font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .src-tag {
+    display: inline-block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.68rem;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  .src-tag.authoritative { color: var(--tag-authoritative); background: var(--tag-authoritative-bg); }
+  .src-tag.notebook { color: var(--tag-notebook); background: var(--tag-notebook-bg); }
+
+  .callout-box {
+    border-left: 3px solid var(--accent);
+    background: color-mix(in srgb, var(--accent) 8%, var(--card));
+    border-radius: 0 10px 10px 0;
+    padding: 1.1rem 1.3rem;
+    margin: 1.2rem 0;
+  }
+  .callout-box strong { color: var(--accent); }
+
+  footer {
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 600px) {
+    .wrap { padding: 2.5rem 1.1rem 4rem; }
+    .slide-card { padding: 1.4rem 1.3rem 1.6rem; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="eyebrow">Deck content brief · UNSW Marketing Analytics Hackathon 2026 · Team Cultural Blend</div>
+    <h1>Beyond a Good Story</h1>
+    <p class="subtitle">When — and for whom — does a persuasive loan story actually speed up funding? Slide-ready content, pulled from the verified full-dataset analysis, for the final presentation.</p>
+    <div class="meta-row">
+      <span><strong>Deadline</strong> 2026-09-03, 5:00pm Sydney</span>
+      <span><strong>Format</strong> Slides only</span>
+      <span><strong>Time limit</strong> 10 min presenting, then 10 min Q&amp;A</span>
+      <span><strong>Judging</strong> Panel 80% + Audience vote 20%</span>
+    </div>
+  </header>
+
+  <section>
+    <div class="callout-box">
+      <strong>Format update from the organizer (2026-08-28):</strong> presentation is strictly timed at 10 minutes, cut off when time is up. <strong>No background/intro slide</strong> — the organizer introduces Kiva and the dataset to everyone, so don't spend a slide on it. Explicit instruction: <strong>quality over quantity of findings.</strong> Below, Slide 3 is trimmed to methods-only for this reason, and Slides 7 and 9 are marked as trim candidates if the deck needs to shrink further to comfortably fit 10 minutes.
+    </div>
+    <h2 class="section-title"><span class="num">§0</span> Research question coverage</h2>
+    <p class="lede">Checked against the proposal's central and supporting questions before writing a single slide — every question the project committed to has a real, verified answer.</p>
+    <div class="audit-grid">
+      <div class="audit-cell">
+        <div class="label">Central question</div>
+        <div class="status">Answered</div>
+      </div>
+      <div class="audit-cell">
+        <div class="label">Framing vs. structure</div>
+        <div class="status">Answered</div>
+      </div>
+      <div class="audit-cell">
+        <div class="label">Segment differences</div>
+        <div class="status">Answered</div>
+      </div>
+      <div class="audit-cell">
+        <div class="label">Pandemic-era shift</div>
+        <div class="status">Answered</div>
+      </div>
+      <div class="audit-cell">
+        <div class="label">Predictive value</div>
+        <div class="status">Answered</div>
+      </div>
+    </div>
+    <div class="callout-box">
+      <strong>One thing to know before building slides:</strong> two sets of numbers exist in this repo — the <span class="src-tag authoritative">authoritative</span> full pipeline (<code>reports/generated_full_dataset/</code>) and the <span class="src-tag notebook">notebook</span> versions (self-contained Kaggle notebooks, built for readability). They agree directionally on most findings, but they do <strong>not</strong> always agree on statistical significance — two results (family framing in Asia, and sentiment tone) are significant in one pipeline and not the other. Where they disagree, this brief reports the disagreement rather than picking a side. <strong>Use the authoritative numbers on slides</strong> — the reference table at the bottom of this document has both, clearly marked.
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title"><span class="num">§1</span> Proposed slide sequence</h2>
+    <p class="lede">10 slides, each with a headline, the number to put on it, and exactly which notebook section to screenshot for the real chart. Speaker notes are the one sentence to say out loud, not read off the slide. At roughly a minute a slide this fits the 10-minute limit, but rehearse with a timer — Slides 7 and 9 are the first to cut if it runs long.</p>
+
+    <div class="slide-card">
+      <div class="slide-head"><span class="slide-num">1</span><h3>Title</h3></div>
+      <ul>
+        <li><strong>Beyond a Good Story</strong> — When (and for whom) does persuasive loan language actually speed up funding?</li>
+        <li>Team Cultural Blend · Kiva loan data · 1.45 million real loans</li>
+      </ul>
+    </div>
+
+    <div class="slide-card">
+      <div class="slide-head"><span class="slide-num">2</span><h3>The question</h3></div>
+      <ul>
+        <li>When a loan's story leans on family, competence, or urgency — does it get funded faster?</li>
+        <li>Does the answer depend on <em>who's</em> asking and <em>when</em>?</li>
+      </ul>
+      <p><strong>Why it matters:</strong> framing is the one thing a platform can actually coach. Loan size, sector, and geography can't be rewritten after the fact.</p>
+    </div>
+
+    <div class="slide-card">
+      <div class="slide-head"><span class="slide-num">3</span><h3>How we made sure findings are real</h3></div>
+      <ul>
+        <li>Trained only on the past, tested only on loans posted in 2024–2025 — no peeking at the future.</li>
+        <li>Two independent methods (statistical regression + machine learning) had to agree before a finding made the deck.</li>
+        <li>Every "significant" result was re-tested under a stricter, more conservative statistical assumption — several headline-looking results didn't survive (Slide 6).</li>
+      </ul>
+      <span class="visual-tag">Source: modeling notebook, §4 Data Split + §7.1 Cluster-Robust Sensitivity Check</span>
+      <div class="speaker-note">Kept to methods only, on the organizer's instruction not to re-cover dataset background they're already introducing.</div>
+    </div>
+
+    <div class="slide-card">
+      <div class="slide-head"><span class="slide-num">4</span><h3>A marketplace that never recovered</h3></div>
+      <div class="stat-callout">46% → 30% → 30% <span class="unit">funded within 24 hours</span></div>
+      <ul>
+        <li>Pre-pandemic, almost half of all loans funded within a day.</li>
+        <li>Since 2020, under a third do — and it has <strong>never</strong> recovered, years after the disruption ended.</li>
+        <li>589,823 loans "before" vs. 565,474 "after" — not a small, noisy sample.</li>
+      </ul>
+      <span class="visual-tag">Source: EDA notebook, §4 Categorical Trends (period chart)</span>
+      <div class="speaker-note">This is the single most concrete, non-technical finding in the whole deck — <strong>lead with it.</strong></div>
+    </div>
+
+    <div class="slide-card">
+      <div class="slide-head"><span class="slide-num">5</span><h3>Structure beats story</h3></div>
+      <ul>
+        <li>Loan amount and repayment terms are linked to funding speed roughly <strong>10× more strongly</strong> than any single narrative choice, in simple comparisons.</li>
+        <li>Sector alone spans well over a full order of magnitude in speed; region and borrower gender show similarly large gaps.</li>
+        <li>Female-posted loans fund in a median 2.3 days; male-posted loans, 7.7 days.</li>
+      </ul>
+      <span class="visual-tag">Source: EDA notebook, §5 Categorical Features + §9 Feature Correlations</span>
+    </div>
+
+    <div class="slide-card">
+      <div class="slide-head"><span class="slide-num">6</span><h3>What survives scrutiny</h3></div>
+      <div class="stat-callout">~Half <span class="unit">of "significant" framing results don't survive a stricter test</span></div>
+      <ul>
+        <li>A standard model made <strong>urgency language</strong> look like a clean, universal win. Re-tested under a stricter, more conservative assumption (standard errors clustered by country, not treated as fully independent), that result doesn't hold up — <strong>we're not recommending it.</strong></li>
+        <li><strong>Family framing</strong> mostly doesn't survive either — and the piece that does is narrower than it first looked. Our original test asked the wrong question (does this region differ from Africa?) instead of the right one (does family framing do anything <em>here</em>?). Re-tested correctly, it holds up in <strong>four countries — Palestine, Yemen, Honduras, Nicaragua</strong> (significant under clustering in all three model fits, both pipelines). Strong evidence, but it is not "the Middle East and Central America" as regions, and it is not a platform-wide writing rule — those four countries are ~5% of all loans.</li>
+        <li><strong>Sentiment tone</strong> — counterintuitively, more positive language links to slower funding, but even this finding's significance is model-sensitive: it survives clustering in the authoritative pipeline, not in the simpler notebook model. Reported as genuinely open, not a third confirmed survivor.</li>
+        <li><strong>Competence/agency language</strong> — no link survives the stricter test. (It did look significant in one of the authoritative pipeline's two models before clustering, then failed — the same fragile pattern as urgency, so don't present it as a clean universal null.)</li>
+        <li>A second, completely different technique (SHAP feature importance from the machine-learning model) independently agrees on urgency and family framing — neither cracks its top 15 factors. Sentiment does (11th place) despite its disputed significance above: real predictive weight and statistical robustness turn out to be different questions.</li>
+      </ul>
+      <span class="visual-tag">Source: modeling notebook, §7.2 within-region slopes (the four-country claim) + §7.1 cluster check + §8 Feature Importance</span>
+      <div class="speaker-note">The most important slide in the deck. Not "framing doesn't matter" — "we tested harder than a typical analysis would, and this is what's actually real." Your answer to "how do we know this isn't a fluke."</div>
+    </div>
+
+    <div class="slide-card">
+      <div class="slide-head"><span class="slide-num">7</span><h3>Beyond keywords</h3></div>
+      <div class="stat-callout">1.5 → 13.5 days <span class="unit">across topics, &gt;9× swing</span></div>
+      <ul>
+        <li>Topic modeling (not just keyword counts) surfaces real, coherent themes: livestock, health &amp; sanitation, clean water, farming, general retail.</li>
+        <li>Funding speed swings more than ninefold across topics — the largest single gap anywhere in the analysis.</li>
+      </ul>
+      <span class="visual-tag">Source: EDA notebook, §8 Topic Modeling</span>
+      <div class="speaker-note">Good "we went further than keyword-spotting" beat for originality. First trim candidate if the deck runs long.</div>
+    </div>
+
+    <div class="slide-card">
+      <div class="slide-head"><span class="slide-num">8</span><h3>What this means in practice</h3></div>
+      <ul>
+        <li>Don't recommend urgency language platform-wide — it looked like a safe, universal tip, but doesn't survive rigorous testing.</li>
+        <li>Family-framing guidance should be a localized A/B test in four countries (Palestine, Yemen, Honduras, Nicaragua) — not a blanket writing rule. Two countries per group is thin evidence, and everywhere else the association vanishes under scrutiny.</li>
+        <li>A structural review (why some sectors/regions fund so much slower) still likely outperforms copywriting coaching alone.</li>
+        <li>A same-day-funding risk flag is buildable <em>today</em> — strong enough (ROC AUC ≈ 0.90) to surface at-risk loans before they stall, no framing insight required.</li>
+      </ul>
+      <div class="speaker-note">This is the practical-implications slide — spend real time here. "Test before you recommend" is itself a practical takeaway, not just a methods footnote.</div>
+    </div>
+
+    <div class="slide-card">
+      <div class="slide-head"><span class="slide-num">9</span><h3>What this can't tell us</h3></div>
+      <ul>
+        <li>Association, never causation — no borrower was randomly assigned a writing style.</li>
+        <li>Measures how fast a <em>funded</em> loan funds — not whether a loan gets funded at all.</li>
+        <li>Framing measured with transparent, simple rules — not a claim to capture every nuance of persuasive writing.</li>
+      </ul>
+      <div class="speaker-note">One slide, said plainly, builds more trust than skipping it. Second trim candidate if the deck runs long.</div>
+    </div>
+
+    <div class="slide-card">
+      <div class="slide-head"><span class="slide-num">10</span><h3>Closing</h3></div>
+      <div class="stat-callout" style="font-size:1.9rem">"The story helps — where it's tested.<br>The structure decides."</div>
+      <ul>
+        <li>Thank you — questions.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title"><span class="num">§2</span> Numbers quick reference</h2>
+    <p class="lede">Every figure used above, with its real source. <span class="src-tag authoritative">authoritative</span> = the tested full pipeline, <code>reports/generated_full_dataset/</code> — put these on slides. <span class="src-tag notebook">notebook</span> = the Kaggle notebooks — directionally identical, use only if you need a chart the authoritative report doesn't render.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Finding</th><th>Value</th><th>Source</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Valid, usable loans</td><td class="num">1,453,840 / 1,453,846</td><td><span class="src-tag authoritative">authoritative</span></td></tr>
+          <tr><td>Funded within 24h — pre-pandemic</td><td class="num">46.0%</td><td><span class="src-tag notebook">notebook</span></td></tr>
+          <tr><td>Funded within 24h — pandemic disruption</td><td class="num">30.3%</td><td><span class="src-tag notebook">notebook</span></td></tr>
+          <tr><td>Funded within 24h — post-pandemic</td><td class="num">30.0%</td><td><span class="src-tag notebook">notebook</span></td></tr>
+          <tr><td>Duration model: gender (male vs. female)</td><td class="num">coef +0.430, HC3 p&lt;0.0001 → clustered p&lt;0.0001 (survives)</td><td><span class="src-tag authoritative">authoritative</span></td></tr>
+          <tr><td>Duration model: urgency framing</td><td class="num">coef −0.063, HC3 p&lt;0.0001 → clustered p=0.49 (does not survive)</td><td><span class="src-tag authoritative">authoritative</span></td></tr>
+          <tr><td>Duration model: family framing (baseline)</td><td class="num">coef −0.023, HC3 p&lt;0.0001 → clustered p=0.20 (does not survive)</td><td><span class="src-tag authoritative">authoritative</span></td></tr>
+          <tr><td><strong>Avg within-region slope</strong>: family in Middle East (Palestine, Yemen)</td><td class="num">−0.1236 notebook · −0.0729 authoritative duration · +0.1753 authoritative 24h — all clustered p&lt;0.005, significant in all 3</td><td><span class="src-tag authoritative">authoritative</span></td></tr>
+          <tr><td><strong>Avg within-region slope</strong>: family in Central America (Honduras, Nicaragua)</td><td class="num">−0.0618 notebook · −0.0742 authoritative duration · +0.1025 authoritative 24h — all clustered p&lt;0.0001, significant in all 3</td><td><span class="src-tag authoritative">authoritative</span></td></tr>
+          <tr><td><strong>Avg within-region slope</strong>: family in Asia (12 countries)</td><td class="num">+0.0338 / +0.0234 / −0.0304 — clustered p=0.0535, 0.0846, 0.2860: not significant in any of the 3 fits</td><td><span class="src-tag authoritative">authoritative</span></td></tr>
+          <tr><td>Avg within-region slope: Africa (27) / Oceania (4) / N. America (1)</td><td class="num">none significant, except N. America in 1 of 3 fits (p=0.0094) — a single country, not claimed</td><td><span class="src-tag authoritative">authoritative</span></td></tr>
+          <tr><td>Countries per region group</td><td class="num">Middle East 2 · Central America 2 · North America 1 · Oceania 4 · Asia 12 · Africa 27</td><td><span class="src-tag authoritative">authoritative</span></td></tr>
+          <tr><td>Duration model: agency framing</td><td class="num">coef +0.001, p=0.31 → p=0.93 (n.s. either way)</td><td><span class="src-tag authoritative">authoritative</span></td></tr>
+          <tr><td>Duration model: sentiment tone</td><td class="num">coef +0.136, HC3 p&lt;0.0001 → clustered p=0.0095 (survives)</td><td><span class="src-tag authoritative">authoritative</span></td></tr>
+          <tr><td>Duration model: sentiment tone (notebook's simpler formula)</td><td class="num">HC3 p&lt;0.0001 → clustered p=0.2544 (does not survive)</td><td><span class="src-tag notebook">notebook</span></td></tr>
+          <tr><td>Cluster-robust check: coefficients changing conclusion</td><td class="num">64 / 128 (50%), both explanatory models combined</td><td><span class="src-tag authoritative">authoritative</span></td></tr>
+          <tr><td>24h classifier: holdout ROC AUC / AP</td><td class="num">0.900 / 0.830</td><td><span class="src-tag authoritative">authoritative</span></td></tr>
+          <tr><td>Duration model: R²</td><td class="num">0.54 (boosted) · Ridge MAE 6.63 days · boosted MAE 5.20 days</td><td><span class="src-tag authoritative">authoritative</span></td></tr>
+          <tr><td>Gender: median funding speed, female vs. male</td><td class="num">2.3 vs. 7.7 days</td><td><span class="src-tag notebook">notebook</span></td></tr>
+          <tr><td>SHAP: narrative-framing rank</td><td class="num">outside the top 15 factors (sentiment 11th)</td><td><span class="src-tag notebook">notebook</span></td></tr>
+          <tr><td>Cluster-robust check: coefficients changing conclusion</td><td class="num">20 / 45 (44%), duration model only</td><td><span class="src-tag notebook">notebook</span></td></tr>
+          <tr><td>Topic modeling: funding-speed range across topics</td><td class="num">1.5 – 13.5 days</td><td><span class="src-tag notebook">notebook</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    Compiled from the verified 2026-08-27/28 Kaggle runs and <code>reports/generated_full_dataset/analysis_summary.json</code> / <code>association_summary.txt</code>. Every number above was cross-checked against a real command output before being written here — none are estimated or recalled from memory.
+  </footer>
+
+</div>

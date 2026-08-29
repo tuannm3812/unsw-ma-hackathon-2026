@@ -1,0 +1,459 @@
+<title>Question Time</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+  :root {
+    --paper: #f7f8f5;
+    --ink: #1b2420;
+    --card: #ffffff;
+    --line: #d8ddd3;
+    --muted: #66705f;
+    --primary: #1f5c46;
+    --primary-ink: #ffffff;
+    --accent: #8c3b2e;
+    --accent-soft: #f3e6e2;
+    --good: #1f5c46;
+    --good-bg: #e4efe7;
+    --warn: #8c3b2e;
+    --warn-bg: #f6e9e5;
+    --chip-notebook: #5c4d8a;
+    --chip-notebook-bg: #ebe7f4;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #151a17;
+      --ink: #e8ebe3;
+      --card: #1d2420;
+      --line: #333d35;
+      --muted: #97a191;
+      --primary: #6fbf9d;
+      --primary-ink: #0e1f18;
+      --accent: #d98a77;
+      --accent-soft: #33221e;
+      --good: #6fbf9d;
+      --good-bg: #1c2f26;
+      --warn: #d98a77;
+      --warn-bg: #33221e;
+      --chip-notebook: #b3a6dd;
+      --chip-notebook-bg: #292339;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #151a17;
+    --ink: #e8ebe3;
+    --card: #1d2420;
+    --line: #333d35;
+    --muted: #97a191;
+    --primary: #6fbf9d;
+    --primary-ink: #0e1f18;
+    --accent: #d98a77;
+    --accent-soft: #33221e;
+    --good: #6fbf9d;
+    --good-bg: #1c2f26;
+    --warn: #d98a77;
+    --warn-bg: #33221e;
+    --chip-notebook: #b3a6dd;
+    --chip-notebook-bg: #292339;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Source Sans 3", system-ui, -apple-system, sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 3.5rem 1.4rem 6rem; }
+  h1, h2, h3, h4 { font-family: "Fraunces", Georgia, serif; text-wrap: balance; margin: 0; }
+  a { color: var(--primary); }
+
+  header.mast { border-bottom: 1px solid var(--line); padding-bottom: 2.2rem; margin-bottom: 2.2rem; }
+  .eyebrow {
+    font-family: "IBM Plex Mono", monospace; font-size: .76rem; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: .8rem;
+  }
+  header.mast h1 { font-size: clamp(2.2rem, 5vw, 3rem); font-weight: 600; }
+  .sub { color: var(--muted); margin-top: .6rem; max-width: 44rem; }
+  .meta { display: flex; flex-wrap: wrap; gap: 1.4rem; margin-top: 1.5rem;
+    font-family: "IBM Plex Mono", monospace; font-size: .8rem; color: var(--muted); }
+  .meta strong { color: var(--ink); }
+
+  nav.toc { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0 0 2.6rem; }
+  nav.toc a {
+    font-family: "IBM Plex Mono", monospace; font-size: .78rem; text-decoration: none;
+    color: var(--primary); border: 1px solid var(--line); background: var(--card);
+    padding: .3rem .7rem; border-radius: 999px;
+  }
+
+  section { margin-bottom: 3rem; }
+  h2.sec { font-size: 1.55rem; font-weight: 600; margin-bottom: 1rem; display: flex; gap: .6rem; align-items: baseline; }
+  h2.sec .n { font-family: "IBM Plex Mono", monospace; font-size: .9rem; color: var(--accent); }
+  h3.sub-sec { font-size: 1.15rem; font-weight: 600; margin: 1.6rem 0 .6rem; }
+  p { margin: 0 0 1rem; }
+  .lede { color: var(--muted); max-width: 46rem; }
+  ul { margin: .4rem 0 1rem; padding-left: 1.25rem; }
+  li { margin-bottom: .45rem; }
+  li::marker { color: var(--accent); }
+
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 1.4rem 1.6rem; margin-bottom: 1.1rem; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 10px 10px 0; padding: 1rem 1.2rem; margin: 1.1rem 0; }
+  .callout strong { color: var(--accent); }
+
+  .arc { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: .9rem; margin: 1.1rem 0; }
+  .act { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.2rem; }
+  .act .k { font-family: "IBM Plex Mono", monospace; font-size: .72rem; letter-spacing: .05em; text-transform: uppercase; color: var(--accent); margin-bottom: .35rem; }
+  .act h4 { font-size: 1.02rem; margin-bottom: .4rem; }
+  .act p { font-size: .92rem; color: var(--muted); margin: 0; }
+
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--card); }
+  table { border-collapse: collapse; width: 100%; font-size: .9rem; min-width: 660px; }
+  thead th { text-align: left; font-family: "IBM Plex Mono", monospace; font-size: .7rem;
+    letter-spacing: .04em; text-transform: uppercase; color: var(--muted);
+    padding: .65rem .85rem; border-bottom: 1px solid var(--line); }
+  tbody td { padding: .6rem .85rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  td.num { font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .tag { display: inline-block; font-family: "IBM Plex Mono", monospace; font-size: .66rem;
+    padding: .12rem .45rem; border-radius: 4px; font-weight: 600; }
+  .tag.sig { color: var(--good); background: var(--good-bg); }
+  .tag.ns { color: var(--muted); background: var(--paper); border: 1px solid var(--line); }
+  .tag.warn { color: var(--warn); background: var(--warn-bg); }
+
+  .qa { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 1.5rem 1.7rem; margin-bottom: 1.2rem; }
+  .qa .qline { display: flex; gap: .8rem; align-items: baseline; margin-bottom: .8rem; }
+  .qa .qnum { font-family: "IBM Plex Mono", monospace; font-size: .8rem; color: var(--primary-ink);
+    background: var(--primary); padding: .12rem .5rem; border-radius: 5px; font-weight: 600; flex-shrink: 0; }
+  .qa h4 { font-size: 1.12rem; font-weight: 600; }
+  .qa .hard { font-family: "IBM Plex Mono", monospace; font-size: .66rem; color: var(--warn);
+    background: var(--warn-bg); padding: .12rem .45rem; border-radius: 4px; margin-left: .4rem; vertical-align: middle; }
+  .label { font-family: "IBM Plex Mono", monospace; font-size: .7rem; letter-spacing: .05em;
+    text-transform: uppercase; color: var(--muted); margin: 1rem 0 .3rem; }
+  .qa .answer { margin: 0 0 .2rem; }
+  .qa .backup { font-size: .92rem; color: var(--muted); }
+  .qa .trap { font-size: .92rem; border-left: 3px solid var(--warn); padding: .5rem .9rem;
+    background: var(--warn-bg); border-radius: 0 8px 8px 0; margin-top: .8rem; }
+  .qa .trap strong { color: var(--warn); }
+
+  footer { margin-top: 3rem; padding-top: 1.4rem; border-top: 1px solid var(--line);
+    font-size: .85rem; color: var(--muted); }
+  @media (max-width: 600px) { .wrap { padding: 2.2rem 1rem 4rem; } .qa { padding: 1.2rem 1.1rem; } }
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="eyebrow">Final-round briefing · UNSW Marketing Analytics Hackathon 2026 · Team Cultural Blend</div>
+  <h1>Question Time</h1>
+  <p class="sub">The full analysis report, and prepared answers for the 10-minute Q&amp;A that follows the presentation — up to three audience questions first, then the judges. Every number here comes from a verified run; nothing is recalled from memory.</p>
+  <div class="meta">
+    <span><strong>Final</strong> 2026-09-04, UNSW Business School</span>
+    <span><strong>Slides due</strong> 2026-09-03 5pm Sydney</span>
+    <span><strong>Q&amp;A</strong> 10 min, audience then judges</span>
+  </div>
+</header>
+
+<nav class="toc">
+  <a href="#report">Part I · The report</a>
+  <a href="#qa-audience">Part II · Audience Qs</a>
+  <a href="#qa-headline">Headline finding</a>
+  <a href="#qa-robust">Robustness</a>
+  <a href="#qa-methods">Methods &amp; data</a>
+  <a href="#qa-other">Other findings</a>
+  <a href="#crib">Crib sheet</a>
+</nav>
+
+<!-- ============================ PART I ============================ -->
+<section id="report">
+  <h2 class="sec"><span class="n">I</span> The report</h2>
+
+  <h3 class="sub-sec">Executive summary</h3>
+  <p>We asked whether the way a Kiva borrower's story is written — family appeals, competence language, urgency, tone — is associated with how fast the loan funds, across 1,453,846 real loans (2016–2025). The answer that survives serious testing: <strong>structure dominates story.</strong> What a loan is for, where it's from, how big it is, and how it's repaid are linked to funding speed roughly an order of magnitude more strongly than any writing choice. Narrative framing has exactly one association that survives every test we could throw at it — family framing and faster funding in <strong>four specific countries</strong> (Palestine, Yemen, Honduras, Nicaragua, ~5% of loans) — and even that is exploratory, because each "region" there is only two countries.</p>
+  <p>The methodological arc is the differentiator: a standard analysis of this dataset would have confidently recommended urgency language platform-wide. We tested that recommendation three times over, and it failed. What we present is what's left standing after we tried hard to kill it.</p>
+
+  <h3 class="sub-sec">The question</h3>
+  <p>When a borrower's story leans on family, competence, or urgency — does the loan fund faster? And does the answer depend on who's asking, where, and when? Framing matters because it's the one factor a platform can actually coach; loan size, sector, and geography can't be rewritten after the fact.</p>
+
+  <h3 class="sub-sec">Data and guardrails</h3>
+  <ul>
+    <li><strong>1,453,840 of 1,453,846 loans usable</strong> (99.9996%) — outcome is days from posting to full funding, log-transformed; plus a funded-within-24h yes/no version.</li>
+    <li><strong>Leakage-safe chronological validation</strong>: models train on 2016–2023 (1,174,953 loans), tested only on 2024–2025 (278,887 loans) they never saw. Imputers, encoders and text vectorizers fit on training data only.</li>
+    <li><strong>Association-only language, enforced in code</strong>: the pipeline's own report generator never writes "causes" or "proves". Borrowers weren't randomly assigned a writing style.</li>
+    <li><strong>Two independent implementations</strong>: an authoritative tested pipeline (<span class="tag sig">authoritative</span>, <code>src/</code> + committed report snapshot) and self-contained Kaggle notebooks (<span class="tag" style="color:var(--chip-notebook);background:var(--chip-notebook-bg)">notebook</span>). Where they disagree, we report the disagreement.</li>
+  </ul>
+
+  <h3 class="sub-sec">Predictive results (the uncontroversial half)</h3>
+  <ul>
+    <li>Gradient-boosted model: <strong>MAE 5.20 days, R² = 0.54</strong> on the never-seen holdout (authoritative; notebook: 5.56 / 0.49). Ridge baseline: MAE 6.63 days.</li>
+    <li>24-hour funding classifier: <strong>ROC AUC 0.90, average precision 0.83</strong> — strong enough to build a real "surface this at-risk loan" feature today, no framing insight required.</li>
+    <li>SHAP on the boosted model: loan amount and repayment term dominate; no family/agency/urgency feature reaches the top 15. Only sentiment appears (11th).</li>
+  </ul>
+
+  <h3 class="sub-sec">The verification arc — three rounds, each changing the answer</h3>
+  <div class="arc">
+    <div class="act">
+      <div class="k">Round 1 · Standard analysis</div>
+      <h4>Almost everything "significant"</h4>
+      <p>OLS with HC3 robust errors on 1.45M rows: urgency framing a clean win (p&nbsp;&lt;&nbsp;0.001), family framing conditional on period, region and size. The story most teams would present.</p>
+    </div>
+    <div class="act">
+      <div class="k">Round 2 · Cluster by country</div>
+      <h4>Half of it evaporates</h4>
+      <p>Loans from one country share partners, templates, conditions. Clustered standard errors: 44–50% of coefficients change significance conclusion. Urgency's p-value goes 0.000&nbsp;→&nbsp;~0.44. Not fabricated — fragile.</p>
+    </div>
+    <div class="act">
+      <div class="k">Round 3 · Test the right quantity</div>
+      <h4>The question itself was wrong</h4>
+      <p>An interaction coefficient tests difference-from-Africa, not "does framing do anything <em>here</em>". Computing each region's average within-region slope resolved a fake contradiction (Asia) and left two survivors.</p>
+    </div>
+  </div>
+
+  <h3 class="sub-sec">What survives — the findings table</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Claim</th><th>Evidence</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Structure dominates: sector, region, loan size, repayment, gender carry the largest associations</td><td class="num">e.g. Water −1.12, ME region −1.07, male +0.43 (notebook, log-days); the largest terms survive clustering in both pipelines</td><td><span class="tag sig">robust</span></td></tr>
+        <tr><td>Pandemic-era slowdown is permanent: share funded in 24h fell 46.0% → 30.3% and stayed at 30.0%</td><td class="num">589,823 / 298,549 / 565,474 loans per era</td><td><span class="tag sig">robust</span></td></tr>
+        <tr><td>Gender gap: female-posted median 2.3 days vs male-posted 7.7</td><td class="num">+0.43 coefficient holding all else fixed; survives clustering</td><td><span class="tag sig">robust</span></td></tr>
+        <tr><td>Family framing ↔ faster funding in Palestine, Yemen, Honduras, Nicaragua</td><td class="num">Significant under clustering in all 3 fits (−0.124/−0.073 duration; +0.175 24h-odds for ME)</td><td><span class="tag warn">exploratory — 2 countries per group</span></td></tr>
+        <tr><td>Urgency framing helps</td><td class="num">HC3 p&lt;0.001 → clustered p≈0.44 (notebook) · 0.49 / 0.22 (authoritative)</td><td><span class="tag ns">does not survive</span></td></tr>
+        <tr><td>Family framing depends on timing / loan size</td><td class="num">All period &amp; size interactions fail clustering</td><td><span class="tag ns">does not survive</span></td></tr>
+        <tr><td>Agency/competence language helps</td><td class="num">Null in notebook; fragile (HC3-only) in authoritative 24h model</td><td><span class="tag ns">no reliable link</span></td></tr>
+        <tr><td>Positive sentiment ↔ slower funding</td><td class="num">Survives clustering in authoritative fits (p≈0.01/0.02), not in notebook (p≈0.25)</td><td><span class="tag warn">genuinely open</span></td></tr>
+        <tr><td>Family framing in Asia (opposite direction)</td><td class="num">p = 0.0535 / 0.0846 / 0.2860 across the 3 fits</td><td><span class="tag ns">not significant — our earlier claim was a computational artifact, corrected</span></td></tr>
+        <tr><td>Family framing in North America (Haiti — 1 country)</td><td class="num">Significant in 1 of 3 fits (p = 0.0094 authoritative duration only)</td><td><span class="tag ns">reported, not claimed</span></td></tr>
+        <tr><td>Family × Water / Construction sector interactions</td><td class="num">Survive clustering in both authoritative models — but as difference-from-Agriculture only</td><td><span class="tag warn">within-sector slopes not yet computed — not claimed</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub-sec">Limitations we state before anyone asks</h3>
+  <ul>
+    <li><strong>Association, never causation.</strong> No borrower was randomly assigned a writing style.</li>
+    <li><strong>Speed among funded loans</strong>, not whether a loan funds at all — the dataset contains completed loans.</li>
+    <li><strong>Four countries is four countries.</strong> A two-cluster region cannot separate "family framing works here" from "something else is different about Palestine and Yemen".</li>
+    <li><strong>Framing measured by transparent dictionaries</strong>, not a claim to capture all persuasion. Topic modeling and sentiment complement, not complete, the picture.</li>
+    <li><strong>Magnitudes are specification-sensitive even where significance is not</strong> (Middle East slope: −0.124 vs −0.073 across our two model families, ~1.7×).</li>
+  </ul>
+
+  <h3 class="sub-sec">Recommendations</h3>
+  <ul>
+    <li><strong>Build the risk flag.</strong> AUC 0.90 supports surfacing at-risk loans the day they're posted — the highest-confidence, lowest-risk action available.</li>
+    <li><strong>Don't ship writing rules from this data.</strong> Urgency advice would have been wrong; family advice has no supporting evidence for ~95% of loans.</li>
+    <li><strong>A/B test family framing in the four countries</strong> where the association survived everything — as a hypothesis, not a rollout.</li>
+    <li><strong>Investigate structure, not copy</strong>: why Water and Education loans fund in a fraction of the time Agriculture does is a platform question worth more than any style guide.</li>
+    <li><strong>Adopt the test-before-recommending discipline</strong> — the process finding is itself the practical implication.</li>
+  </ul>
+</section>
+
+<!-- ============================ PART II ============================ -->
+<section id="qa-audience">
+  <h2 class="sec"><span class="n">II</span> Q&amp;A preparation</h2>
+  <p class="lede">Format: up to three audience questions first, then judges. Audience questions skew practical and non-technical; judge questions probe methods. Each card: the spoken answer (~30–45 seconds), backup numbers if pressed, and the trap to avoid. <span class="hard">HARD</span> marks the hostile versions.</p>
+
+  <h3 class="sub-sec">Likely audience questions</h3>
+
+  <div class="qa"><div class="qline"><span class="qnum">A1</span><h4>So… does storytelling matter or not?</h4></div>
+    <div class="label">Answer</div>
+    <p class="answer">Far less than everyone assumes — and that's the finding. How a loan is structured — its size, sector, country, repayment plan — is linked to funding speed about ten times more strongly than any writing choice. We found exactly one writing pattern that survived every robustness test: mentioning family is associated with faster funding in four specific countries. Everywhere else, the writing-style effects that looked significant at first collapsed when we tested them properly. So: polish the structure conversation before the copywriting one.</p>
+    <div class="label">Backup</div>
+    <p class="backup">Raw correlations: loan amount r = +0.43, repayment term r = +0.28, vs family r = −0.02, urgency r = +0.01, agency r = +0.06 (the largest narrative correlation — and toward <em>slower</em>). So "about ten times" is 7× against the biggest narrative signal, 20× against the others. SHAP: no framing feature in the boosted model's top 15.</p>
+    <div class="trap"><strong>Trap:</strong> don't say "storytelling doesn't matter" — say the honest version: <em>we couldn't find reliable evidence it matters, and we looked hard</em>. Absence of robust evidence ≠ evidence of absence.</div>
+  </div>
+
+  <div class="qa"><div class="qline"><span class="qnum">A2</span><h4>What should a borrower actually write, then?</h4></div>
+    <div class="label">Answer</div>
+    <p class="answer">Our data can't hand a borrower a winning script — and we think saying so is more useful than pretending otherwise. A typical analysis of this dataset would tell every borrower to add urgent language; we tested that and it doesn't hold up. Our honest advice is boring: write a clear, complete description — not because our data shows it speeds funding, but because nothing we tested beats it — and let the platform work on what is actually linked to speed — how loans are sized, categorized and surfaced. If you're a borrower in Honduras, Nicaragua, Palestine or Yemen, mentioning your family is associated with faster funding — but even there we'd call it worth trying, not proven.</p>
+    <div class="trap"><strong>Trap:</strong> a questioner may want a tip they can tweet. Resist inventing one — "we tested the popular tip and it failed" is the memorable answer.</div>
+  </div>
+
+  <div class="qa"><div class="qline"><span class="qnum">A3</span><h4>Why did funding get slower after 2020, and will it recover?</h4></div>
+    <div class="label">Answer</div>
+    <p class="answer">Pre-pandemic, 46% of loans funded within a day. During the disruption that fell to 30% — and four years later it's still 30%. Whatever changed — lender attention, competition for capital, the mix of loans posted — it's structural, not a shock that faded. We can't say from this data <em>why</em>; we can say a "it'll bounce back on its own" assumption has already been wrong for four years, which makes it an operational question worth someone's time.</p>
+    <div class="label">Backup</div>
+    <p class="backup">46.0% → 30.3% → 30.0% across 589,823 / 298,549 / 565,474 loans. The era shift survives clustering in the authoritative duration model — both post-2019 period terms significant (clustered p = 0.0014 / 0.0031), direction: slower than pre-pandemic.</p>
+  </div>
+</section>
+
+<section id="qa-headline">
+  <h3 class="sub-sec">The headline finding</h3>
+
+  <div class="qa"><div class="qline"><span class="qnum">B1</span><h4>Your key claim rests on two countries per region. Is that a finding at all? <span class="hard">HARD</span></h4></div>
+    <div class="label">Answer</div>
+    <p class="answer">You've named the exact limitation we'd point to ourselves, and it's why we call this exploratory. In our data "Middle East" is Palestine and Yemen; "Central America" is Honduras and Nicaragua. Because we cluster standard errors by country — treating same-country loans as related, not independent — a two-country group carries little independent evidence, and the estimate can't separate "family framing works here" from "these two countries are unusual." What stops us discarding it: it's significant under clustering in all three model fits we ran, in the same direction, in both our independent implementations. So our recommendation is scoped to match the evidence: an A/B test in those four countries, not a claim about regions.</p>
+    <div class="label">Backup</div>
+    <p class="backup">ME: −0.124 (notebook), −0.073 (authoritative duration), +0.175 (authoritative 24h log-odds — inverted sign, also faster), all clustered p ≤ 0.004. CA: −0.062 / −0.074 / +0.103, all p &lt; 0.0001. The clustered covariance uses all 48 country clusters — the SE isn't computed from two — but the contrast is <em>identified</em> only by those two.</p>
+    <div class="trap"><strong>Trap:</strong> don't defend it as a regional finding. Concede the scope immediately and pivot to the discipline — conceding fast is what makes the rest credible.</div>
+  </div>
+
+  <div class="qa"><div class="qline"><span class="qnum">B2</span><h4>How big is the family-framing association in practice?</h4></div>
+    <div class="label">Answer</div>
+    <p class="answer">In the four countries where it survives: each additional family mention per hundred words is associated with roughly 6–12% faster funding — the range depends on which of our two model specifications you use, which is itself worth noting: the significance is stable across specifications, the magnitude less so. For scale, that's real but modest next to structure: in our notebook model a Water-sector loan is associated with funding in roughly a third of the time an Agriculture loan takes.</p>
+    <div class="label">Backup</div>
+    <p class="backup">Slope on log(1+days) per mention/100 words: Middle East −0.124 / −0.073 → ~12% / ~7% shorter; Central America −0.062 / −0.074 → ~6% / ~7%. Water sector −1.12 → ≈ ×0.33 (notebook). All approximate transformations of log-scale coefficients.</p>
+  </div>
+
+  <div class="qa"><div class="qline"><span class="qnum">B3</span><h4>Couldn't the four-country result just be those countries being different — conflict zones, say? <span class="hard">HARD</span></h4></div>
+    <div class="label">Answer</div>
+    <p class="answer">Yes — and we can't rule that out, which is exactly why we won't call it causal. Palestine and Yemen are conflict-affected; lenders may respond differently to family language in that context, or the field partners there may write differently, or something else entirely may travel with those countries. Clustering by country adjusts the uncertainty for within-country dependence, but no amount of statistics separates the framing from the country when the group only contains two of them. That's what the A/B test recommendation is for: it's the design that <em>would</em> separate them.</p>
+  </div>
+</section>
+
+<section id="qa-robust">
+  <h3 class="sub-sec">The robustness story</h3>
+
+  <div class="qa"><div class="qline"><span class="qnum">C1</span><h4>Half your coefficients changed significance when you clustered. Doesn't that mean your model is wrong? <span class="hard">HARD</span></h4></div>
+    <div class="label">Answer</div>
+    <p class="answer">It means the standard <em>assumption</em> was wrong, and we corrected it — the model's coefficients don't change at all, only the honesty of the uncertainty around them. Every analysis of this dataset that treats 1.45 million loans as 1.45 million independent observations will produce those overconfident p-values; loans from the same country share field partners, templates, and local conditions, so the effective sample is much smaller than the row count. The change was also selective in an informative way: the largest structural findings — the big sector and region gaps, gender, loan amount, repayment structure — all held, while the flips concentrated in narrative-framing terms plus some of the smaller sector and region categories. The fragile results were overwhelmingly the framing ones.</p>
+    <div class="label">Backup</div>
+    <p class="backup">Notebook: 20/45 coefficients flip (44%). Authoritative, both models: 64/128 (50%), of which 40 (62.5%) are narrative/sentiment terms. 48 country clusters. Urgency: HC3 p&lt;0.001 → clustered 0.44 (notebook duration); 0.49 / 0.22 (authoritative duration / 24h).</p>
+    <div class="trap"><strong>Trap:</strong> don't let "your p-values changed" be framed as instability. The framing is: <em>we'd rather report 10 findings that are real than 30 that are artifacts.</em></div>
+  </div>
+
+  <div class="qa"><div class="qline"><span class="qnum">C2</span><h4>Why cluster by country rather than field partner, sector, or time?</h4></div>
+    <div class="label">Answer</div>
+    <p class="answer">Country is the strongest grouping available in our data for the dependence we're worried about — field partners operate within countries, and they're the plausible source of shared writing templates and shared local conditions. The dataset has no partner identifier, so we clustered at the coarser level that contains partners: country. That's the conservative direction — coarser clusters allow <em>more</em> correlation between loans, so country-level clustering produces wider standard errors than partner-level clustering would. With a partner ID we'd cluster there instead for a sharper estimate of where the dependence really sits, but our surviving results were tested against the stricter of the two corrections, not the milder one.</p>
+    <div class="label">Backup</div>
+    <p class="backup">48 country clusters, only 5 with &lt;30 loans. Standard practice: cluster at the coarsest level you believe dependence operates at — clustering coarser than the truth is conservative (wider SEs), clustering finer than the truth understates uncertainty.</p>
+  </div>
+
+  <div class="qa"><div class="qline"><span class="qnum">C3</span><h4>Why HC3 standard errors in the first place?</h4></div>
+    <div class="label">Answer</div>
+    <p class="answer">HC3 is the conservative default for unequal variance — funding speed is heavily skewed, so classical standard errors would understate uncertainty. But the honest answer is that at 1.45 million rows the choice among HC0–HC3 barely matters; they converge. The assumption that actually bound our results was independence, not heteroskedasticity — which is why the check that mattered was clustering, and it changed our headline findings where the HC-variant choice changed nothing.</p>
+    <div class="trap"><strong>Trap:</strong> this is a knowledge-check question. Answer it in one breath and steer to the assumption that mattered — that's where the analysis has something to say.</div>
+  </div>
+
+  <div class="qa"><div class="qline"><span class="qnum">C4</span><h4>What's the difference between your interaction test and the within-region average — and why did it matter?</h4></div>
+    <div class="label">Answer</div>
+    <p class="answer">An interaction coefficient answers "is this region's family-framing slope different from Africa's?" — which is not the question anyone actually cares about. The useful question is "within this region, is family framing associated with speed at all?" And because family framing is interacted with several factors at once in our model, answering that properly means averaging the slope over each region's own mix of loan sizes and time periods, not reading a single coefficient. Getting this wrong isn't hypothetical for us: our own first attempt evaluated the slope at one unrepresentative reference cell, which made Asia look significant in the opposite direction. Computed correctly, that result disappeared — it was an artifact of our calculation, and we've documented the correction rather than hidden it.</p>
+    <div class="label">Backup</div>
+    <p class="backup">Asia: artifact value p = 0.0070 (preserved in our committed correction log — the corrected run no longer prints it); corrected within-region average p = 0.0535 / 0.0846 / 0.2860 across the three fits — not significant anywhere. The withdrawn contrast's reference cell was pandemic-era × large loans — a few percent of the data.</p>
+  </div>
+
+  <div class="qa"><div class="qline"><span class="qnum">C5</span><h4>You've said you got it wrong twice. Why should we trust round three? <span class="hard">HARD</span></h4></div>
+    <div class="label">Answer</div>
+    <p class="answer">Because round three is the only one that was independently verified three different ways rather than trusted. The corrected quantity was validated arithmetically against a brute-force calculation; it was computed through two separately-built implementations that agree; and the whole trail — including both mistakes and what caught them — is in our repository's review log, not cleaned up. But the deeper answer is: you shouldn't trust any single round, ours included. The reason we found our own errors is that we kept subjecting the headline result to new tests. An analysis that never revises its answer is one that was never really tested.</p>
+    <div class="trap"><strong>Trap:</strong> don't get defensive. This question is the presentation's thesis handed to you — self-correction under testing is the method working, not failing.</div>
+  </div>
+  <div class="qa"><div class="qline"><span class="qnum">C6</span><h4>You tested well over a hundred coefficients. Aren't your survivors just multiple-comparison luck? <span class="hard">HARD</span></h4></div>
+    <div class="label">Answer</div>
+    <p class="answer">Fair concern, and three things answer it. First, the model was pre-specified — one formula, no stepwise searching, every coefficient reported whether significant or not, so there's no garden of forking paths behind the survivors. Second, the clustering correction itself removed the mass false-positive problem: it's what took us from "almost everything significant" to a handful. Third — and most directly — the survivors aren't marginal. The four-country result sits at p ≤ 0.004 in every fit and below 0.0001 in most of them; under a Bonferroni correction across all 18 within-region tests, five of its six tests still clear the adjusted threshold, and the sixth sits just at the line. And where a result <em>was</em> marginal — a single-fit p = 0.009 for Haiti — we didn't claim it, which is the multiple-comparisons discipline applied rather than described.</p>
+    <div class="label">Backup</div>
+    <p class="backup">6 regions × 3 fits = 18 slope tests; Bonferroni threshold ≈ 0.0028. ME/CA clear it in 5 of 6 tests: notebook and authoritative-duration p < 0.0001 for both regions, CA 24h p < 0.0001; the exception is ME's 24h fit, p = 0.0040 vs the adjusted threshold 0.0028 — significant unadjusted, just over the line after correction. Worth conceding if pushed.</p>
+  </div>
+
+  <div class="qa"><div class="qline"><span class="qnum">C7</span><h4>Your own committed results show family×Water and family×Construction surviving clustering. Why aren't sectors in your headline? <span class="hard">HARD</span></h4></div>
+    <div class="label">Answer</div>
+    <p class="answer">Because those are interaction coefficients, and the central lesson of our own analysis is that a significant interaction is not a within-group association — it only says the slope differs from the Agriculture baseline. For regions we did the extra work: averaged each region's slope over its own composition and re-tested. For sectors we haven't run that computation yet, so we report the interactions as surviving and claim nothing about what family framing does <em>within</em> Water or Construction loans — the same discipline that caught our own Asia error. It's the first item on the analysis backlog, and the honest answer today is "not yet tested properly."</p>
+    <div class="label">Backup</div>
+    <p class="backup">Authoritative interaction terms surviving clustering in both models: family×Water (p = 0.0000 / 0.0258), family×Construction (p = 0.0413 / 0.0007); family×Clean Energy in the duration model only (0.0079 / 0.0818). All are difference-from-Agriculture, not within-sector slopes.</p>
+    <div class="trap"><strong>Trap:</strong> don't improvise a within-sector claim under pressure — "we haven't computed that quantity, and here's why we won't guess it" is the strong answer.</div>
+  </div>
+
+  <div class="qa"><div class="qline"><span class="qnum">C8</span><h4>What about North America? Your snapshot shows it significant.</h4></div>
+    <div class="label">Answer</div>
+    <p class="answer">Significant in exactly one of our three fits — the authoritative duration model, p = 0.009 — and not in the other two. And "North America" in this dataset is a single country: Haiti. One cluster can't support any within-region inference at all, so we report it for completeness and claim nothing. If a marginal single-fit result on a one-country base counted as a finding, our four-country caution would be theater — consistency is the point.</p>
+    <div class="label">Backup</div>
+    <p class="backup">Haiti: 7,559 loans. Within-region slope +0.0127 (toward slower), clustered p = 0.0094 authoritative duration; p = 0.0621 notebook; p = 0.6570 authoritative 24h.</p>
+  </div>
+
+</section>
+
+<section id="qa-methods">
+  <h3 class="sub-sec">Methods &amp; data</h3>
+
+  <div class="qa"><div class="qline"><span class="qnum">D1</span><h4>Why OLS on log-days instead of a survival model?</h4></div>
+    <div class="label">Answer</div>
+    <p class="answer">A survival model earns its complexity when observations are censored — loans still unfunded when the data ends. Our dataset contains completed loans — every row has both a posting and a fully-funded date, so there's essentially no censoring for a hazard model to handle. (The six rows we drop, of 1.45 million, have a funded date recorded <em>before</em> the posting date — a data inconsistency, not censoring.) Log-transformed duration with OLS handles the heavy skew, keeps every coefficient directly interpretable for a non-technical audience, and we pair it with a 24-hour logistic model so the "fast vs slow" framing is covered too. With unfunded or expired loans in the data, survival analysis would be our first move — we'd genuinely like that data.</p>
+  </div>
+
+  <div class="qa"><div class="qline"><span class="qnum">D2</span><h4>You only observe funded loans. Isn't that survivorship bias? <span class="hard">HARD</span></h4></div>
+    <div class="label">Answer</div>
+    <p class="answer">It's a real scope limit and we state it: our outcome is <em>how fast a loan that funded got funded</em>, not whether loans fund. If some loans expire unfunded and framing affects <em>that</em>, we can't see it, and our associations are conditional on reaching full funding. What we can say is that within our question the data is essentially complete — only six loans out of 1.45 million were dropped, for timestamp inconsistencies (funded date before posting), not missingness — and the practical outputs, like the at-risk-loan flag, are about speed among posted loans, where this scope is the right one. Extending to expiry outcomes is the top of our future-work list.</p>
+  </div>
+
+  <div class="qa"><div class="qline"><span class="qnum">D3</span><h4>Dictionary word-counting for framing seems crude. Why not embeddings or an LLM?</h4></div>
+    <div class="label">Answer</div>
+    <p class="answer">Deliberate trade-off: transparency over sophistication. A dictionary measure is auditable — anyone can check exactly which words counted, reproduce every number, and challenge the word lists themselves. An LLM score is neither reproducible nor explainable at that standard, and for an analysis whose whole contribution is rigor, an unauditable feature would undercut the point. We didn't stop at keywords, though: topic modeling found the description themes without any word lists, and VADER sentiment scores tone — and notably, the topic structure agrees with the structural story, not the framing one. LLM-scored narrative dimensions are the natural next iteration once there's a validation protocol for them.</p>
+    <div class="label">Backup</div>
+    <p class="backup">TF-IDF + NMF, 8 topics, coherent themes (livestock, sanitation, clean water, farming, retail); topic funding-speed means span 1.5 → 13.5 days (&gt;9×), though topics track sector/loan-type as much as style.</p>
+  </div>
+
+  <div class="qa"><div class="qline"><span class="qnum">D4</span><h4>How do you know your predictive results aren't leakage?</h4></div>
+    <div class="label">Answer</div>
+    <p class="answer">Three defenses, all structural. The split is chronological, not random — train on 2016–2023, test on 2024–2025, so the model literally cannot have seen the future. Every fitted transformation — imputation, encoding, the text vectorizer — is fit on training data only and applied to the holdout. And the feature set is restricted to information available at posting time; anything downstream of the outcome is excluded by an allowlist, not by judgment call. The holdout R² of 0.54 is credible partly <em>because</em> it's unglamorous — leakage usually announces itself with numbers too good to believe.</p>
+  </div>
+
+  <div class="qa"><div class="qline"><span class="qnum">D5</span><h4>R² of 0.49–0.54 — is that good? What's in the missing half?</h4></div>
+    <div class="label">Answer</div>
+    <p class="answer">For predicting human funding behavior from posting-time information alone, explaining half the variation is strong — and the missing half is informative about what we don't observe: lender-side dynamics. Where a loan appears in browse results, when it's posted relative to lender activity, photos, promotion, herding among lenders — none of that is in our data. The half we do explain is dominated by structure, which is the finding: the observable, coachable part of a loan's presentation contributes little on top.</p>
+  </div>
+</section>
+
+<section id="qa-other">
+  <h3 class="sub-sec">Other findings</h3>
+
+  <div class="qa"><div class="qline"><span class="qnum">E1</span><h4>Positive descriptions fund slower? Should borrowers write sadder stories? <span class="hard">HARD</span></h4></div>
+    <div class="label">Answer</div>
+    <p class="answer">No — and this result is a good example of why we report uncertainty honestly. The direction is consistent everywhere we tested: more positive tone, slower funding. But its statistical significance depends on which of our two model specifications you ask — it survives clustering in one and not the other, so we report it as open, not established. Even taking the direction at face value, we deliberately don't offer a mechanism, because the obvious one fails our own test: description <em>length</em> is separately controlled in the model and, if anything, points toward faster funding — so "positive pitches are just longer" doesn't explain it. What we can say: descriptions are almost uniformly upbeat already — median 0.89 on a −1 to +1 scale — so tone has little room to vary, whatever it proxies for is unresolved, and nothing here says "write negatively."</p>
+    <div class="label">Backup</div>
+    <p class="backup">Median compound 0.89, mean 0.78 (20k-sample). Clustered p ≈ 0.01/0.02 (authoritative duration/24h) vs ≈ 0.25 (notebook). Word-count coefficients: −0.0004 duration / +0.0011 24h-odds — both toward faster, both fail clustering. Ceiling effect limits coachability regardless.</p>
+  </div>
+
+  <div class="qa"><div class="qline"><span class="qnum">E2</span><h4>The gender gap — what's driving it, and what should Kiva do?</h4></div>
+    <div class="label">Answer</div>
+    <p class="answer">It's one of the most robust patterns in the data: female-posted loans fund in a median 2.3 days against 7.7 for male-posted. Controls matter here in both directions: adjusting for loan size, sector, region, timing and writing style simultaneously absorbs roughly half of that raw gap — so composition explains a lot — but a large adjusted gap remains, about 54% longer for male-posted loans, and it survives clustering. What drives the remainder our data can't decompose: candidates include lender behavior, field-partner posting practices, and loan differences we don't observe. What to do with it is genuinely a values question for the platform more than an analytics one — but knowing the gap is real, large, and not purely a composition artifact is the necessary first step, and setting realistic funding-time expectations by borrower profile is an immediate, neutral use.</p>
+    <div class="label">Backup</div>
+    <p class="backup">Raw median ratio ≈ 3.3×; adjusted coefficient +0.43 on log(1+days) ≈ ×1.54 — controls absorb roughly half the raw log-gap. Survives clustering (p &lt; 0.0001). Smaller than the biggest sector/region gaps, larger than every narrative term combined.</p>
+  </div>
+
+  <div class="qa"><div class="qline"><span class="qnum">E3</span><h4>What's the difference between your two pipelines, and which one is right? </h4></div>
+    <div class="label">Answer</div>
+    <p class="answer">One is the authoritative tested pipeline — versioned, unit-tested, source of the committed results. The other is a deliberately simpler, self-contained rebuild for Kaggle, so anyone can run the analysis without our internal code. They're not meant to produce identical numbers — different formula richness — and that turned out to be a feature: where the two agree, as on the four-country result, the finding doesn't depend on one team's modeling choices; where they disagree, as on sentiment, that disagreement <em>is</em> the result — it tells us the finding is specification-sensitive and shouldn't be presented as settled.</p>
+  </div>
+
+  <div class="qa"><div class="qline"><span class="qnum">E4</span><h4>What would you do next with more time or data?</h4></div>
+    <div class="label">Answer</div>
+    <p class="answer">Four things, in order. Run the A/B test in the four countries — it's the only way to turn our one surviving framing association into something actionable. Get expired and unfunded loans into the data, so we can model funding success, not just speed. Get a field-partner identifier, which would let us cluster at the true dependence level and probably explain part of what "country" currently absorbs. And add LLM-scored narrative dimensions alongside our transparent dictionaries — with a validation protocol, so they'd meet the same auditability bar as everything else here.</p>
+  </div>
+</section>
+
+<!-- ============================ CRIB ============================ -->
+<section id="crib">
+  <h2 class="sec"><span class="n">III</span> Numbers crib sheet</h2>
+  <p class="lede">One table to re-read before the session. Sign conventions: duration models predict log(1+days), <strong>negative = faster</strong>; the 24-hour model predicts log-odds, <strong>positive = faster</strong>.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Number</th><th>Value</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr><td>Dataset / usable</td><td class="num">1,453,846 / 1,453,840 (99.9996%)</td><td>both pipelines</td></tr>
+        <tr><td>Train / holdout split</td><td class="num">1,174,953 (2016–23) / 278,887 (2024–25)</td><td>authoritative</td></tr>
+        <tr><td>Boosted model holdout</td><td class="num">MAE 5.20 d · R² 0.54 (notebook: 5.56 / 0.49)</td><td>authoritative</td></tr>
+        <tr><td>24h classifier</td><td class="num">ROC AUC 0.90 · AP 0.83</td><td>authoritative</td></tr>
+        <tr><td>Funded within 24h by era</td><td class="num">46.0% → 30.3% → 30.0%</td><td>notebook (EDA)</td></tr>
+        <tr><td>Gender medians</td><td class="num">female 2.3 d · male 7.7 d; coef +0.43 ≈ 54% longer</td><td>notebook</td></tr>
+        <tr><td>Explanatory OLS R²</td><td class="num">0.426 on 1,453,840 loans</td><td>notebook</td></tr>
+        <tr><td>Cluster-check flips</td><td class="num">20/45 (44%) notebook · 64/128 (50%) authoritative, 62.5% of those narrative terms</td><td>both</td></tr>
+        <tr><td>Urgency collapse</td><td class="num">HC3 p&lt;0.001 → clustered p≈0.44 notebook dur · 0.49 / 0.22 authoritative dur / 24h</td><td>both</td></tr>
+        <tr><td>Family within Middle East</td><td class="num">−0.124 / −0.073 / +0.175 · all clustered p ≤ 0.004</td><td>3 fits</td></tr>
+        <tr><td>Family within Central America</td><td class="num">−0.062 / −0.074 / +0.103 · all clustered p &lt; 0.0001</td><td>3 fits</td></tr>
+        <tr><td>Family within Asia (corrected)</td><td class="num">p = 0.0535 / 0.0846 / 0.2860 — not significant</td><td>3 fits</td></tr>
+        <tr><td>Family within North America (Haiti)</td><td class="num">sig in 1 of 3 fits only (p = 0.0094 auth. duration) — 1 country, not claimed</td><td>3 fits</td></tr>
+        <tr><td>Country counts per group</td><td class="num">Africa 27 · Asia 12 · Oceania 4 · CA 2 · ME 2 · NA 1 (48 total)</td><td>raw data</td></tr>
+        <tr><td>Four-country loan share</td><td class="num">74,337 loans ≈ 5.1% (ME 14,946 + CA 59,391)</td><td>raw data</td></tr>
+        <tr><td>Biggest structural coefs (dur)</td><td class="num">Water −1.12 · ME region −1.07 · male +0.43 · log-amount +0.43 · term +0.068/mo</td><td>notebook</td></tr>
+        <tr><td>Sentiment</td><td class="num">median 0.89 · clustered p 0.01/0.02 authoritative vs 0.25 notebook — open</td><td>both</td></tr>
+        <tr><td>Topic-modeling swing</td><td class="num">1.5 → 13.5 days across 8 topics (&gt;9×)</td><td>notebook (EDA)</td></tr>
+        <tr><td>Repayment term spread</td><td class="num">2–133 months, middle 50% between 8–14</td><td>raw data</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout"><strong>The one-sentence close, if a question goes sideways:</strong> "The honest summary is that we tested our own best findings three times, killed most of them, and what's left — structure dominates, and one narrow four-country framing result — is what we'd stake the recommendation on."</div>
+</section>
+
+<footer>
+  Compiled 2026-08-29 from verified runs: Kaggle kernels v10 (EDA) and v13 (modeling), the committed <code>reports/generated_full_dataset/</code> snapshot, and the authoritative pipeline's within-region average recomputation. Companion to the deck-content brief "Beyond a Good Story".
+</footer>
+
+</div>
