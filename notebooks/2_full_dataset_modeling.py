@@ -857,12 +857,17 @@ plt.show()
 # agreeing with Section 7's biggest effects.
 #
 # **The honest divergence worth stating plainly: narrative framing barely
-# registers here, and this broadly lines up with Section 7.1's robustness
-# check even though the two are completely independent methods.** None of
-# the family, agency, or urgency framing scores make it into the top 15
-# factors this more flexible model actually relied on - matching 7.1's
-# finding that urgency's HC3 significance and most of family framing's
-# conditional structure don't survive clustering. Only overall sentiment
+# registers here.** This is complementary evidence, not independent
+# confirmation of Section 7's inferential results: SHAP ranks predictive
+# contributions in a different model (one that doesn't even contain the
+# region interactions Section 7.2 reports), so it can say that narrative
+# features carry little overall predictive weight - it cannot corroborate
+# the sign or clustered uncertainty of any particular coefficient. With
+# that scope clear: none of the family, agency, or urgency framing scores
+# make it into the top 15 factors this more flexible model actually relied
+# on - consistent in spirit with 7.1's finding that urgency's HC3
+# significance and most of family framing's conditional structure don't
+# survive clustering. Only overall sentiment
 # tone cracks the list, in 11th place, well behind individual sector and
 # region categories - a more interesting case, because 7.1 found
 # sentiment's *statistical significance* doesn't reliably survive

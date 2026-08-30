@@ -15,11 +15,25 @@ When — and for whom — does a persuasive loan story actually speed up funding
 
 Checked against the proposal's central and supporting questions before writing a single slide — every question the project committed to has a real, verified answer.
 
-- Central question — **Answered**
-- Framing vs. structure — **Answered**
-- Segment differences — **Answered**
-- Pandemic-era shift — **Answered**
-- Predictive value — **Answered**
+Central question
+
+Answered
+
+Framing vs. structure
+
+Answered
+
+Segment differences
+
+Answered
+
+Pandemic-era shift
+
+Answered
+
+Predictive value
+
+Answered
 
 **One thing to know before building slides:** two sets of numbers exist in this repo — the `authoritative` full pipeline (`reports/generated_full_dataset/`) and the `notebook` versions (self-contained Kaggle notebooks, built for readability). They agree directionally on most findings, but they do **not** always agree on statistical significance — sentiment tone is significant in one pipeline and not the other (the corrected within-region family slopes agree in all fits: Asia is non-significant everywhere). Where they disagree, this brief reports the disagreement rather than picking a side. **Use the authoritative numbers on slides** — the reference table at the bottom of this document has both, clearly marked.
 
@@ -77,7 +91,7 @@ Source: EDA notebook, §5 Categorical Features + §9 Feature Correlations
 - **Family framing** mostly doesn't survive either — and the piece that does is narrower than it first looked. Our original test asked the wrong question (does this region differ from Africa?) instead of the right one (does family framing do anything *here*?). Re-tested correctly, it holds up in **two pooled two-country categories — Middle East (Palestine + Yemen) and Central America (Honduras + Nicaragua)**, significant under clustering in all three model fits, both pipelines. Strong evidence, but the estimate is *pooled*: it is not "the Middle East" as a region, and not a finding about any single country either — a pooled result can be driven by one of the pair. Those categories are ~5% of all loans.
 - **Sentiment tone** — counterintuitively, more positive language links to slower funding, but even this finding's significance is model-sensitive: it survives clustering in the authoritative pipeline, not in the simpler notebook model. Reported as genuinely open, not a third confirmed survivor.
 - **Competence/agency language** — no link survives the stricter test. (It did look significant in one of the authoritative pipeline's two models before clustering, then failed — the same fragile pattern as urgency, so don't present it as a clean universal null.)
-- A second, completely different technique (SHAP feature importance from the machine-learning model) independently agrees on urgency and family framing — neither cracks its top 15 factors. Sentiment does (11th place) despite its disputed significance above: real predictive weight and statistical robustness turn out to be different questions.
+- Complementary evidence, not independent confirmation: SHAP importance from the forecasting model (a different model, without the region interactions) shows narrative features carry little overall predictive weight — no family, agency or urgency feature reaches its top 15. It can't corroborate the sign or uncertainty of any specific coefficient. Sentiment does reach 11th place despite its disputed significance: predictive weight and statistical robustness are different questions.
 
 Source: modeling notebook, §7.2 within-region slopes (the pooled-category claim) + §7.1 cluster check + §8 Feature Importance
 

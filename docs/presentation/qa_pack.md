@@ -15,7 +15,7 @@ The full analysis report, and prepared answers for the 10-minute Q&A that follow
 
 ### Executive summary
 
-We asked whether the way a Kiva borrower's story is written — family appeals, competence language, urgency, tone — is associated with how fast the loan funds, across 1,453,846 real loans (2016–2025). The answer that survives serious testing: **structure dominates story.** What a loan is for, where it's from, how big it is, and how it's repaid are linked to funding speed roughly an order of magnitude more strongly than any writing choice. Narrative framing has exactly one association that survived every robustness test we ran — family framing and faster funding in **two pooled two-country categories** (Middle East = Palestine + Yemen; Central America = Honduras + Nicaragua; together ~5% of loans) — and even that is exploratory: each estimate pools its pair of countries, so it isn't evidence about any single country, and two clusters is a thin base.
+We asked whether the way a Kiva borrower's story is written — family appeals, competence language, urgency, tone — is associated with how fast the loan funds, across 1,453,846 real loans (2016–2025). The answer that survives serious testing: **structure dominates story.** What a loan is for, where it's from, how big it is, and how it's repaid are linked to funding speed roughly an order of magnitude more strongly than any writing choice. Narrative framing has exactly one association that was consistent across all three of our clustered model fits (five of its six headline tests also clear an 18-test Bonferroni check) — family framing and faster funding in **two pooled two-country categories** (Middle East = Palestine + Yemen; Central America = Honduras + Nicaragua; together ~5% of loans) — and even that is exploratory: each estimate pools its pair of countries, so it isn't evidence about any single country, and two clusters is a thin base.
 
 The methodological arc is the differentiator: a standard analysis of this dataset would have confidently recommended urgency language platform-wide. We tested that recommendation three times over, and it failed. What we present is what's left standing after we tried hard to kill it.
 
@@ -98,7 +98,7 @@ Format: up to three audience questions first, then judges. Audience questions sk
 
 **Answer:**
 
-Far less than everyone assumes — and that's the finding. How a loan is structured — its size, sector, country, repayment plan — is linked to funding speed about ten times more strongly than any writing choice. We found exactly one writing pattern that survived every robustness test: mentioning family is associated with faster funding in two small pooled country-groups — Palestine with Yemen, and Honduras with Nicaragua. Everywhere else, the writing-style effects that looked significant at first collapsed when we tested them properly. So: polish the structure conversation before the copywriting one.
+Far less than everyone assumes — and that's the finding. How a loan is structured — its size, sector, country, repayment plan — is linked to funding speed about ten times more strongly than any writing choice. We found exactly one writing pattern that held up across all three of our clustered model fits: mentioning family is associated with faster funding in two small pooled country-groups — Palestine with Yemen, and Honduras with Nicaragua. Everywhere else, the writing-style effects that looked significant at first collapsed when we tested them properly. So: polish the structure conversation before the copywriting one.
 
 **Backup:**
 
@@ -148,7 +148,7 @@ In the two pooled categories where it survives: each additional family mention p
 
 Slope on log(1+days) per mention/100 words: Middle East −0.124 / −0.073 → ~12% / ~7% shorter; Central America −0.062 / −0.074 → ~6% / ~7%. Water sector −1.12 → ≈ ×0.33 (notebook). All approximate transformations of log-scale coefficients.
 
-#### B3 · Couldn't the four-country result just be those countries being different — conflict zones, say? `[HARD]`
+#### B3 · Couldn't the pooled-category result just be those countries being different — conflict zones, say? `[HARD]`
 
 **Answer:**
 
@@ -208,7 +208,7 @@ Because round three is the only one that was independently verified three differ
 
 **Answer:**
 
-Fair concern, and three things answer it. First, the regression formula itself was pre-specified — one formula, no stepwise searching, every coefficient reported whether significant or not. We'll be candid that the within-region *averaging* analysis came later, developed through review rounds, so we treat it as post-estimation and exploratory rather than pretending the whole inferential path was fixed in advance. Second, the clustering correction itself removed the mass false-positive problem: it's what took us from "almost everything significant" to a handful. Third — and most directly — the survivors aren't marginal. The pooled-category result sits at p ≤ 0.004 in every fit and below 0.0001 in most of them; under a Bonferroni correction across all 18 within-region tests, five of its six tests still clear the adjusted threshold, and the sixth sits just at the line. And where a result *was* marginal — a single-fit p = 0.009 for Haiti — we didn't claim it, which is the multiple-comparisons discipline applied rather than described.
+Fair concern, and three things answer it. First, the regression formula itself was pre-specified — one formula, no stepwise searching, every coefficient reported whether significant or not. We'll be candid that the within-region *averaging* analysis came later, developed through review rounds, so we treat it as post-estimation and exploratory rather than pretending the whole inferential path was fixed in advance. Second, the clustering correction itself removed the mass false-positive problem: it's what took us from "almost everything significant" to a handful. Third — and most directly — the result is consistent rather than marginal: significant in all three unadjusted clustered specifications, at p ≤ 0.004 in every fit and below 0.0001 in most; under a Bonferroni correction across all 18 within-region tests, five of its six headline tests still clear the adjusted threshold and the sixth (p = 0.004 vs. 0.0028) does not. We say "consistent across specifications", not "survived everything" — and the within-region averaging itself is a post-estimation, exploratory analysis. And where a result *was* marginal — a single-fit p = 0.009 for Haiti — we didn't claim it, which is the multiple-comparisons discipline applied rather than described.
 
 **Backup:**
 
@@ -298,7 +298,7 @@ Raw median ratio ≈ 3.3×; adjusted coefficient +0.43 on log(1+days) ≈ ×1.54
 
 **Answer:**
 
-One is the authoritative tested pipeline — versioned, unit-tested, source of the committed results. The other is a deliberately simpler, self-contained rebuild for Kaggle, so anyone can run the analysis without our internal code. They're not meant to produce identical numbers — different formula richness — and that turned out to be a feature: where the two agree, as on the four-country result, the finding doesn't depend on one team's modeling choices; where they disagree, as on sentiment, that disagreement *is* the result — it tells us the finding is specification-sensitive and shouldn't be presented as settled.
+One is the authoritative tested pipeline — versioned, unit-tested, source of the committed results. The other is a deliberately simpler, self-contained rebuild for Kaggle, so anyone can run the analysis without our internal code. They're not meant to produce identical numbers — different formula richness — and that turned out to be useful: where the two agree, as on the pooled-category result, the finding is at least robust to the modeling choices that differ between them — same data, so not independent replication; where they disagree, as on sentiment, that disagreement *is* the result — it tells us the finding is specification-sensitive and shouldn't be presented as settled.
 
 #### E4 · What would you do next with more time or data?
 

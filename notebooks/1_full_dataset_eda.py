@@ -229,16 +229,18 @@ plt.show()
 
 # %% [markdown]
 # **The headline finding of this notebook**: the share of loans funded
-# within 24 hours nearly halved and never recovered -
+# within 24 hours nearly halved and has not recovered through the end of
+# the data (2025) -
 # **46.0% pre-pandemic → 30.3% during pandemic disruption → 30.0%
 # post-pandemic.** Before 2020, almost half of all loans were fully
 # funded within a day of posting; since 2020, that's dropped to under a
-# third, and it has stayed there, years after the disruption itself
-# ended. This isn't a small blip either - 589,823 loans fall in the
-# "before" group and 565,474 in the "after" group, so it isn't a handful
-# of unusual loans skewing the picture. Something structural changed
-# about how this marketplace funds loans around 2020, and it never
-# bounced back.
+# third, and it has stayed there for the four years of data after the
+# disruption itself ended. This isn't a small blip either - 589,823 loans
+# fall in the "before" group and 565,474 in the "after" group, so it
+# isn't a handful of unusual loans skewing the picture. Whatever changed
+# about how this marketplace funds loans around 2020 has persisted to
+# date - this data can describe that persistence, not explain it, and
+# cannot say whether it will ever reverse.
 
 # %%
 fig, ax = plt.subplots(figsize=(8, 5))
