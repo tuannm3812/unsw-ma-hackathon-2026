@@ -481,11 +481,13 @@ def fit_explanatory_models(
     influences (field-partner writing templates, local conditions) that
     make them correlated rather than independent. Both refits use the
     exact same formula and data as the primary HC3 fit - only the
-    covariance estimator differs - so a coefficient that stays
-    significant under both is a materially more trustworthy finding than
-    one that is only significant under HC3's stricter independence
-    assumption. When `None` (the default), no extra fitting happens and
-    the returned dict omits the `*_clustered*` keys entirely.
+    covariance estimator differs - so the comparison is a same-data
+    specification-robustness check: a coefficient significant under both
+    is robust to the choice between the two dependence assumptions
+    (independent observations vs. within-cluster correlation), while one
+    significant only under HC3 is not. When `None` (the default), no extra
+    fitting happens and the returned dict omits the `*_clustered*` keys
+    entirely.
 
     Returns a dict with `duration`/`binary` results objects (or `None`),
     `duration_error`/`binary_error` diagnostic strings (or `None` when
@@ -602,9 +604,13 @@ def fit_explanatory_models(
 
 # The focal continuous measure and grouping factor for the average
 # within-group slope report. Module constants (not per-call arguments on
-# `fit_explanatory_models`) because they are part of this project's
-# pre-specified design - the family-framing-by-region question - not a
-# free parameter a caller should vary run to run.
+# `fit_explanatory_models`) because they follow the project's focal
+# question - family framing by region - rather than being a free parameter
+# to vary run to run. Note the distinction from pre-specification: the
+# regression FORMULA was pre-specified; the within-group average itself is
+# a post-estimation quantity, introduced during review after the
+# interaction-coefficient reading was found to be wrong, and is reported
+# as exploratory wherever that matters.
 WITHIN_GROUP_FOCAL_TERM = "family_mentions_per_100_words"
 WITHIN_GROUP_FACTOR = "region_group"
 
@@ -670,12 +676,23 @@ def _average_group_slopes(
         estimate = float(np.ravel(t_hc3.effect)[0])
         hc3_p = float(np.ravel(t_hc3.pvalue)[0])
         clustered_p = float(np.ravel(t_clustered.pvalue)[0])
+        # A p-value alone says nothing about how precisely the slope is
+        # pinned down - and with two clusters in a group, the width of the
+        # clustered interval is the honest statement of what is known.
+        hc3_ci = np.ravel(t_hc3.conf_int(alpha=0.05))
+        clustered_ci = np.ravel(t_clustered.conf_int(alpha=0.05))
         rows.append({
             "group": level,
             "n_loans": int(len(subset)),
             "n_clusters": int(subset[cluster_col].nunique()) if cluster_col in subset.columns else None,
             "estimate": estimate,
+            "hc3_se": float(np.ravel(t_hc3.sd)[0]),
+            "hc3_ci_low": float(hc3_ci[0]),
+            "hc3_ci_high": float(hc3_ci[1]),
             "hc3_p": hc3_p,
+            "clustered_se": float(np.ravel(t_clustered.sd)[0]),
+            "clustered_ci_low": float(clustered_ci[0]),
+            "clustered_ci_high": float(clustered_ci[1]),
             "clustered_p": clustered_p,
             "significant_under_both": bool(hc3_p < 0.05 and clustered_p < 0.05),
         })
@@ -916,8 +933,11 @@ def format_within_region_slopes(results: "dict[str, object]") -> str:
         "the other moderators' reference levels, one unrepresentative cell. "
         "This section reports the correct quantity: each group's slope "
         "averaged over that group's own observed composition of the other "
-        "moderators, as a weighted linear contrast, under both HC3 and "
-        f"{cluster_col}-clustered standard errors.",
+        "moderators, as a weighted linear contrast, with standard errors and "
+        f"95% confidence intervals under both HC3 and {cluster_col}-clustered "
+        "covariance. Read the clustered interval, not just the p-value: with "
+        "very few clusters in a group, its width is the honest statement of "
+        "how precisely the slope is known.",
         "",
         "Sign conventions are OPPOSITE between the two models: the duration "
         "model is log(1 + days), so NEGATIVE = faster funding; the 24-hour "
@@ -942,8 +962,10 @@ def format_within_region_slopes(results: "dict[str, object]") -> str:
             clusters = f", {row['n_clusters']} {cluster_col} cluster(s)" if row.get("n_clusters") is not None else ""
             lines.append(
                 f"  - {row['group']} ({row['n_loans']} loans{clusters}): "
-                f"estimate={row['estimate']:.4f} HC3 p={row['hc3_p']:.4f} | "
-                f"clustered p={row['clustered_p']:.4f} [{verdict}]"
+                f"estimate={row['estimate']:.4f}; "
+                f"HC3 se={row['hc3_se']:.4f} 95% CI [{row['hc3_ci_low']:.4f}, {row['hc3_ci_high']:.4f}] p={row['hc3_p']:.4f} | "
+                f"clustered se={row['clustered_se']:.4f} 95% CI [{row['clustered_ci_low']:.4f}, {row['clustered_ci_high']:.4f}] "
+                f"p={row['clustered_p']:.4f} [{verdict}]"
             )
 
     _section("Duration model (log funding speed; NEGATIVE = faster):", "duration")

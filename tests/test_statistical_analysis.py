@@ -628,6 +628,26 @@ def test_average_group_slopes_match_brute_force_rowwise_average(large_synthetic_
         assert row["estimate"] == pytest.approx(expected[row["group"]], abs=1e-9)
 
 
+def test_average_group_slopes_report_uncertainty_under_both_covariances(large_synthetic_kiva_df):
+    # Codex review follow-up: a p-value alone does not say how precisely a
+    # slope is pinned down. Every group row must carry standard errors and
+    # 95% intervals under both covariances, the interval must bracket the
+    # point estimate, and its half-width must be consistent with the SE
+    # (1.96*se for the normal case; the OLS t-based interval is marginally
+    # wider at this n, so allow a small tolerance above 1.96).
+    result = fit_explanatory_models(large_synthetic_kiva_df, cluster_sensitivity_col="country_name")
+    for key in ("duration", "binary"):
+        rows = result["within_region_slopes"][key]
+        assert isinstance(rows, list) and rows
+        for row in rows:
+            for prefix in ("hc3", "clustered"):
+                se, lo, hi = row[f"{prefix}_se"], row[f"{prefix}_ci_low"], row[f"{prefix}_ci_high"]
+                assert se > 0
+                assert lo < row["estimate"] < hi
+                half_width = (hi - lo) / 2
+                assert 1.9 * se <= half_width <= 2.3 * se, (key, row["group"], prefix, se, half_width)
+
+
 def test_within_region_slopes_omitted_without_cluster_sensitivity(large_synthetic_kiva_df):
     result = fit_explanatory_models(large_synthetic_kiva_df)
     assert "within_region_slopes" not in result
@@ -643,7 +663,7 @@ def test_format_within_region_slopes_reports_every_group_with_cluster_counts(lar
     for row in result["within_region_slopes"]["duration"]:
         assert row["group"] in summary
         assert row["n_clusters"] is not None  # country_name is present in the frame
-    assert "clustered p=" in summary and "HC3 p=" in summary
+    assert "clustered se=" in summary and "95% CI [" in summary and "HC3 se=" in summary
 
 
 def test_average_group_slopes_reports_error_string_when_focal_term_absent():

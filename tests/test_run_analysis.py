@@ -318,7 +318,12 @@ def test_run_analysis_appends_cluster_sensitivity_check_when_requested(tmp_path,
     assert isinstance(digest["duration"], list) and digest["duration"]
     assert isinstance(digest["binary"], list) and digest["binary"]
     for row in digest["duration"]:
-        assert {"group", "n_loans", "n_clusters", "estimate", "hc3_p", "clustered_p", "significant_under_both"} <= set(row)
+        assert {
+            "group", "n_loans", "n_clusters", "estimate",
+            "hc3_se", "hc3_ci_low", "hc3_ci_high", "hc3_p",
+            "clustered_se", "clustered_ci_low", "clustered_ci_high", "clustered_p",
+            "significant_under_both",
+        } <= set(row)
 
     # And the digest must survive the JSON round-trip on disk.
     import json
