@@ -39,12 +39,14 @@ Answered
 
 ## §1 · Proposed slide sequence
 
-10 slides, each with a headline, the number to put on it, and exactly which notebook section to screenshot for the real chart. Speaker notes are the one sentence to say out loud, not read off the slide. At roughly a minute a slide this fits the 10-minute limit, but rehearse with a timer — Slides 7 and 9 are the first to cut if it runs long.
+10 slides, each with a headline, the number to put on it, exactly which notebook section to screenshot for the real chart — and now a full word-for-word speaker script per slide. Scripts total ≈9½ minutes at a measured pace, inside the strict 10-minute cut-off, but rehearse with a timer — Slides 7 and 9 are the first to cut (their scripts save ~85 seconds) if a run-through goes long. Treat the scripts as a floor to edit for your own voice, not lines to memorise.
 
 ### Slide 1 · Title
 
 - **Beyond a Good Story** — When (and for whom) does persuasive loan language actually speed up funding?
 - Team Cultural Blend · Kiva loan data · 1.45 million real loans
+
+> **Script · ~20s** — "Good morning — we're Cultural Blend. Kiva is built on stories: every loan page leads with one. So we asked a simple question of 1.45 million real loans: does the story actually move the money?"
 
 ### Slide 2 · The question
 
@@ -52,6 +54,8 @@ Answered
 - Does the answer depend on *who's* asking and *when*?
 
 **Why it matters:** framing is the one thing a platform can actually coach. Loan size, sector, and geography can't be rewritten after the fact.
+
+> **Script · ~45s** — "Specifically: when a borrower's story leans on family, on competence, on urgency — does the loan fund faster? And does the answer depend on who's asking, and when? We care because language is the one thing a platform can coach. You can't rewrite a loan's size, sector, or country after the fact — but you could suggest better words. *If* words work. That's the claim we set out to test, not assume."
 
 ### Slide 3 · How we made sure findings are real
 
@@ -62,6 +66,8 @@ Answered
 Source: modeling notebook, §4 Data Split + §7.1 Cluster-Robust Sensitivity Check
 
 Kept to methods only, on the organizer's instruction not to re-cover dataset background they're already introducing.
+
+> **Script · ~60s** — "Two disciplines before any findings. For prediction, we train only on the past and test only on loans posted in 2024–25 — no peeking at the future. For the framing claims, every 'significant' result had to survive re-testing: first with standard errors clustered by country, so ten thousand loans from one country can't masquerade as ten thousand independent pieces of evidence — and where a result rested on just a couple of countries, a deliberately harsher few-cluster reference on top. Most headline-looking results did not survive. That's the point: we'd rather lose a finding than present a fluke."
 
 ### Slide 4 · A marketplace that hasn't recovered
 
@@ -75,6 +81,8 @@ Source: EDA notebook, §4 Categorical Trends (period chart)
 
 This is the single most concrete, non-technical finding in the whole deck — **lead with it.**
 
+> **Script · ~60s** — "Before the pandemic, almost half of Kiva loans — 46% — funded within 24 hours. Since 2020, it's been under a third — and through the end of our data in 2025 it has not recovered. That's more than half a million loans on each side of the divide, so this isn't noise. Every result we show next lives inside this slower, tighter marketplace — lenders are more selective now, which makes knowing what actually drives speed more valuable, not less."
+
 ### Slide 5 · Structure beats story
 
 - Loan amount and repayment terms are linked to funding speed roughly **10× more strongly** than any single narrative choice, in simple comparisons.
@@ -82,6 +90,8 @@ This is the single most concrete, non-technical finding in the whole deck — **
 - Female-posted loans fund in a median 2.3 days; male-posted loans, 7.7 days.
 
 Source: EDA notebook, §5 Categorical Features + §9 Feature Correlations
+
+> **Script · ~70s** — "So what does drive speed? Structure. Loan amount and repayment terms are associated with funding speed roughly ten times more strongly than any single narrative choice. Sector alone spans more than an order of magnitude. And the starkest gap in the data: loans posted by women fund in a median of 2.3 days; by men, 7.7 — more than three times longer. None of this is causal — but the pattern is enormous, it's stable, and it dwarfs anything the words do."
 
 ### Slide 6 · What survives scrutiny
 
@@ -97,6 +107,8 @@ Source: modeling notebook, §7.2 within-region slopes (the pooled-category claim
 
 The most important slide in the deck. Not "framing doesn't matter" — "we tested harder than a typical analysis would, and nothing narrative survived it; here is exactly why the one thing that looked like it did doesn't count." Your answer to "how do we know this isn't a fluke."
 
+> **Script · ~2min** — "Now the question we came to answer — and the honest answer is that nothing about the narrative survives our own scrutiny. Urgency language looked like a clean, universal win: significant at p < 0.001. Cluster by country, and it collapses to p ≈ 0.44. Gone. Family framing — here our own first version got it wrong: we tested whether regions differ from Africa, which is not the same as whether family framing helps *within* a region. Corrected, two pooled categories — Palestine + Yemen, and Honduras + Nicaragua — do show faster funding in every fit we ran. But each rests on exactly two countries, and against the appropriate few-cluster bar — a t distribution with one degree of freedom, where the critical value is 12.7, not 1.96 — neither is significant: p between 0.06 and 0.21. So we report it as a hypothesis worth testing, not a finding. Sentiment tone: more positive language associates with *slower* funding, but its significance flips between our two specifications — we call it open. We'd rather show you three trustworthy nulls than one exciting result we can't defend."
+
 ### Slide 7 · Beyond keywords
 
 1.5 → 13.5 days across topics, \>9× swing
@@ -108,6 +120,8 @@ Source: EDA notebook, §8 Topic Modeling
 
 Good "we went further than keyword-spotting" beat for originality. First trim candidate if the deck runs long.
 
+> **Script · ~45s** — "We also went beyond keyword counting. Topic modeling finds coherent themes in the stories — livestock, health and sanitation, clean water, farming, retail — and funding speed swings ninefold across them, from a day and a half to nearly two weeks. But notice what a topic mostly encodes: what the loan is *for*. Which is structure again — not persuasion."
+
 ### Slide 8 · What this means in practice
 
 - Don't recommend urgency language platform-wide — it looked like a safe, universal tip, but doesn't survive rigorous testing.
@@ -117,6 +131,8 @@ Good "we went further than keyword-spotting" beat for originality. First trim ca
 
 This is the practical-implications slide — spend real time here. "Test before you recommend" is itself a practical takeaway, not just a methods footnote.
 
+> **Script · ~90s** — "So what should Kiva actually do? Three things. First — don't ship writing tips. A platform-wide 'add urgency' nudge would be built on a result that doesn't survive testing. The family-framing pattern deserves a country-stratified A/B test in exactly those four markets: that's how a hypothesis becomes a decision, and it's cheap to run. Second — the structural gaps are where the real levers are: review how the consistently slower sectors and regions are surfaced, bundled, and supported, because those gaps are ten times the size of any wording effect. Third — speed itself is predictable: our classifier ranks same-day funding at AUC 0.90 on strictly future data, without any framing features. That's strong enough to pilot an early-warning flag for loans likely to stall — pilot, with calibration, capacity and fairness checks, not a blind rollout."
+
 ### Slide 9 · What this can't tell us
 
 - Association, never causation — no borrower was randomly assigned a writing style.
@@ -125,12 +141,16 @@ This is the practical-implications slide — spend real time here. "Test before 
 
 One slide, said plainly, builds more trust than skipping it. Second trim candidate if the deck runs long.
 
+> **Script · ~40s** — "Three honest limits. This is association, never causation — no borrower was randomly assigned a writing style. We measure how fast funded loans fund — not whether a loan funds at all. And our framing measures are transparent, simple rules — they don't capture every nuance of persuasion. We'd rather you know exactly what this analysis can and cannot say — that's what makes the parts we do claim worth trusting."
+
 ### Slide 10 · Closing
 
 "In this data, the story barely registers.\
 The structure carries the signal."
 
 - Thank you — questions.
+
+> **Script · ~20s** — "In this data, the story barely registers — the structure carries the signal. And testing hard enough to *know* that is worth more to a platform than a good-sounding tip. Thank you — we're happy to take questions."
 
 ## §2 · Numbers quick reference
 
