@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-30T20:54:08.978012+00:00",
+  "generated_at": "2026-08-31T12:50:57.458708+00:00",
   "software_versions": {
     "python": "3.12.13",
     "pandas": "2.3.3",
@@ -2228,11 +2228,11 @@
           "clustered_ci_high": 0.02232231483076413,
           "clustered_p": 0.009378542497841775,
           "significant_under_both": true,
-          "few_cluster_df": 1,
-          "few_cluster_p": 0.23391940280638848,
-          "few_cluster_ci_low": -0.04950521379903294,
-          "few_cluster_ci_high": 0.07495200496691126,
-          "significant_few_cluster": false
+          "few_cluster_df": null,
+          "few_cluster_p": null,
+          "few_cluster_ci_low": null,
+          "few_cluster_ci_high": null,
+          "significant_few_cluster": null
         },
         {
           "group": "Oceania",
@@ -2350,11 +2350,11 @@
           "clustered_ci_high": 0.017147993174512578,
           "clustered_p": 0.6569991690190027,
           "significant_under_both": false,
-          "few_cluster_df": 1,
-          "few_cluster_p": 0.7339544997845977,
-          "few_cluster_ci_low": -0.08746633576926477,
-          "few_cluster_ci_high": 0.09380132959221477,
-          "significant_few_cluster": false
+          "few_cluster_df": null,
+          "few_cluster_p": null,
+          "few_cluster_ci_low": null,
+          "few_cluster_ci_high": null,
+          "significant_few_cluster": null
         },
         {
           "group": "Oceania",

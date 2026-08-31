@@ -49,7 +49,7 @@ machine-readable counterparts under `analysis_summary.json`'s
    `test_average_group_slopes_match_brute_force_rowwise_average`).
 
 **Provenance of the current snapshot:** regenerated end-to-end on
-2026-08-30T20:54 UTC by the Kaggle pipeline kernel
+2026-08-31T12:50 UTC by the Kaggle pipeline kernel
 (`notebooks/kernels/full_dataset_pipeline/`, see `README.md`'s
 "Regenerating the committed snapshot on Kaggle"), not on a laptop. Its
 audit trail therefore records Kaggle's software stack (python 3.12.13,
@@ -68,9 +68,11 @@ own re-hash of what Kaggle actually mounted. Kaggle kernel metadata
 cannot pin dataset versions (it always mounts the latest), so this file
 - plus the kernel/dataset version pages on Kaggle - is the audit trail
 tying the committed numbers to exact inputs. The runner refuses to run
-if the code dataset carries no provenance record. (The 2026-08-30
-snapshot predates this mechanism and was produced from a then-uncommitted
-working tree - the collaboration log for that date records which.)
+if the code dataset carries no provenance record. The current (2026-08-31) snapshot carries this record: `provenance.json`
+here names commit `5e3e349`, a clean tree, and a mounted-src hash the
+runner verified against the publish-time hash. (The superseded 2026-08-30
+snapshot predated the mechanism and came from a then-uncommitted tree -
+the collaboration log records that honestly.)
 
 **A regeneration that omits `--cluster-sensitivity-column country_name`
 will drop both sections** - see `README.md`'s reproduction command, which

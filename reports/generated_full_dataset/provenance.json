@@ -1,0 +1,13 @@
+{
+  "code_dataset_provenance": {
+    "git_commit": "5e3e34912a872309411f368ef5ece0686162fb07",
+    "git_tree_dirty": false,
+    "src_tree_sha256": "bbce4e49964481bb8b9f3d349bb0522bcd71a18e4745a87a83f1d0e439f1c41c",
+    "published_at_utc": "2026-08-31T00:42:16Z",
+    "publish_message": "few-cluster heuristic labeling + single-cluster non-estimable, src at 5e3e349"
+  },
+  "mounted_src_files_hashed": 11,
+  "mounted_src_sha256_of_file_digests": "bbce4e49964481bb8b9f3d349bb0522bcd71a18e4745a87a83f1d0e439f1c41c",
+  "data_dataset_mount": "/kaggle/input/datasets/tuannm3812/kiva-loans-hackathon-data",
+  "code_dataset_mount": "/kaggle/input/datasets/tuannm3812/kiva-hackathon-src"
+}
