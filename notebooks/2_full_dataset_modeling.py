@@ -984,12 +984,16 @@ plt.show()
 # %% [markdown]
 # ### 9.2 Business Impact
 #
-# - **A 24-hour-funding risk flag is worth piloting** - holdout ROC AUC
-#   0.91 shows a strong ranking signal, without needing any
-#   narrative-framing insight at all. Discrimination alone doesn't settle
-#   deployment: a rollout still needs a chosen threshold, calibration at
-#   that threshold, capacity and fairness checks, and a prospective test
-#   that surfacing flagged loans actually helps them fund.
+# - **The 24-hour classifier is a retrospective ranking prototype - not
+#   yet an early-warning product** - holdout ROC AUC 0.91 without any
+#   narrative-framing features. Its negative class is "eventually funded,
+#   but not within 24 hours": expired or withdrawn listings never enter
+#   this dataset, so the model is validated only among eventual funders,
+#   not on the population a live at-risk flag would score. Building one
+#   would first need all posted listings (including expired/withdrawn
+#   outcomes), a defined operational target and censoring window, then
+#   retraining and validation on that population - followed by threshold,
+#   calibration, capacity/fairness checks and a prospective test.
 # - **Don't recommend urgency language as a general rule.** Its raw HC3
 #   association looked like a clean, simple win, but that doesn't survive
 #   a country-clustered check that lets loans from the same country be

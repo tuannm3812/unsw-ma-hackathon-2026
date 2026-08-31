@@ -15,7 +15,7 @@ The full analysis report, and prepared answers for the 10-minute Q&A that follow
 
 ### Executive summary
 
-We asked whether the way a Kiva borrower's story is written — family appeals, competence language, urgency, tone — is associated with how fast the loan funds, across 1,453,846 real loans (2016–2025). The answer that survives serious testing: **structure dominates story.** What a loan is for, where it's from, how big it is, and how it's repaid are linked to funding speed roughly an order of magnitude more strongly than any writing choice. Narrative framing has **no association that survives at a defensible standard**. One descriptive pattern — family framing and faster funding in **two pooled two-country categories** (Middle East = Palestine + Yemen; Central America = Honduras + Nicaragua; together ~5% of loans) — is consistent in direction across all three of our model fits, but each rests on exactly two countries, and under a few-cluster reference (t with 1 degree of freedom) it is not significant in any fit. It is a hypothesis for a country-stratified test, not a finding.
+We asked whether the way a Kiva borrower's story is written — family appeals, competence language, urgency, tone — is associated with how fast the loan funds, across 1,453,846 real loans (2016–2025). The answer that survives serious testing: **structure dominates story.** What a loan is for, where it's from, how big it is, and how it's repaid are linked to funding speed roughly an order of magnitude more strongly than any writing choice. Narrative framing has **no robustly supported association — absence of robust evidence, not proof of no effect**. One descriptive pattern — family framing and faster funding in **two pooled two-country categories** (Middle East = Palestine + Yemen; Central America = Honduras + Nicaragua; together ~5% of loans) — is consistent in direction across all three of our model fits, but each rests on exactly two countries, and under a few-cluster reference (t with 1 degree of freedom) it is not significant in any fit. It is a hypothesis for a country-stratified test, not a finding.
 
 The methodological arc is the differentiator: a standard analysis of this dataset would have confidently recommended urgency language platform-wide, and a slightly better one would have recommended family framing in two regions. We tested both, in four rounds, and both failed. What we present is what's left standing after we tried hard to kill it — which for narrative framing is nothing, and that is the finding.
 
@@ -33,7 +33,7 @@ When a borrower's story leans on family, competence, or urgency — does the loa
 ### Predictive results (the uncontroversial half)
 
 - Gradient-boosted model: **MAE 5.20 days, R² = 0.54** on the never-seen holdout (authoritative; notebook: 5.56 / 0.49). Ridge baseline: MAE 6.63 days.
-- 24-hour funding classifier: **ROC AUC 0.90, average precision 0.83** — a strong ranking signal for an at-risk-loan flag, no framing insight required; piloting recommended (threshold, calibration, prospective test) rather than "buildable today".
+- 24-hour funding classifier: **ROC AUC 0.90, average precision 0.83** — a strong retrospective ranking signal among eventually-funded loans (expired/withdrawn listings aren't in the data), no framing insight required; a live early-warning flag would first need all posted listings incl. expired/withdrawn outcomes, then retraining and validation on that population.
 - SHAP on the boosted model: loan amount and repayment term dominate; no family/agency/urgency feature reaches the top 15. Only sentiment appears (11th).
 
 ### The verification arc — three rounds, each changing the answer
@@ -82,7 +82,7 @@ An interaction coefficient tests difference-from-Africa, not "does framing do an
 
 ### Recommendations
 
-- **Pilot the risk flag.** Holdout AUC 0.90 shows a strong ranking signal for surfacing at-risk loans; a pilot should pick a threshold, check calibration at it (holdout Brier 0.116), and prospectively test that surfacing helps before any rollout.
+- **Treat the classifier as a prototype, not a product.** Holdout AUC 0.90 (Brier 0.116) is a retrospective ranking result among loans that eventually funded — the data contain no expired/withdrawn listings, so it is not validated for flagging loans that may never fund. Before any pilot: obtain all posted listings including expired/withdrawn outcomes, define the operational target and censoring window, retrain and validate on that population; only then threshold, calibration, fairness checks and a prospective test.
 - **Don't ship writing rules from this data.** Urgency advice would have been wrong; family advice has no supporting evidence for ~95% of loans.
 - **If anyone wants to chase the family-framing pattern, do it as a country-stratified A/B test** in the two pooled categories — designed to find out whether any real association exists at all and which countries, if any, carry it. A hypothesis, not a finding, and certainly not a rollout.
 - **Investigate structure, not copy**: why Water and Education loans fund in a fraction of the time Agriculture does is a platform question worth more than any style guide.

@@ -1,0 +1,190 @@
+#!/usr/bin/env python3
+"""Regenerate docs/presentation/slides_draft.pptx from the deck brief content.
+
+Single source of truth for the editable draft deck: slide content, big-number
+callouts, chart placeholders (named after the notebook section to screenshot)
+and the timed speaker scripts (as presenter notes). Design mirrors the deck
+brief page: warm paper ground, deep teal + amber accent, Georgia display type.
+Re-run after any wording change: python3 scripts/build_slides_draft.py
+"""
+from pptx import Presentation
+from pptx.util import Inches, Pt, Emu
+from pptx.dml.color import RGBColor
+from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
+from pptx.enum.shapes import MSO_SHAPE
+from pathlib import Path
+
+PAPER = RGBColor(0xFA, 0xF7, 0xF0); INK = RGBColor(0x1E, 0x2A, 0x2F)
+TEAL = RGBColor(0x1F, 0x4E, 0x5F); CREAM = RGBColor(0xFA, 0xF7, 0xF0)
+AMBER = RGBColor(0xC9, 0x7B, 0x3D); MUTED = RGBColor(0x6E, 0x6A, 0x5E)
+PANEL = RGBColor(0xF1, 0xEB, 0xDF); LINE = RGBColor(0xDC, 0xD3, 0xC0)
+DISPLAY = "Georgia"; BODY = "Avenir Next"; MONO = "Courier New"
+
+SLIDES = [
+ ("Beyond a Good Story",
+  "When — and for whom — does persuasive loan language actually speed up funding?",
+  None, ["Team Cultural Blend  ·  Kiva loan data  ·  1.45 million real loans (2016–2025)"], None,
+  "Good morning — we're Cultural Blend. Kiva is built on stories: every loan page leads with one. So we asked a simple question of 1.45 million real loans: does the story actually move the money?",
+  "UNSW MARKETING ANALYTICS HACKATHON · FINAL"),
+ ("The question", None, None,
+  ["When a loan's story leans on family, competence, or urgency — does it fund faster?",
+   "Does the answer depend on WHO is asking and WHEN?",
+   "Why it matters: framing is the one thing a platform can coach — loan size, sector and geography can't be rewritten after the fact."],
+  None,
+  "Specifically: when a borrower's story leans on family, on competence, on urgency — does the loan fund faster? And does the answer depend on who's asking, and when? We care because language is the one thing a platform can coach. You can't rewrite a loan's size, sector, or country after the fact — but you could suggest better words. IF words work. That's the claim we set out to test, not assume.",
+  "MOTIVATION"),
+ ("How we stress-tested our findings", None, None,
+  ["Predictive claims: trained only on the past, tested only on loans posted 2024–2025 — no peeking at the future.",
+   "Framing claims: every 'significant' result re-tested with country-clustered standard errors, then a harsher few-cluster reference where a result rests on a handful of countries.",
+   "Most headline-looking results did NOT survive — that is the point of the method.",
+   "SHAP importance shown as complementary predictive evidence only — it cannot confirm or refute a statistical finding."],
+  "modeling notebook §4 data split · §7.1 cluster-robust check",
+  "Two disciplines before any findings. For prediction, we train only on the past and test only on loans posted in 2024–25 — no peeking at the future. For the framing claims, every 'significant' result had to survive re-testing: first with standard errors clustered by country, so ten thousand loans from one country can't masquerade as ten thousand independent pieces of evidence — and where a result rested on just a couple of countries, a deliberately harsher few-cluster reference on top. Most headline-looking results did not survive. That's the point: we'd rather lose a finding than present a fluke.",
+  "METHOD"),
+ ("A marketplace that hasn't recovered", None,
+  "46% → 30% → 30%|funded within 24 hours",
+  ["Pre-pandemic, almost half of all loans funded within a day.",
+   "Since 2020: under a third — and through the end of the data (2025) it has NOT recovered. Persistence to date, not proof it never will.",
+   "589,823 loans before vs. 565,474 after — not a small, noisy sample."],
+  "EDA notebook §4 categorical trends (period chart)",
+  "Before the pandemic, almost half of Kiva loans — 46% — funded within 24 hours. Since 2020, it's been under a third — and through the end of our data in 2025 it has not recovered. That's more than half a million loans on each side of the divide, so this isn't noise. Every result we show next lives inside this slower, tighter marketplace — lenders are more selective now, which makes knowing what actually drives speed more valuable, not less.",
+  "FINDING 1 · THE MARKET"),
+ ("Structure beats story", None,
+  "2.3 vs 7.7 days|median funding speed — female- vs male-posted loans",
+  ["Loan amount + repayment terms: linked to funding speed ~10x more strongly than any single narrative choice.",
+   "Sector alone spans well over an order of magnitude in speed; region shows similarly large gaps.",
+   "None of this is causal — but it dwarfs anything the words do."],
+  "EDA notebook §5 categorical features · §9 feature correlations",
+  "So what does drive speed? Structure. Loan amount and repayment terms are associated with funding speed roughly ten times more strongly than any single narrative choice. Sector alone spans more than an order of magnitude. And the starkest gap in the data: loans posted by women fund in a median of 2.3 days; by men, 7.7 — more than three times longer. None of this is causal — but the pattern is enormous, it's stable, and it dwarfs anything the words do.",
+  "FINDING 2 · STRUCTURE"),
+ ("What survives scrutiny", None,
+  "No narrative result|is robust enough to support a recommendation",
+  ["Urgency: looked universal (p<0.001) — collapses under country clustering (p≈0.44). Not recommended.",
+   "Family: corrected test → Middle East (Palestine+Yemen) & Central America (Honduras+Nicaragua) same direction in every fit — but 2 countries each; few-cluster t(1) screen bar is 12.7, not 1.96: p≈0.06–0.21. A hypothesis, not a finding.",
+   "Sentiment: positive tone <-> slower funding, but significance flips between specifications — genuinely open.",
+   "SHAP: no family / agency / urgency feature in the model's top 15 — complementary evidence, not confirmation."],
+  "modeling notebook §7.2 within-region slopes · §7.1 check",
+  "Now the question we came to answer — and the honest answer is that nothing about the narrative survives our own scrutiny. Urgency language looked like a clean, universal win: significant at p<0.001. Cluster by country, and it collapses to p≈0.44. Gone. Family framing — here our own first version got it wrong: we tested whether regions differ from Africa, which is not the same as whether family framing helps WITHIN a region. Corrected, two pooled categories — Palestine+Yemen, and Honduras+Nicaragua — do show faster funding in every fit we ran. But each rests on exactly two countries, and against a deliberately harsh few-cluster screen — a t distribution with one degree of freedom, where the critical value is 12.7, not 1.96 — neither is significant: p between 0.06 and 0.21. So we report it as a hypothesis worth testing, not a finding. Sentiment tone: more positive language associates with SLOWER funding, but its significance flips between our two specifications — we call it open. We'd rather report no robust evidence than one exciting result we can't defend.",
+  "FINDING 3 · THE HEADLINE"),
+ ("Beyond keywords", None,
+  "1.5 → 13.5 days|across story topics — a >9x swing",
+  ["Topic modeling (NMF, 5 topics — not keyword counts) surfaces coherent themes: livestock, health & sanitation, clean water, farming, retail.",
+   "The largest single gap anywhere in the analysis — but a topic mostly encodes what the loan is FOR. Structure again, not persuasion."],
+  "EDA notebook §8 topic modeling",
+  "We also went beyond keyword counting. Topic modeling finds coherent themes in the stories — livestock, health and sanitation, clean water, farming, retail — and funding speed swings ninefold across them, from a day and a half to nearly two weeks. But notice what a topic mostly encodes: what the loan is FOR. Which is structure again — not persuasion.",
+  "FINDING 4 · TOPICS"),
+ ("What this means in practice", None, None,
+  ["DON'T ship writing tips — a platform-wide 'add urgency' nudge would be built on a result that doesn't survive testing.",
+   "DO run a country-stratified A/B test of family framing in exactly those 4 markets — that's how a hypothesis becomes a decision.",
+   "DO review the structural gaps (sector / region / gender) — they are ~10x the size of any wording effect.",
+   "PROTOTYPE, then re-validate: the 24h classifier ranks well among eventually-funded loans (AUC ≈ 0.90, strictly future data) — but expired/withdrawn listings aren't in the data, so an early-warning flag first needs all posted listings, a defined target, and retraining on that population."],
+  None,
+  "So what should Kiva actually do? Three things. First — don't ship writing tips. A platform-wide 'add urgency' nudge would be built on a result that doesn't survive testing. The family-framing pattern deserves a country-stratified A/B test in exactly those four markets: that's how a hypothesis becomes a decision, and it's cheap to run. Second — the structural gaps are where the real levers are: review how the consistently slower sectors and regions are surfaced, bundled, and supported, because those gaps are ten times the size of any wording effect. Third — speed is predictable in retrospect: among loans that eventually funded, our classifier ranks same-day funding at AUC 0.90 on strictly future data, without any framing features. One honest boundary: expired or withdrawn listings never enter this data, so that is a ranking prototype among eventual funders — not yet an early-warning system. To build one, Kiva should pull all posted listings including expired and withdrawn outcomes, define the operational target, and retrain and validate on that population — before any pilot.",
+  "RECOMMENDATIONS"),
+ ("What this can't tell us", None, None,
+  ["Association, never causation — no borrower was randomly assigned a writing style.",
+   "Measures how fast a FUNDED loan funds — not whether a loan gets funded at all (expired/withdrawn listings never enter the data).",
+   "Framing measured with transparent, simple rules — not every nuance of persuasive writing."],
+  None,
+  "Three honest limits. This is association, never causation — no borrower was randomly assigned a writing style. We measure how fast funded loans fund — not whether a loan funds at all. And our framing measures are transparent, simple rules — they don't capture every nuance of persuasion. We'd rather you know exactly what this analysis can and cannot say — that's what makes the parts we do claim worth trusting.",
+  "LIMITS"),
+ ("", None, None, [], None,
+  "In this data, the story barely registers — the structure carries the signal. And testing hard enough to KNOW that is worth more to a platform than a good-sounding tip. Thank you — we're happy to take questions.",
+  "CLOSING"),
+]
+
+
+def build(out_path: str) -> None:
+    prs = Presentation(); prs.slide_width = Inches(13.333); prs.slide_height = Inches(7.5)
+    blank = prs.slide_layouts[6]
+
+    def bg(slide, color):
+        slide.background.fill.solid(); slide.background.fill.fore_color.rgb = color
+
+    def box(slide, x, y, w, h):
+        b = slide.shapes.add_textbox(x, y, w, h); b.text_frame.word_wrap = True
+        return b.text_frame
+
+    def style(p, size, color, font=BODY, bold=False, italic=False, align=None):
+        p.font.size = Pt(size); p.font.color.rgb = color; p.font.name = font
+        p.font.bold = bold; p.font.italic = italic
+        if align: p.alignment = align
+
+    def rect(slide, x, y, w, h, fill, line=None, rounded=False):
+        sh = slide.shapes.add_shape(
+            MSO_SHAPE.ROUNDED_RECTANGLE if rounded else MSO_SHAPE.RECTANGLE, x, y, w, h)
+        sh.fill.solid(); sh.fill.fore_color.rgb = fill
+        if line: sh.line.color.rgb = line; sh.line.width = Pt(0.75)
+        else: sh.line.fill.background()
+        sh.shadow.inherit = False
+        return sh
+
+    for i, (title, sub, big, bullets, chart, script, eyebrow) in enumerate(SLIDES, 1):
+        sl = prs.slides.add_slide(blank)
+        bg(sl, TEAL if i in (1, 10) else PAPER)
+        if i == 1:
+            rect(sl, Inches(0.9), Inches(2.05), Inches(1.6), Pt(4), AMBER)
+            tf = box(sl, Inches(0.9), Inches(1.35), Inches(11.5), Inches(0.5))
+            tf.text = eyebrow; style(tf.paragraphs[0], 13, AMBER, MONO)
+            tf = box(sl, Inches(0.85), Inches(2.3), Inches(11.8), Inches(2.2))
+            tf.text = title; style(tf.paragraphs[0], 66, CREAM, DISPLAY, bold=True)
+            tf = box(sl, Inches(0.9), Inches(4.35), Inches(9.8), Inches(1.2))
+            tf.text = sub; style(tf.paragraphs[0], 22, RGBColor(0xB8, 0xCE, 0xD6), BODY, italic=True)
+            tf = box(sl, Inches(0.9), Inches(6.3), Inches(11.5), Inches(0.6))
+            tf.text = bullets[0]; style(tf.paragraphs[0], 15, RGBColor(0x8F, 0xB0, 0xBB), MONO)
+        elif i == 10:
+            rect(sl, Inches(5.87), Inches(1.7), Inches(1.6), Pt(4), AMBER)
+            tf = box(sl, Inches(1.2), Inches(2.5), Inches(10.9), Inches(2.6))
+            for j, line in enumerate(["“The story barely registers.", "The structure carries the signal.”"]):
+                p = tf.paragraphs[0] if j == 0 else tf.add_paragraph()
+                p.text = line; style(p, 42, CREAM, DISPLAY, bold=True, align=PP_ALIGN.CENTER)
+            tf = box(sl, Inches(1.2), Inches(5.3), Inches(10.9), Inches(0.7))
+            tf.text = "Thank you — questions."
+            style(tf.paragraphs[0], 20, RGBColor(0xB8, 0xCE, 0xD6), BODY, align=PP_ALIGN.CENTER)
+            tf = box(sl, Inches(1.2), Inches(6.9), Inches(10.9), Inches(0.4))
+            tf.text = "Team Cultural Blend · UNSW Marketing Analytics Hackathon 2026"
+            style(tf.paragraphs[0], 12, RGBColor(0x8F, 0xB0, 0xBB), MONO, align=PP_ALIGN.CENTER)
+        else:
+            tf = box(sl, Inches(0.75), Inches(0.42), Inches(9.0), Inches(0.35))
+            tf.text = eyebrow; style(tf.paragraphs[0], 11.5, AMBER, MONO)
+            chip = rect(sl, Inches(12.15), Inches(0.4), Inches(0.72), Inches(0.38), TEAL, rounded=True)
+            ctf = chip.text_frame; ctf.text = f"{i}/10"
+            ctf.margin_top = Emu(0); ctf.margin_bottom = Emu(0)
+            style(ctf.paragraphs[0], 12, CREAM, MONO, align=PP_ALIGN.CENTER)
+            ctf.vertical_anchor = MSO_ANCHOR.MIDDLE
+            tf = box(sl, Inches(0.7), Inches(0.78), Inches(11.3), Inches(1.0))
+            tf.text = title; style(tf.paragraphs[0], 36, INK, DISPLAY, bold=True)
+            rect(sl, Inches(0.75), Inches(1.62), Inches(1.35), Pt(3.5), AMBER)
+            y = 1.95
+            if big:
+                num, label = big.split("|")
+                tf = box(sl, Inches(0.75), Inches(y), Inches(12.1), Inches(1.0))
+                p = tf.paragraphs[0]; p.text = num.strip() + "  "
+                style(p, 40, AMBER, DISPLAY, bold=True)
+                r = p.add_run(); r.text = label.strip()
+                r.font.size = Pt(16); r.font.color.rgb = MUTED; r.font.name = BODY; r.font.bold = False
+                y += 1.15
+            bw = 8.2 if chart else 12.1
+            tf = box(sl, Inches(0.75), Inches(y), Inches(bw), Inches(6.9 - y))
+            for j, item in enumerate(bullets):
+                p = tf.paragraphs[0] if j == 0 else tf.add_paragraph()
+                r1 = p.add_run(); r1.text = "▪  "; r1.font.color.rgb = AMBER; r1.font.size = Pt(16); r1.font.name = BODY
+                r2 = p.add_run(); r2.text = item; r2.font.size = Pt(16.5); r2.font.color.rgb = INK; r2.font.name = BODY
+                p.space_after = Pt(12); p.line_spacing = 1.15
+            if chart:
+                ph = rect(sl, Inches(9.2), Inches(y), Inches(3.5), Inches(6.55 - y), PANEL, line=LINE, rounded=True)
+                ptf = ph.text_frame; ptf.word_wrap = True; ptf.vertical_anchor = MSO_ANCHOR.MIDDLE
+                ptf.text = "CHART GOES HERE"
+                style(ptf.paragraphs[0], 13, TEAL, MONO, bold=True, align=PP_ALIGN.CENTER)
+                p2 = ptf.add_paragraph(); p2.text = "\nscreenshot from:\n" + chart
+                style(p2, 11, MUTED, BODY, align=PP_ALIGN.CENTER)
+            tf = box(sl, Inches(0.75), Inches(7.05), Inches(9.0), Inches(0.35))
+            tf.text = "Cultural Blend · Kiva 2016–2025 · 1.45M loans"
+            style(tf.paragraphs[0], 10, MUTED, MONO)
+        sl.notes_slide.notes_text_frame.text = script
+    prs.save(out_path)
+    print("wrote", out_path, Path(out_path).stat().st_size, "bytes")
+
+
+if __name__ == "__main__":
+    build("docs/presentation/slides_draft.pptx")
