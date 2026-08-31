@@ -47,8 +47,12 @@ case "${1:-}" in
     NOTEBOOK=""
     KERNEL_DIR="$NOTEBOOKS_DIR/kernels/full_dataset_pipeline"
     ;;
+  execute)
+    NOTEBOOK=""
+    KERNEL_DIR="$NOTEBOOKS_DIR/kernels/execute_notebooks"
+    ;;
   *)
-    echo "Usage: $0 <eda|modeling|pipeline>" >&2
+    echo "Usage: $0 <eda|modeling|pipeline|execute>" >&2
     exit 1
     ;;
 esac

@@ -66,6 +66,13 @@ EOF
     rsync -a --exclude '__pycache__' "${REPO_ROOT}/src" "${STAGE_DIR}/"
     rsync -a "${REPO_ROOT}/resources" "${STAGE_DIR}/"
     cp "${REPO_ROOT}/requirements.txt" "${REPO_ROOT}/requirements-lock.txt" "${STAGE_DIR}/"
+    # The two analysis notebooks ride along so the execute_notebooks kernel
+    # can re-execute them on Kaggle and expose the executed .ipynb files
+    # (with outputs) as downloadable kernel output - the Kaggle API never
+    # returns a notebook kernel's own executed notebook.
+    mkdir -p "${STAGE_DIR}/notebooks"
+    cp "${REPO_ROOT}/notebooks/1_full_dataset_eda.ipynb" \
+       "${REPO_ROOT}/notebooks/2_full_dataset_modeling.ipynb" "${STAGE_DIR}/notebooks/"
     # Immutable provenance for any snapshot later generated from this
     # upload: the git commit (plus a dirty flag - an upload from an
     # uncommitted tree is recorded as exactly that) and a content hash of
