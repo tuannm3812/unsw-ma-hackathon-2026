@@ -323,6 +323,8 @@ def test_run_analysis_appends_cluster_sensitivity_check_when_requested(tmp_path,
             "hc3_se", "hc3_ci_low", "hc3_ci_high", "hc3_p",
             "clustered_se", "clustered_ci_low", "clustered_ci_high", "clustered_p",
             "significant_under_both",
+            "few_cluster_df", "few_cluster_p", "few_cluster_ci_low", "few_cluster_ci_high",
+            "significant_few_cluster",
         } <= set(row)
 
     # And the digest must survive the JSON round-trip on disk.

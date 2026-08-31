@@ -1,0 +1,17 @@
+{
+  "id": "tuannm3812/kiva-hackathon-full-dataset-pipeline",
+  "title": "Kiva Hackathon Full Dataset Pipeline",
+  "code_file": "run_full_pipeline.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": false,
+  "dataset_sources": [
+    "tuannm3812/kiva-loans-hackathon-data",
+    "tuannm3812/kiva-hackathon-src"
+  ],
+  "competition_sources": [],
+  "kernel_sources": []
+}

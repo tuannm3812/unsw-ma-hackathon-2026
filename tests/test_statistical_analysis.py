@@ -648,6 +648,71 @@ def test_average_group_slopes_report_uncertainty_under_both_covariances(large_sy
                 assert 1.9 * se <= half_width <= 2.3 * se, (key, row["group"], prefix, se, half_width)
 
 
+def test_average_group_slopes_carry_a_few_cluster_reference(large_synthetic_kiva_df):
+    # Codex review follow-up: statsmodels' clustered p-value/interval use a
+    # normal reference, which is not trustworthy when a group's slope is
+    # identified by only a few clusters. Every row must therefore also carry
+    # a t(G_k - 1) reference on the same clustered SE, and its interval must
+    # be wider than the normal one by exactly the t/normal critical ratio.
+    from scipy import stats
+
+    result = fit_explanatory_models(large_synthetic_kiva_df, cluster_sensitivity_col="country_name")
+    for key in ("duration", "binary"):
+        for row in result["within_region_slopes"][key]:
+            if row["n_clusters"] < 2:
+                # One cluster cannot estimate between-cluster uncertainty:
+                # every few-cluster inferential field must be absent, not
+                # a t(1) pretending otherwise (Codex review regression).
+                assert row["few_cluster_df"] is None
+                assert row["few_cluster_p"] is None
+                assert row["few_cluster_ci_low"] is None
+                assert row["few_cluster_ci_high"] is None
+                assert row["significant_few_cluster"] is None
+                continue
+            assert row["few_cluster_df"] == row["n_clusters"] - 1
+            assert 0 <= row["few_cluster_p"] <= 1
+            assert row["few_cluster_ci_low"] < row["estimate"] < row["few_cluster_ci_high"]
+            crit = stats.t.ppf(0.975, row["few_cluster_df"])
+            half = (row["few_cluster_ci_high"] - row["few_cluster_ci_low"]) / 2
+            assert half == pytest.approx(crit * row["clustered_se"], rel=1e-9)
+            # Few-cluster reference can only be less permissive than the normal one.
+            assert row["few_cluster_p"] >= row["clustered_p"] - 1e-12
+            assert row["significant_few_cluster"] == (row["few_cluster_p"] < 0.05)
+
+
+def test_few_cluster_reference_uses_t1_for_a_two_cluster_group():
+    # A two-cluster group must get t(1): 95% critical value 12.706, not 1.96.
+    from scipy import stats
+    import numpy as np, statsmodels.api as sm, patsy
+    rng = np.random.default_rng(0)
+    n = 400
+    frame = pd.DataFrame({
+        "g": rng.choice(["A", "B", "C"], n, p=[0.5, 0.25, 0.25]),
+        "x": rng.normal(size=n),
+    })
+    # Two clusters in group A, one each in B and C.
+    frame["c"] = np.where(frame["g"] == "A", rng.choice(["a1", "a2"], n), frame["g"] + "_c")
+    frame["y"] = 0.3 * frame["x"] + rng.normal(size=n)
+    y, X = patsy.dmatrices("y ~ x + C(g) + x:C(g)", frame, return_type="dataframe")
+    hc3 = sm.OLS(y, X).fit(cov_type="HC3")
+    clu = sm.OLS(y, X).fit(cov_type="cluster", cov_kwds={"groups": frame.loc[X.index, "c"]})
+    rows = {r["group"]: r for r in _average_group_slopes(hc3, clu, frame, "x", "g", "c")}
+    assert rows["A"]["n_clusters"] == 2 and rows["A"]["few_cluster_df"] == 1
+    half = (rows["A"]["few_cluster_ci_high"] - rows["A"]["few_cluster_ci_low"]) / 2
+    assert half == pytest.approx(stats.t.ppf(0.975, 1) * rows["A"]["clustered_se"], rel=1e-9)
+    assert half / ((rows["A"]["clustered_ci_high"] - rows["A"]["clustered_ci_low"]) / 2) > 6
+    # Regression (Codex review): groups B and C each contain exactly ONE
+    # cluster - between-cluster sampling uncertainty is undefined there, so
+    # no few-cluster p-value, interval, df, or verdict may be emitted.
+    for single in ("B", "C"):
+        assert rows[single]["n_clusters"] == 1
+        assert rows[single]["few_cluster_df"] is None
+        assert rows[single]["few_cluster_p"] is None
+        assert rows[single]["few_cluster_ci_low"] is None
+        assert rows[single]["few_cluster_ci_high"] is None
+        assert rows[single]["significant_few_cluster"] is None
+
+
 def test_within_region_slopes_omitted_without_cluster_sensitivity(large_synthetic_kiva_df):
     result = fit_explanatory_models(large_synthetic_kiva_df)
     assert "within_region_slopes" not in result
@@ -664,6 +729,7 @@ def test_format_within_region_slopes_reports_every_group_with_cluster_counts(lar
         assert row["group"] in summary
         assert row["n_clusters"] is not None  # country_name is present in the frame
     assert "clustered se=" in summary and "95% CI [" in summary and "HC3 se=" in summary
+    assert "few-cluster t(" in summary
 
 
 def test_average_group_slopes_reports_error_string_when_focal_term_absent():

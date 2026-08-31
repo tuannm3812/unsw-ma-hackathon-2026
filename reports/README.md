@@ -48,6 +48,30 @@ machine-readable counterparts under `analysis_summary.json`'s
    `src/statistical_analysis.py` (see
    `test_average_group_slopes_match_brute_force_rowwise_average`).
 
+**Provenance of the current snapshot:** regenerated end-to-end on
+2026-08-30T20:54 UTC by the Kaggle pipeline kernel
+(`notebooks/kernels/full_dataset_pipeline/`, see `README.md`'s
+"Regenerating the committed snapshot on Kaggle"), not on a laptop. Its
+audit trail therefore records Kaggle's software stack (python 3.12.13,
+pandas 2.3.3, numpy 2.0.2, scikit-learn 1.6.1, statsmodels 0.14.6 -
+newer than the local venv that produced earlier snapshots) and a
+Kaggle-relative `source_path`
+(`../input/datasets/.../Kiva_Loans.pkl`). The within-region few-cluster
+p-values match the last local run to all four printed decimals, and the
+headline predictive metrics are unchanged.
+
+**Provenance binding:** a Kaggle-regenerated snapshot must be committed
+together with the `provenance.json` the runner writes beside it, which
+records the code dataset's git commit, whether that tree was dirty when
+published, the src-tree content hash at publish time, and the runner's
+own re-hash of what Kaggle actually mounted. Kaggle kernel metadata
+cannot pin dataset versions (it always mounts the latest), so this file
+- plus the kernel/dataset version pages on Kaggle - is the audit trail
+tying the committed numbers to exact inputs. The runner refuses to run
+if the code dataset carries no provenance record. (The 2026-08-30
+snapshot predates this mechanism and was produced from a then-uncommitted
+working tree - the collaboration log for that date records which.)
+
 **A regeneration that omits `--cluster-sensitivity-column country_name`
 will drop both sections** - see `README.md`'s reproduction command, which
 includes the flag for exactly this reason. (Earlier snapshots of this

@@ -1,8 +1,9 @@
 # Pinned direct numerical/statistical environment - NOT a complete lock
 # and NOT a bit-for-bit artifact reproduction guarantee. It pins exactly
-# requirements.txt's own direct packages (plus scipy, the transitive
-# dependency most likely to shift statsmodels/scikit-learn numerical
-# edge-case/warning behavior) - it does not pin the rest of the
+# requirements.txt's own direct packages (scipy is now itself a direct
+# dependency - src/statistical_analysis.py imports it for the few-cluster
+# t reference - and remains the package most likely to shift
+# statsmodels/scikit-learn numerical edge-case/warning behavior) - it does not pin the rest of the
 # transitive dependency tree, and it does not cover the separate
 # artifact-rendering toolchain (jupytext/nbconvert for the notebook,
 # pandoc/weasyprint plus system fonts for the PDF - see "Optional tooling

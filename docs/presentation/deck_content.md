@@ -56,7 +56,7 @@ Answered
 ### Slide 3 · How we made sure findings are real
 
 - **Predictive claims**: trained only on the past, tested only on loans posted in 2024–2025 — no peeking at the future. (This validates the forecasting models, not the framing findings — those come from a separate full-sample statistical model.)
-- **Framing claims**: every "significant" result was re-tested under a stricter, more conservative statistical assumption — several headline-looking results didn't survive (Slide 6).
+- **Framing claims**: every "significant" result was re-tested under a country-clustered sensitivity check — one that lets loans from the same country be correlated instead of treating them as independent — and then under a few-cluster reference where a result rests on only a handful of countries. Most headline-looking results didn't survive (Slide 6).
 - A machine-learning importance ranking (SHAP) is shown as complementary predictive evidence — it measures what the forecasting model relied on, and cannot by itself confirm or refute the statistical findings.
 
 Source: modeling notebook, §4 Data Split + §7.1 Cluster-Robust Sensitivity Check
@@ -85,17 +85,17 @@ Source: EDA notebook, §5 Categorical Features + §9 Feature Correlations
 
 ### Slide 6 · What survives scrutiny
 
-~Half of "significant" framing results don't survive a stricter test
+Zero narrative-framing results survive at a defensible standard
 
-- A standard model made **urgency language** look like a clean, universal win. Re-tested under a stricter, more conservative assumption (standard errors clustered by country, not treated as fully independent), that result doesn't hold up — **we're not recommending it.**
-- **Family framing** mostly doesn't survive either — and the piece that does is narrower than it first looked. Our original test asked the wrong question (does this region differ from Africa?) instead of the right one (does family framing do anything *here*?). Re-tested correctly, it holds up in **two pooled two-country categories — Middle East (Palestine + Yemen) and Central America (Honduras + Nicaragua)**, significant under clustering in all three model fits, both pipelines. Strong evidence, but the estimate is *pooled*: it is not "the Middle East" as a region, and not a finding about any single country either — a pooled result can be driven by one of the pair. Those categories are ~5% of all loans.
+- A standard model made **urgency language** look like a clean, universal win. Re-tested with standard errors clustered by country (loans from one country allowed to be correlated, not treated as independent), that result doesn't hold up — **we're not recommending it.**
+- **Family framing** doesn't survive either — and the one piece that looked like it did turns out to be a descriptive pattern, not a supported result. Our original test asked the wrong question (does this region differ from Africa?) instead of the right one (does family framing do anything *here*?). Re-tested correctly, **two pooled two-country categories — Middle East (Palestine + Yemen) and Central America (Honduras + Nicaragua)** show the same faster-funding direction in every fit. But each rests on exactly two countries, and once the p-value is referred to a few-cluster distribution (t with 1 degree of freedom, critical value 12.7 not 1.96), **neither is significant** — p ≈ 0.06–0.21 across fits. A hypothesis for a country-stratified test, not a finding. Those categories are ~5% of all loans.
 - **Sentiment tone** — counterintuitively, more positive language links to slower funding, but even this finding's significance is model-sensitive: it survives clustering in the authoritative pipeline, not in the simpler notebook model. Reported as genuinely open, not a third confirmed survivor.
-- **Competence/agency language** — no link survives the stricter test. (It did look significant in one of the authoritative pipeline's two models before clustering, then failed — the same fragile pattern as urgency, so don't present it as a clean universal null.)
+- **Competence/agency language** — no link survives the clustered check. (It did look significant in one of the authoritative pipeline's two models before clustering, then failed — the same fragile pattern as urgency, so don't present it as a clean universal null.)
 - Complementary evidence, not independent confirmation: SHAP importance from the forecasting model (a different model, without the region interactions) shows narrative features carry little overall predictive weight — no family, agency or urgency feature reaches its top 15. It can't corroborate the sign or uncertainty of any specific coefficient. Sentiment does reach 11th place despite its disputed significance: predictive weight and statistical robustness are different questions.
 
 Source: modeling notebook, §7.2 within-region slopes (the pooled-category claim) + §7.1 cluster check + §8 Feature Importance
 
-The most important slide in the deck. Not "framing doesn't matter" — "we tested harder than a typical analysis would, and this is what's actually real." Your answer to "how do we know this isn't a fluke."
+The most important slide in the deck. Not "framing doesn't matter" — "we tested harder than a typical analysis would, and nothing narrative survived it; here is exactly why the one thing that looked like it did doesn't count." Your answer to "how do we know this isn't a fluke."
 
 ### Slide 7 · Beyond keywords
 
@@ -111,7 +111,7 @@ Good "we went further than keyword-spotting" beat for originality. First trim ca
 ### Slide 8 · What this means in practice
 
 - Don't recommend urgency language platform-wide — it looked like a safe, universal tip, but doesn't survive rigorous testing.
-- Family-framing guidance should be a *country-stratified* A/B test in the two surviving pooled categories (Palestine + Yemen; Honduras + Nicaragua) — designed to show which countries, if any, drive the pooled association. Not a blanket writing rule: everywhere else the association vanishes under scrutiny.
+- No writing rule at all from this data. The one family-framing pattern (Palestine + Yemen; Honduras + Nicaragua) is a hypothesis worth a *country-stratified* A/B test — not a recommendation, because two countries per category cannot support one.
 - A structural review (why some sectors/regions fund so much slower) still likely outperforms copywriting coaching alone.
 - A same-day-funding risk flag is worth *piloting* — holdout ROC AUC ≈ 0.90 shows a strong ranking signal, no framing insight required. A rollout still needs a threshold, calibration at it, capacity/fairness checks, and a prospective test that surfacing actually helps.
 
@@ -145,8 +145,8 @@ Every figure used above, with its real source. `authoritative` = the tested full
 | Duration model: gender (male vs. female) | coef +0.430, HC3 p\<0.0001 → clustered p\<0.0001 (survives) | `authoritative` |
 | Duration model: urgency framing | coef −0.063, HC3 p\<0.0001 → clustered p=0.49 (does not survive) | `authoritative` |
 | Duration model: family framing (baseline) | coef −0.023, HC3 p\<0.0001 → clustered p=0.20 (does not survive) | `authoritative` |
-| **Avg within-region slope**: family in Middle East (Palestine, Yemen) | −0.1236 notebook · −0.0729 authoritative duration · +0.1753 authoritative 24h — all clustered p\<0.005, significant in all 3 | `authoritative` |
-| **Avg within-region slope**: family in Central America (Honduras, Nicaragua) | −0.0618 notebook · −0.0742 authoritative duration · +0.1025 authoritative 24h — all clustered p\<0.0001, significant in all 3 | `authoritative` |
+| **Avg within-region slope**: family in Middle East (Palestine, Yemen) | −0.1236 notebook · −0.0729 authoritative duration · +0.1753 authoritative 24h — conventional clustered p\<0.005 in all 3, but few-cluster t(1) p = 0.12 / 0.12 / 0.21: NOT significant (2 countries) | `authoritative` |
+| **Avg within-region slope**: family in Central America (Honduras, Nicaragua) | −0.0618 notebook · −0.0742 authoritative duration · +0.1025 authoritative 24h — conventional clustered p\<0.0001 in all 3, but few-cluster t(1) p = 0.06 / 0.06 / 0.14: NOT significant (2 countries) | `authoritative` |
 | **Avg within-region slope**: family in Asia (12 countries) | +0.0338 / +0.0234 / −0.0304 — clustered p=0.0535, 0.0846, 0.2860: not significant in any of the 3 fits | `authoritative` |
 | Avg within-region slope: Africa (27) / Oceania (4) / N. America (1) | none significant, except N. America in 1 of 3 fits (p=0.0094) — a single country, not claimed | `authoritative` |
 | Countries per region group | Middle East 2 · Central America 2 · North America 1 · Oceania 4 · Asia 12 · Africa 27 | `authoritative` |

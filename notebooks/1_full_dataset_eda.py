@@ -544,7 +544,7 @@ plt.show()
 # Controlling for loan size, sector, and everything else at once (the
 # modeling notebook's first-pass regression) made urgency look like a
 # strong, precise association with faster funding - a classic
-# "confound was masking a real effect" story. But a stricter check -
+# "confound was masking a real effect" story. But a country-clustered sensitivity check -
 # refitting with standard errors clustered by country instead of
 # assuming every loan is independent - showed that apparent association
 # doesn't hold up either (full detail in `2_full_dataset_modeling.ipynb`
@@ -552,16 +552,18 @@ plt.show()
 # no longer distinguishable from no association. **Two rounds of
 # "controlling for more" changed the answer twice** - first making
 # urgency look important, then showing that importance doesn't survive a
-# more conservative check. A third round - testing the *right* quantity,
+# check under that coarser dependence assumption. A third round - testing the *right* quantity,
 # not just testing it robustly (that notebook's Section 7.2) - narrowed it
-# further still. What is left standing is specific: more family language
-# is associated with faster funding in **two pooled region categories** -
-# Middle East (Palestine + Yemen) and Central America (Honduras +
-# Nicaragua) - a result that survives clustering and holds in all three
-# same-data model fits we ran. Two cautions bound it: each category is
-# only two countries, and the model estimates one pooled slope per
-# category, never a slope for any individual country - so it is
-# exploratory rather than a region-level or country-level rule. That is a far more specific, and more
+# further still. What is left is a descriptive pattern, not a supported
+# association: more family language goes with faster funding in **two
+# pooled region categories** - Middle East (Palestine + Yemen) and
+# Central America (Honduras + Nicaragua) - in the same direction in all
+# three same-data model fits we ran. But each category is only two
+# countries, and once the p-value is referred to a few-cluster t
+# distribution instead of the usual normal approximation, neither clears
+# significance. The model also estimates one pooled slope per category,
+# never a slope for any individual country. A hypothesis for a
+# country-stratified test, not a region-level or country-level rule. That is a far more specific, and more
 # cautionary, finding than "timing, region, and loan size all matter,"
 # which is what an analysis stopping after the first round would have
 # concluded.
@@ -595,14 +597,14 @@ plt.show()
 #   framing's apparent association, and most of family framing's
 #   conditional structure, don't survive standard errors clustered by
 #   country. Tested with the correct within-region contrast (that
-#   notebook's Section 7.2), one result survives everywhere it's checked:
-#   family framing is associated with faster funding in two pooled
+#   notebook's Section 7.2), one descriptive pattern appears everywhere
+#   it's checked: family framing goes with faster funding in two pooled
 #   region categories - Middle East (Palestine + Yemen) and Central
-#   America (Honduras + Nicaragua). Each is two countries, and the
-#   estimate is pooled per category, not per country - exploratory, not a
-#   region-level or country-level rule. Elsewhere (Africa, Asia, North
-#   America, Oceania) no association survives the corrected test in any
-#   fit. Sentiment tone's
+#   America (Honduras + Nicaragua) - but each is two countries, and under
+#   a few-cluster t reference neither is significant, so it is a
+#   hypothesis, not a statistically supported association. Elsewhere
+#   (Africa, Asia, North America, Oceania) nothing clears even the
+#   conventional test in any fit. Sentiment tone's
 #   association is a genuinely open question, not a confirmed survivor -
 #   it holds up in this project's richer authoritative model but not in
 #   the modeling notebook's own simpler one.
@@ -638,15 +640,16 @@ plt.show()
 # - **Narrative framing's value is narrower than a first-pass model
 #   suggested, and it's worth stress-testing before acting on it** - the
 #   modeling notebook's robustness check shows urgency's apparent link to
-#   speed doesn't survive a stricter standard-error assumption, and
+#   speed doesn't survive a country-clustered standard-error assumption, and
 #   neither does most of family framing's conditional structure. What
-#   remains defensible after testing is narrow rather than a writing rule:
-#   family framing is associated with faster funding in two pooled
-#   two-country categories (Middle East = Palestine + Yemen; Central
-#   America = Honduras + Nicaragua) and nowhere else that survives
-#   scrutiny - so a blanket "mention family" recommendation isn't
-#   supported for the vast majority of loans in this dataset, and even
-#   there the evidence is pooled, not per-country. Even
+#   remains after testing is not a writing rule at all: a descriptive
+#   pattern - family framing and faster funding in two pooled two-country
+#   categories (Middle East = Palestine + Yemen; Central America =
+#   Honduras + Nicaragua) - that is consistent in direction but not
+#   statistically supported once the two-country cluster base is taken
+#   seriously. So a "mention family" recommendation isn't supported
+#   anywhere in this dataset; the pattern is worth a country-stratified
+#   test, nothing more. Even
 #   sentiment tone's (counterintuitive) association, which looked like a
 #   second survivor, turned out to depend on exactly which model is
 #   fitted - a reminder to keep testing rather than stop at the first

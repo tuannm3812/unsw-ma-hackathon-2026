@@ -49,6 +49,7 @@ import numpy as np
 import pandas as pd
 import patsy
 import statsmodels.api as sm
+from scipy import stats as _scipy_stats
 from statsmodels.tools.sm_exceptions import PerfectSeparationWarning
 
 try:
@@ -681,20 +682,51 @@ def _average_group_slopes(
         # clustered interval is the honest statement of what is known.
         hc3_ci = np.ravel(t_hc3.conf_int(alpha=0.05))
         clustered_ci = np.ravel(t_clustered.conf_int(alpha=0.05))
+        # HEURISTIC few-cluster sensitivity reference. statsmodels'
+        # clustered p-value and interval use a normal reference, which is
+        # only trustworthy with many clusters, and a group's slope is
+        # identified by the clusters INSIDE it (G_k). Cameron & Miller
+        # (2015, sec. VI) discuss t(G-1) as the minimum improvement over
+        # the normal reference for a cluster-robust Wald statistic - but
+        # warn that even t(G-1) on the standard CRVE can still over-reject;
+        # their better-calibrated procedures (bias-corrected CRVE with
+        # data-determined degrees of freedom, wild-cluster bootstrap) are
+        # NOT implemented here, and substituting G_k for the fit's full
+        # cluster count is a further conservative heuristic, not a derived
+        # result. So these values are a sensitivity screen only: failing it
+        # downgrades a result to descriptive; passing it must never be read
+        # as statistical support. A single-cluster group has no
+        # between-cluster sampling uncertainty to estimate: G_k - 1 = 0
+        # degrees of freedom means no p-value, interval, or verdict at all.
+        n_clusters = int(subset[cluster_col].nunique()) if cluster_col in subset.columns else None
+        clustered_se = float(np.ravel(t_clustered.sd)[0])
+        if n_clusters is not None and n_clusters >= 2 and clustered_se > 0:
+            few_df = n_clusters - 1
+            few_t = estimate / clustered_se
+            few_p = float(2 * _scipy_stats.t.sf(abs(few_t), few_df))
+            few_crit = float(_scipy_stats.t.ppf(0.975, few_df))
+            few_ci = (estimate - few_crit * clustered_se, estimate + few_crit * clustered_se)
+        else:
+            few_df, few_p, few_ci = None, None, (None, None)
         rows.append({
             "group": level,
             "n_loans": int(len(subset)),
-            "n_clusters": int(subset[cluster_col].nunique()) if cluster_col in subset.columns else None,
+            "n_clusters": n_clusters,
             "estimate": estimate,
             "hc3_se": float(np.ravel(t_hc3.sd)[0]),
             "hc3_ci_low": float(hc3_ci[0]),
             "hc3_ci_high": float(hc3_ci[1]),
             "hc3_p": hc3_p,
-            "clustered_se": float(np.ravel(t_clustered.sd)[0]),
+            "clustered_se": clustered_se,
             "clustered_ci_low": float(clustered_ci[0]),
             "clustered_ci_high": float(clustered_ci[1]),
             "clustered_p": clustered_p,
             "significant_under_both": bool(hc3_p < 0.05 and clustered_p < 0.05),
+            "few_cluster_df": few_df,
+            "few_cluster_p": few_p,
+            "few_cluster_ci_low": few_ci[0],
+            "few_cluster_ci_high": few_ci[1],
+            "significant_few_cluster": (few_p < 0.05) if few_p is not None else None,
         })
     return rows
 
@@ -935,9 +967,24 @@ def format_within_region_slopes(results: "dict[str, object]") -> str:
         "averaged over that group's own observed composition of the other "
         "moderators, as a weighted linear contrast, with standard errors and "
         f"95% confidence intervals under both HC3 and {cluster_col}-clustered "
-        "covariance. Read the clustered interval, not just the p-value: with "
-        "very few clusters in a group, its width is the honest statement of "
-        "how precisely the slope is known.",
+        "covariance. The clustered p-value and interval use statsmodels' "
+        "normal reference, which is only trustworthy with many clusters - and "
+        "a group's slope is identified only by the clusters inside that group. "
+        "Each row therefore also reports a HEURISTIC few-cluster "
+        "sensitivity reference: a t distribution with (clusters in group - 1) "
+        "degrees of freedom on the unchanged clustered SE. Cameron & Miller "
+        "(2015, sec. VI) discuss t(G-1) as the minimum improvement over the "
+        "normal reference but warn that even it can over-reject with the "
+        "standard CRVE; their better-calibrated small-cluster procedures are "
+        "not implemented here, and substituting the clusters inside one group "
+        "for the fit's full cluster count is a further conservative "
+        "heuristic, not a derived result. These p-values and intervals are a "
+        "sensitivity screen, never grounds for claiming significance: "
+        "failing the screen downgrades a result to descriptive; passing it "
+        "must NOT be read as statistical support. For a two-cluster group "
+        "the reference is t(1), whose 95% critical value is 12.7 instead of "
+        "1.96. For a single-cluster group, between-cluster uncertainty is "
+        "not estimable and no few-cluster values are reported at all.",
         "",
         "Sign conventions are OPPOSITE between the two models: the duration "
         "model is log(1 + days), so NEGATIVE = faster funding; the 24-hour "
@@ -958,14 +1005,34 @@ def format_within_region_slopes(results: "dict[str, object]") -> str:
             lines.append(f"  {section or 'not computed'}")
             return
         for row in section:
-            verdict = "significant under both" if row["significant_under_both"] else "not significant under both"
             clusters = f", {row['n_clusters']} {cluster_col} cluster(s)" if row.get("n_clusters") is not None else ""
+            if row.get("few_cluster_p") is None:
+                if row.get("n_clusters") == 1:
+                    few = "few-cluster reference: not estimable (single cluster - between-cluster uncertainty undefined)"
+                    verdict = (
+                        "significant under HC3 and normal-reference clustering, but identified by a single cluster - descriptive only"
+                        if row["significant_under_both"] else "not significant"
+                    )
+                else:
+                    few = "few-cluster reference: not available"
+                    verdict = "significant under HC3 and normal-reference clustering" if row["significant_under_both"] else "not significant"
+            else:
+                few = (
+                    f"few-cluster t({row['few_cluster_df']}) 95% CI "
+                    f"[{row['few_cluster_ci_low']:.4f}, {row['few_cluster_ci_high']:.4f}] p={row['few_cluster_p']:.4f}"
+                )
+                if row["significant_few_cluster"]:
+                    verdict = "significant under HC3 and normal-reference clustering; also inside the few-cluster sensitivity screen (a heuristic - not calibrated statistical support)"
+                elif row["significant_under_both"]:
+                    verdict = "significant under the normal reference only - NOT under the few-cluster reference; descriptive, not statistically supported"
+                else:
+                    verdict = "not significant"
             lines.append(
                 f"  - {row['group']} ({row['n_loans']} loans{clusters}): "
                 f"estimate={row['estimate']:.4f}; "
                 f"HC3 se={row['hc3_se']:.4f} 95% CI [{row['hc3_ci_low']:.4f}, {row['hc3_ci_high']:.4f}] p={row['hc3_p']:.4f} | "
                 f"clustered se={row['clustered_se']:.4f} 95% CI [{row['clustered_ci_low']:.4f}, {row['clustered_ci_high']:.4f}] "
-                f"p={row['clustered_p']:.4f} [{verdict}]"
+                f"p={row['clustered_p']:.4f} | {few} [{verdict}]"
             )
 
     _section("Duration model (log funding speed; NEGATIVE = faster):", "duration")

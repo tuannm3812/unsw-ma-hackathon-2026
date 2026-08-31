@@ -3,7 +3,7 @@ UNSW Marketing Analytics Hackathon 2026 - Reproducible Analysis Report
 
 Audit trail
 --------------------------------------------------------------
-Source file: data/Kiva_Loans.pkl
+Source file: ../input/datasets/tuannm3812/kiva-loans-hackathon-data/Kiva_Loans.pkl
 Rows loaded: 1453846
 Rows with a valid completed outcome: 1453840
 Rows excluded: 6 ({'negative_duration': 6})
@@ -12,7 +12,7 @@ fundraisingDate range: 2016-01-01T02:30:02+00:00 to 2025-12-31T20:30:25+00:00
 Chronological holdout boundary: 2024-01-01
 Period counts: {'pre_pandemic': 589823, 'post_pandemic': 565474, 'pandemic_disruption': 298549}
 Funded-within-24h share (valid outcomes): 0.36566265888956145
-Software versions: python=3.9.6, pandas=2.3.3, numpy=2.0.2, scikit_learn=1.6.1, statsmodels=0.14.6
+Software versions: python=3.12.13, pandas=2.3.3, numpy=2.0.2, scikit_learn=1.6.1, statsmodels=0.14.6
 
 24-Hour Funding Classifier (leakage-safe chronological holdout)
 --------------------------------------------------------------
@@ -43,7 +43,7 @@ Dropped for lacking variation in this sample: sentiment_available
   - C(sector)[T.Health]: coefficient -0.4839 (95% CI [-0.5112, -0.4565], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
   - C(sector)[T.Housing]: coefficient -0.1234 (95% CI [-0.1406, -0.1062], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
   - C(sector)[T.Manufacturing]: coefficient -0.7615 (95% CI [-0.7912, -0.7317], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
-  - C(sector)[T.Personal Use]: coefficient 0.1971 (95% CI [0.1774, 0.2168], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
+  - C(sector)[T.Personal Use]: coefficient 0.1971 (95% CI [0.1774, 0.2167], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
   - C(sector)[T.Retail]: coefficient 0.2038 (95% CI [0.1944, 0.2131], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
   - C(sector)[T.Reuse & Recycle]: coefficient -0.0575 (95% CI [-0.0821, -0.0329], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
   - C(sector)[T.Sanitation & Hygiene]: coefficient -0.3487 (95% CI [-0.3893, -0.3080], p=0.0000) is associated with funding speed, holding the other modeled predictors fixed.
@@ -304,25 +304,25 @@ Duration model (log funding speed):
 Average Within-Region Family-Framing Slopes
 ==============================================================
 
-An interaction coefficient only tests whether a region_group level's family_mentions_per_100_words slope differs from the reference level's. It does NOT test whether the focal measure is associated with the outcome WITHIN that group - and because the focal term is interacted with several moderators at once, 'main effect + group term' is the slope only at the other moderators' reference levels, one unrepresentative cell. This section reports the correct quantity: each group's slope averaged over that group's own observed composition of the other moderators, as a weighted linear contrast, with standard errors and 95% confidence intervals under both HC3 and country_name-clustered covariance. Read the clustered interval, not just the p-value: with very few clusters in a group, its width is the honest statement of how precisely the slope is known.
+An interaction coefficient only tests whether a region_group level's family_mentions_per_100_words slope differs from the reference level's. It does NOT test whether the focal measure is associated with the outcome WITHIN that group - and because the focal term is interacted with several moderators at once, 'main effect + group term' is the slope only at the other moderators' reference levels, one unrepresentative cell. This section reports the correct quantity: each group's slope averaged over that group's own observed composition of the other moderators, as a weighted linear contrast, with standard errors and 95% confidence intervals under both HC3 and country_name-clustered covariance. The clustered p-value and interval use statsmodels' normal reference, which is only trustworthy with many clusters - and a group's slope is identified only by the clusters inside that group. Each row therefore also reports a few-cluster reference: a t distribution with (clusters in group - 1) degrees of freedom on the same clustered SE (Cameron & Miller 2015, sec. VI). For a two-cluster group that is t(1), whose 95% critical value is 12.7 instead of 1.96. A slope that is 'significant' only under the normal reference but not under the few-cluster reference is a descriptive pattern, not a statistically supported association.
 
 Sign conventions are OPPOSITE between the two models: the duration model is log(1 + days), so NEGATIVE = faster funding; the 24-hour model is log-odds of funding within 24h, so POSITIVE = faster.
 
 A group's slope is identified only by the clusters within it; a group containing very few clusters cannot separate the focal association from whatever else is idiosyncratic about those specific clusters, and its estimate pools the whole group - it is not evidence about any individual constituent cluster.
 
 Duration model (log funding speed; NEGATIVE = faster):
-  - Africa (610368 loans, 27 country_name cluster(s)): estimate=-0.0158; HC3 se=0.0008 95% CI [-0.0173, -0.0142] p=0.0000 | clustered se=0.0160 95% CI [-0.0471, 0.0155] p=0.3225 [not significant under both]
-  - Asia (738191 loans, 12 country_name cluster(s)): estimate=0.0234; HC3 se=0.0007 95% CI [0.0220, 0.0249] p=0.0000 | clustered se=0.0136 95% CI [-0.0032, 0.0501] p=0.0846 [not significant under both]
-  - Central America (59391 loans, 2 country_name cluster(s)): estimate=-0.0742; HC3 se=0.0033 95% CI [-0.0806, -0.0678] p=0.0000 | clustered se=0.0070 95% CI [-0.0879, -0.0605] p=0.0000 [significant under both]
-  - Middle East (14946 loans, 2 country_name cluster(s)): estimate=-0.0729; HC3 se=0.0061 95% CI [-0.0849, -0.0609] p=0.0000 | clustered se=0.0140 95% CI [-0.1003, -0.0456] p=0.0000 [significant under both]
-  - North America (7559 loans, 1 country_name cluster(s)): estimate=0.0127; HC3 se=0.0034 95% CI [0.0061, 0.0193] p=0.0002 | clustered se=0.0049 95% CI [0.0031, 0.0223] p=0.0094 [significant under both]
-  - Oceania (23385 loans, 4 country_name cluster(s)): estimate=0.0050; HC3 se=0.0035 95% CI [-0.0019, 0.0119] p=0.1584 | clustered se=0.0376 95% CI [-0.0688, 0.0787] p=0.8949 [not significant under both]
+  - Africa (610368 loans, 27 country_name cluster(s)): estimate=-0.0158; HC3 se=0.0008 95% CI [-0.0173, -0.0142] p=0.0000 | clustered se=0.0160 95% CI [-0.0471, 0.0155] p=0.3225 | few-cluster t(26) 95% CI [-0.0486, 0.0170] p=0.3316 [not significant]
+  - Asia (738191 loans, 12 country_name cluster(s)): estimate=0.0234; HC3 se=0.0007 95% CI [0.0220, 0.0249] p=0.0000 | clustered se=0.0136 95% CI [-0.0032, 0.0501] p=0.0846 | few-cluster t(11) 95% CI [-0.0065, 0.0534] p=0.1125 [not significant]
+  - Central America (59391 loans, 2 country_name cluster(s)): estimate=-0.0742; HC3 se=0.0033 95% CI [-0.0806, -0.0678] p=0.0000 | clustered se=0.0070 95% CI [-0.0879, -0.0605] p=0.0000 | few-cluster t(1) 95% CI [-0.1629, 0.0145] p=0.0597 [significant under the normal reference only - NOT under the few-cluster reference; descriptive, not statistically supported]
+  - Middle East (14946 loans, 2 country_name cluster(s)): estimate=-0.0729; HC3 se=0.0061 95% CI [-0.0849, -0.0609] p=0.0000 | clustered se=0.0140 95% CI [-0.1003, -0.0456] p=0.0000 | few-cluster t(1) 95% CI [-0.2502, 0.1043] p=0.1203 [significant under the normal reference only - NOT under the few-cluster reference; descriptive, not statistically supported]
+  - North America (7559 loans, 1 country_name cluster(s)): estimate=0.0127; HC3 se=0.0034 95% CI [0.0061, 0.0193] p=0.0002 | clustered se=0.0049 95% CI [0.0031, 0.0223] p=0.0094 | few-cluster t(1) 95% CI [-0.0495, 0.0750] p=0.2339 [significant under the normal reference only - NOT under the few-cluster reference; descriptive, not statistically supported]
+  - Oceania (23385 loans, 4 country_name cluster(s)): estimate=0.0050; HC3 se=0.0035 95% CI [-0.0019, 0.0119] p=0.1584 | clustered se=0.0376 95% CI [-0.0688, 0.0787] p=0.8949 | few-cluster t(3) 95% CI [-0.1148, 0.1247] p=0.9032 [not significant]
 
 24-hour funding model (log-odds; POSITIVE = faster):
-  - Africa (610368 loans, 27 country_name cluster(s)): estimate=0.0271; HC3 se=0.0023 95% CI [0.0225, 0.0316] p=0.0000 | clustered se=0.0327 95% CI [-0.0370, 0.0912] p=0.4075 [not significant under both]
-  - Asia (738191 loans, 12 country_name cluster(s)): estimate=-0.0304; HC3 se=0.0019 95% CI [-0.0341, -0.0267] p=0.0000 | clustered se=0.0285 95% CI [-0.0862, 0.0254] p=0.2860 [not significant under both]
-  - Central America (59391 loans, 2 country_name cluster(s)): estimate=0.1025; HC3 se=0.0099 95% CI [0.0831, 0.1220] p=0.0000 | clustered se=0.0237 95% CI [0.0561, 0.1490] p=0.0000 [significant under both]
-  - Middle East (14946 loans, 2 country_name cluster(s)): estimate=0.1753; HC3 se=0.0257 95% CI [0.1249, 0.2258] p=0.0000 | clustered se=0.0608 95% CI [0.0561, 0.2946] p=0.0040 [significant under both]
-  - North America (7559 loans, 1 country_name cluster(s)): estimate=0.0032; HC3 se=0.0111 95% CI [-0.0186, 0.0250] p=0.7759 | clustered se=0.0071 95% CI [-0.0108, 0.0171] p=0.6570 [not significant under both]
-  - Oceania (23385 loans, 4 country_name cluster(s)): estimate=-0.0723; HC3 se=0.0095 95% CI [-0.0908, -0.0537] p=0.0000 | clustered se=0.0912 95% CI [-0.2511, 0.1066] p=0.4284 [not significant under both]
+  - Africa (610368 loans, 27 country_name cluster(s)): estimate=0.0271; HC3 se=0.0023 95% CI [0.0225, 0.0316] p=0.0000 | clustered se=0.0327 95% CI [-0.0370, 0.0912] p=0.4075 | few-cluster t(26) 95% CI [-0.0401, 0.0943] p=0.4150 [not significant]
+  - Asia (738191 loans, 12 country_name cluster(s)): estimate=-0.0304; HC3 se=0.0019 95% CI [-0.0341, -0.0267] p=0.0000 | clustered se=0.0285 95% CI [-0.0862, 0.0254] p=0.2860 | few-cluster t(11) 95% CI [-0.0931, 0.0323] p=0.3088 [not significant]
+  - Central America (59391 loans, 2 country_name cluster(s)): estimate=0.1025; HC3 se=0.0099 95% CI [0.0831, 0.1220] p=0.0000 | clustered se=0.0237 95% CI [0.0561, 0.1490] p=0.0000 | few-cluster t(1) 95% CI [-0.1986, 0.4037] p=0.1446 [significant under the normal reference only - NOT under the few-cluster reference; descriptive, not statistically supported]
+  - Middle East (14946 loans, 2 country_name cluster(s)): estimate=0.1753; HC3 se=0.0257 95% CI [0.1249, 0.2258] p=0.0000 | clustered se=0.0608 95% CI [0.0561, 0.2946] p=0.0040 | few-cluster t(1) 95% CI [-0.5978, 0.9485] p=0.2127 [significant under the normal reference only - NOT under the few-cluster reference; descriptive, not statistically supported]
+  - North America (7559 loans, 1 country_name cluster(s)): estimate=0.0032; HC3 se=0.0111 95% CI [-0.0186, 0.0250] p=0.7759 | clustered se=0.0071 95% CI [-0.0108, 0.0171] p=0.6570 | few-cluster t(1) 95% CI [-0.0875, 0.0938] p=0.7340 [not significant]
+  - Oceania (23385 loans, 4 country_name cluster(s)): estimate=-0.0723; HC3 se=0.0095 95% CI [-0.0908, -0.0537] p=0.0000 | clustered se=0.0912 95% CI [-0.2511, 0.1066] p=0.4284 | few-cluster t(3) 95% CI [-0.3626, 0.2181] p=0.4862 [not significant]
 
