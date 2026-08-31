@@ -212,6 +212,31 @@
   }
   .speaker-note strong { font-style: normal; color: var(--ink); }
 
+  .backup {
+    margin: 0.9rem 0 0.2rem;
+    padding: 0.85rem 1rem 0.9rem;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  .backup ul { margin: 0.3rem 0 0; padding-left: 1.1rem; }
+  .backup li { margin-bottom: 0.5rem; }
+  .backup li:last-child { margin-bottom: 0; }
+  .backup .backup-tag {
+    display: inline-block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    background: var(--accent);
+    border-radius: 4px;
+    padding: 0.1rem 0.5rem;
+    margin-bottom: 0.45rem;
+  }
   .script {
     margin: 0.9rem 0 0.2rem;
     padding: 0.85rem 1rem 0.9rem;
@@ -354,6 +379,7 @@
       </ul>
       <p><strong>Why it matters:</strong> framing is the one thing a platform can actually coach. Loan size, sector, and geography can't be rewritten after the fact.</p>
       <div class="script"><span class="script-tag">Script &middot; ~45s</span><br>&ldquo;Specifically: when a borrower's story leans on family, on competence, on urgency — does the loan fund faster? And does the answer depend on who's asking, and when? We care because language is the one thing a platform can coach. You can't rewrite a loan's size, sector, or country after the fact — but you could suggest better words. <em>If</em> words work. That's the claim we set out to test, not assume.&rdquo;</div>
+      <div class="backup"><span class="backup-tag">Backup &middot; if questions land here</span><ul><li><strong>How is 'framing' measured?</strong> Transparent per-100-word lexicon rates (family, agency/competence, urgency, gratitude, first/third-person), VADER sentiment compound, plus NMF topic modeling (5 topics) — all computed from the loan description text with simple, auditable rules.</li><li><strong>Why speed, not success?</strong> The dataset contains completed fundraises (1,452,203 funded + 1,637 refunded that completed funding), so time-to-fund is the observable outcome. Whether a loan funds at all is out of scope — conceded up front on Slide 9.</li></ul></div>
     </div>
 
     <div class="slide-card">
@@ -366,6 +392,7 @@
       <span class="visual-tag">Source: modeling notebook, §4 Data Split + §7.1 Cluster-Robust Sensitivity Check</span>
       <div class="speaker-note">Kept to methods only, on the organizer's instruction not to re-cover dataset background they're already introducing.</div>
       <div class="script"><span class="script-tag">Script &middot; ~60s</span><br>&ldquo;Two disciplines before any findings. For prediction, we train only on the past and test only on loans posted in 2024–25 — no peeking at the future. For the framing claims, every 'significant' result had to survive re-testing: first with standard errors clustered by country, so ten thousand loans from one country can't masquerade as ten thousand independent pieces of evidence — and where a result rested on just a couple of countries, a deliberately harsher few-cluster reference on top. Most headline-looking results did not survive. That's the point: we'd rather lose a finding than present a fluke.&rdquo;</div>
+      <div class="backup"><span class="backup-tag">Backup &middot; if questions land here</span><ul><li><strong>Why HC3?</strong> The most conservative of the standard heteroskedasticity-robust estimators — a defensible default when error variance differs across 1.45M loans. It still assumes independence, which is exactly what the clustering re-test relaxes.</li><li><strong>Why cluster by country?</strong> Same-country loans share an economy, currency, field-partner institutions and lender familiarity — treating them as independent overstates evidence. 48 country clusters in the explanatory sample.</li><li><strong>Why call the few-cluster check a 'screen', not a test?</strong> It refers the unchanged clustered SE to t(countries−1) — Cameron &amp; Miller (2015 §VI) treat that as a minimum improvement and warn even it can over-reject; the calibrated small-cluster procedures (bias-corrected CRVE, wild-cluster bootstrap) are named future work. So it can downgrade a claim, never certify one.</li><li><strong>Split sizes:</strong> train 1,174,953 (pre-2024) / holdout 278,887 (posted 2024-01-01 onward).</li></ul></div>
     </div>
 
     <div class="slide-card">
@@ -379,6 +406,7 @@
       <span class="visual-tag">Source: EDA notebook, §4 Categorical Trends (period chart)</span>
       <div class="speaker-note">This is the single most concrete, non-technical finding in the whole deck — <strong>lead with it.</strong></div>
       <div class="script"><span class="script-tag">Script &middot; ~60s</span><br>&ldquo;Before the pandemic, almost half of Kiva loans — 46% — funded within 24 hours. Since 2020, it's been under a third — and through the end of our data in 2025 it has not recovered. That's more than half a million loans on each side of the divide, so this isn't noise. Every result we show next lives inside this slower, tighter marketplace — lenders are more selective now, which makes knowing what actually drives speed more valuable, not less.&rdquo;</div>
+      <div class="backup"><span class="backup-tag">Backup &middot; if questions land here</span><ul><li><strong>Exact shares:</strong> 46.0% pre-pandemic → 30.3% pandemic-disruption → 30.0% post-pandemic; 589,823 loans before vs 565,474 after.</li><li><strong>'Could it be composition?'</strong> Fair question — this is a descriptive period comparison, and the loan mix (countries, sectors, amounts) also shifted. We claim persistence of the slowdown to date, not a causal pandemic effect. The multivariable models on later slides do hold structure fixed, and the period terms stay large there too.</li></ul></div>
     </div>
 
     <div class="slide-card">
@@ -390,6 +418,7 @@
       </ul>
       <span class="visual-tag">Source: EDA notebook, §5 Categorical Features + §9 Feature Correlations</span>
       <div class="script"><span class="script-tag">Script &middot; ~70s</span><br>&ldquo;So what does drive speed? Structure. Loan amount and repayment terms are associated with funding speed roughly ten times more strongly than any single narrative choice. Sector alone spans more than an order of magnitude. And the starkest gap in the data: loans posted by women fund in a median of 2.3 days; by men, 7.7 — more than three times longer. None of this is causal — but the pattern is enormous, it's stable, and it dwarfs anything the words do.&rdquo;</div>
+      <div class="backup"><span class="backup-tag">Backup &middot; if questions land here</span><ul><li><strong>Gender gap robustness:</strong> the duration-model male coefficient is +0.430 with HC3 <em>and</em> country-clustered p &lt; 0.0001 — one of the few results that survives every re-test. Still associational: gender correlates with sector, amount, and country.</li><li><strong>Where does '10×' come from?</strong> Standardized-correlation comparison in EDA §9: amount/term correlations with speed are an order of magnitude larger than any narrative feature's.</li><li><strong>Sector scale example:</strong> Water-sector coefficient −1.12 on log(1+days) ≈ funding in roughly ⅓ the time of the Agriculture baseline (notebook model).</li></ul></div>
     </div>
 
     <div class="slide-card">
@@ -405,6 +434,7 @@
       <span class="visual-tag">Source: modeling notebook, §7.2 within-region slopes (the pooled-category claim) + §7.1 cluster check + §8 Feature Importance</span>
       <div class="speaker-note">The most important slide in the deck. Not "framing doesn't matter" — "we tested harder than a typical analysis would, and nothing narrative survived it; here is exactly why the one thing that looked like it did doesn't count." Your answer to "how do we know this isn't a fluke."</div>
       <div class="script"><span class="script-tag">Script &middot; ~2min</span><br>&ldquo;Now the question we came to answer — and the honest answer is that nothing about the narrative survives our own scrutiny. Urgency language looked like a clean, universal win: significant at p&nbsp;&lt;&nbsp;0.001. Cluster by country, and it collapses to p&nbsp;≈&nbsp;0.44. Gone. Family framing — here our own first version got it wrong: we tested whether regions differ from Africa, which is not the same as whether family framing helps <em>within</em> a region. Corrected, two pooled categories — Palestine&nbsp;+&nbsp;Yemen, and Honduras&nbsp;+&nbsp;Nicaragua — do show faster funding in every fit we ran. But each rests on exactly two countries, and against the appropriate few-cluster bar — a t distribution with one degree of freedom, where the critical value is 12.7, not 1.96 — neither is significant: p between 0.06 and 0.21. So we report it as a hypothesis worth testing, not a finding. Sentiment tone: more positive language associates with <em>slower</em> funding, but its significance flips between our two specifications — we call it open. We'd rather show you three trustworthy nulls than one exciting result we can't defend.&rdquo;</div>
+      <div class="backup"><span class="backup-tag">Backup &middot; if questions land here</span><ul><li><strong>Urgency, all three fits (clustered p):</strong> authoritative duration 0.4943, authoritative 24h 0.2233, notebook 0.4442 — HC3 said p&lt;0.0001 in all three. The re-test, not the sample, is what changed the answer.</li><li><strong>Full few-cluster screen (p), authoritative duration / authoritative 24h / notebook:</strong> Africa (27 countries) 0.33 / 0.42 / 0.56 · Asia (12) 0.11 / 0.31 / 0.08 · Central America (2) 0.06 / 0.14 / 0.07 · Middle East (2) 0.12 / 0.21 / 0.08 · Oceania (4) 0.90 / 0.49 / 0.66 · North America (1 country — Haiti): not estimable, a single cluster has no between-cluster uncertainty.</li><li><strong>Sentiment disagreement, precisely:</strong> authoritative duration model survives clustering (p = 0.0095); the notebook's simpler formula does not (p = 0.2544). Same data, different specification — which is why we call it open rather than picking the answer we like.</li><li><strong>Scale of the clustering shake-up:</strong> 64 of 128 authoritative coefficients (50%) change significance conclusion; 20 of 45 (44%) in the notebook's duration model.</li><li><strong>If pressed on 'isn't t(1) too harsh?':</strong> concede it's deliberately conservative and a heuristic — then point out the direction of the argument: a result identified by two countries shouldn't be certified by a normal approximation either. We choose to under-claim.</li></ul></div>
     </div>
 
     <div class="slide-card">
@@ -417,6 +447,7 @@
       <span class="visual-tag">Source: EDA notebook, §8 Topic Modeling</span>
       <div class="speaker-note">Good "we went further than keyword-spotting" beat for originality. First trim candidate if the deck runs long.</div>
       <div class="script"><span class="script-tag">Script &middot; ~45s</span><br>&ldquo;We also went beyond keyword counting. Topic modeling finds coherent themes in the stories — livestock, health and sanitation, clean water, farming, retail — and funding speed swings ninefold across them, from a day and a half to nearly two weeks. But notice what a topic mostly encodes: what the loan is <em>for</em>. Which is structure again — not persuasion.&rdquo;</div>
+      <div class="backup"><span class="backup-tag">Backup &middot; if questions land here</span><ul><li><strong>Method:</strong> NMF (non-negative matrix factorization), 5 topics, seeded/reproducible; topic loadings enter the models as features (topic_0…topic_4).</li><li><strong>Speed range:</strong> ~1.5 days (fastest topic) to ~13.5 days (slowest) in median funding time — the largest single gap in the analysis.</li><li><strong>Why not a persuasion finding:</strong> a topic mostly encodes the loan's purpose (livestock vs clean water vs retail) — that's structure; the framing lexicons measure the how, topics measure the what.</li></ul></div>
     </div>
 
     <div class="slide-card">
@@ -429,6 +460,7 @@
       </ul>
       <div class="speaker-note">This is the practical-implications slide — spend real time here. "Test before you recommend" is itself a practical takeaway, not just a methods footnote.</div>
       <div class="script"><span class="script-tag">Script &middot; ~90s</span><br>&ldquo;So what should Kiva actually do? Three things. First — don't ship writing tips. A platform-wide 'add urgency' nudge would be built on a result that doesn't survive testing. The family-framing pattern deserves a country-stratified A/B test in exactly those four markets: that's how a hypothesis becomes a decision, and it's cheap to run. Second — the structural gaps are where the real levers are: review how the consistently slower sectors and regions are surfaced, bundled, and supported, because those gaps are ten times the size of any wording effect. Third — speed itself is predictable: our classifier ranks same-day funding at AUC 0.90 on strictly future data, without any framing features. That's strong enough to pilot an early-warning flag for loans likely to stall — pilot, with calibration, capacity and fairness checks, not a blind rollout.&rdquo;</div>
+      <div class="backup"><span class="backup-tag">Backup &middot; if questions land here</span><ul><li><strong>Classifier detail:</strong> holdout ROC AUC 0.8997, average precision 0.8301, Brier 0.1156, accuracy 0.840 on 278,887 strictly-future loans (87,466 funded within 24h vs 191,421 not). No framing features required for that performance.</li><li><strong>What the A/B test looks like:</strong> country-stratified (Palestine, Yemen, Honduras, Nicaragua separately), family-framing writing prompt vs standard prompt at loan-creation, outcome = time-to-fund. Stratification is the point — it answers the question our observational data cannot: which constituent country, if any, drives the pattern.</li><li><strong>Pilot guardrails, if asked:</strong> choose an operating threshold, check calibration at it, cap review capacity, test for demographic disparities in flag rates, and measure prospectively whether surfacing flagged loans actually changes outcomes.</li></ul></div>
     </div>
 
     <div class="slide-card">
@@ -440,6 +472,7 @@
       </ul>
       <div class="speaker-note">One slide, said plainly, builds more trust than skipping it. Second trim candidate if the deck runs long.</div>
       <div class="script"><span class="script-tag">Script &middot; ~40s</span><br>&ldquo;Three honest limits. This is association, never causation — no borrower was randomly assigned a writing style. We measure how fast funded loans fund — not whether a loan funds at all. And our framing measures are transparent, simple rules — they don't capture every nuance of persuasion. We'd rather you know exactly what this analysis can and cannot say — that's what makes the parts we do claim worth trusting.&rdquo;</div>
+      <div class="backup"><span class="backup-tag">Backup &middot; if questions land here</span><ul><li><strong>Selection, stated exactly:</strong> the data are completed fundraises — expired or withdrawn listings aren't in it, so all speed findings condition on eventual funding.</li><li><strong>Why simple lexicons, not an LLM?</strong> Transparency and auditability: every measure can be recomputed by a judge from the stated rule. A richer text model is future work, and would still face the same inference discipline.</li></ul></div>
     </div>
 
     <div class="slide-card">
@@ -468,7 +501,7 @@
           <tr><td>Duration model: gender (male vs. female)</td><td class="num">coef +0.430, HC3 p&lt;0.0001 → clustered p&lt;0.0001 (survives)</td><td><span class="src-tag authoritative">authoritative</span></td></tr>
           <tr><td>Duration model: urgency framing</td><td class="num">coef −0.063, HC3 p&lt;0.0001 → clustered p=0.49 (does not survive)</td><td><span class="src-tag authoritative">authoritative</span></td></tr>
           <tr><td>Duration model: family framing (baseline)</td><td class="num">coef −0.023, HC3 p&lt;0.0001 → clustered p=0.20 (does not survive)</td><td><span class="src-tag authoritative">authoritative</span></td></tr>
-          <tr><td><strong>Avg within-region slope</strong>: family in Middle East (Palestine, Yemen)</td><td class="num">−0.1236 notebook · −0.0729 authoritative duration · +0.1753 authoritative 24h — conventional clustered p&lt;0.005 in all 3, but few-cluster t(1) p = 0.12 / 0.12 / 0.21: NOT significant (2 countries)</td><td><span class="src-tag authoritative">authoritative</span></td></tr>
+          <tr><td><strong>Avg within-region slope</strong>: family in Middle East (Palestine, Yemen)</td><td class="num">−0.1236 notebook · −0.0729 authoritative duration · +0.1753 authoritative 24h — conventional clustered p&lt;0.005 in all 3, but few-cluster t(1) p = 0.08 notebook / 0.12 authoritative duration / 0.21 authoritative 24h: NOT significant (2 countries)</td><td><span class="src-tag authoritative">authoritative</span></td></tr>
           <tr><td><strong>Avg within-region slope</strong>: family in Central America (Honduras, Nicaragua)</td><td class="num">−0.0618 notebook · −0.0742 authoritative duration · +0.1025 authoritative 24h — conventional clustered p&lt;0.0001 in all 3, but few-cluster t(1) p = 0.06 / 0.06 / 0.14: NOT significant (2 countries)</td><td><span class="src-tag authoritative">authoritative</span></td></tr>
           <tr><td><strong>Avg within-region slope</strong>: family in Asia (12 countries)</td><td class="num">+0.0338 / +0.0234 / −0.0304 — clustered p=0.0535, 0.0846, 0.2860: not significant in any of the 3 fits</td><td><span class="src-tag authoritative">authoritative</span></td></tr>
           <tr><td>Avg within-region slope: Africa (27) / Oceania (4) / N. America (1)</td><td class="num">none significant, except N. America in 1 of 3 fits (p=0.0094) — a single country, not claimed</td><td><span class="src-tag authoritative">authoritative</span></td></tr>
