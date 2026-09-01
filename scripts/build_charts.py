@@ -137,4 +137,71 @@ ax.set_title("Within-region family-framing slope (duration model)\nno region pas
              fontsize=13, pad=10, loc="left")
 fig.savefig(OUT + "few_cluster_table.png", bbox_inches="tight", facecolor="white"); plt.close(fig)
 
-print("5 exhibits rebuilt in the deck palette")
+
+
+# S5 - average funding speed by sector. Values computed from
+# data/Kiva_Loans.pkl replicating the EDA notebook's exact grouping
+# (valid = non-null, non-negative funding_speed_days; sectors with
+# < 1,000 loans folded into "Other"); every count below matches the
+# executed notebook's printed n= annotations, and valid rows = 1,453,840.
+SECTORS = [("Sanitation & Hygiene", 0.91, 6905), ("Clean Energy", 1.54, 35342),
+           ("Personal Use", 3.06, 46323), ("Manufacturing", 4.21, 9024),
+           ("Water", 5.30, 1466), ("Housing", 6.05, 81853),
+           ("Arts", 6.43, 18328), ("Education", 6.48, 40302),
+           ("Reuse & Recycle", 7.67, 17133), ("Health", 8.72, 17570),
+           ("Food", 9.59, 304913), ("Other", 10.31, 1524),
+           ("Retail", 10.37, 276710), ("Agriculture", 10.84, 461563),
+           ("Construction", 10.95, 10769), ("Services", 10.98, 63205),
+           ("Transportation", 11.96, 19577), ("Clothing", 12.12, 41333)]
+OVERALL_MEAN = 9.47
+fig, ax = plt.subplots(figsize=(7.6, 6.4), dpi=200)
+names = [x[0] for x in SECTORS]; means = [x[1] for x in SECTORS]; ns = [x[2] for x in SECTORS]
+colors = [plt.get_cmap('viridis')(m / 13.5) for m in means]
+ax.barh(names, means, color=colors, height=0.7)
+ax.axvline(OVERALL_MEAN, color=INK, linestyle="--", linewidth=1)
+ax.text(OVERALL_MEAN + 0.15, 0.2, f"overall avg {OVERALL_MEAN:.1f}", fontsize=10, color=MUTED)
+for y, (m, n) in enumerate(zip(means, ns)):
+    ax.text(m + 0.15, y, f"{m:.1f}  (n={n:,})", va="center", fontsize=9, color=MUTED)
+ax.set_xlabel("Mean funding speed (days)", fontsize=13); ax.set_xlim(0, 15.6)
+ax.spines[["top", "right"]].set_visible(False)
+ax.set_title("Sector spans an order of magnitude in speed", fontsize=15,
+             weight="bold", pad=12, loc="left")
+fig.savefig(OUT + "sector.png", facecolor="white", bbox_inches="tight"); plt.close(fig)
+
+# A1 - average funding speed by region (same computation and verification)
+REGIONS = [("North America", 3.71, 7559), ("Asia", 8.18, 738191),
+           ("Africa", 10.29, 610368), ("Middle East", 11.01, 14946),
+           ("Oceania", 14.23, 23385), ("Central America", 15.56, 59391)]
+fig, ax = plt.subplots(figsize=(7.4, 4.4), dpi=200)
+names = [x[0] for x in REGIONS]; means = [x[1] for x in REGIONS]; ns = [x[2] for x in REGIONS]
+colors = [plt.get_cmap('viridis')(m / 16.5) for m in means]
+ax.barh(names, means, color=colors, height=0.62)
+ax.axvline(OVERALL_MEAN, color=INK, linestyle="--", linewidth=1)
+for y, (m, n) in enumerate(zip(means, ns)):
+    ax.text(m + 0.2, y, f"{m:.1f}  (n={n:,})", va="center", fontsize=10.5, color=MUTED)
+ax.set_xlabel("Mean funding speed (days)", fontsize=13); ax.set_xlim(0, 19.5)
+ax.spines[["top", "right"]].set_visible(False)
+ax.set_title("Average funding speed by region", fontsize=15, weight="bold", pad=12, loc="left")
+fig.savefig(OUT + "region.png", facecolor="white", bbox_inches="tight"); plt.close(fig)
+
+# S3 - chronological data-split schematic. Counts from the authoritative
+# snapshot (train 1,174,953 / holdout 278,887; boundary 2024-01-01).
+fig, ax = plt.subplots(figsize=(7.4, 3.4), dpi=200)
+ax.barh([0], [8.0], left=[0], color=BLUE, height=0.42)
+ax.barh([0], [2.0], left=[8.0], color=YELLOW, edgecolor=INK, linewidth=1.2, height=0.42)
+ax.text(4.0, 0, "TRAIN\n2016 - 2023\n1,174,953 loans", ha="center", va="center",
+        color="white", fontsize=13, weight="bold")
+ax.text(9.0, 0, "TEST\n2024 - 2025\n278,887", ha="center", va="center",
+        color=INK, fontsize=11.5, weight="bold")
+ax.axvline(8.0, color=INK, linewidth=1.4)
+ax.text(8.0, 0.38, "2024-01-01", ha="center", fontsize=11, color=INK, weight="bold")
+ax.text(5.0, -0.42, "Models never see the future they are scored on", ha="center",
+        fontsize=12, color=MUTED, style="italic")
+ax.set_xlim(0, 10.4); ax.set_ylim(-0.62, 0.62); ax.axis("off")
+ax.set_title("Chronological holdout: train on the past, test on the future",
+             fontsize=14.5, weight="bold", pad=10, loc="left")
+fig.savefig(OUT + "data_split.png", facecolor="white", bbox_inches="tight"); plt.close(fig)
+
+print("3 additional exhibits built (sector, region, data_split)")
+
+print("8 exhibits rebuilt in the deck palette")

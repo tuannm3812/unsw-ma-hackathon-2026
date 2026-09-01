@@ -26,12 +26,12 @@ import os
 # with CHART_DIR env var; missing files fall back to the labelled placeholder.
 CHART_DIR = os.environ.get("CHART_DIR", "docs/presentation/charts")
 CHARTS = {
-    3: "mod_21.png",            # boosted forecast vs actual (holdout)
+    3: "data_split.png",        # chronological-split schematic (verified counts)
     4: "period_24h.png",        # 24h-funded share by period (rebuilt, exact shares)
-    5: "eda_22.png",            # average funding speed by sector
+    5: "sector.png",            # average funding speed by sector
     6: "few_cluster_table.png", # SS7.2 within-region few-cluster screen (typeset)
     7: "topics.png",            # topic mean speeds, semantic labels (8 NMF topics)
-    12: "region_speed.png",     # appendix: region speed panel only
+    12: "region.png",           # appendix: region speeds (house style, verified values)
     13: "shap_top15.png",       # appendix: SHAP top-15, human feature names
     14: "correlations.png",     # appendix: the exact 10x correlation basis
 }
@@ -49,18 +49,18 @@ DISPLAY = "Georgia"; BODY = "DM Sans"; MONO = "Courier New"
 
 # Academic figure captions shown under each embedded exhibit.
 FIGS = {
-    3:  (1, "Predicted vs. actual funding speed on the chronological holdout.",
-         "Boosted model; loans posted 2024-01-01 onward (n = 278,887). Modeling notebook \u00a76."),
+    3:  (1, "Chronological train/test split.",
+         "Train 1,174,953 loans (2016-2023); test 278,887 (posted 2024-01-01 onward). Counts from the authoritative snapshot."),
     4:  (2, "Share of loans funded within 24 hours, by analysis period.",
          "Exact shares 46.0% / 30.3% / 30.0%; period sizes shown in axis labels. EDA notebook \u00a74."),
-    5:  (3, "Average funding speed by sector.",
-         "Bar annotations give per-sector loan counts; dashed line = overall average. EDA notebook \u00a75."),
+    5:  (3, "Mean funding speed by sector.",
+         "Computed from the raw data replicating EDA \u00a75 grouping (sectors under 1,000 loans folded into Other); all counts match the executed notebook."),
     6:  (4, "Average within-region family-framing slope (duration model).",
          "Slopes averaged over each region's own moderator mix; few-cluster screen is a conservative heuristic. Executed modeling notebook \u00a77.2."),
     7:  (5, "Mean funding speed by story theme.",
          "TF-IDF + NMF, 8 topics, 20K-description sample; themes named from each topic's top words. EDA notebook \u00a78."),
-    12: (6, "Average funding speed by region.",
-         "Bar annotations give per-region loan counts; dashed line = overall average. EDA notebook \u00a75."),
+    12: (6, "Mean funding speed by region.",
+         "Computed from the raw data replicating EDA \u00a75 grouping; all counts match the executed notebook."),
     13: (7, "Top 15 features by mean |SHAP| value, boosted model.",
          "2,000-loan holdout sample; sentiment (11th) highlighted as the only narrative feature. Modeling notebook \u00a78."),
     14: (8, "Correlation with funding speed: structural vs narrative features.",
@@ -68,13 +68,13 @@ FIGS = {
 }
 
 SOURCES = {
-    3: "Chart: modeling notebook SS6 (boosted forecast vs actual, chronological holdout). Split sizes: analysis_summary.json.",
+    3: "Split schematic drawn from analysis_summary.json split sizes (train 1,174,953 / holdout 278,887; boundary 2024-01-01).",
     4: "Chart rebuilt from EDA SS4 printed shares (0.460/0.303/0.300) and period counts; association_summary.txt audit trail.",
-    5: "Chart: EDA SS5 sector figure (executed notebook). Gender medians: EDA SS4 printout. 10x basis: EDA SS9 correlations.",
+    5: "Sector means computed from data/Kiva_Loans.pkl replicating EDA SS5 grouping (counts verified vs executed notebook). Gender medians: EDA SS4 printout.",
     6: "Table typeset from the executed modeling notebook SS7.2 printout (v15); authoritative few-cluster values: analysis_summary.json within_region_slopes.",
     7: "Chart rebuilt from EDA SS8 printed topic means and top-words (8 NMF topics).",
     8: "Classifier metrics: analysis_summary.json binary_classifier. Few-cluster screen: SS7.2 / within_region_slopes.",
-    12: "Region panel: EDA SS5 figure. Pooled definitions + p-values: association_summary.txt within-region section.",
+    12: "Region means computed from data/Kiva_Loans.pkl replicating EDA SS5 grouping (counts verified). Pooled definitions + p-values: association_summary.txt.",
     13: "Chart rebuilt from modeling SS8 printed SHAP top-15 values (v14/v15 runs).",
     14: "Chart rebuilt from EDA SS9 printed correlation table; decile curve: EDA SS9 figure.",
 }
