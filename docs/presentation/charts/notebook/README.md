@@ -4,7 +4,10 @@ Every figure from the Kaggle-executed notebooks (EDA v11, modeling v15),
 exported verbatim - notebook styling, NOT the deck's house style, and not
 restyleable without re-execution (their underlying aggregates are not all
 printed). The eight deck exhibits in the parent folder are the house-style
-set; use these as extra/backup visuals only.
+set, and house-style rebuilds of most of these now live in ../extra/
+(mod_21 excepted - model predictions are unreproducible without
+retraining). Prefer ../extra/ for slides; use these raw exports only
+when the exact notebook rendering is wanted.
 
 - `eda_13_3_target_variable.png` - 3. Target Variable
 - `eda_17_4_categorical_trends.png` - 4. Categorical Trends

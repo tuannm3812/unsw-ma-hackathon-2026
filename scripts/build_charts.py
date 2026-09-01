@@ -207,5 +207,119 @@ ax.set_title("Within-region family-framing slope (duration model)\nno region pas
              fontsize=TITLE, pad=8, loc="left")
 finish(fig, "few_cluster_table.png")
 
+
+# ============================================================================
+# EXTRAS (docs/presentation/charts/extra/): house-style rebuilds of the
+# remaining notebook figures. Values computed from data/Kiva_Loans.pkl with
+# the notebooks' exact logic and verified against printed output where it
+# exists: gender medians match the EDA SS4 printout (2.332 / 7.714), the
+# repayment counts match the notebook figure's n= annotations (1,264,787 /
+# 70,707 / 118,346), and the loan-amount decile bin edges match the figure's
+# axis labels ((1.791, 4.836], (5.303, 5.421], ...). Period boxplot n's are
+# over VALID rows, hence 6 fewer than the full-row period counts.
+# mod_21 (prediction scatter) is deliberately NOT rebuilt: its points are
+# model predictions, unreproducible without retraining.
+# ============================================================================
+import os
+EXTRA = OUT + "extra/"
+os.makedirs(EXTRA, exist_ok=True)
+
+def finish_extra(fig, name):
+    fig.savefig(EXTRA + name, facecolor="white", bbox_inches="tight", dpi=DPI)
+    plt.close(fig)
+
+# -- funding-speed distribution (30 bins of 2 days, clipped at 60; 0.05%
+#    of loans above the clip; 36.6% funded within 1 day) --------------------
+HIST = [660265, 134700, 84174, 59418, 48645, 38357, 34438, 31178, 27303,
+        25465, 23521, 22200, 25866, 28882, 75273, 18568, 23322, 59492,
+        2164, 2370, 2924, 4718, 19192, 87, 100, 128, 103, 99, 72, 816]
+fig, ax = plt.subplots(figsize=(4.6, 2.9))
+lefts = [i * 2 for i in range(30)]
+colors = [YELLOW if i == 0 else BLUE for i in range(30)]
+edges = [INK if i == 0 else BLUE for i in range(30)]
+ax.bar(lefts, HIST, width=1.9, align="edge", color=colors, edgecolor=edges, linewidth=0.5)
+ax.annotate("36.6% fund\nwithin 1 day", xy=(1.4, 620000), xytext=(11, 560000),
+            fontsize=ANNOT, weight="bold",
+            arrowprops=dict(arrowstyle="-", color=INK, lw=0.8))
+ax.set_xlabel("Funding speed (days, clipped at 60)", fontsize=LABEL)
+ax.set_ylabel("Loans", fontsize=LABEL)
+ax.spines[["top", "right"]].set_visible(False)
+ax.set_title("Most funding happens fast -\nor not for weeks", fontsize=TITLE,
+             weight="bold", pad=10, loc="left")
+finish_extra(fig, "extra_speed_distribution.png")
+
+# -- funding speed by period (boxplot; whiskers at 1.5 IQR, outliers hidden)
+PERIOD_BOX = [
+    ("Pre-\npandemic",      dict(med=1.379, q1=0.17,  q3=9.695,  whislo=0.0,   whishi=23.983)),
+    ("Pandemic\ndisruption", dict(med=4.903, q1=0.661, q3=25.363, whislo=0.001, whishi=62.414)),
+    ("Post-\npandemic",     dict(med=4.122, q1=0.726, q3=18.518, whislo=0.001, whishi=45.001)),
+]
+fig, ax = plt.subplots(figsize=(4.5, 3.0))
+stats = [dict(label=n, **d, fliers=[]) for n, d in PERIOD_BOX]
+bp = ax.bxp(stats, showfliers=False, patch_artist=True, widths=0.55)
+for i, box in enumerate(bp["boxes"]):
+    box.set_facecolor(BLUE if i == 0 else YELLOW); box.set_edgecolor(INK)
+for el in bp["medians"]: el.set_color(INK); el.set_linewidth(1.6)
+for el in bp["whiskers"] + bp["caps"]: el.set_color(INK)
+for i, (n, d) in enumerate(PERIOD_BOX, 1):
+    ax.text(i, d["med"] + 1.2, f"{d['med']:.1f}", ha="center", fontsize=ANNOT, weight="bold")
+ax.set_ylabel("Funding speed (days)", fontsize=LABEL)
+ax.spines[["top", "right"]].set_visible(False)
+ax.set_title("Funding got slower across the board\n(median days, outliers hidden)",
+             fontsize=TITLE, weight="bold", pad=10, loc="left")
+finish_extra(fig, "extra_period_speed_box.png")
+
+# -- funding speed by gender (medians match EDA SS4 printout) ---------------
+GENDER_BOX = [
+    ("Female-posted\n(n=1,220,450)", dict(med=2.332, q1=0.328, q3=13.590, whislo=0.0, whishi=33.482), BLUE),
+    ("Male-posted\n(n=233,390)",     dict(med=7.714, q1=1.024, q3=27.284, whislo=0.0, whishi=66.560), YELLOW),
+]
+fig, ax = plt.subplots(figsize=(4.5, 2.9))
+stats = [dict(label=n, **d, fliers=[]) for n, d, _ in GENDER_BOX]
+bp = ax.bxp(stats, showfliers=False, patch_artist=True, widths=0.5)
+for box, (_, _, c) in zip(bp["boxes"], GENDER_BOX):
+    box.set_facecolor(c); box.set_edgecolor(INK)
+for el in bp["medians"]: el.set_color(INK); el.set_linewidth(1.6)
+for el in bp["whiskers"] + bp["caps"]: el.set_color(INK)
+for i, (n, d, _) in enumerate(GENDER_BOX, 1):
+    ax.text(i, d["med"] + 1.6, f"median {d['med']:.1f}", ha="center", fontsize=ANNOT, weight="bold")
+ax.set_ylabel("Funding speed (days)", fontsize=LABEL)
+ax.spines[["top", "right"]].set_visible(False)
+ax.set_title("2.3 vs 7.7 days: the gender gap\n(outliers hidden)", fontsize=TITLE,
+             weight="bold", pad=10, loc="left")
+finish_extra(fig, "extra_gender_speed_box.png")
+
+# -- mean speed by repayment interval (counts match figure annotations) -----
+REPAY = [("monthly", 9.09, 1264787), ("irregularly", 10.79, 70707), ("at_end", 12.75, 118346)]
+fig, ax = plt.subplots(figsize=(4.6, 2.3))
+names = [x[0] for x in REPAY][::-1]; means = [x[1] for x in REPAY][::-1]; ns = [x[2] for x in REPAY][::-1]
+ax.barh(names, means, color=[VIRIDIS(m / 14.0) for m in means], height=0.55)
+for y, (m, n) in enumerate(zip(means, ns)):
+    ax.text(m + 0.2, y, f"{m:.1f} (n={n:,})", va="center", fontsize=ANNOT, color=MUTED)
+ax.set_xlabel("Mean funding speed (days)", fontsize=LABEL); ax.set_xlim(0, 17.5)
+ax.spines[["top", "right"]].set_visible(False)
+ax.set_title("Mean funding speed by\nrepayment interval", fontsize=TITLE,
+             weight="bold", pad=10, loc="left")
+finish_extra(fig, "extra_repayment.png")
+
+# -- mean speed by loan-amount decile (bin edges match figure labels) -------
+DECILES = [2.14, 2.46, 5.03, 6.08, 8.87, 10.93, 13.07, 14.32, 16.97, 18.56]
+fig, ax = plt.subplots(figsize=(4.6, 2.9))
+xs = list(range(1, 11))
+ax.plot(xs, DECILES, "-o", color=BLUE, linewidth=2, markersize=5)
+ax.plot([1], [DECILES[0]], "o", color=YELLOW, markeredgecolor=INK, markersize=8)
+ax.plot([10], [DECILES[-1]], "o", color=YELLOW, markeredgecolor=INK, markersize=8)
+ax.text(1.15, DECILES[0] + 1.0, f"{DECILES[0]:.1f}", fontsize=ANNOT, weight="bold")
+ax.text(9.85, DECILES[-1] - 2.4, f"{DECILES[-1]:.1f}", ha="right", fontsize=ANNOT, weight="bold")
+ax.set_xticks(xs); ax.set_xticklabels(["1\nsmallest", "2", "3", "4", "5", "6", "7", "8", "9", "10\nlargest"])
+ax.set_xlabel("Loan-amount decile", fontsize=LABEL)
+ax.set_ylabel("Mean funding speed (days)", fontsize=LABEL)
+ax.spines[["top", "right"]].set_visible(False)
+ax.set_title("Bigger asks fund slower -\nalmost monotonically", fontsize=TITLE,
+             weight="bold", pad=10, loc="left")
+finish_extra(fig, "extra_amount_deciles.png")
+
+print("5 extra exhibits rebuilt in house style under charts/extra/")
+
 print("8 exhibits rebuilt: uniform typography "
       f"(title {TITLE}pt / labels {LABEL}pt / ticks {TICK}pt / annotations {ANNOT}pt) at {DPI} dpi")

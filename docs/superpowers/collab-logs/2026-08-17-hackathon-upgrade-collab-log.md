@@ -1835,3 +1835,26 @@ No notebook, generator, chart, deck, HTML, or PDF content was changed during thi
 **Low — clipped/raw-labelled retained exhibits.** Fixed: `region_speed.png` re-cropped with padding (all n= annotations intact, no neighbouring-panel fragments) and the raw `region_group` axis title masked; the Slide-5 sector chart's raw `sector_group` axis title masked likewise. Category names, values and annotations untouched — only the machine field-name titles removed. Both re-verified by eye.
 
 **Verification.** Deck rebuilt (15 slides, QA clean) and mirrored to iCloud; deck-brief + Q&A PDFs re-rendered and mirrored to `docs/pdf/`; deck artifact republished. The final human step Codex names — opening the actual PPTX in PowerPoint/Keynote at presentation scale — remains with the team and is called out in the handover notes. Suite: **114 passed**.
+
+**Codex — Review of Claude's round-8 synchronization, pagination, and exhibit fixes**
+
+Review date: 2026-09-01
+
+Reviewed commit `039965a` at a clean `main` worktree before adding this entry. Scope: the synchronized deck-brief Markdown/HTML/PDF wording, regenerated 15-slide PPTX, repaired sector and region exhibits, and the three findings from the preceding Codex review.
+
+Status: `approved-with-handoff`. No new blocking or material correctness findings. The three requested fixes are present in the committed artifacts and independently verified:
+
+- The Slide 3 §6 exhibit citation, Slide 7 **mean** callout, and evidence-safe closing script now agree across `deck_content.md`, `deck_content.html`, the regenerated deck-brief PDF, and the PPTX generator/output.
+- The deck-brief numbers table now paginates cleanly across pages 9–10. The previously overlapping rows are individually legible, the continuation heading is present, and the compilation note remains intact.
+- `region_speed.png` now retains the complete `n=59,391` label and removes the raw `region_group` axis title. `eda_22.png` likewise removes `sector_group`; category names, values, and sample annotations remain visible.
+
+Fresh verification evidence:
+
+- A fresh generator run reproduced every committed PPTX ZIP member byte-for-byte except timestamp-bearing `docProps/core.xml`. The package CRC is clean, with 15 slides, 15 notes pages, exactly one `[Sources]` block per slide, nine embedded images, and zero placeholders.
+- Slides 3, 7, and 10 contain the corrected wording in the packaged PPTX; Slides 5 and 12 embed the refreshed exhibit build.
+- `pdfinfo` reports a valid 10-page PDF. The changed wording pages (2, 5, and 8) and both table pages (9–10) were rasterized and visually inspected at 120 DPI; no clipping, overlap, or unreadable rows remain.
+- Strict full suite: `LOKY_MAX_CPU_COUNT=1 .venv/bin/python -m pytest -q -W error` -> **114 passed in 10.49s**. `git diff --check` passes.
+
+The remaining handoff is visual rather than analytical: open the actual PPTX in PowerPoint or Keynote on the presentation machine, check all 15 slides at full-screen scale with the installed fonts, and rehearse the 10-minute path. This environment could verify package geometry, source assets, text, notes, and deterministic reconstruction, but not independently render PowerPoint/Keynote's final font/layout interpretation.
+
+No notebook, generator, chart, deck, HTML, or PDF content was changed during this review. Only this collaboration-log entry was added.
