@@ -67,7 +67,7 @@ Answered
 - **Framing claims**: every "significant" result was re-tested under a country-clustered sensitivity check — one that lets loans from the same country be correlated instead of treating them as independent — and then under a few-cluster reference where a result rests on only a handful of countries. Most headline-looking results didn't survive (Slide 6).
 - A machine-learning importance ranking (SHAP) is shown as complementary predictive evidence — it measures what the forecasting model relied on, and cannot by itself confirm or refute the statistical findings.
 
-Source: modeling notebook, §4 Data Split + §7.1 Cluster-Robust Sensitivity Check
+Source: modeling notebook, §6 boosted forecast vs. actual on the chronological holdout (the split/cluster checks themselves are text output: §4 + §7.1)
 
 Kept to methods only, on the organizer's instruction not to re-cover dataset background they're already introducing.
 
@@ -137,7 +137,7 @@ The most important slide in the deck. Not "framing doesn't matter" — "we teste
 
 ### Slide 7 · Beyond keywords
 
-1.5 → 13.5 days across topics, \>9× swing
+1.5 → 13.5 days mean funding speed across topics, >9× swing
 
 - Topic modeling on the descriptions (TF-IDF + NMF, 8 topics — not just keyword counts) surfaces real, coherent themes: sanitation, clean water, pig raising, family business, smallholder farming.
 - Mean funding speed swings more than ninefold across topics (1.5 → 13.5 days) — the largest single gap anywhere in the analysis.
@@ -190,7 +190,7 @@ The structure carries the signal."
 
 - Thank you — questions.
 
-> **Script · ~20s** — "In this data, the story barely registers — the structure carries the signal. And testing hard enough to *know* that is worth more to a platform than a good-sounding tip. Thank you — we're happy to take questions."
+> **Script · ~20s** — "In this data, the story barely registers — the structure carries the signal. And testing hard enough to say, honestly, that there is no robust evidence for the story is worth more to a platform than a good-sounding tip. Thank you — we're happy to take questions."
 
 ## §2 · Numbers quick reference
 
@@ -210,6 +210,11 @@ Every figure used above, with its real source. `authoritative` = the tested full
 | **Avg within-region slope**: family in Asia (12 countries) | +0.0338 / +0.0234 / −0.0304 — clustered p=0.0535, 0.0846, 0.2860: not significant in any of the 3 fits | `authoritative` |
 | Avg within-region slope: Africa (27) / Oceania (4) / N. America (1) | none significant, except N. America in 1 of 3 fits (p=0.0094) — a single country, not claimed | `authoritative` |
 | Countries per region group | Middle East 2 · Central America 2 · North America 1 · Oceania 4 · Asia 12 · Africa 27 | `authoritative` |
+
+**Numbers quick reference, continued:**
+
+| Finding | Value | Source |
+|----|----|----|
 | Duration model: agency framing | coef +0.001, p=0.31 → p=0.93 (n.s. either way) | `authoritative` |
 | Duration model: sentiment tone | coef +0.136, HC3 p\<0.0001 → clustered p=0.0095 (survives) | `authoritative` |
 | Duration model: sentiment tone (notebook's simpler formula) | HC3 p\<0.0001 → clustered p=0.2544 (does not survive) | `notebook` |
