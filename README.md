@@ -49,6 +49,8 @@ pip install -r requirements.txt
 
 `requirements.txt` intentionally uses lower bounds (`>=`) so installs stay possible as new versions ship - a different set of versions satisfying those same bounds can produce different numerical edge cases and warnings on identical code (this project hit exactly that during development). `pip install -r requirements-lock.txt` pins the exact core numerical/statistical package versions this project was verified against, if you ever hit different numerical/warning behavior and want to rule that out first.
 
+One optional extra outside the analysis pipeline: rebuilding the draft slide deck (`python3 scripts/build_slides_draft.py`, output `docs/presentation/slides_draft.pptx`) needs `pip install python-pptx` - deliberately not in `requirements.txt`, since no pipeline or test code imports it.
+
 **4. Verify the setup - run the full offline test suite** (no dataset or network access required):
 
 ```bash

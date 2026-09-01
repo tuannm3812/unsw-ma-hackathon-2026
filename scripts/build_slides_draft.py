@@ -5,6 +5,12 @@ Single source of truth for the editable draft deck: slide content, big-number
 callouts, chart placeholders (named after the notebook section to screenshot)
 and the timed speaker scripts (as presenter notes). Design mirrors the deck
 brief page: warm paper ground, deep teal + amber accent, Georgia display type.
+Sync contract: docs/presentation/deck_content.md is the source of truth for
+wording; this script mirrors it (update both together). Chart assets live in
+docs/presentation/charts/ and are the source of truth for exhibits. The build
+FAILS if any required chart is missing; pass --scaffold to emit labelled
+placeholders instead. Requires python-pptx (optional tooling, not a pipeline
+dependency): pip install python-pptx
 Re-run after any wording change: python3 scripts/build_slides_draft.py
 """
 from pptx import Presentation
@@ -20,14 +26,14 @@ import os
 # with CHART_DIR env var; missing files fall back to the labelled placeholder.
 CHART_DIR = os.environ.get("CHART_DIR", "docs/presentation/charts")
 CHARTS = {
-    3: "mod_21.png",            # predicted vs actual, chronological holdout
-    4: "eda_17_right.png",      # 24h-funded share by period (cropped panel)
+    3: "mod_21.png",            # boosted forecast vs actual (holdout)
+    4: "period_24h.png",        # 24h-funded share by period (rebuilt, exact shares)
     5: "eda_22.png",            # average funding speed by sector
-    6: "few_cluster_table.png", # SS7.2 within-region few-cluster screen
-    7: "eda_32.png",            # funding speed by dominant topic
-    12: "eda_23.png",           # appendix: region + repayment speed panels
-    13: "mod_39.png",           # appendix: SHAP top-15
-    14: "eda_36.png",           # appendix: speed by loan-amount decile
+    6: "few_cluster_table.png", # SS7.2 within-region few-cluster screen (typeset)
+    7: "topics.png",            # topic mean speeds, semantic labels (8 NMF topics)
+    12: "region_speed.png",     # appendix: region speed panel only
+    13: "shap_top15.png",       # appendix: SHAP top-15, human feature names
+    14: "correlations.png",     # appendix: the exact 10x correlation basis
 }
 
 PAPER = RGBColor(0xFA, 0xF7, 0xF0); INK = RGBColor(0x1E, 0x2A, 0x2F)
@@ -35,6 +41,18 @@ TEAL = RGBColor(0x1F, 0x4E, 0x5F); CREAM = RGBColor(0xFA, 0xF7, 0xF0)
 AMBER = RGBColor(0xC9, 0x7B, 0x3D); MUTED = RGBColor(0x6E, 0x6A, 0x5E)
 PANEL = RGBColor(0xF1, 0xEB, 0xDF); LINE = RGBColor(0xDC, 0xD3, 0xC0)
 DISPLAY = "Georgia"; BODY = "Avenir Next"; MONO = "Courier New"
+
+SOURCES = {
+    3: "Chart: modeling notebook SS6 (boosted forecast vs actual, chronological holdout). Split sizes: analysis_summary.json.",
+    4: "Chart rebuilt from EDA SS4 printed shares (0.460/0.303/0.300) and period counts; association_summary.txt audit trail.",
+    5: "Chart: EDA SS5 sector figure (executed notebook). Gender medians: EDA SS4 printout. 10x basis: EDA SS9 correlations.",
+    6: "Table typeset from the executed modeling notebook SS7.2 printout (v15); authoritative few-cluster values: analysis_summary.json within_region_slopes.",
+    7: "Chart rebuilt from EDA SS8 printed topic means and top-words (8 NMF topics).",
+    8: "Classifier metrics: analysis_summary.json binary_classifier. Few-cluster screen: SS7.2 / within_region_slopes.",
+    12: "Region panel: EDA SS5 figure. Pooled definitions + p-values: association_summary.txt within-region section.",
+    13: "Chart rebuilt from modeling SS8 printed SHAP top-15 values (v14/v15 runs).",
+    14: "Chart rebuilt from EDA SS9 printed correlation table; decile curve: EDA SS9 figure.",
+}
 
 SLIDES = [
  ("Beyond a Good Story",
@@ -54,7 +72,7 @@ SLIDES = [
    "Framing claims: every 'significant' result re-tested with country-clustered standard errors, then a harsher few-cluster reference where a result rests on a handful of countries.",
    "Most headline-looking results did NOT survive — that is the point of the method.",
    "SHAP importance shown as complementary predictive evidence only — it cannot confirm or refute a statistical finding."],
-  "modeling notebook §4 data split · §7.1 cluster-robust check",
+  "modeling notebook §6 · boosted forecast vs actual on the chronological holdout",
   "Two disciplines before any findings. For prediction, we train only on the past and test only on loans posted in 2024–25 — no peeking at the future. For the framing claims, every 'significant' result had to survive re-testing: first with standard errors clustered by country, so ten thousand loans from one country can't masquerade as ten thousand independent pieces of evidence — and where a result rested on just a couple of countries, a deliberately harsher few-cluster reference on top. Most headline-looking results did not survive. That's the point: we'd rather lose a finding than present a fluke.",
   "METHOD"),
  ("A marketplace that hasn't recovered", None,
@@ -83,8 +101,8 @@ SLIDES = [
   "Now the question we came to answer — and the honest answer is that nothing about the narrative survives our own scrutiny. Urgency language looked like a clean, universal win: significant at p<0.001. Cluster by country, and it collapses to p≈0.44. Gone. Family framing — here our own first version got it wrong: we tested whether regions differ from Africa, which is not the same as whether family framing helps WITHIN a region. Corrected, two pooled categories — Palestine+Yemen, and Honduras+Nicaragua — do show faster funding in every fit we ran. But each rests on exactly two countries, and against a deliberately harsh few-cluster screen — a t distribution with one degree of freedom, where the critical value is 12.7, not 1.96 — neither is significant: p between 0.06 and 0.21. So we report it as a hypothesis worth testing, not a finding. Sentiment tone: more positive language associates with SLOWER funding, but its significance flips between our two specifications — we call it open. We'd rather report no robust evidence than one exciting result we can't defend.",
   "FINDING 3 · THE HEADLINE"),
  ("Beyond keywords", None,
-  "1.5 → 13.5 days|across story topics — a >9x swing",
-  ["Topic modeling (NMF, 5 topics — not keyword counts) surfaces coherent themes: livestock, health & sanitation, clean water, farming, retail.",
+  "1.5 → 13.5 days|mean funding speed across story topics — a >9x swing",
+  ["Topic modeling on the descriptions (TF-IDF + NMF, 8 topics — not keyword counts) surfaces coherent themes: sanitation, clean water, pig raising, family business, smallholder farming.",
    "The largest single gap anywhere in the analysis — but a topic mostly encodes what the loan is FOR. Structure again, not persuasion."],
   "EDA notebook §8 topic modeling",
   "We also went beyond keyword counting. Topic modeling finds coherent themes in the stories — livestock, health and sanitation, clean water, farming, retail — and funding speed swings ninefold across them, from a day and a half to nearly two weeks. But notice what a topic mostly encodes: what the loan is FOR. Which is structure again — not persuasion.",
@@ -105,7 +123,7 @@ SLIDES = [
   "Three honest limits. This is association, never causation — no borrower was randomly assigned a writing style. We measure how fast funded loans fund — not whether a loan funds at all. And our framing measures are transparent, simple rules — they don't capture every nuance of persuasion. We'd rather you know exactly what this analysis can and cannot say — that's what makes the parts we do claim worth trusting.",
   "LIMITS"),
  ("", None, None, [], None,
-  "In this data, the story barely registers — the structure carries the signal. And testing hard enough to KNOW that is worth more to a platform than a good-sounding tip. Thank you — we're happy to take questions.",
+  "In this data, the story barely registers — the structure carries the signal. And testing hard enough to say, honestly, that there is no robust evidence for the story is worth more to a platform than a good-sounding tip. Thank you — we're happy to take questions.",
   "CLOSING"),
  # ---- Appendix: Q&A backup, never presented in the 10 minutes ----
  ("Appendix", "Q&A backup — not part of the 10-minute presentation.", None, [], None,
@@ -126,11 +144,11 @@ SLIDES = [
   "modeling notebook §8 · SHAP top-15",
   "Backup for SHAP questions: what the ranking shows, and exactly what it cannot corroborate.",
   "APPENDIX · A2"),
- ("Structure, dose-response", None, None,
-  ["Funding speed rises almost monotonically across loan-amount deciles — small asks fund in ~2 days, the largest in ~18.",
-   "Gender: female-posted median 2.3 days vs male 7.7 (the duration-model male coefficient +0.430 survives HC3 AND country clustering, p < 0.0001 — still associational).",
-   "This dose-response pattern is what the '~10x stronger than narrative' comparison rests on."],
-  "EDA notebook §9 · speed by loan-amount decile",
+ ("The '~10x' comparison, exactly", None, None,
+  ["Correlation with funding speed: loan amount (log) r = 0.43, repayment term r = 0.28 — vs competence 0.058, family 0.019, urgency 0.010.",
+   "Loan-amount deciles also rise almost monotonically (~2 days for the smallest asks, ~18 for the largest) — monotonicity, not the 10x basis itself.",
+   "Gender: female-posted median 2.3 days vs male 7.7 (male coefficient +0.430 survives HC3 AND country clustering, p < 0.0001 — still associational)."],
+  "EDA notebook §9 · correlation table (the 10x basis)",
   "Backup for Slide 5 probes: the amount gradient and the gender gap's robustness status.",
   "APPENDIX · A3"),
  ("24h classifier — operating detail", None, None,
@@ -254,10 +272,17 @@ def build(out_path: str) -> None:
             tf = box(sl, Inches(0.75), Inches(7.05), Inches(9.0), Inches(0.35))
             tf.text = "Cultural Blend · Kiva 2016–2025 · 1.45M loans"
             style(tf.paragraphs[0], 10, MUTED, MONO)
-        sl.notes_slide.notes_text_frame.text = script
+        src_note = SOURCES.get(i, "reports/generated_full_dataset/association_summary.txt (authoritative numbers); docs/presentation/deck_content.md SS2 numbers table")
+        sl.notes_slide.notes_text_frame.text = script + "\n\n[Sources] " + src_note
     prs.save(out_path)
     print("wrote", out_path, Path(out_path).stat().st_size, "bytes")
 
 
 if __name__ == "__main__":
+    import sys
+    scaffold = "--scaffold" in sys.argv
+    if not scaffold and CHART_DIR:
+        missing = [f for f in CHARTS.values() if not (Path(CHART_DIR) / f).is_file()]
+        if missing:
+            raise SystemExit(f"missing chart assets in {CHART_DIR}: {missing} (pass --scaffold to build placeholders)")
     build("docs/presentation/slides_draft.pptx")

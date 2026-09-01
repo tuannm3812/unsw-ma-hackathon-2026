@@ -55,8 +55,9 @@ ipykernel==6.31.0
 notebook==7.5.7
 pytest==8.4.2
 
-# Not directly required (not in requirements.txt), but pinned here too
-# since it is the transitive dependency most likely to change numerical
-# edge-case/warning behavior in statsmodels/scikit-learn - the exact
-# category of version-sensitivity this file exists to pin down.
+# Directly required (requirements.txt: scipy>=1.10.0 - the few-cluster t
+# reference in src/statistical_analysis.py imports it), and still the
+# package most likely to change numerical edge-case/warning behavior in
+# statsmodels/scikit-learn - the exact category of version-sensitivity
+# this file exists to pin down.
 scipy==1.13.1

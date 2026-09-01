@@ -58,7 +58,7 @@ Answered
 > **Script · ~45s** — "Specifically: when a borrower's story leans on family, on competence, on urgency — does the loan fund faster? And does the answer depend on who's asking, and when? We care because language is the one thing a platform can coach. You can't rewrite a loan's size, sector, or country after the fact — but you could suggest better words. *If* words work. That's the claim we set out to test, not assume."
 
 > **Backup · if questions land here**
-> - **How is 'framing' measured?** Transparent per-100-word lexicon rates (family, agency/competence, urgency, gratitude, first/third-person), VADER sentiment compound, plus NMF topic modeling (5 topics) — all computed from the loan description text with simple, auditable rules.
+> - **How is 'framing' measured?** Transparent per-100-word lexicon rates (family, agency/competence, urgency, gratitude, first/third-person), VADER sentiment compound, plus topic modeling (an 8-topic NMF exploration of the descriptions in the EDA; 5 topic loadings enter the models as features) — all computed from the loan description text with simple, auditable rules.
 > - **Why speed, not success?** The dataset contains completed fundraises (1,452,203 funded + 1,637 refunded that completed funding), so time-to-fund is the observable outcome. Whether a loan funds at all is out of scope — conceded up front on Slide 9.
 
 ### Slide 3 · How we stress-tested our findings
@@ -139,8 +139,8 @@ The most important slide in the deck. Not "framing doesn't matter" — "we teste
 
 1.5 → 13.5 days across topics, \>9× swing
 
-- Topic modeling (not just keyword counts) surfaces real, coherent themes: livestock, health & sanitation, clean water, farming, general retail.
-- Funding speed swings more than ninefold across topics — the largest single gap anywhere in the analysis.
+- Topic modeling on the descriptions (TF-IDF + NMF, 8 topics — not just keyword counts) surfaces real, coherent themes: sanitation, clean water, pig raising, family business, smallholder farming.
+- Mean funding speed swings more than ninefold across topics (1.5 → 13.5 days) — the largest single gap anywhere in the analysis.
 
 Source: EDA notebook, §8 Topic Modeling
 
@@ -149,8 +149,8 @@ Good "we went further than keyword-spotting" beat for originality. First trim ca
 > **Script · ~45s** — "We also went beyond keyword counting. Topic modeling finds coherent themes in the stories — livestock, health and sanitation, clean water, farming, retail — and funding speed swings ninefold across them, from a day and a half to nearly two weeks. But notice what a topic mostly encodes: what the loan is *for*. Which is structure again — not persuasion."
 
 > **Backup · if questions land here**
-> - **Method:** NMF (non-negative matrix factorization), 5 topics, seeded/reproducible; topic loadings enter the models as features (topic_0…topic_4).
-> - **Speed range:** ~1.5 days (fastest topic) to ~13.5 days (slowest) in median funding time — the largest single gap in the analysis.
+> - **Method:** TF-IDF + NMF (non-negative matrix factorization), 8 topics in the EDA exploration, seeded/reproducible. Separately, the forecasting pipeline uses 5 topic loadings as features (topic_0…topic_4) — two related but distinct uses.
+> - **Speed range:** ~1.5 days (fastest topic: sanitation) to ~13.5 days (slowest: group solar/farm plots) in MEAN funding time — the largest single gap in the analysis.
 > - **Why not a persuasion finding:** a topic mostly encodes the loan's purpose (livestock vs clean water vs retail) — that's structure; the framing lexicons measure the how, topics measure the what.
 
 ### Slide 8 · What this means in practice
