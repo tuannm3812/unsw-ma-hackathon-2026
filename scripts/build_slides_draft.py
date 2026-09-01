@@ -36,10 +36,13 @@ CHARTS = {
     14: "correlations.png",     # appendix: the exact 10x correlation basis
 }
 
-PAPER = RGBColor(0xFA, 0xF7, 0xF0); INK = RGBColor(0x1E, 0x2A, 0x2F)
-TEAL = RGBColor(0x1F, 0x4E, 0x5F); CREAM = RGBColor(0xFA, 0xF7, 0xF0)
-AMBER = RGBColor(0xC9, 0x7B, 0x3D); MUTED = RGBColor(0x6E, 0x6A, 0x5E)
-PANEL = RGBColor(0xF1, 0xEB, 0xDF); LINE = RGBColor(0xDC, 0xD3, 0xC0)
+# Deck palette: navy ink + viridis blue + team yellow #FFDD04 (yellow is a
+# shape/chip colour only - never text on a light ground)
+PAPER = RGBColor(0xFB, 0xFA, 0xF6); INK = RGBColor(0x1C, 0x23, 0x33)
+TEAL = RGBColor(0x1C, 0x23, 0x33); CREAM = RGBColor(0xFB, 0xFA, 0xF6)
+AMBER = RGBColor(0xFF, 0xDD, 0x04); MUTED = RGBColor(0x6E, 0x72, 0x78)
+PANEL = RGBColor(0xEF, 0xED, 0xE6); LINE = RGBColor(0xD9, 0xD6, 0xCC)
+BLUE = RGBColor(0x31, 0x68, 0x8E)
 DISPLAY = "Georgia"; BODY = "Avenir Next"; MONO = "Courier New"
 
 SOURCES = {
@@ -220,11 +223,11 @@ def build(out_path: str) -> None:
             style(tf.paragraphs[0], 12, RGBColor(0x8F, 0xB0, 0xBB), MONO, align=PP_ALIGN.CENTER)
         else:
             tf = box(sl, Inches(0.75), Inches(0.42), Inches(9.0), Inches(0.35))
-            tf.text = eyebrow; style(tf.paragraphs[0], 11.5, AMBER, MONO)
+            tf.text = eyebrow; style(tf.paragraphs[0], 11.5, BLUE, MONO)
             chip = rect(sl, Inches(12.15), Inches(0.4), Inches(0.72), Inches(0.38), TEAL, rounded=True)
             ctf = chip.text_frame; ctf.text = f"{i}/10" if i <= 10 else f"A{i - 11}"
             ctf.margin_top = Emu(0); ctf.margin_bottom = Emu(0)
-            style(ctf.paragraphs[0], 12, CREAM, MONO, align=PP_ALIGN.CENTER)
+            style(ctf.paragraphs[0], 12, AMBER, MONO, align=PP_ALIGN.CENTER)
             ctf.vertical_anchor = MSO_ANCHOR.MIDDLE
             tf = box(sl, Inches(0.7), Inches(0.78), Inches(11.3), Inches(1.0))
             tf.text = title; style(tf.paragraphs[0], 36, INK, DISPLAY, bold=True)
@@ -234,7 +237,7 @@ def build(out_path: str) -> None:
                 num, label = big.split("|")
                 tf = box(sl, Inches(0.75), Inches(y), Inches(12.1), Inches(1.0))
                 p = tf.paragraphs[0]; p.text = num.strip() + "  "
-                style(p, 40, AMBER, DISPLAY, bold=True)
+                style(p, 40, INK, DISPLAY, bold=True)
                 r = p.add_run(); r.text = label.strip()
                 r.font.size = Pt(16); r.font.color.rgb = MUTED; r.font.name = BODY; r.font.bold = False
                 y += 1.15
