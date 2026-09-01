@@ -282,9 +282,17 @@ def build(out_path: str) -> None:
                 # charts; downscale only if one overflows its column/height
                 pic = sl.shapes.add_picture(str(img), Inches(8.2), Inches(chart_top))
                 max_w = Inches(4.55); max_h = Inches(6.55 - chart_top)
-                scale = min(1.0, max_w / pic.width, max_h / pic.height)
-                if scale < 1.0:
-                    pic.width = int(pic.width * scale); pic.height = int(pic.height * scale)
+                # FAIL-FAST native-size contract (Codex round 11): every chart
+                # is authored at its placed size; an oversized exhibit is a
+                # chart-authoring bug and must break the build, never be
+                # silently rescaled into illegibility.
+                if pic.width > max_w * 1.005 or pic.height > max_h * 1.005:
+                    raise SystemExit(
+                        f"slide {i}: exhibit {img.name} authored "
+                        f"{pic.width / 914400:.2f}x{pic.height / 914400:.2f}in exceeds its "
+                        f"{max_w / 914400:.2f}x{max_h / 914400:.2f}in slot - re-author the "
+                        "figure at its placed size (scripts/build_charts.py)"
+                    )
                 pic.left = Inches(8.2) + max(0, (Inches(4.55) - pic.width) // 2)
                 fig_no, fig_name, fig_notes = FIGS[i]
                 cap = box(sl, Inches(8.2), Inches(6.62), Inches(4.7), Inches(0.75))
