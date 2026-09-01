@@ -6,10 +6,15 @@ sized at its intended physical on-slide size, saved at 300 dpi - so inserting
 any exported PNG at native size (no rescaling) renders text identically
 across all exhibits. Figure dimensions vary with content; type does not.
 
-All values are verified: printed by the executed notebooks, taken from the
-authoritative snapshot, or computed from data/Kiva_Loans.pkl replicating the
-EDA notebook's exact grouping with every per-category count asserted equal
-to the executed notebook's printed n= annotations.
+All values below are TRANSCRIBED literals. Their provenance: printed by the
+executed notebooks, taken from the authoritative snapshot, or computed once
+from data/Kiva_Loans.pkl (verified 2026-09-01; the collaboration log records
+the run). A plain run only proves image reproducibility from these literals.
+Run `python3 scripts/build_charts.py --verify` to RECOMPUTE every
+pkl-derived aggregate from the raw data and assert it equals the literals
+(loads the 1.45M-row pickle; takes a minute or two). Printed-notebook values
+(topic means, SHAP, few-cluster table, period shares) are outside --verify's
+scope - their source is each block's comment.
 
 Palette: navy ink #1C2333, viridis blue #31688E, team yellow #FFDD04
 (fills only - never text on a light ground), viridis purple #440154.
@@ -50,8 +55,14 @@ if family:
 VIRIDIS = plt.get_cmap("viridis")
 
 
-def finish(fig, name):
-    fig.savefig(OUT + name, facecolor="white", bbox_inches="tight", dpi=DPI)
+def finish(fig, name, out_dir=None):
+    # Fixed-size save: the PNG's physical size EQUALS the authored figsize
+    # (bbox_inches="tight" would grow it and force downscaling on the slide).
+    try:
+        fig.tight_layout()
+    except Exception:
+        pass
+    fig.savefig((out_dir or OUT) + name, facecolor="white", dpi=DPI)
     plt.close(fig)
 
 
@@ -77,7 +88,7 @@ topics = [("Sanitation & toilets", 1.46), ("Clean drinking water", 1.81),
           ("Pig raising", 7.26), ("Philippine small business", 7.80),
           ("General store goods", 8.96), ("Family business & income", 10.70),
           ("Smallholder farming", 12.51), ("Group solar / farm plots", 13.49)]
-fig, ax = plt.subplots(figsize=(4.6, 3.2))
+fig, ax = plt.subplots(figsize=(4.55, 3.0))
 names = [t[0] for t in topics][::-1]; means = [t[1] for t in topics][::-1]
 ax.barh(names, means, color=[VIRIDIS(m / 15.0) for m in means], height=0.66)
 for y, m in enumerate(means):
@@ -97,28 +108,30 @@ shap = [("Loan amount (log)", 0.4462), ("Repayment term", 0.3373),
         ("Sentiment (VADER compound)", 0.0368), ("Gender: male", 0.0362),
         ("Post-pandemic period", 0.0263), ("Region: Africa", 0.0237),
         ("Sector: Sanitation & Hygiene", 0.0200)]
-fig, ax = plt.subplots(figsize=(4.6, 4.1))
+fig, ax = plt.subplots(figsize=(4.55, 3.9))
 names = [s[0] for s in shap][::-1]; vals = [s[1] for s in shap][::-1]
 ax.barh(names, vals, color=[YELLOW if "Sentiment" in n else BLUE for n in names],
         edgecolor=[INK if "Sentiment" in n else BLUE for n in names],
         linewidth=0.7, height=0.66)
 ax.set_xlabel("mean |SHAP value| (boosted model,\n2,000-loan holdout sample)", fontsize=LABEL)
 ax.spines[["top", "right"]].set_visible(False)
-ax.set_title("SHAP top 15: sentiment (11th) is\nthe only narrative feature", fontsize=TITLE,
-             weight="bold", pad=10, loc="left")
-finish(fig, "shap_top15.png")
+fig.suptitle("SHAP top 15: sentiment (11th) is\nthe only narrative feature",
+             fontsize=TITLE, weight="bold", x=0.02, y=0.99, ha="left", va="top")
+fig.tight_layout(rect=(0, 0, 1, 0.905))
+fig.subplots_adjust(top=0.86)   # close the gap tight_layout leaves under the suptitle
+fig.savefig(OUT + "shap_top15.png", facecolor="white", dpi=DPI); plt.close(fig)
 
 # ---- A3: the 10x correlation basis (EDA SS9 printout) --------------------
 corr = [("Loan amount (log)", 0.429), ("Repayment term", 0.285),
         ("Competence/agency mentions", 0.058), ("Family mentions", 0.019),
         ("Urgency mentions", 0.010)]
-fig, ax = plt.subplots(figsize=(4.6, 2.9))
+fig, ax = plt.subplots(figsize=(4.55, 2.7))
 names = [c[0] for c in corr][::-1]; vals = [c[1] for c in corr][::-1]
 ax.barh(names, vals, color=[YELLOW, YELLOW, YELLOW, BLUE, BLUE],
         edgecolor=[INK, INK, INK, BLUE, BLUE], linewidth=0.7, height=0.6)
 for y, v in enumerate(vals):
     ax.text(v + 0.008, y, f"{v:.3f}", va="center", fontsize=ANNOT, weight="bold")
-ax.set_xlabel("|correlation| with funding speed (days)", fontsize=LABEL)
+ax.set_xlabel("|correlation| with funding speed", fontsize=LABEL)
 ax.set_xlim(0, 0.5); ax.spines[["top", "right"]].set_visible(False)
 ax.set_title("The “~10×” claim, exactly:\nstructure vs narrative", fontsize=TITLE,
              weight="bold", pad=10, loc="left")
@@ -135,13 +148,13 @@ SECTORS = [("Sanitation & Hygiene", 0.91, 6905), ("Clean Energy", 1.54, 35342),
            ("Construction", 10.95, 10769), ("Services", 10.98, 63205),
            ("Transportation", 11.96, 19577), ("Clothing", 12.12, 41333)]
 OVERALL_MEAN = 9.47
-fig, ax = plt.subplots(figsize=(4.6, 4.6))
+fig, ax = plt.subplots(figsize=(4.55, 4.5))
 names = [x[0] for x in SECTORS]; means = [x[1] for x in SECTORS]; ns = [x[2] for x in SECTORS]
 ax.barh(names, means, color=[VIRIDIS(m / 13.5) for m in means], height=0.7)
 ax.axvline(OVERALL_MEAN, color=INK, linestyle="--", linewidth=1)
 ax.text(OVERALL_MEAN + 0.2, 0.1, f"avg {OVERALL_MEAN:.1f}", fontsize=ANNOT, color=MUTED)
 for y, (m, n) in enumerate(zip(means, ns)):
-    ax.text(m + 0.2, y, f"{m:.1f} (n={n:,})", va="center", fontsize=ANNOT - 1.5, color=MUTED)
+    ax.text(m + 0.2, y, f"{m:.1f} (n={n:,})", va="center", fontsize=9, color=MUTED)
 ax.set_xlabel("Mean funding speed (days)", fontsize=LABEL); ax.set_xlim(0, 16.4)
 ax.spines[["top", "right"]].set_visible(False)
 ax.set_title("Sector spans an order of\nmagnitude in speed", fontsize=TITLE,
@@ -152,12 +165,12 @@ finish(fig, "sector.png")
 REGIONS = [("North America", 3.71, 7559), ("Asia", 8.18, 738191),
            ("Africa", 10.29, 610368), ("Middle East", 11.01, 14946),
            ("Oceania", 14.23, 23385), ("Central America", 15.56, 59391)]
-fig, ax = plt.subplots(figsize=(4.6, 2.9))
+fig, ax = plt.subplots(figsize=(4.55, 2.7))
 names = [x[0] for x in REGIONS]; means = [x[1] for x in REGIONS]; ns = [x[2] for x in REGIONS]
 ax.barh(names, means, color=[VIRIDIS(m / 16.5) for m in means], height=0.62)
 ax.axvline(OVERALL_MEAN, color=INK, linestyle="--", linewidth=1)
 for y, (m, n) in enumerate(zip(means, ns)):
-    ax.text(m + 0.25, y, f"{m:.1f} (n={n:,})", va="center", fontsize=ANNOT - 1, color=MUTED)
+    ax.text(m + 0.25, y, f"{m:.1f} (n={n:,})", va="center", fontsize=ANNOT, color=MUTED)
 ax.set_xlabel("Mean funding speed (days)", fontsize=LABEL); ax.set_xlim(0, 20.5)
 ax.spines[["top", "right"]].set_visible(False)
 ax.set_title("Mean funding speed by region", fontsize=TITLE,
@@ -182,30 +195,36 @@ ax.set_title("Chronological holdout: train on the\npast, test on the future", fo
 finish(fig, "data_split.png")
 
 # ---- S6: few-cluster table (executed modeling notebook SS7.2, v15) -------
-rows = [("Africa", "27", "610,368", "-0.0101", "0.5536", "t(26) 0.5587", "not significant"),
-        ("Asia", "12", "738,191", "+0.0338", "0.0535", "t(11) 0.0797", "not significant"),
-        ("Central America", "2", "59,391", "-0.0618", "<0.0001", "t(1) 0.0650", "normal-ref only"),
-        ("Middle East", "2", "14,946", "-0.1236", "<0.0001", "t(1) 0.0753", "normal-ref only"),
-        ("North America", "1", "7,559", "+0.0109", "0.0621", "not estimable", "single country"),
-        ("Oceania", "4", "23,385", "+0.0162", "0.6305", "t(3) 0.6634", "not significant")]
-hdr = ["region", "ctys", "loans", "slope", "clust. p", "few-cluster p", "verdict"]
-fig, ax = plt.subplots(figsize=(6.4, 2.9)); ax.axis("off")
+# Compact 6-column layout so the table fits its placed 4.55in at full 10pt
+# type (region label carries the country count; 3-dp rounding; full 4-dp
+# values live in SS7.2 / analysis_summary.json).
+rows = [("Africa (27)", "610,368", "-0.010", "0.554", "t(26) 0.559", "n.s."),
+        ("Asia (12)", "738,191", "+0.034", "0.054", "t(11) 0.080", "n.s."),
+        ("C. America (2)", "59,391", "-0.062", "<0.001", "t(1) 0.065", "normal-ref only"),
+        ("Middle East (2)", "14,946", "-0.124", "<0.001", "t(1) 0.075", "normal-ref only"),
+        ("N. America (1)", "7,559", "+0.011", "0.062", "not estimable", "single country"),
+        ("Oceania (4)", "23,385", "+0.016", "0.631", "t(3) 0.663", "n.s.")]
+hdr = ["region (ctys)", "loans", "slope", "cl. p", "few-cl. p", "verdict"]
+rows = [(a, b, c, d, e, f.replace("normal-ref only", "norm-ref only").replace("single country", "1 country"))
+        for a, b, c, d, e, f in rows]
+fig = plt.figure(figsize=(4.55, 2.75))
+ax = fig.add_axes((0.005, 0.02, 0.99, 0.70)); ax.axis("off")
 tbl = ax.table(cellText=rows, colLabels=hdr, loc="center", cellLoc="center")
-tbl.auto_set_font_size(False); tbl.set_fontsize(TICK); tbl.scale(1, 1.75)
-tbl.auto_set_column_width(list(range(7)))
+tbl.auto_set_font_size(False); tbl.set_fontsize(9); tbl.scale(1, 1.55)
+tbl.auto_set_column_width(list(range(6)))
 for (r, c), cell in tbl.get_celld().items():
     cell.set_edgecolor(LINE)
     if r == 0:
         cell.set_facecolor(PURPLE); cell.set_text_props(color="white", weight="bold")
-    elif rows[r-1][0] in ("Central America", "Middle East"):
+    elif "America (2)" in rows[r-1][0] or "Middle East" in rows[r-1][0]:
         cell.set_facecolor("#FFF6BF")
-    elif rows[r-1][0] == "North America":
+    elif "N. America" in rows[r-1][0]:
         cell.set_facecolor("#EFEDE6")
     else:
         cell.set_facecolor("white")
-ax.set_title("Within-region family-framing slope (duration model)\nno region passes the few-cluster screen",
-             fontsize=TITLE, pad=8, loc="left")
-finish(fig, "few_cluster_table.png")
+fig.suptitle("Within-region family-framing slope\n(duration model): none pass the screen",
+             fontsize=TITLE, x=0.02, y=0.97, ha="left")
+fig.savefig(OUT + "few_cluster_table.png", facecolor="white", dpi=DPI); plt.close(fig)
 
 
 # ============================================================================
@@ -225,8 +244,7 @@ EXTRA = OUT + "extra/"
 os.makedirs(EXTRA, exist_ok=True)
 
 def finish_extra(fig, name):
-    fig.savefig(EXTRA + name, facecolor="white", bbox_inches="tight", dpi=DPI)
-    plt.close(fig)
+    finish(fig, name, out_dir=EXTRA)
 
 # -- funding-speed distribution (30 bins of 2 days, clipped at 60; 0.05%
 #    of loans above the clip; 36.6% funded within 1 day) --------------------
@@ -323,3 +341,58 @@ print("5 extra exhibits rebuilt in house style under charts/extra/")
 
 print("8 exhibits rebuilt: uniform typography "
       f"(title {TITLE}pt / labels {LABEL}pt / ticks {TICK}pt / annotations {ANNOT}pt) at {DPI} dpi")
+
+
+# ---------------------------------------------------------------------------
+if "--verify" in __import__("sys").argv:
+    import pickle
+    import numpy as np
+    import pandas as pd
+    print("--verify: recomputing pkl-derived aggregates from data/Kiva_Loans.pkl ...")
+    with open("data/Kiva_Loans.pkl", "rb") as f:
+        _df = pd.DataFrame(pickle.load(f))
+    _fr = pd.to_datetime(_df["fundraisingDate"], errors="coerce", utc=True)
+    _ra = pd.to_datetime(_df["raisedDate"], errors="coerce", utc=True)
+    _df["funding_speed_days"] = (_ra - _fr).dt.total_seconds() / 86400
+    _year = _fr.dt.year
+    _df["analysis_period"] = pd.cut(_year, bins=[-np.inf, 2019, 2021, np.inf],
+        labels=["pre_pandemic", "pandemic_disruption", "post_pandemic"])
+    _v = _df.loc[_df["funding_speed_days"].notna() & (_df["funding_speed_days"] >= 0)].copy()
+    assert len(_v) == 1453840, len(_v)
+    assert round(float(_v["funding_speed_days"].mean()), 2) == OVERALL_MEAN
+
+    def _grp(col, min_obs):
+        c = _v[col].value_counts()
+        g = _v[col].where(_v[col].isin(c[c >= min_obs].index), "Other")
+        return _v.groupby(g, observed=True)["funding_speed_days"].agg(["mean", "count"])
+
+    _sec = _grp("sector", 1000)
+    for name, m, n in SECTORS:
+        assert int(_sec.loc[name, "count"]) == n, (name, n)
+        assert round(float(_sec.loc[name, "mean"]), 2) == m, (name, m)
+    _reg = _grp("region", 10)
+    for name, m, n in REGIONS:
+        assert int(_reg.loc[name, "count"]) == n, (name, n)
+        assert round(float(_reg.loc[name, "mean"]), 2) == m, (name, m)
+    _rep = _v.groupby("repaymentInterval", observed=True)["funding_speed_days"].agg(["mean", "count"])
+    for name, m, n in REPAY:
+        assert int(_rep.loc[name, "count"]) == n, (name, n)
+        assert round(float(_rep.loc[name, "mean"]), 2) == m, (name, m)
+    _v["log_loan_amount"] = np.log1p(pd.to_numeric(_v["loanAmount"], errors="coerce"))
+    _dec = _v.groupby(pd.qcut(_v["log_loan_amount"], 10, duplicates="drop"),
+                      observed=True)["funding_speed_days"].mean()
+    for lit, got in zip(DECILES, _dec):
+        assert abs(float(got) - lit) <= 0.0055, (lit, float(got))
+
+    def _box(sr):
+        q1, med, q3 = sr.quantile([.25, .5, .75]); iqr = q3 - q1
+        return dict(med=round(float(med), 3), q1=round(float(q1), 3), q3=round(float(q3), 3),
+                    whislo=round(float(sr[sr >= q1 - 1.5*iqr].min()), 3),
+                    whishi=round(float(sr[sr <= q3 + 1.5*iqr].max()), 3))
+    for (label, d), period in zip(PERIOD_BOX, ["pre_pandemic", "pandemic_disruption", "post_pandemic"]):
+        assert _box(_v.loc[_v["analysis_period"] == period, "funding_speed_days"]) == d, label
+    for (label, d, _), gender in zip(GENDER_BOX, ["female", "male"]):
+        assert _box(_v.loc[_v["gender"] == gender, "funding_speed_days"]) == d, label
+    _h, _ = np.histogram(_v["funding_speed_days"].clip(upper=60), bins=30)
+    assert [int(x) for x in _h] == HIST
+    print("--verify: ALL pkl-derived literals reproduced from raw data.")

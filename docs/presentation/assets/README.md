@@ -1,6 +1,9 @@
 # Slide icons
 
-Icon assets for the deck (Slides 8-9), added by the team from Flaticon.
+CANDIDATE icon assets for Slides 8-9, added by the team from Flaticon.
+Not yet placed in the deck - the generator does not reference them; the
+team adds them during the design pass. Do not use before each source is
+recorded below.
 
 **Attribution required:** Flaticon's free licence requires visible credit
 (e.g. "Icons: Flaticon.com" on the appendix divider or closing slide) -

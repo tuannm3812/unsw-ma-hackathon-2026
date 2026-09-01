@@ -97,7 +97,7 @@ SLIDES = [
    "Framing claims: every 'significant' result re-tested with country-clustered standard errors, then a harsher few-cluster reference where a result rests on a handful of countries.",
    "Most headline-looking results did NOT survive — that is the point of the method.",
    "SHAP importance shown as complementary predictive evidence only — it cannot confirm or refute a statistical finding."],
-  "modeling notebook §6 · boosted forecast vs actual on the chronological holdout",
+  "chronological train/test split · counts from analysis_summary.json",
   "Two disciplines before any findings. For prediction, we train only on the past and test only on loans posted in 2024–25 — no peeking at the future. For the framing claims, every 'significant' result had to survive re-testing: first with standard errors clustered by country, so ten thousand loans from one country can't masquerade as ten thousand independent pieces of evidence — and where a result rested on just a couple of countries, a deliberately harsher few-cluster reference on top. Most headline-looking results did not survive. That's the point: we'd rather lose a finding than present a fluke.",
   "METHOD"),
  ("A marketplace that hasn't recovered", None,
@@ -255,9 +255,10 @@ def build(out_path: str) -> None:
             tf.text = title; style(tf.paragraphs[0], 36, INK, DISPLAY, bold=True)
             rect(sl, Inches(0.75), Inches(1.62), Inches(1.35), Pt(3.5), AMBER)
             y = 1.95
+            chart_top = y   # exhibits sit beside callout+bullets, full column height
             if big:
                 num, label = big.split("|")
-                tf = box(sl, Inches(0.75), Inches(y), Inches(12.1), Inches(1.0))
+                tf = box(sl, Inches(0.75), Inches(y), Inches(7.35 if chart else 12.1), Inches(1.0))
                 p = tf.paragraphs[0]; p.text = num.strip() + "  "
                 style(p, 40, INK, DISPLAY, bold=True)
                 r = p.add_run(); r.text = label.strip()
@@ -279,8 +280,8 @@ def build(out_path: str) -> None:
                 # exhibits are authored at their physical on-slide size (300
                 # dpi) - place at NATIVE size so type stays uniform across
                 # charts; downscale only if one overflows its column/height
-                pic = sl.shapes.add_picture(str(img), Inches(8.2), Inches(y))
-                max_w = Inches(4.55); max_h = Inches(6.55 - y)
+                pic = sl.shapes.add_picture(str(img), Inches(8.2), Inches(chart_top))
+                max_w = Inches(4.55); max_h = Inches(6.55 - chart_top)
                 scale = min(1.0, max_w / pic.width, max_h / pic.height)
                 if scale < 1.0:
                     pic.width = int(pic.width * scale); pic.height = int(pic.height * scale)
@@ -289,12 +290,12 @@ def build(out_path: str) -> None:
                 cap = box(sl, Inches(8.2), Inches(6.62), Inches(4.7), Inches(0.75))
                 cp = cap.paragraphs[0]
                 r1 = cp.add_run(); r1.text = f"Figure {fig_no}. "
-                r1.font.size = Pt(9); r1.font.bold = True; r1.font.color.rgb = INK; r1.font.name = BODY
+                r1.font.size = Pt(10); r1.font.bold = True; r1.font.color.rgb = INK; r1.font.name = BODY
                 r2 = cp.add_run(); r2.text = fig_name
-                r2.font.size = Pt(9); r2.font.color.rgb = INK; r2.font.name = BODY
+                r2.font.size = Pt(10); r2.font.color.rgb = INK; r2.font.name = BODY
                 cp2 = cap.add_paragraph()
                 r3 = cp2.add_run(); r3.text = "Notes: " + fig_notes
-                r3.font.size = Pt(8); r3.font.color.rgb = MUTED; r3.font.name = BODY
+                r3.font.size = Pt(9); r3.font.color.rgb = MUTED; r3.font.name = BODY
             elif chart:
                 ph = rect(sl, Inches(9.2), Inches(y), Inches(3.5), Inches(6.55 - y), PANEL, line=LINE, rounded=True)
                 ptf = ph.text_frame; ptf.word_wrap = True; ptf.vertical_anchor = MSO_ANCHOR.MIDDLE

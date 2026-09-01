@@ -67,7 +67,7 @@ Answered
 - **Framing claims**: every "significant" result was re-tested under a country-clustered sensitivity check — one that lets loans from the same country be correlated instead of treating them as independent — and then under a few-cluster reference where a result rests on only a handful of countries. Most headline-looking results didn't survive (Slide 6).
 - A machine-learning importance ranking (SHAP) is shown as complementary predictive evidence — it measures what the forecasting model relied on, and cannot by itself confirm or refute the statistical findings.
 
-Source: modeling notebook, §6 boosted forecast vs. actual on the chronological holdout (the split/cluster checks themselves are text output: §4 + §7.1)
+Visual: chronological train/test split schematic (counts from the authoritative snapshot: train 1,174,953 / test 278,887 at 2024-01-01). The boosted forecast-vs-actual exhibit is available in charts/notebook/ as an optional backup; the split/cluster checks themselves are text output (§4 + §7.1).
 
 Kept to methods only, on the organizer's instruction not to re-cover dataset background they're already introducing.
 
