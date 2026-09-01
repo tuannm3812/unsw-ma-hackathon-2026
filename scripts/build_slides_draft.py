@@ -45,6 +45,26 @@ PANEL = RGBColor(0xEF, 0xED, 0xE6); LINE = RGBColor(0xD9, 0xD6, 0xCC)
 BLUE = RGBColor(0x31, 0x68, 0x8E)
 DISPLAY = "Georgia"; BODY = "Avenir Next"; MONO = "Courier New"
 
+# Academic figure captions shown under each embedded exhibit.
+FIGS = {
+    3:  (1, "Predicted vs. actual funding speed on the chronological holdout.",
+         "Boosted model; loans posted 2024-01-01 onward (n = 278,887). Modeling notebook \u00a76."),
+    4:  (2, "Share of loans funded within 24 hours, by analysis period.",
+         "Exact shares 46.0% / 30.3% / 30.0%; period sizes shown in axis labels. EDA notebook \u00a74."),
+    5:  (3, "Average funding speed by sector.",
+         "Bar annotations give per-sector loan counts; dashed line = overall average. EDA notebook \u00a75."),
+    6:  (4, "Average within-region family-framing slope (duration model).",
+         "Slopes averaged over each region's own moderator mix; few-cluster screen is a conservative heuristic. Executed modeling notebook \u00a77.2."),
+    7:  (5, "Mean funding speed by story theme.",
+         "TF-IDF + NMF, 8 topics, 20K-description sample; themes named from each topic's top words. EDA notebook \u00a78."),
+    12: (6, "Average funding speed by region.",
+         "Bar annotations give per-region loan counts; dashed line = overall average. EDA notebook \u00a75."),
+    13: (7, "Top 15 features by mean |SHAP| value, boosted model.",
+         "2,000-loan holdout sample; sentiment (11th) highlighted as the only narrative feature. Modeling notebook \u00a78."),
+    14: (8, "Correlation with funding speed: structural vs narrative features.",
+         "Absolute Pearson correlations from the full valid sample. EDA notebook \u00a79."),
+}
+
 SOURCES = {
     3: "Chart: modeling notebook SS6 (boosted forecast vs actual, chronological holdout). Split sizes: analysis_summary.json.",
     4: "Chart rebuilt from EDA SS4 printed shares (0.460/0.303/0.300) and period counts; association_summary.txt audit trail.",
@@ -256,15 +276,22 @@ def build(out_path: str) -> None:
             if chart and img is not None:
                 # right-column exhibit: fit to 4.45in wide, cap height, centre
                 pic = sl.shapes.add_picture(str(img), Inches(8.2), Inches(y), width=Inches(4.45))
-                max_h = Inches(6.7 - y)
+                max_h = Inches(6.55 - y)   # leave room for the Figure/Notes caption at 6.62
                 if pic.height > max_h:
                     ratio = max_h / pic.height
                     pic.height = int(max_h)
                     pic.width = int(pic.width * ratio)
                     pic.left = Inches(8.2) + (Inches(4.45) - pic.width) // 2
-                cap = box(sl, Inches(8.2), Inches(6.75), Inches(4.6), Inches(0.3))
-                cap.text = chart
-                style(cap.paragraphs[0], 8.5, MUTED, MONO)
+                fig_no, fig_name, fig_notes = FIGS[i]
+                cap = box(sl, Inches(8.2), Inches(6.62), Inches(4.7), Inches(0.75))
+                cp = cap.paragraphs[0]
+                r1 = cp.add_run(); r1.text = f"Figure {fig_no}. "
+                r1.font.size = Pt(9); r1.font.bold = True; r1.font.color.rgb = INK; r1.font.name = BODY
+                r2 = cp.add_run(); r2.text = fig_name
+                r2.font.size = Pt(9); r2.font.color.rgb = INK; r2.font.name = BODY
+                cp2 = cap.add_paragraph()
+                r3 = cp2.add_run(); r3.text = "Notes: " + fig_notes
+                r3.font.size = Pt(8); r3.font.color.rgb = MUTED; r3.font.name = BODY
             elif chart:
                 ph = rect(sl, Inches(9.2), Inches(y), Inches(3.5), Inches(6.55 - y), PANEL, line=LINE, rounded=True)
                 ptf = ph.text_frame; ptf.word_wrap = True; ptf.vertical_anchor = MSO_ANCHOR.MIDDLE

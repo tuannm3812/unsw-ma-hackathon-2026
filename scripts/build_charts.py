@@ -10,17 +10,36 @@ comment. Palette: navy ink #1C2333, viridis blue #31688E base, team yellow
 the table header. Yellow is used only as a fill (never text on light).
 Run: python3 scripts/build_charts.py  (then scripts/build_slides_draft.py)
 """
+import glob
 import matplotlib
 matplotlib.use("Agg")
+import matplotlib.font_manager as fm
 import matplotlib.pyplot as plt
 
 OUT = "docs/presentation/charts/"
 INK = "#1C2333"; BLUE = "#31688E"; YELLOW = "#FFDD04"; MUTED = "#6E7278"
 PURPLE = "#440154"; LINE = "#D9D6CC"
+
+# Typeface: prefer a real Google Sans TTF if the team drops one into
+# docs/presentation/fonts/ (it is not freely redistributable, so it is not
+# committed); otherwise use the committed DM Sans (SIL-OFL, the standard
+# open substitute with the same geometric feel).
+FONT_DIR = "docs/presentation/fonts/"
+family = None
+for pattern, name in (("GoogleSans*", None), ("ProductSans*", None), ("DMSans*", "DM Sans")):
+    files = [f for f in glob.glob(FONT_DIR + pattern + ".ttf") if "Italic" not in f]             + [f for f in glob.glob(FONT_DIR + pattern + ".ttf") if "Italic" in f]
+    if files:
+        for f in files:
+            fm.fontManager.addfont(f)
+        family = name or fm.FontProperties(fname=files[0]).get_name()
+        break
 plt.rcParams.update({
     "font.size": 14, "axes.edgecolor": LINE, "axes.labelcolor": INK,
     "xtick.color": INK, "ytick.color": INK, "text.color": INK,
 })
+if family:
+    plt.rcParams["font.family"] = family
+    print("charts typeface:", family)
 
 # S4 - shares printed by EDA SS4 (0.46028 / 0.30321 / 0.299945) + period Ns
 fig, ax = plt.subplots(figsize=(7.2, 4.6), dpi=200)
