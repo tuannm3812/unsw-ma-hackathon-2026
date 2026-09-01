@@ -50,21 +50,22 @@ DISPLAY = "Georgia"; BODY = "DM Sans"; MONO = "Courier New"
 # Academic figure captions shown under each embedded exhibit.
 FIGS = {
     3:  (1, "Chronological train/test split.",
-         "Train 1,174,953 loans (2016-2023); test 278,887 (posted 2024-01-01 onward). Counts from the authoritative snapshot."),
+         "The 278,887 test loans stayed sealed during training - the models never see the future they are scored on. Counts: analysis_summary.json (boundary 2024-01-01)."),
     4:  (2, "Share of loans funded within 24 hours, by analysis period.",
-         "Exact shares 46.0% / 30.3% / 30.0%; period sizes 589,823 / 298,549 / 565,474 loans. EDA notebook \u00a74."),
+         "The drop is 16 points; the 'recovery' is -0.3. Exact shares 46.0% / 30.3% / 30.0% (589,823 / 298,549 / 565,474 loans). EDA notebook \u00a74."),
     5:  (3, "Mean funding speed by sector.",
-         "Computed from the raw data replicating EDA \u00a75 grouping (sectors under 1,000 loans folded into Other); all counts match the executed notebook."),
+         "Sanitation loans fund ~13x faster than Clothing (0.9 vs 12.1 days). Computed from the raw data replicating EDA \u00a75 grouping; every count matches the executed notebook."),
     6:  (4, "Average within-region family-framing slope (duration model).",
-         "Slopes averaged over each region's own moderator mix; few-cluster screen is a conservative heuristic. Executed modeling notebook \u00a77.2."),
+         "For a two-country region the significance bar is t(1) = 12.7, not 1.96 - nothing clears it. Typeset from executed \u00a77.2 (v15); 4-dp values in analysis_summary.json."),
     7:  (5, "Mean funding speed by story theme.",
-         "TF-IDF + NMF, 8 topics, 20K-description sample; themes named from each topic's top words. EDA notebook \u00a78."),
+         "Water and sanitation stories fund in under 2 days; group farming waits ~2 weeks - themes track what the loan is FOR. EDA \u00a78 printed means (TF-IDF + NMF, 8 topics, 20K sample)."),
+    8:  None,
     12: (6, "Mean funding speed by region.",
-         "Computed from the raw data replicating EDA \u00a75 grouping; all counts match the executed notebook."),
+         "North America is Haiti alone (n = 7,559) - fastest region, and exactly why single-cluster inference is off the table. Computed from the raw data (counts verified vs executed notebook)."),
     13: (7, "Top 15 features by mean |SHAP| value, boosted model.",
-         "2,000-loan holdout sample; sentiment (11th) highlighted as the only narrative feature. Modeling notebook \u00a78."),
+         "Ten structural features outrank the first narrative one. Rebuilt from modeling \u00a78 printed values (2,000-loan holdout sample)."),
     14: (8, "Correlation with funding speed: structural vs narrative features.",
-         "Absolute Pearson correlations from the full valid sample. EDA notebook \u00a79."),
+         "Loan amount correlates ~7x stronger with speed than the best narrative signal (0.429 vs 0.058). EDA \u00a79 printed correlation table."),
 }
 
 SOURCES = {
@@ -294,7 +295,7 @@ def build(out_path: str) -> None:
                         "figure at its placed size (scripts/build_charts.py)"
                     )
                 pic.left = Inches(8.2) + max(0, (Inches(4.55) - pic.width) // 2)
-                fig_no, fig_name, fig_notes = FIGS[i]
+                fig_no, fig_name, fig_notes = FIGS[i]  # chart slides only; None entries never reach here
                 cap = box(sl, Inches(8.2), Inches(6.62), Inches(4.7), Inches(0.75))
                 cp = cap.paragraphs[0]
                 r1 = cp.add_run(); r1.text = f"Figure {fig_no}. "
