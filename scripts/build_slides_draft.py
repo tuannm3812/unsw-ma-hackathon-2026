@@ -52,7 +52,7 @@ FIGS = {
     3:  (1, "Chronological train/test split.",
          "Train 1,174,953 loans (2016-2023); test 278,887 (posted 2024-01-01 onward). Counts from the authoritative snapshot."),
     4:  (2, "Share of loans funded within 24 hours, by analysis period.",
-         "Exact shares 46.0% / 30.3% / 30.0%; period sizes shown in axis labels. EDA notebook \u00a74."),
+         "Exact shares 46.0% / 30.3% / 30.0%; period sizes 589,823 / 298,549 / 565,474 loans. EDA notebook \u00a74."),
     5:  (3, "Mean funding speed by sector.",
          "Computed from the raw data replicating EDA \u00a75 grouping (sectors under 1,000 loans folded into Other); all counts match the executed notebook."),
     6:  (4, "Average within-region family-framing slope (duration model).",
@@ -276,14 +276,15 @@ def build(out_path: str) -> None:
                 r2 = p.add_run(); r2.text = item; r2.font.size = Pt(16.5); r2.font.color.rgb = INK; r2.font.name = BODY
                 p.space_after = Pt(12); p.line_spacing = 1.15
             if chart and img is not None:
-                # right-column exhibit: fit to 4.45in wide, cap height, centre
-                pic = sl.shapes.add_picture(str(img), Inches(8.2), Inches(y), width=Inches(4.45))
-                max_h = Inches(6.55 - y)   # leave room for the Figure/Notes caption at 6.62
-                if pic.height > max_h:
-                    ratio = max_h / pic.height
-                    pic.height = int(max_h)
-                    pic.width = int(pic.width * ratio)
-                    pic.left = Inches(8.2) + (Inches(4.45) - pic.width) // 2
+                # exhibits are authored at their physical on-slide size (300
+                # dpi) - place at NATIVE size so type stays uniform across
+                # charts; downscale only if one overflows its column/height
+                pic = sl.shapes.add_picture(str(img), Inches(8.2), Inches(y))
+                max_w = Inches(4.55); max_h = Inches(6.55 - y)
+                scale = min(1.0, max_w / pic.width, max_h / pic.height)
+                if scale < 1.0:
+                    pic.width = int(pic.width * scale); pic.height = int(pic.height * scale)
+                pic.left = Inches(8.2) + max(0, (Inches(4.55) - pic.width) // 2)
                 fig_no, fig_name, fig_notes = FIGS[i]
                 cap = box(sl, Inches(8.2), Inches(6.62), Inches(4.7), Inches(0.75))
                 cp = cap.paragraphs[0]
