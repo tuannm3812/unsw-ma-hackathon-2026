@@ -13,6 +13,19 @@ from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.enum.shapes import MSO_SHAPE
 from pathlib import Path
+import os
+
+# Slide -> chart image (extracted from the Kaggle-executed notebooks; the
+# few-cluster table is typeset from the verified v15 SS7.2 output). Override
+# with CHART_DIR env var; missing files fall back to the labelled placeholder.
+CHART_DIR = os.environ.get("CHART_DIR", "docs/presentation/charts")
+CHARTS = {
+    3: "mod_21.png",            # predicted vs actual, chronological holdout
+    4: "eda_17_right.png",      # 24h-funded share by period (cropped panel)
+    5: "eda_22.png",            # average funding speed by sector
+    6: "few_cluster_table.png", # SS7.2 within-region few-cluster screen
+    7: "eda_32.png",            # funding speed by dominant topic
+}
 
 PAPER = RGBColor(0xFA, 0xF7, 0xF0); INK = RGBColor(0x1E, 0x2A, 0x2F)
 TEAL = RGBColor(0x1F, 0x4E, 0x5F); CREAM = RGBColor(0xFA, 0xF7, 0xF0)
@@ -164,14 +177,31 @@ def build(out_path: str) -> None:
                 r = p.add_run(); r.text = label.strip()
                 r.font.size = Pt(16); r.font.color.rgb = MUTED; r.font.name = BODY; r.font.bold = False
                 y += 1.15
-            bw = 8.2 if chart else 12.1
+            img = None
+            if chart and CHART_DIR and i in CHARTS:
+                cand = Path(CHART_DIR) / CHARTS[i]
+                if cand.is_file():
+                    img = cand
+            bw = 12.1 if not chart else 7.35
             tf = box(sl, Inches(0.75), Inches(y), Inches(bw), Inches(6.9 - y))
             for j, item in enumerate(bullets):
                 p = tf.paragraphs[0] if j == 0 else tf.add_paragraph()
                 r1 = p.add_run(); r1.text = "▪  "; r1.font.color.rgb = AMBER; r1.font.size = Pt(16); r1.font.name = BODY
                 r2 = p.add_run(); r2.text = item; r2.font.size = Pt(16.5); r2.font.color.rgb = INK; r2.font.name = BODY
                 p.space_after = Pt(12); p.line_spacing = 1.15
-            if chart:
+            if chart and img is not None:
+                # right-column exhibit: fit to 4.45in wide, cap height, centre
+                pic = sl.shapes.add_picture(str(img), Inches(8.2), Inches(y), width=Inches(4.45))
+                max_h = Inches(6.7 - y)
+                if pic.height > max_h:
+                    ratio = max_h / pic.height
+                    pic.height = int(max_h)
+                    pic.width = int(pic.width * ratio)
+                    pic.left = Inches(8.2) + (Inches(4.45) - pic.width) // 2
+                cap = box(sl, Inches(8.2), Inches(6.75), Inches(4.6), Inches(0.3))
+                cap.text = chart
+                style(cap.paragraphs[0], 8.5, MUTED, MONO)
+            elif chart:
                 ph = rect(sl, Inches(9.2), Inches(y), Inches(3.5), Inches(6.55 - y), PANEL, line=LINE, rounded=True)
                 ptf = ph.text_frame; ptf.word_wrap = True; ptf.vertical_anchor = MSO_ANCHOR.MIDDLE
                 ptf.text = "CHART GOES HERE"
