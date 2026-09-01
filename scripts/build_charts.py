@@ -53,7 +53,7 @@ for b, v in zip(bars, vals):
             fontsize=17, weight="bold")
 ax.set_ylabel("Share funded within 24 hours (%)", fontsize=13)
 ax.set_ylim(0, 54); ax.spines[["top", "right"]].set_visible(False)
-ax.set_title("Same-day funding has not recovered", fontsize=16, weight="bold", pad=12)
+ax.set_title("Same-day funding has not recovered", fontsize=16, weight="bold", pad=12, loc="left")
 fig.savefig(OUT + "period_24h.png", facecolor="white", bbox_inches="tight"); plt.close(fig)
 
 # S7 - means printed by EDA SS8 (8 NMF topics), semantic labels from top-words
@@ -71,7 +71,7 @@ for y, m in enumerate(means):
 ax.set_xlabel("Mean funding speed (days)", fontsize=13); ax.set_xlim(0, 15.4)
 ax.spines[["top", "right"]].set_visible(False)
 ax.set_title("Story themes (8 NMF topics): a ninefold gap", fontsize=15,
-             weight="bold", pad=12)
+             weight="bold", pad=12, loc="left")
 fig.savefig(OUT + "topics.png", facecolor="white", bbox_inches="tight"); plt.close(fig)
 
 # A2 - SHAP top-15 printed by modeling SS8 (v14/v15 runs)
@@ -91,7 +91,7 @@ ax.barh(names, vals, color=colors, edgecolor=edges, linewidth=0.8, height=0.66)
 ax.set_xlabel("mean |SHAP value| (boosted model, 2,000-loan holdout sample)", fontsize=12)
 ax.spines[["top", "right"]].set_visible(False)
 ax.set_title("SHAP top 15: structure fills the ranks;\nsentiment (11th) is the only narrative feature",
-             fontsize=14, weight="bold", pad=12)
+             fontsize=14, weight="bold", pad=12, loc="left")
 fig.savefig(OUT + "shap_top15.png", facecolor="white", bbox_inches="tight"); plt.close(fig)
 
 # A3 - correlations printed by EDA SS9
@@ -108,7 +108,7 @@ for y, v in enumerate(vals):
 ax.set_xlabel("|correlation| with funding speed (days)", fontsize=13); ax.set_xlim(0, 0.5)
 ax.spines[["top", "right"]].set_visible(False)
 ax.set_title("The “~10×” claim, exactly:\nstructure vs narrative correlations",
-             fontsize=14, weight="bold", pad=12)
+             fontsize=14, weight="bold", pad=12, loc="left")
 fig.savefig(OUT + "correlations.png", facecolor="white", bbox_inches="tight"); plt.close(fig)
 
 # S6 - few-cluster table, values from the executed modeling notebook SS7.2 (v15)
@@ -134,7 +134,7 @@ for (r, c), cell in tbl.get_celld().items():
     else:
         cell.set_facecolor("white")
 ax.set_title("Within-region family-framing slope (duration model)\nno region passes the few-cluster screen",
-             fontsize=13, pad=10)
+             fontsize=13, pad=10, loc="left")
 fig.savefig(OUT + "few_cluster_table.png", bbox_inches="tight", facecolor="white"); plt.close(fig)
 
 print("5 exhibits rebuilt in the deck palette")
