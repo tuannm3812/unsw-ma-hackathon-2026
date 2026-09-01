@@ -43,7 +43,9 @@ TEAL = RGBColor(0x1C, 0x23, 0x33); CREAM = RGBColor(0xFB, 0xFA, 0xF6)
 AMBER = RGBColor(0xFF, 0xDD, 0x04); MUTED = RGBColor(0x6E, 0x72, 0x78)
 PANEL = RGBColor(0xEF, 0xED, 0xE6); LINE = RGBColor(0xD9, 0xD6, 0xCC)
 BLUE = RGBColor(0x31, 0x68, 0x8E)
-DISPLAY = "Georgia"; BODY = "Avenir Next"; MONO = "Courier New"
+# DM Sans matches the chart typeface (install docs/presentation/fonts/*.ttf
+# on any machine that opens this deck, or PowerPoint silently falls back).
+DISPLAY = "Georgia"; BODY = "DM Sans"; MONO = "Courier New"
 
 # Academic figure captions shown under each embedded exhibit.
 FIGS = {
