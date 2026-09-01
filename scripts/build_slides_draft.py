@@ -25,6 +25,9 @@ CHARTS = {
     5: "eda_22.png",            # average funding speed by sector
     6: "few_cluster_table.png", # SS7.2 within-region few-cluster screen
     7: "eda_32.png",            # funding speed by dominant topic
+    12: "eda_23.png",           # appendix: region + repayment speed panels
+    13: "mod_39.png",           # appendix: SHAP top-15
+    14: "eda_36.png",           # appendix: speed by loan-amount decile
 }
 
 PAPER = RGBColor(0xFA, 0xF7, 0xF0); INK = RGBColor(0x1E, 0x2A, 0x2F)
@@ -104,6 +107,40 @@ SLIDES = [
  ("", None, None, [], None,
   "In this data, the story barely registers — the structure carries the signal. And testing hard enough to KNOW that is worth more to a platform than a good-sounding tip. Thank you — we're happy to take questions.",
   "CLOSING"),
+ # ---- Appendix: Q&A backup, never presented in the 10 minutes ----
+ ("Appendix", "Q&A backup — not part of the 10-minute presentation.", None, [], None,
+  "Divider only. Everything after this slide exists to be pulled up during Q&A if a question calls for it.",
+  "APPENDIX"),
+ ("The two-country problem, in full", None, None,
+  ["Pooled categories: Middle East = Palestine + Yemen (14,946 loans); Central America = Honduras + Nicaragua (59,391); North America = Haiti alone.",
+   "Few-cluster screen p (duration / 24h / notebook fit): ME 0.12 / 0.21 / 0.08 · CA 0.06 / 0.14 / 0.07 — same direction in every fit, none significant; t(1) critical value 12.7.",
+   "North America: single country — between-country uncertainty not estimable at all.",
+   "The screen is a conservative heuristic: it can downgrade a claim, never certify one. Next step: country-stratified A/B test in those four markets."],
+  "EDA notebook §5 · regional speed context for the pooled categories",
+  "Backup for Slide 6 probes: exact pooled definitions, all p-values, the single-country boundary, and the honest status of the screen.",
+  "APPENDIX · A1"),
+ ("Predictive weight ≠ statistical robustness", None, None,
+  ["SHAP importance from the boosted forecasting model: structure fills the top ranks (amount, term, period, size band, sector, gender).",
+   "No family, agency, or urgency feature reaches the top 15; sentiment is 11th despite its disputed significance.",
+   "Complementary predictive evidence only — a different model, no region interactions; it cannot confirm or refute any coefficient's sign or uncertainty."],
+  "modeling notebook §8 · SHAP top-15",
+  "Backup for SHAP questions: what the ranking shows, and exactly what it cannot corroborate.",
+  "APPENDIX · A2"),
+ ("Structure, dose-response", None, None,
+  ["Funding speed rises almost monotonically across loan-amount deciles — small asks fund in ~2 days, the largest in ~18.",
+   "Gender: female-posted median 2.3 days vs male 7.7 (the duration-model male coefficient +0.430 survives HC3 AND country clustering, p < 0.0001 — still associational).",
+   "This dose-response pattern is what the '~10x stronger than narrative' comparison rests on."],
+  "EDA notebook §9 · speed by loan-amount decile",
+  "Backup for Slide 5 probes: the amount gradient and the gender gap's robustness status.",
+  "APPENDIX · A3"),
+ ("24h classifier — operating detail", None, None,
+  ["Holdout (posted 2024-01-01 onward): 278,887 loans; 87,466 funded within 24h vs 191,421 not.",
+   "ROC AUC 0.8997 · average precision 0.8301 · Brier 0.1156 · accuracy 0.840 — no narrative features needed.",
+   "Boundary: negative class = 'eventually funded, but not within 24h'. Expired/withdrawn listings never enter the data — a retrospective ranking prototype among eventual funders.",
+   "Path to deployment: all posted listings incl. expired/withdrawn outcomes -> define operational target + censoring window -> retrain, validate -> threshold, calibration, fairness, prospective test."],
+  None,
+  "Backup for classifier questions: exact metrics, class balance, and the population boundary stated before anyone asks.",
+  "APPENDIX · A4"),
 ]
 
 
@@ -132,17 +169,23 @@ def build(out_path: str) -> None:
         sh.shadow.inherit = False
         return sh
 
-    for i, (title, sub, big, bullets, chart, script, eyebrow) in enumerate(SLIDES, 1):
+    for i, (title, sub_, big, bullets, chart, script, eyebrow) in enumerate(SLIDES, 1):
         sl = prs.slides.add_slide(blank)
-        bg(sl, TEAL if i in (1, 10) else PAPER)
-        if i == 1:
+        bg(sl, TEAL if i in (1, 10, 11) else PAPER)
+        if i == 11:
+            rect(sl, Inches(0.9), Inches(3.0), Inches(1.6), Pt(4), AMBER)
+            tf = box(sl, Inches(0.9), Inches(3.25), Inches(11.5), Inches(1.2))
+            tf.text = title; style(tf.paragraphs[0], 54, CREAM, DISPLAY, bold=True)
+            tf = box(sl, Inches(0.9), Inches(4.5), Inches(11.5), Inches(0.6))
+            tf.text = sub_; style(tf.paragraphs[0], 18, RGBColor(0xB8, 0xCE, 0xD6), BODY, italic=True)
+        elif i == 1:
             rect(sl, Inches(0.9), Inches(2.05), Inches(1.6), Pt(4), AMBER)
             tf = box(sl, Inches(0.9), Inches(1.35), Inches(11.5), Inches(0.5))
             tf.text = eyebrow; style(tf.paragraphs[0], 13, AMBER, MONO)
             tf = box(sl, Inches(0.85), Inches(2.3), Inches(11.8), Inches(2.2))
             tf.text = title; style(tf.paragraphs[0], 66, CREAM, DISPLAY, bold=True)
             tf = box(sl, Inches(0.9), Inches(4.35), Inches(9.8), Inches(1.2))
-            tf.text = sub; style(tf.paragraphs[0], 22, RGBColor(0xB8, 0xCE, 0xD6), BODY, italic=True)
+            tf.text = sub_; style(tf.paragraphs[0], 22, RGBColor(0xB8, 0xCE, 0xD6), BODY, italic=True)
             tf = box(sl, Inches(0.9), Inches(6.3), Inches(11.5), Inches(0.6))
             tf.text = bullets[0]; style(tf.paragraphs[0], 15, RGBColor(0x8F, 0xB0, 0xBB), MONO)
         elif i == 10:
@@ -161,7 +204,7 @@ def build(out_path: str) -> None:
             tf = box(sl, Inches(0.75), Inches(0.42), Inches(9.0), Inches(0.35))
             tf.text = eyebrow; style(tf.paragraphs[0], 11.5, AMBER, MONO)
             chip = rect(sl, Inches(12.15), Inches(0.4), Inches(0.72), Inches(0.38), TEAL, rounded=True)
-            ctf = chip.text_frame; ctf.text = f"{i}/10"
+            ctf = chip.text_frame; ctf.text = f"{i}/10" if i <= 10 else f"A{i - 11}"
             ctf.margin_top = Emu(0); ctf.margin_bottom = Emu(0)
             style(ctf.paragraphs[0], 12, CREAM, MONO, align=PP_ALIGN.CENTER)
             ctf.vertical_anchor = MSO_ANCHOR.MIDDLE
