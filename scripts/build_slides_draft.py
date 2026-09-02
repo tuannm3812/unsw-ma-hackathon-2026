@@ -56,7 +56,7 @@ FIGS = {
     5:  (3, "Mean funding speed by sector.",
          "Sanitation loans fund ~13x faster than Clothing (0.9 vs 12.1 days). Computed from the raw data replicating EDA \u00a75 grouping; every count matches the executed notebook."),
     6:  (4, "Average within-region family-framing slope (duration model).",
-         "For a two-country region the significance bar is t(1) = 12.7, not 1.96 - nothing clears it. Typeset from executed \u00a77.2 (v15); 4-dp values in analysis_summary.json."),
+         "Against the few-cluster screen - a conservative heuristic (t(1) critical value 12.7), able to downgrade a claim but never certify one - nothing clears it. Typeset from executed \u00a77.2 (v15); 4-dp values in analysis_summary.json."),
     7:  (5, "Mean funding speed by story theme.",
          "Water and sanitation stories fund in under 2 days; group farming waits ~2 weeks - themes track what the loan is FOR. EDA \u00a78 printed means (TF-IDF + NMF, 8 topics, 20K sample)."),
     8:  None,
@@ -84,14 +84,14 @@ SLIDES = [
  ("Beyond a Good Story",
   "When — and for whom — does persuasive loan language actually speed up funding?",
   None, ["Team Cultural Blend  ·  Kiva loan data  ·  1.45 million real loans (2016–2025)"], None,
-  "(Tuan, ~20s) Good morning — we're Cultural Blend: I'm Tuan, and my teammate Sophia will take you through what this means for the business. Kiva is built on stories — every loan page leads with one, the way a landing page leads with copy. We asked 1.45 million real loans a single question: does the story actually move the money?",
+  "(Tuan, ~30s) Good morning — we're Cultural Blend: I'm Tuan, and my teammate Sophia will take you through what this means for the business. Kiva is built on stories — every loan page leads with one, the way a landing page leads with copy. We asked 1.45 million real loans a single question: does the story actually move the money?",
   "UNSW MARKETING ANALYTICS HACKATHON · FINAL"),
  ("The question", None, None,
   ["When a loan's story leans on family, competence, or urgency — does it fund faster?",
    "Does the answer depend on WHO is asking and WHEN?",
    "Why it matters: framing is the one thing a platform can coach — loan size, sector and geography can't be rewritten after the fact."],
   None,
-  "(Tuan, ~45s) Why should a marketing audience care? Because on Kiva, the lender is the customer and the loan page is the product page. Loan size, sector, geography — fixed at listing. The story is the one element a platform can coach, test, and optimise — classic conversion territory. So: when a story leans on family, competence, or urgency, does the loan fund faster? And does that depend on who's asking, and when? That's a testable claim — so we tested it, hard.",
+  "(Tuan, ~50s) Why should a marketing audience care? Because on Kiva, the lender is the customer and the loan page is the product page. Loan size, sector, geography — fixed at listing. The story is the one element a platform can coach, test, and optimise — classic conversion territory. So: when a story leans on family, competence, or urgency, does the loan fund faster? And does that depend on who's asking, and when? That's a testable claim — so we tested it, hard.",
   "MOTIVATION"),
  ("How we stress-tested our findings", None, None,
   ["Predictive claims: trained only on the past, tested only on loans posted 2024–2025 — no peeking at the future.",
@@ -99,7 +99,7 @@ SLIDES = [
    "Most headline-looking results did NOT survive — that is the point of the method.",
    "SHAP importance shown as complementary predictive evidence only — it cannot confirm or refute a statistical finding."],
   "chronological train/test split · counts from analysis_summary.json",
-  "(Tuan, ~60s) Two disciplines before any findings — because in a dataset this size it is dangerously easy to find things that aren't there. For prediction: train only on the past, score only on loans posted in 2024-25 — the models never see the future they're graded on. For the framing claims: every 'significant' result had to survive country-clustered standard errors — ten thousand loans from one country are not ten thousand independent customers — and where a result rested on just a couple of countries, an even harsher few-cluster screen on top. Most headline-looking results did not survive. Hold that thought while Sophia shows you what the market itself looks like.",
+  "(Tuan, ~65s) Two disciplines before any findings — because in a dataset this size it is dangerously easy to find things that aren't there. For prediction: train only on the past, score only on loans posted in 2024-25 — the models never see the future they're graded on. For the framing claims: every 'significant' result had to survive country-clustered standard errors — ten thousand loans from one country are not ten thousand independent customers — and where a result rested on just a couple of countries, an even harsher few-cluster screen on top. Most headline-looking results did not survive. Hold that thought while Sophia shows you what the market itself looks like.",
   "METHOD"),
  ("A marketplace that hasn't recovered", None,
   "46% → 30% → 30%|funded within 24 hours",
@@ -115,7 +115,7 @@ SLIDES = [
    "Sector alone spans well over an order of magnitude in speed; region shows similarly large gaps.",
    "None of this is causal — but it dwarfs anything the words do."],
   "EDA notebook §5 categorical features · §9 feature correlations",
-  "(Sophia, ~70s) And what drives it is structure. Loan amount and repayment terms correlate with funding speed roughly ten times more strongly than any narrative signal. Sector alone spans an order of magnitude — sanitation stories fund in under a day, clothing takes twelve. And the starkest gap in the data: loans posted by women fund in a median of 2.3 days, by men 7.7 — three times longer. None of this is causal, but it's enormous, it's stable, and it dwarfs anything the words do. Which brings us to the question we actually came here to answer. Tuan —",
+  "(Sophia, ~65s) And what drives it is structure. Loan amount and repayment terms correlate with funding speed roughly ten times more strongly than any narrative signal. Sector alone spans an order of magnitude — sanitation stories fund in under a day, clothing takes twelve. And the starkest gap in the data: loans posted by women fund in a median of 2.3 days, by men 7.7 — three times longer. None of this is causal, but it's enormous, it's stable, and it dwarfs anything the words do. Which brings us to the question we actually came here to answer. Tuan —",
   "FINDING 2 · STRUCTURE"),
  ("What survives scrutiny", None,
   "No narrative result|is robust enough to support a recommendation",
@@ -124,14 +124,14 @@ SLIDES = [
    "Sentiment: positive tone <-> slower funding, but significance flips between specifications — genuinely open.",
    "SHAP: no family / agency / urgency feature in the model's top 15 — complementary evidence, not confirmation."],
   "modeling notebook §7.2 within-region slopes · §7.1 check",
-  "(Tuan, ~2min) So: does the story matter? Our honest answer is that nothing narrative survives our own scrutiny. Urgency language looked like a universal win — significant at p below 0.001. Cluster by country, and it collapses to 0.44. Gone. Family framing — and here our own first version got it wrong: we tested whether regions differ from Africa, which is not the same as whether family framing helps within a region. Corrected, two pooled categories — Palestine plus Yemen, and Honduras plus Nicaragua — do show faster funding in every fit we ran. But each rests on exactly two countries, and against a deliberately harsh few-cluster screen — a t distribution with one degree of freedom, where the critical value is 12.7, not 1.96 — neither is significant: p between 0.06 and 0.21. So we report a hypothesis worth testing, not a finding. Sentiment flips between our two specifications — genuinely open. We'd rather report no robust evidence than one exciting result we can't defend — because a recommendation you'd ship to real borrowers deserves that bar.",
+  "(Tuan, ~1m50s) So: does the story matter? Our honest answer: no narrative result is robust enough across specifications to support a recommendation. Urgency language looked like a universal win — significant at p below 0.001. Cluster by country, and it collapses to 0.44. Gone. Family framing — and here our own first version got it wrong: we tested whether regions differ from Africa, which is not the same as whether family framing helps within a region. Corrected, two pooled categories — Palestine plus Yemen, and Honduras plus Nicaragua — do show faster funding in every fit we ran. But each rests on exactly two countries, and against a deliberately harsh few-cluster screen — a conservative heuristic, not calibrated inference: a t distribution with one degree of freedom, critical value 12.7, not 1.96 — neither is significant: p between 0.06 and 0.21. So we report a hypothesis worth testing, not a finding. Sentiment is the honest illustration: it survives country clustering in one of our two specifications and not the other — genuinely open, robust in neither direction. We'd rather report no robust evidence than one exciting result we can't defend — because a recommendation you'd ship to real borrowers deserves that bar.",
   "FINDING 3 · THE HEADLINE"),
  ("Beyond keywords", None,
   "1.5 → 13.5 days|mean funding speed across story topics — a >9x swing",
   ["Topic modeling on the descriptions (TF-IDF + NMF, 8 topics — not keyword counts) surfaces coherent themes: sanitation, clean water, pig raising, family business, smallholder farming.",
    "The largest single gap anywhere in the analysis — but a topic mostly encodes what the loan is FOR. Structure again, not persuasion."],
   "EDA notebook §8 topic modeling",
-  "(Tuan, ~45s) One more layer before the recommendations — we went past keyword counting. Topic modelling finds eight coherent story themes, and mean funding speed swings ninefold across them: sanitation and clean-water stories in under two days, group farming closer to two weeks. But notice what a theme mostly encodes: what the loan is FOR. Structure again — not persuasion. So what should Kiva actually do with all of this? Sophia —",
+  "(Tuan, ~40s) One more layer before the recommendations — we went past keyword counting. Topic modelling finds eight coherent story themes, and mean funding speed swings ninefold across them: sanitation and clean-water stories in under two days, group farming closer to two weeks. But notice what a theme mostly encodes: what the loan is FOR. Structure again — not persuasion. So what should Kiva actually do with all of this? Sophia —",
   "FINDING 4 · TOPICS"),
  ("What this means in practice", None, None,
   ["DON'T ship writing tips — a platform-wide 'add urgency' nudge would be built on a result that doesn't survive testing.",
@@ -139,14 +139,14 @@ SLIDES = [
    "DO review the structural gaps (sector / region / gender) — they are ~10x the size of any wording effect.",
    "PROTOTYPE, then re-validate: the 24h classifier ranks well among eventually-funded loans (AUC ≈ 0.90, strictly future data) — but expired/withdrawn listings aren't in the data, so an early-warning flag first needs all posted listings, a defined target, and retraining on that population."],
   None,
-  "(Sophia, ~90s) Three moves — each with a clear owner. One: don't ship writing tips. For Kiva's content team that's a build spared; for borrowers, it's not being coached into copy that does nothing. Two: for the growth team and the field partners in exactly four markets — Palestine, Yemen, Honduras, Nicaragua — run the country-stratified A/B test: family-framing prompt versus standard at listing, outcome time-to-fund. That's how a hypothesis becomes a decision — and everyone in this room knows the discipline: test before you ship. Three: for the product team, the structural gaps are the real levers — how the consistently slower sectors and regions get surfaced, bundled, and supported — because those gaps are ten times any wording effect. And the classifier? A retrospective ranking prototype among funded loans — AUC 0.90 on strictly future data — for the data science team to develop toward an early-warning flag, after retraining on all listings including expired ones. The benefit flows to lenders through better discovery, and to borrowers through fewer stalled loans.",
+  "(Sophia, ~85s) Three moves — each with a clear owner. One: don't ship writing tips. For Kiva's content team that's a build spared; for borrowers, it's not being coached into copy we found no robust evidence for. Two: for the growth team and the field partners in exactly four markets — Palestine, Yemen, Honduras, Nicaragua — run the country-stratified A/B test: family-framing prompt versus standard at listing, outcome time-to-fund. That's how a hypothesis becomes a decision — and everyone in this room knows the discipline: test before you ship. Three: for the product team, the structural gaps are the real levers — how the consistently slower sectors and regions get surfaced, bundled, and supported — because those gaps are ten times any wording effect. And the classifier? A retrospective ranking prototype among funded loans — AUC 0.90 on strictly future data — for the data science team to develop toward an early-warning flag, after retraining on all listings including expired ones. And the intended benefits — to be tested, not assumed: better discovery for lenders, fewer stalled loans for borrowers.",
   "RECOMMENDATIONS"),
  ("What this can't tell us", None, None,
   ["Association, never causation — no borrower was randomly assigned a writing style.",
    "Measures how fast a FUNDED loan funds — not whether a loan gets funded at all (expired/withdrawn listings never enter the data).",
    "Framing measured with transparent, simple rules — not every nuance of persuasive writing."],
   None,
-  "(Sophia, ~40s) Three honest limits. Association, never causation — nobody randomly assigned writing styles. We measure how fast funded loans fund — not whether a loan funds at all. And our framing measures are transparent, simple rules — not every nuance of persuasion. We'd rather you know exactly what this can and cannot say — that's what makes the parts we do claim worth trusting.",
+  "(Sophia, ~35s) Three honest limits. Association, never causation — nobody randomly assigned writing styles. We measure how fast funded loans fund — not whether a loan funds at all. And our framing measures are transparent, simple rules — not every nuance of persuasion. We'd rather you know exactly what this can and cannot say — that's what makes the parts we do claim worth trusting.",
   "LIMITS"),
  ("", None, None, [], None,
   "(Both, ~20s) (Sophia) In this data, the story barely registers — the structure carries the signal. (Tuan) And testing hard enough to say, honestly, that there is no robust evidence for the story — that's worth more to a platform than a good-sounding tip. Thank you — we're happy to take your questions.",
@@ -318,7 +318,18 @@ def build(out_path: str) -> None:
         src_note = SOURCES.get(i, "reports/generated_full_dataset/association_summary.txt (authoritative numbers); docs/presentation/deck_content.md SS2 numbers table")
         sl.notes_slide.notes_text_frame.text = script + "\n\n[Sources] " + src_note
     prs.save(out_path)
-    print("wrote", out_path, Path(out_path).stat().st_size, "bytes")
+    # Post-build self-check: speaker-tagged script openers and a [Sources]
+    # block on every notes page (fails the build on any drift).
+    check = Presentation(out_path)
+    expected_openers = [t[5][:22] for t in SLIDES]
+    for idx, slide in enumerate(check.slides):
+        notes = slide.notes_slide.notes_text_frame.text
+        if not notes.startswith(expected_openers[idx]):
+            raise SystemExit(f"slide {idx + 1}: notes opener drifted: {notes[:40]!r}")
+        if "[Sources]" not in notes:
+            raise SystemExit(f"slide {idx + 1}: notes missing [Sources] block")
+    print("wrote", out_path, Path(out_path).stat().st_size,
+          "bytes; notes self-check passed for", len(expected_openers), "slides")
 
 
 if __name__ == "__main__":
