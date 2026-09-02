@@ -17,7 +17,7 @@ The full analysis report, and prepared answers for the 10-minute Q&A that follow
 
 We asked whether the way a Kiva borrower's story is written — family appeals, competence language, urgency, tone — is associated with how fast the loan funds, across 1,453,846 real loans (2016–2025). The answer that survives serious testing: **structure dominates story.** What a loan is for, where it's from, how big it is, and how it's repaid are linked to funding speed roughly an order of magnitude more strongly than any writing choice. Narrative framing has **no robustly supported association — absence of robust evidence, not proof of no effect**. One descriptive pattern — family framing and faster funding in **two pooled two-country categories** (Middle East = Palestine + Yemen; Central America = Honduras + Nicaragua; together ~5% of loans) — is consistent in direction across all three of our model fits, but each rests on exactly two countries, and under a few-cluster reference (t with 1 degree of freedom) it is not significant in any fit. It is a hypothesis for a country-stratified test, not a finding.
 
-The methodological arc is the differentiator: a standard analysis of this dataset would have confidently recommended urgency language platform-wide, and a slightly better one would have recommended family framing in two regions. We tested both, across multiple review rounds, and neither obtained robust support. What we present is what's left standing after we tried hard to kill it — and for narrative framing the finding is that the available evidence does not support a writing recommendation. The effects themselves remain uncertain; we are reporting a failure to obtain robust support, not proof of no effect.
+The methodological arc is the differentiator: a standard analysis of this dataset would have confidently recommended urgency language platform-wide, and a slightly better one would have recommended family framing in two regions. We tested both, across multiple review rounds, and neither obtained robust support. What we present is what's left standing after we tried hard to kill it — and for narrative framing the finding is that the available evidence does not support a writing recommendation. The effects themselves remain uncertain; we are reporting a failure to obtain robust support, **not proof of no effect**.
 
 ### The question
 
@@ -98,11 +98,11 @@ Format: up to three audience questions first, then judges. Audience questions sk
 
 **Answer:**
 
-Far less than everyone assumes — and that's the finding. How a loan is structured — its size, sector, country, repayment plan — is linked to funding speed about ten times more strongly than any writing choice. Every writing-style effect that looked significant at first collapsed when we tested it properly — including the last one standing, a family-framing pattern in two small country-groups (Palestine with Yemen, Honduras with Nicaragua) that points the same way in every fit but rests on two countries each and isn't significant once that is accounted for. So: polish the structure conversation before the copywriting one.
+Far less than everyone assumes — and that's the finding. How a loan is structured — its size, sector, country, repayment plan — is linked to funding speed about **ten times** more strongly than any writing choice. Every writing-style effect that looked significant at first collapsed when we tested it properly — including the last one standing, a family-framing pattern in two small country-groups (Palestine with Yemen, Honduras with Nicaragua) that points the same way in every fit but rests on two countries each and isn't significant once that is accounted for. So: polish the structure conversation before the copywriting one.
 
 **Backup:**
 
-Raw correlations: loan amount r = +0.43, repayment term r = +0.28, vs family r = −0.02, urgency r = +0.01, agency r = +0.06 (the largest narrative correlation — and toward *slower*). So "about ten times" is 7× against the biggest narrative signal, 20× against the others. SHAP: no framing feature in the boosted model's top 15.
+Raw correlations: loan amount r = +0.43, repayment term r = +0.28, vs family r = −0.02, urgency r = +0.01, agency r = +0.06 (the largest narrative correlation — and toward *slower*). So "about **ten times**" is 7× against the biggest narrative signal, 20× against the others. SHAP: no framing feature in the boosted model's top 15.
 
 **Trap:** don't say "storytelling doesn't matter" — say the honest version: *we couldn't find reliable evidence it matters, and we looked hard*. Absence of robust evidence ≠ evidence of absence.
 
@@ -110,7 +110,7 @@ Raw correlations: loan amount r = +0.43, repayment term r = +0.28, vs family r =
 
 **Answer:**
 
-Our data can't hand a borrower a winning script — and we think saying so is more useful than pretending otherwise. A typical analysis of this dataset would tell every borrower to add urgent language; we tested that and it doesn't hold up. Our honest advice is boring: write a clear, complete description — not because our data shows it speeds funding, but because nothing we tested beats it — and let the platform work on what is actually linked to speed — how loans are sized, categorized and surfaced. The one family-framing pattern (Palestine+Yemen, Honduras+Nicaragua) is a pooled, descriptive average that doesn't survive a few-cluster test — worth a properly designed experiment, not advice for any borrower.
+Our data can't hand a borrower a winning script — and we think saying so is more useful than pretending otherwise. A typical analysis of this dataset would tell every borrower to add urgent language; we tested that and it doesn't hold up. Our honest advice is boring: write a clear, complete description — not because our data shows it speeds funding, but because nothing we tested beats it — and let the platform work on what is actually linked to speed — how loans are sized, categorized and surfaced. The one family-framing pattern (**Palestine**+Yemen, Honduras+Nicaragua) is a pooled, descriptive average that doesn't survive a few-cluster test — worth a properly designed experiment, not advice for any borrower.
 
 **Trap:** a questioner may want a tip they can tweet. Resist inventing one — "we tested the popular tip and it failed" is the memorable answer.
 
@@ -122,7 +122,7 @@ Pre-pandemic, 46% of loans funded within a day. During the disruption that fell 
 
 **Backup:**
 
-46.0% → 30.3% → 30.0% across 589,823 / 298,549 / 565,474 loans. The era shift survives clustering in the authoritative duration model — both post-2019 period terms significant (clustered p = 0.0014 / 0.0031), direction: slower than pre-pandemic.
+**46.0% → 30.3% → 30.0%** across 589,823 / 298,549 / 565,474 loans. The era shift survives clustering in the authoritative duration model — both post-2019 period terms significant (clustered p = 0.0014 / 0.0031), direction: slower than pre-pandemic.
 
 ### The headline finding
 
@@ -130,7 +130,7 @@ Pre-pandemic, 46% of loans funded within a day. During the disruption that fell 
 
 **Answer:**
 
-You've named the exact limitation we'd point to ourselves, and it's why we call this exploratory. In our data "Middle East" is Palestine and Yemen; "Central America" is Honduras and Nicaragua. Because we cluster standard errors by country — treating same-country loans as related, not independent — a two-country group carries little independent evidence, and the estimate can't separate "family framing works here" from "these two countries are unusual." We went further than conceding: the conventional clustered p-value that made it look significant uses a normal approximation that's only trustworthy with many clusters, so we re-referred it to a t distribution with one degree of freedom — a deliberately harsh sensitivity screen, a conservative heuristic rather than calibrated inference — and it is not significant in any of our three fits (p ≈ 0.06 to 0.21). What's left is a descriptive pattern: same direction every time, pooled per pair so it can't even say whether Palestine or Yemen drives it. Our recommendation is scoped to exactly that: a country-stratified A/B test in those markets, presented as a hypothesis, not a claim about regions, countries, or significance.
+You've named the exact limitation we'd point to ourselves, and it's why we call this exploratory. In our data "Middle East" is Palestine and Yemen; "Central America" is Honduras and Nicaragua. Because we cluster standard errors by country — treating same-country loans as related, not independent — a two-country group carries little independent evidence, and the estimate can't separate "family framing works here" from "these two countries are unusual." We went further than conceding: the conventional clustered p-value that made it look significant uses a normal approximation that's only trustworthy with many clusters, so we re-referred it to a t distribution with one degree of freedom — a deliberately harsh sensitivity screen, a conservative heuristic rather than calibrated inference — and it is not significant in any of our three fits (p ≈ 0.06 to 0.21). What's left is a descriptive pattern: same direction every time, pooled per pair so it can't even say whether Palestine or Yemen drives it. Our recommendation is scoped to exactly that: a **country-stratified A/B test** in those markets, presented as a hypothesis, not a claim about regions, countries, or significance.
 
 **Backup:**
 
@@ -152,7 +152,7 @@ Slope on log(1+days) per mention/100 words: Middle East −0.124 / −0.073 → 
 
 **Answer:**
 
-Yes — and we can't rule that out, which is exactly why we won't call it causal. Worse for the country framing: the estimate pools each pair, so we can't even say which of the two countries drives it. Palestine and Yemen are conflict-affected; lenders may respond differently to family language in that context, or the field partners there may write differently, or something else entirely may travel with those countries. Clustering by country adjusts the uncertainty for within-country dependence, but no amount of statistics separates the framing from the country when the group only contains two of them. That's what the A/B test recommendation is for: it's the design that *would* separate them.
+Yes — and we can't rule that out, which is exactly why we won't call it causal. Worse for the country framing: the estimate pools each pair, so we can't even say which of the two countries drives it. **Palestine** and Yemen are conflict-affected; lenders may respond differently to family language in that context, or the field partners there may write differently, or something else entirely may travel with those countries. Clustering by country adjusts the uncertainty for within-country dependence, but no amount of statistics separates the framing from the country when the group only contains two of them. That's what the A/B test recommendation is for: it's the design that *would* separate them.
 
 ### The robustness story
 
@@ -160,7 +160,7 @@ Yes — and we can't rule that out, which is exactly why we won't call it causal
 
 **Answer:**
 
-It means the standard *assumption* was wrong, and we corrected it — the model's coefficients don't change at all, only the honesty of the uncertainty around them. Every analysis of this dataset that treats 1.45 million loans as 1.45 million independent observations will produce those overconfident p-values; loans from the same country share field partners, templates, and local conditions, so the effective sample is much smaller than the row count. The change was also selective in an informative way: the largest structural findings — the big sector and region gaps, gender, loan amount, repayment structure — all held, while the flips concentrated in narrative-framing terms plus some of the smaller sector and region categories. The fragile results were overwhelmingly the framing ones.
+It means the standard *assumption* was wrong, and we corrected it — the model's coefficients don't change at all, only the honesty of the uncertainty around them. Every analysis of this dataset that treats **1.45 million** loans as **1.45 million** independent observations will produce those overconfident p-values; loans from the same country share field partners, templates, and local conditions, so the effective sample is much smaller than the row count. The change was also selective in an informative way: the largest structural findings — the big sector and region gaps, gender, loan amount, repayment structure — all held, while the flips concentrated in narrative-framing terms plus some of the smaller sector and region categories. The fragile results were overwhelmingly the framing ones.
 
 **Backup:**
 
@@ -182,7 +182,7 @@ Country is the strongest grouping available in our data for the dependence we're
 
 **Answer:**
 
-HC3 is the conservative default for unequal variance — funding speed is heavily skewed, so classical standard errors would understate uncertainty. But the honest answer is that at 1.45 million rows the choice among HC0–HC3 barely matters; they converge. The assumption that actually bound our results was independence, not heteroskedasticity — which is why the check that mattered was clustering, and it changed our headline findings where the HC-variant choice changed nothing.
+HC3 is the conservative default for unequal variance — funding speed is heavily skewed, so classical standard errors would understate uncertainty. But the honest answer is that at **1.45 million** rows the choice among HC0–HC3 barely matters; they converge. The assumption that actually bound our results was independence, not heteroskedasticity — which is why the check that mattered was clustering, and it changed our headline findings where the HC-variant choice changed nothing.
 
 **Trap:** this is a knowledge-check question. Answer it in one breath and steer to the assumption that mattered — that's where the analysis has something to say.
 
@@ -208,7 +208,7 @@ Because round three is the only one that was independently verified three differ
 
 **Answer:**
 
-Fair concern, and three things answer it. First, the regression formula itself was pre-specified — one formula, no stepwise searching, every coefficient reported whether significant or not. We'll be candid that the within-region *averaging* analysis came later, developed through review rounds, so we treat it as post-estimation and exploratory rather than pretending the whole inferential path was fixed in advance. Second, the clustering correction itself removed the mass false-positive problem: it's what took us from "almost everything significant" to a handful. Third — and this is where we ended up conceding the point ourselves — multiplicity isn't even the binding problem. The pooled family-framing result clears conventional clustered p-values in all three fits and five of six headline tests clear an 18-test Bonferroni threshold; but those p-values rely on a normal approximation that fails with two clusters, and under a few-cluster t(1) reference the result is not significant in any fit. So we don't claim it. The within-region averaging itself is post-estimation and exploratory. And where a result *was* marginal — a single-fit p = 0.009 for Haiti — we didn't claim it, which is the multiple-comparisons discipline applied rather than described.
+Fair concern, and three things answer it. First, the regression formula itself was pre-specified — one formula, no stepwise searching, every coefficient reported whether significant or not. We'll be candid that the within-region *averaging* analysis came later, developed through review rounds, so we treat it as post-estimation and exploratory rather than pretending the whole inferential path was fixed in advance. Second, the clustering correction itself removed the mass false-positive problem: it's what took us from "almost everything significant" to a handful. Third — and this is where we ended up conceding the point ourselves — multiplicity isn't even the binding problem. The pooled family-framing result clears conventional clustered p-values in all three fits and five of six headline tests clear an 18-test Bonferroni threshold; but those p-values rely on a normal approximation that fails with two clusters, and under a few-cluster **t(1)** reference the result is not significant in any fit. So we don't claim it. The within-region averaging itself is post-estimation and exploratory. And where a result *was* marginal — a single-fit p = 0.009 for Haiti — we didn't claim it, which is the multiple-comparisons discipline applied rather than described.
 
 **Backup:**
 
@@ -242,13 +242,13 @@ Haiti: 7,559 loans. Within-region slope +0.0127 (toward slower), clustered p = 0
 
 **Answer:**
 
-A survival model earns its complexity when observations are censored — loans still unfunded when the data ends. Our dataset contains completed loans — every row has both a posting and a fully-funded date, so there's essentially no censoring for a hazard model to handle. (The six rows we drop, of 1.45 million, have a funded date recorded *before* the posting date — a data inconsistency, not censoring.) Log-transformed duration with OLS handles the heavy skew, keeps every coefficient directly interpretable for a non-technical audience, and we pair it with a 24-hour logistic model so the "fast vs slow" framing is covered too. With unfunded or expired loans in the data, survival analysis would be our first move — we'd genuinely like that data.
+A survival model earns its complexity when observations are censored — loans still unfunded when the data ends. Our dataset contains completed loans — every row has both a posting and a fully-funded date, so there's essentially no censoring for a hazard model to handle. (The six rows we drop, of **1.45 million**, have a funded date recorded *before* the posting date — a data inconsistency, not censoring.) Log-transformed duration with OLS handles the heavy skew, keeps every coefficient directly interpretable for a non-technical audience, and we pair it with a 24-hour logistic model so the "fast vs slow" framing is covered too. With unfunded or expired loans in the data, survival analysis would be our first move — we'd genuinely like that data.
 
 #### D2 · You only observe funded loans. Isn't that survivorship bias? `[HARD]`
 
 **Answer:**
 
-It's a real scope limit and we state it: our outcome is *how fast a loan that funded got funded*, not whether loans fund. If some loans expire unfunded and framing affects *that*, we can't see it, and our associations are conditional on reaching full funding. What we can say is that within our question the data is essentially complete — only six loans out of 1.45 million were dropped, for timestamp inconsistencies (funded date before posting), not missingness — and the practical outputs, like the at-risk-loan flag, are about speed among posted loans, where this scope is the right one. Extending to expiry outcomes is the top of our future-work list.
+It's a real scope limit and we state it: our outcome is *how fast a loan that funded got funded*, not whether loans fund. If some loans expire unfunded and framing affects *that*, we can't see it, and our associations are conditional on reaching full funding. What we can say is that within our question the data is essentially complete — only six loans out of **1.45 million** were dropped, for timestamp inconsistencies (funded date before posting), not missingness — and the practical outputs, like the at-risk-loan flag, are about speed among posted loans, where this scope is the right one. Extending to expiry outcomes is the top of our future-work list.
 
 #### D3 · Dictionary word-counting for framing seems crude. Why not embeddings or an LLM?
 
@@ -258,7 +258,7 @@ Deliberate trade-off: transparency over sophistication. A dictionary measure is 
 
 **Backup:**
 
-TF-IDF + NMF, 8 topics, coherent themes (livestock, sanitation, clean water, farming, retail); topic funding-speed means span 1.5 → 13.5 days (\>9×), though topics track sector/loan-type as much as style.
+TF-IDF + NMF, 8 topics, coherent themes (livestock, sanitation, clean water, farming, retail); topic funding-speed means span 1.5 → **13.5 days** (\>9×), though topics track sector/loan-type as much as style.
 
 #### D4 · How do you know your predictive results aren't leakage?
 
@@ -288,7 +288,7 @@ Median compound 0.89, mean 0.78 (20k-sample). Clustered p ≈ 0.01/0.02 (authori
 
 **Answer:**
 
-It's one of the most robust patterns in the data: female-posted loans fund in a median 2.3 days against 7.7 for male-posted. Controls matter here in both directions: adjusting for loan size, sector, region, timing and writing style simultaneously absorbs roughly half of that raw gap — so composition explains a lot — but a large adjusted gap remains, about 54% longer for male-posted loans, and it survives clustering. What drives the remainder our data can't decompose: candidates include lender behavior, field-partner posting practices, and loan differences we don't observe. What to do with it is genuinely a values question for the platform more than an analytics one — but knowing the gap is real, large, and not purely a composition artifact is the necessary first step, and setting realistic funding-time expectations by borrower profile is an immediate, neutral use.
+It's one of the most robust patterns in the data: female-posted loans fund in a median **2.3 days** against 7.7 for male-posted. Controls matter here in both directions: adjusting for loan size, sector, region, timing and writing style simultaneously absorbs roughly half of that raw gap — so composition explains a lot — but a large adjusted gap remains, about 54% longer for male-posted loans, and it survives clustering. What drives the remainder our data can't decompose: candidates include lender behavior, field-partner posting practices, and loan differences we don't observe. What to do with it is genuinely a values question for the platform more than an analytics one — but knowing the gap is real, large, and not purely a composition artifact is the necessary first step, and setting realistic funding-time expectations by borrower profile is an immediate, neutral use.
 
 **Backup:**
 
@@ -304,7 +304,7 @@ One is the authoritative tested pipeline — versioned, unit-tested, source of t
 
 **Answer:**
 
-Four things, in order. Run the country-stratified A/B test in the two surviving pooled categories — it's the only way to locate which countries, if any, actually drive the pooled association and turn it into something actionable. Get expired and unfunded loans into the data, so we can model funding success, not just speed. Get a field-partner identifier, which would let us cluster at the true dependence level and probably explain part of what "country" currently absorbs. And add LLM-scored narrative dimensions alongside our transparent dictionaries — with a validation protocol, so they'd meet the same auditability bar as everything else here.
+Four things, in order. Run the **country-stratified A/B test** in the two surviving pooled categories — it's the only way to locate which countries, if any, actually drive the pooled association and turn it into something actionable. Get expired and unfunded loans into the data, so we can model funding success, not just speed. Get a field-partner identifier, which would let us cluster at the true dependence level and probably explain part of what "country" currently absorbs. And add LLM-scored narrative dimensions alongside our transparent dictionaries — with a validation protocol, so they'd meet the same auditability bar as everything else here.
 
 ### The questions behind the questions
 
@@ -312,11 +312,11 @@ Four things, in order. Run the country-stratified A/B test in the two surviving 
 
 **Answer:**
 
-The sharpest question in the room, and we'll concede its premise: measurement error attenuates estimates toward zero, and that is exactly why our claim is "no robust evidence for a recommendation," never "no effect exists." But three things stop attenuation from explaining our result. First, the same crude measures *did* produce large, highly significant associations under HC3 — attenuation didn't stop signals from appearing; the clustering re-test is what removed them, and clustering corrects dependence, not sensitivity. Second, topic modelling is lexicon-free — no word lists at all — and it tracks what the loan is *for*, not how it's written: a completely different text instrument pointing at the same structural story. Third, at 1.45 million loans, an effect large enough to justify platform-wide copy coaching should survive attenuated measurement; an effect so small that noise hides it at this scale would struggle to clear any cost-benefit bar. The honest residual: subtler narrative dimensions could exist below our instruments' resolution — which is precisely the LLM-scored follow-up we name as future work.
+The sharpest question in the room, and we'll concede its premise: measurement error attenuates estimates toward zero, and that is exactly why our claim is "no robust evidence for a recommendation," never "no effect exists." But three things stop attenuation from explaining our result. First, the same crude measures *did* produce large, highly significant associations under HC3 — attenuation didn't stop signals from appearing; the clustering re-test is what removed them, and clustering corrects **dependence, not sensitivity**. Second, topic modelling is lexicon-free — no word lists at all — and it tracks what the loan is *for*, not how it's written: a completely different text instrument pointing at the same structural story. Third, at 1.45 million loans, an effect large enough to justify platform-wide copy coaching should survive attenuated measurement; an effect so small that noise hides it at this scale would struggle to clear any cost-benefit bar. The honest residual: subtler narrative dimensions could exist below our instruments' resolution — which is precisely the LLM-scored follow-up we name as future work.
 
 **Backup:**
 
-Attenuation shrinks coefficients toward 0 but does not inflate clustered standard errors relative to HC3 — the HC3→clustered collapse (urgency p<0.001 → ≈0.44) is a dependence phenomenon. The lexicons are validated enough to move: family mentions median ~1.4/100 words with wide spread. Topic swing 1.5→13.5 days shows the description text is informative — just about structure.
+Attenuation shrinks coefficients toward 0 but does not inflate clustered standard errors relative to HC3 — the HC3→clustered collapse (urgency p<0.001 → ≈0.44) is a dependence phenomenon. The lexicons are validated enough to move: family mentions median ~1.4/100 words with wide spread. Topic swing 1.5→**13.5 days** shows the description text is informative — just about structure.
 
 **Trap:** don't say "our measures are fine." Concede attenuation immediately, then redirect to why the *pattern* of results (big-then-clustered-away, lexicon-free topics agreeing) isn't what attenuation produces.
 
@@ -324,7 +324,7 @@ Attenuation shrinks coefficients toward 0 but does not inflate clustered standar
 
 **Answer:**
 
-Because we tested the platform's most cherished assumption on the one lever it can actually coach — and knowing where *not* to spend is one of the most commercially valuable things analytics can deliver. A platform that believed the intuitive result would fund copy-coaching programs, borrower writing guides, A/B tests of urgency phrasing — all built on an association that doesn't survive honest standard errors. Our result redirects that budget: toward the structural levers that are ten times larger, and toward one cheap, targeted experiment in four named markets that would settle the family-framing question properly. The organizers asked for quality over quantity of findings; a defended null on the central question, plus the map of what actually matters, is that.
+Because we tested the platform's most cherished assumption on the one lever it can actually coach — and knowing where *not* to spend is one of the most commercially valuable things analytics can deliver. A platform that believed the intuitive result would fund copy-coaching programs, borrower writing guides, A/B tests of urgency phrasing — all built on an association that doesn't survive honest standard errors. Our result redirects that budget: toward the structural levers that are **ten times** larger, and toward one cheap, targeted experiment in four named markets that would settle the family-framing question properly. The organizers asked for quality over quantity of findings; a defended null on the central question, plus the map of what actually matters, is that.
 
 **Trap:** never sound defensive about the null. The confident version of this answer is the whole presentation in miniature.
 
@@ -332,7 +332,7 @@ Because we tested the platform's most cherished assumption on the one lever it c
 
 **Answer:**
 
-"On Kiva, the story barely registers — structure carries the signal. We tested the romantic assumption four times, killed it honestly, and found where the real levers are." If there's room for one more sentence: "And that discipline — test before you ship — is the most transferable thing we can offer a room full of marketers."
+"On Kiva, the story barely registers — structure carries the signal. We tested the romantic assumption four times, killed it honestly, and found where the real levers are." If there's room for one more sentence: "And that discipline — **test before you ship** — is the most transferable thing we can offer a room full of marketers."
 
 ### How this maps to the judging criteria
 

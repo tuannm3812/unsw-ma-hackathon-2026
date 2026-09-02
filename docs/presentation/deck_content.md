@@ -44,7 +44,7 @@ Answered
 ### Slide 1 · Title
 
 - **Beyond a Good Story** — When (and for whom) does persuasive loan language actually speed up funding?
-- Team Cultural Blend · Kiva loan data · 1.45 million real loans
+- Team Cultural Blend · Kiva loan data · **1.45 million** real loans
 
 > **Script · Tuan · ~30s** — "Good morning — we're Cultural Blend: I'm Tuan, and my teammate Sophia will take you through what this means for the business. Kiva is built on stories — every loan page leads with one, the way a landing page leads with copy. We asked 1.45 million real loans a single question: does the story actually move the money?"
 
@@ -101,7 +101,7 @@ This is the single most concrete, non-technical finding in the whole deck — **
 
 - Loan amount and repayment terms are linked to funding speed roughly **10× more strongly** than any single narrative choice, in simple comparisons.
 - Sector alone spans well over a full order of magnitude in speed; region and borrower gender show similarly large gaps.
-- Female-posted loans fund in a median 2.3 days; male-posted loans, 7.7 days.
+- Female-posted loans fund in a median **2.3 days**; male-posted loans, 7.7 days.
 
 Source: EDA notebook, §5 Categorical Features + §9 Feature Correlations
 
@@ -137,10 +137,10 @@ The most important slide in the deck. Not "framing doesn't matter" — "we teste
 
 ### Slide 7 · Beyond keywords
 
-1.5 → 13.5 days mean funding speed across topics, >9× swing
+1.5 → **13.5 days** mean funding speed across topics, >9× swing
 
 - Topic modeling on the descriptions (TF-IDF + NMF, 8 topics — not just keyword counts) surfaces real, coherent themes: sanitation, clean water, pig raising, family business, smallholder farming.
-- Mean funding speed swings more than ninefold across topics (1.5 → 13.5 days) — the largest single gap anywhere in the analysis.
+- Mean funding speed swings more than ninefold across topics (1.5 → **13.5 days**) — the largest single gap anywhere in the analysis.
 
 Source: EDA notebook, §8 Topic Modeling
 
@@ -156,7 +156,7 @@ Good "we went further than keyword-spotting" beat for originality. First trim ca
 ### Slide 8 · What this means in practice
 
 - Don't recommend urgency language platform-wide — it looked like a safe, universal tip, but doesn't survive rigorous testing.
-- No writing rule at all from this data. The one family-framing pattern (Palestine + Yemen; Honduras + Nicaragua) is a hypothesis worth a *country-stratified* A/B test — not a recommendation, because two countries per category cannot support one.
+- No writing rule at all from this data. The one family-framing pattern (**Palestine** + Yemen; Honduras + Nicaragua) is a hypothesis worth a *country-stratified* A/B test — not a recommendation, because two countries per category cannot support one.
 - A structural review (why some sectors/regions fund so much slower) still likely outperforms copywriting coaching alone.
 - A same-day-funding RANKING PROTOTYPE works — holdout ROC AUC ≈ 0.90 among eventually-funded loans, no framing insight required. But its negative class is “funded, just not within 24h” — expired/withdrawn listings aren't in the data — so it is NOT yet validated for early-warning use. Path to a pilot: obtain all posted listings (incl. expired/withdrawn outcomes), define the operational target and censoring window, retrain and validate on that population; only then threshold, calibration, capacity/fairness checks and a prospective test.
 
