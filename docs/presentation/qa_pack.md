@@ -306,6 +306,44 @@ One is the authoritative tested pipeline — versioned, unit-tested, source of t
 
 Four things, in order. Run the country-stratified A/B test in the two surviving pooled categories — it's the only way to locate which countries, if any, actually drive the pooled association and turn it into something actionable. Get expired and unfunded loans into the data, so we can model funding success, not just speed. Get a field-partner identifier, which would let us cluster at the true dependence level and probably explain part of what "country" currently absorbs. And add LLM-scored narrative dimensions alongside our transparent dictionaries — with a validation protocol, so they'd meet the same auditability bar as everything else here.
 
+### The questions behind the questions
+
+#### F1 · Your framing measures are crude word counts. Noisy measures bias you toward finding nothing — isn't your null baked in? `[HARD]`
+
+**Answer:**
+
+The sharpest question in the room, and we'll concede its premise: measurement error attenuates estimates toward zero, and that is exactly why our claim is "no robust evidence for a recommendation," never "no effect exists." But three things stop attenuation from explaining our result. First, the same crude measures *did* produce large, highly significant associations under HC3 — attenuation didn't stop signals from appearing; the clustering re-test is what removed them, and clustering corrects dependence, not sensitivity. Second, topic modelling is lexicon-free — no word lists at all — and it tracks what the loan is *for*, not how it's written: a completely different text instrument pointing at the same structural story. Third, at 1.45 million loans, an effect large enough to justify platform-wide copy coaching should survive attenuated measurement; an effect so small that noise hides it at this scale would struggle to clear any cost-benefit bar. The honest residual: subtler narrative dimensions could exist below our instruments' resolution — which is precisely the LLM-scored follow-up we name as future work.
+
+**Backup:**
+
+Attenuation shrinks coefficients toward 0 but does not inflate clustered standard errors relative to HC3 — the HC3→clustered collapse (urgency p<0.001 → ≈0.44) is a dependence phenomenon. The lexicons are validated enough to move: family mentions median ~1.4/100 words with wide spread. Topic swing 1.5→13.5 days shows the description text is informative — just about structure.
+
+**Trap:** don't say "our measures are fine." Concede attenuation immediately, then redirect to why the *pattern* of results (big-then-clustered-away, lexicon-free topics agreeing) isn't what attenuation produces.
+
+#### F2 · You spent the whole project on storytelling and concluded it doesn't have robust effects. Why is that valuable? `[HARD]`
+
+**Answer:**
+
+Because we tested the platform's most cherished assumption on the one lever it can actually coach — and knowing where *not* to spend is one of the most commercially valuable things analytics can deliver. A platform that believed the intuitive result would fund copy-coaching programs, borrower writing guides, A/B tests of urgency phrasing — all built on an association that doesn't survive honest standard errors. Our result redirects that budget: toward the structural levers that are ten times larger, and toward one cheap, targeted experiment in four named markets that would settle the family-framing question properly. The organizers asked for quality over quantity of findings; a defended null on the central question, plus the map of what actually matters, is that.
+
+**Trap:** never sound defensive about the null. The confident version of this answer is the whole presentation in miniature.
+
+#### F3 · One line for the audience vote: what should we remember?
+
+**Answer:**
+
+"On Kiva, the story barely registers — structure carries the signal. We tested the romantic assumption four times, killed it honestly, and found where the real levers are." If there's room for one more sentence: "And that discipline — test before you ship — is the most transferable thing we can offer a room full of marketers."
+
+### How this maps to the judging criteria
+
+| Criterion (20% each) | Where we earn it |
+|----|----|
+| Originality of research question | We test — and honestly kill — the platform's core narrative assumption, on its only coachable lever; the verification arc (three rounds, each changing the answer) is itself the original contribution |
+| Analytical approach & execution | Chronological holdout (never scoring the past), country-clustered + few-cluster screening, three same-data fits compared, SHAP kept strictly complementary, every number traceable to a verified run |
+| Insights & communication | One message per slide, hook-first figure notes, two-presenter arc, and an honest vocabulary — "no robust evidence," not fake certainty in either direction |
+| Practical implications | Every recommendation has a named owner (content, growth + field partners, product, data science) and a stated next test; benefits framed as intended-and-testable, not assumed |
+| Audience vote | The F3 one-liner, the −0.3pt "recovery," and conceding hard questions fast — audiences reward candour |
+
 ## Part III · Numbers crib sheet
 
 One table to re-read before the session. Sign conventions: duration models predict log(1+days), **negative = faster**; the 24-hour model predicts log-odds, **positive = faster**.

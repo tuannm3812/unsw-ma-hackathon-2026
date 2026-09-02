@@ -14,6 +14,11 @@ finalising the deck so the credit line can name them:
 - `project.png` - (source/author link)
 - `testing.png` - (source/author link)
 - `wireframes.png` - (source/author link)
+- `emotion.png` - (source/author link) - sentiment/story-review icon, yellow
+- `funnel.png` - (source/author link) - funnel/consolidation icon, yellow
+- `grammar.png` - (source/author link) - checked-text/settings icon, yellow
+- `home.png` - (source/author link) - house icon, GREY - recolour to the
+  palette (yellow on navy, navy on light) before use
 
 Note: two icons are team-yellow (#FFDD04), two are black - recolour for
 consistency before placing (yellow works on the navy slides; use navy
