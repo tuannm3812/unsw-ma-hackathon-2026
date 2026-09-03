@@ -27,7 +27,7 @@ From Dr Songting Dong (final organizer), received 2026-08-28. Full original emai
 - [ ] Send the team's group photo alongside the slides by **2026-09-03, 5:00pm**.
 - [ ] If presenting remotely, book a quiet room and test screen-share/camera over Teams beforehand.
 
-**Field reference:** [`docs/data_dictionary.md`](docs/data_dictionary.md) documents every
+**Field reference:** [`docs/1_data_dictionary.md`](docs/1_data_dictionary.md) documents every
 column in the raw data — the official definition from the competition's data dictionary, its
 real coverage, and exactly how this project used it (predictor, outcome, clustering unit, or
 deliberately omitted, with the reasoning). Regenerate with `python3 scripts/build_data_dictionary.py`.

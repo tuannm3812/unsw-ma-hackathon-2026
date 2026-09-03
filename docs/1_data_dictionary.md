@@ -72,6 +72,49 @@ derived features).
 
 Both are recorded honestly in the Q&A pack (D6 and C10) rather than quietly fixed.
 
+## What a row actually looks like
+
+A deterministic sample spanning the speed range (loan attributes only — identifiers
+and free text are withheld, see the privacy note below):
+
+| gender | borrowerCount | loanAmount | lenderRepaymentTerm | repaymentInterval | sector | activity | country_name | region | speed_days | disb_lead |
+|---|---|---|---|---|---|---|---|---|---|---|
+| female | 1 | 300.0 | 8 | monthly | Agriculture | Farming | Philippines | Asia | 0.0 | 8.72 |
+| female | 1 | 150.0 | 8 | monthly | Agriculture | Farming | Philippines | Asia | 0.0 | 28.29 |
+| male | 1 | 825.0 | 14 | at_end | Agriculture | Livestock | Kenya | Africa | 5.02 | 8.67 |
+| female | 1 | 975.0 | 26 | monthly | Health | Personal Medical Expenses | Tajikistan | Asia | 2.25 | 12.84 |
+| female | 7 | 300.0 | 11 | at_end | Agriculture | Farming | Kenya | Africa | 19.67 | -4.31 |
+| female | 1 | 1450.0 | 14 | irregularly | Agriculture | Cattle | Kyrgyzstan | Asia | 55.92 | 24.39 |
+
+Four things this sample shows, all of which matter for how the findings are read:
+
+1. **The fast tail is real.** Rows funding in `0.00` days are small Philippine farming
+   loans filled within the hour — the reason the median (2.85d) sits far below the
+   mean (9.47d).
+2. **`disb_lead` is positive in almost every row** — the borrower already held the
+   capital that many days before the page went live. The 96.4% pre-disbursal fact is
+   visible in a six-row sample.
+3. **The group-loan penalty is visible** — the multi-borrower row funds far slower,
+   consistent with the population medians (5.7d group vs 2.6d individual).
+4. **Descriptions are field-partner prose, not borrower voice.** They are third-person
+   and formulaic — different loans share near-identical sentence structure ("X is 48
+   years old and has seven children… is in the agricultural business, farming rice").
+   This is the most intuitive evidence for the programme-effect argument in Q&A C10:
+   writing style is largely a partner house style, which is why a surviving text
+   signal such as third-person voice most plausibly measures *who wrote the page*.
+
+**Privacy note:** no raw `description` text is reproduced here. Descriptions open with
+the borrower's name and biography, and recur mid-paragraph, so automated redaction is
+not reliable enough to commit. `use` phrases (short, generic) and `whySpecial`
+(programme boilerplate covering hundreds of thousands of loans) are safe to show:
+
+| field | example (verbatim) | scope |
+|---|---|---|
+| `use` | to purchase additional sacks of fertilizers and other farm supplies. | one loan |
+| `use` | to buy fertilizers and other farm supplies. | one loan |
+| `whySpecial` | It helps this borrower grow their business. | 342,277 loans |
+| `whySpecial` | It finances smallholder farmers to purchase dairy cows, chickens, cere | 93,834 loans |
+
 ## Reproducing these numbers
 
 ```bash
