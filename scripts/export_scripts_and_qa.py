@@ -53,6 +53,7 @@ SCRIPT_BULLETS = {
 
 SLIDE_RE = re.compile(r"^### Slide (\d+) · (.+)$")
 SCRIPT_RE = re.compile(r"^> \*\*Script · (.+?) · ~(.+?)\*\* — (.+)$")
+BEAT_RE = re.compile(r"^> \*\*Beat · (.+?) · (.+?) · ~(.+?)\*\* — (.+)$")
 QA_RE = re.compile(r"^#### ([A-F]\d+) · (.+)$")
 GROUP_RE = re.compile(r"^### (.+)$")
 
@@ -103,6 +104,14 @@ def extract_scripts() -> list[dict]:
             slides[-1].update(
                 speaker=m.group(1), budget=m.group(2), script=m.group(3).strip()
             )
+            continue
+        m = BEAT_RE.match(line)
+        if m:
+            assert slides and slides[-1]["script"] is not None, "beat before its slide's script"
+            slides[-1].setdefault("beats", []).append(
+                {"name": m.group(1), "speaker": m.group(2),
+                 "budget": m.group(3), "script": m.group(4).strip()}
+            )
     assert len(slides) == EXPECTED_SLIDES, f"found {len(slides)} slides, expected {EXPECTED_SLIDES}"
     missing = [s["num"] for s in slides if s["script"] is None]
     assert not missing, f"slides without a script block: {missing}"
@@ -135,6 +144,20 @@ def write_scripts(slides: list[dict]) -> None:
                 body += [tail, ""]
         else:
             body += [spoken, ""]
+        for b in s.get("beats", []):
+            bs = b["script"].strip()
+            if bs.startswith('"') and bs.endswith('"'):
+                bs = bs[1:-1]
+            bw = len(bs.split())
+            total_words += bw
+            total_budget += parse_duration(b["budget"])
+            body += [
+                f"**{b['name']} — {b['speaker']}** · budget ~{b['budget']} · {bw} words "
+                f"(~{mmss(round(bw / MEASURED_WPM * 60))} at {MEASURED_WPM} wpm)",
+                "",
+                bs,
+                "",
+            ]
 
     at_measured = round(total_words / MEASURED_WPM * 60)
     at_presentation = round(total_words / PRESENTATION_WPM * 60)

@@ -52,7 +52,7 @@ HL_BASE = (
     "39,088", "1.81 d vs 2.88 d", "Spearman 0.559",
     "partner capital-cycle", "capital-replenishment cycle", "capital cycle",
     "pre-disbursed", "before the page goes live",
-    "no robust evidence", "not proof of no effect", "test before you ship",
+    "no robust evidence", "not proof of no effect", "test before you ship", "Test before you ship",
     "country-stratified A/B test", "descriptive pattern", "conservative heuristic",
     "2.3 vs. 7.7 days", "ROC AUC 0.90", "AUC 0.90", "t(1)", "12.7, not 1.96",
 )
