@@ -12,6 +12,8 @@ regenerated 2026-08-31 from the final verified content:
 | `notebook-2-full-dataset-modeling-vi.pdf` | Vietnamese translation of Notebook 2, styled Typst render (`notebook-2-full-dataset-modeling-vi.typ`) |
 | `beyond-a-good-story-deck-brief.pdf` | `docs/presentation/deck_content.md` (slides + scripts + backup blocks) |
 | `question-time-report-and-qa.pdf` | `docs/presentation/qa_pack.md` |
+| `notebook-1-full-dataset-eda-vi.pdf` (+ `.typ` source) | team-authored Vietnamese translation of Notebook 1 |
+| `notebook-2-full-dataset-modeling-vi.pdf` (+ `.typ` source) | team-authored Vietnamese translation of Notebook 2 |
 
 Not part of the competition submission (slides only) - these are for team
 review and Q&A preparation.
