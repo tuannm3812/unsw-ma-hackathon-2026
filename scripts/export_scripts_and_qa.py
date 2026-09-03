@@ -28,6 +28,29 @@ EXPECTED_SLIDES = 10
 MEASURED_WPM = 130
 PRESENTATION_WPM = 140
 
+# Four scripts enumerate parallel items in prose. The rehearsal copy breaks
+# those into bullets so a presenter can find their place at a glance; the deck
+# brief and the pptx speaker notes keep the spoken paragraph unchanged.
+# "items" are the exact substrings each bullet starts at, "tail" the substring
+# where prose resumes. split_bullets() asserts the pieces rejoin to the source
+# text character for character, so this can never alter a spoken word.
+SCRIPT_BULLETS = {
+    3: {"items": ["For prediction:", "For the framing claims:"],
+        "tail": "Most headline-looking results did not survive."},
+    6: {"items": ["Urgency language looked like",
+                  "Family framing \u2014 and here our own first version",
+                  "Sentiment is the honest illustration:"],
+        "tail": "We'd rather report no robust evidence"},
+    8: {"items": ["One: don't ship writing tips",
+                  "Two \u2014 an experiment, not an action",
+                  "Three \u2014 review, not change"],
+        "tail": "And the classifier stays a prototype"},
+    9: {"items": ["Association, never causation",
+                  "We measure how fast funded loans fund",
+                  "And our framing measures are transparent"],
+        "tail": "We'd rather you know exactly"},
+}
+
 SLIDE_RE = re.compile(r"^### Slide (\d+) · (.+)$")
 SCRIPT_RE = re.compile(r"^> \*\*Script · (.+?) · ~(.+?)\*\* — (.+)$")
 QA_RE = re.compile(r"^#### ([A-F]\d+) · (.+)$")
@@ -43,6 +66,24 @@ def parse_duration(text: str) -> int:
 
 def mmss(seconds: int) -> str:
     return f"{seconds // 60}:{seconds % 60:02d}"
+
+
+def split_bullets(spoken: str, spec: dict) -> tuple[str, list[str], str]:
+    """Cut one spoken paragraph into lead-in, bullets, and closing prose."""
+    marks = list(spec["items"]) + ([spec["tail"]] if spec["tail"] else [])
+    cuts = []
+    for mark in marks:
+        assert spoken.count(mark) == 1, f"marker not unique: {mark!r}"
+        cuts.append(spoken.index(mark))
+    assert cuts == sorted(cuts), f"markers out of order: {marks}"
+    bounds = [0] + cuts + [len(spoken)]
+    pieces = [spoken[a:b] for a, b in zip(bounds, bounds[1:])]
+    assert "".join(pieces) == spoken, "bullet split lost or altered text"
+    lead = pieces[0].strip()
+    tail = pieces[-1].strip() if spec["tail"] else ""
+    items = [x.strip() for x in (pieces[1:-1] if spec["tail"] else pieces[1:])]
+    assert lead and all(items), "empty lead-in or bullet"
+    return lead, items, tail
 
 
 def extract_scripts() -> list[dict]:
@@ -86,9 +127,14 @@ def write_scripts(slides: list[dict]) -> None:
             f"**{s['speaker']}** · budget ~{s['budget']} · {words} words "
             f"(~{mmss(round(words / MEASURED_WPM * 60))} at {MEASURED_WPM} wpm)",
             "",
-            spoken,
-            "",
         ]
+        if s["num"] in SCRIPT_BULLETS:
+            lead, items, tail = split_bullets(spoken, SCRIPT_BULLETS[s["num"]])
+            body += [lead, ""] + [f"- {x}" for x in items] + [""]
+            if tail:
+                body += [tail, ""]
+        else:
+            body += [spoken, ""]
 
     at_measured = round(total_words / MEASURED_WPM * 60)
     at_presentation = round(total_words / PRESENTATION_WPM * 60)

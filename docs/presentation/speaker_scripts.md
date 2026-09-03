@@ -24,7 +24,12 @@ Why should a marketing audience care? Because on Kiva, the lender is the custome
 
 **Tuan** · budget ~65s · 110 words (~0:51 at 130 wpm)
 
-Two disciplines before any findings — because in a dataset this size it is dangerously easy to find things that aren't there. For prediction: train only on the past, score only on loans posted in 2024–25 — the models never see the future they're graded on. For the framing claims: every 'significant' result had to survive country-clustered standard errors — ten thousand loans from one country are not ten thousand independent customers — and where a result rested on just a couple of countries, an even harsher few-cluster screen on top. Most headline-looking results did not survive. Hold that thought while Sophia shows you what the market itself looks like.
+Two disciplines before any findings — because in a dataset this size it is dangerously easy to find things that aren't there.
+
+- For prediction: train only on the past, score only on loans posted in 2024–25 — the models never see the future they're graded on.
+- For the framing claims: every 'significant' result had to survive country-clustered standard errors — ten thousand loans from one country are not ten thousand independent customers — and where a result rested on just a couple of countries, an even harsher few-cluster screen on top.
+
+Most headline-looking results did not survive. Hold that thought while Sophia shows you what the market itself looks like.
 
 ## Slide 4 · A marketplace that hasn't recovered
 
@@ -42,7 +47,13 @@ And what drives it is structure. Loan amount and repayment terms correlate with 
 
 **Tuan** · budget ~1m50s · 200 words (~1:32 at 130 wpm)
 
-So: does the story matter? Our honest answer: no narrative result is robust enough across specifications to support a recommendation. Urgency language looked like a universal win — significant at p below 0.001. Cluster by country, and it collapses to 0.44. Gone. Family framing — and here our own first version got it wrong: we tested whether regions differ from Africa, which is not the same as whether family framing helps within a region. Corrected, two pooled categories — Palestine plus Yemen, and Honduras plus Nicaragua — do show faster funding in every fit we ran. But each rests on exactly two countries, and against a deliberately harsh few-cluster screen — a conservative heuristic, not calibrated inference: a t distribution with one degree of freedom, critical value 12.7, not 1.96 — neither is significant: p between 0.06 and 0.21. So we report a hypothesis worth testing, not a finding. Sentiment is the honest illustration: it survives country clustering in one of our two specifications and not the other — genuinely open, robust in neither direction. We'd rather report no robust evidence than one exciting result we can't defend — because a recommendation you'd ship to real borrowers deserves that bar.
+So: does the story matter? Our honest answer: no narrative result is robust enough across specifications to support a recommendation.
+
+- Urgency language looked like a universal win — significant at p below 0.001. Cluster by country, and it collapses to 0.44. Gone.
+- Family framing — and here our own first version got it wrong: we tested whether regions differ from Africa, which is not the same as whether family framing helps within a region. Corrected, two pooled categories — Palestine plus Yemen, and Honduras plus Nicaragua — do show faster funding in every fit we ran. But each rests on exactly two countries, and against a deliberately harsh few-cluster screen — a conservative heuristic, not calibrated inference: a t distribution with one degree of freedom, critical value 12.7, not 1.96 — neither is significant: p between 0.06 and 0.21. So we report a hypothesis worth testing, not a finding.
+- Sentiment is the honest illustration: it survives country clustering in one of our two specifications and not the other — genuinely open, robust in neither direction.
+
+We'd rather report no robust evidence than one exciting result we can't defend — because a recommendation you'd ship to real borrowers deserves that bar.
 
 ## Slide 7 · Beyond keywords
 
@@ -54,13 +65,25 @@ One more layer before the recommendations — we went past keyword counting. Top
 
 **Sophia** · budget ~2m · 264 words (~2:02 at 130 wpm)
 
-Three moves for the platform, one for borrowers — and notice the verbs, because the evidence sets them. One: don't ship writing tips — a firm don't, because a robust null is the one thing we did find. For the content team that's a build spared; for borrowers, it's not being coached into copy we found no robust evidence for — and the timing advice belongs to field partners, not borrowers: a bigger ask sits on the platform longer — two days for the smallest loans against nineteen for the largest — and since 96% of loans in this data are already disbursed before the page even goes live, that is a partner capital-cycle fact, not a borrower's waiting time. Which is also why we are not telling anyone to ask for less. Two — an experiment, not an action, because there we have a pattern we could not confirm: for the growth team and the field partners in exactly four markets — Palestine, Yemen, Honduras, Nicaragua — run the country-stratified A/B test: family-framing prompt versus standard at listing. test before you ship. Three — review, not change, because these are associations and not causes: for the product team, the structural gaps are the real levers — how the consistently slower sectors and regions get surfaced and supported — because those gaps are ten times any wording effect. And the classifier stays a prototype, not a deployment — a retrospective ranking prototype among funded loans — AUC 0.90 on strictly future data — so data science retrains on all listings, including expired ones, first. 
+Three moves for the platform, one for borrowers — and notice the verbs, because the evidence sets them.
+
+- One: don't ship writing tips — a firm don't, because a robust null is the one thing we did find. For the content team that's a build spared; for borrowers, it's not being coached into copy we found no robust evidence for — and the timing advice belongs to field partners, not borrowers: a bigger ask sits on the platform longer — two days for the smallest loans against nineteen for the largest — and since 96% of loans in this data are already disbursed before the page even goes live, that is a partner capital-cycle fact, not a borrower's waiting time. Which is also why we are not telling anyone to ask for less.
+- Two — an experiment, not an action, because there we have a pattern we could not confirm: for the growth team and the field partners in exactly four markets — Palestine, Yemen, Honduras, Nicaragua — run the country-stratified A/B test: family-framing prompt versus standard at listing. test before you ship.
+- Three — review, not change, because these are associations and not causes: for the product team, the structural gaps are the real levers — how the consistently slower sectors and regions get surfaced and supported — because those gaps are ten times any wording effect.
+
+And the classifier stays a prototype, not a deployment — a retrospective ranking prototype among funded loans — AUC 0.90 on strictly future data — so data science retrains on all listings, including expired ones, first.
 
 ## Slide 9 · What this can't tell us
 
 **Sophia** · budget ~35s · 63 words (~0:29 at 130 wpm)
 
-Three honest limits. Association, never causation — nobody randomly assigned writing styles. We measure how fast funded loans fund — not whether a loan funds at all. And our framing measures are transparent, simple rules — not every nuance of persuasion. We'd rather you know exactly what this can and cannot say — that's what makes the parts we do claim worth trusting.
+Three honest limits.
+
+- Association, never causation — nobody randomly assigned writing styles.
+- We measure how fast funded loans fund — not whether a loan funds at all.
+- And our framing measures are transparent, simple rules — not every nuance of persuasion.
+
+We'd rather you know exactly what this can and cannot say — that's what makes the parts we do claim worth trusting.
 
 ## Slide 10 · Closing
 

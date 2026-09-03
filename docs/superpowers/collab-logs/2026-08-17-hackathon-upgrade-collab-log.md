@@ -2078,3 +2078,17 @@ Two corrections fell out of building it:
 - **Q&A D6 sits out of place in the source**, appended after the judging-criteria and traceability sections rather than with D1–D5. The generator groups by question letter rather than by nearest preceding heading, so the reading copy files it under Methods & data; the source ordering is unchanged and the file says so.
 
 Also deduplicated two rows in `docs/pdf/README.md` (the Vietnamese notebook PDFs were listed twice). Verified: `python3 -m pytest -q` → 114 passed; both new PDFs rasterised and read at page 1.
+
+**Claude — Rehearsal copy: parallel items bulleted, keywords highlighted (2026-09-03, evening)**
+
+Four of the ten scripts enumerate parallel items in prose, which is hard to find your place in under pressure. `scripts/export_scripts_and_qa.py` now breaks those into bullets **in the rehearsal copy only** — Slide 3 (two disciplines), Slide 6 (urgency / family framing / sentiment), Slide 8 (the three moves), Slide 9 (three honest limits). The deck brief and the pptx speaker notes keep the spoken paragraph unchanged, so nothing that feeds the submitted deck moved.
+
+The split is declarative, not heuristic: `SCRIPT_BULLETS` names the exact substring each bullet starts at and where prose resumes, and `split_bullets()` asserts the pieces rejoin to the source **character for character** before writing. It also asserts each marker occurs exactly once and appears in order. The word count is unchanged at 1,137, which is the check that the transform is presentation-only.
+
+Highlighting is now per-document in `render_review_pdfs.py`: `HL_BASE` applies to all four PDFs, `HL_EXTRA` adds the rehearsal-specific terms (the load-bearing numbers, and the verb that sets each recommendation — *don't ship writing tips*, *an experiment, not an action*, *review, not change*, *prototype, not a deployment*). Marking those in the two long-form documents would have been noise.
+
+One real bug found while verifying: pandoc's typst writer escapes apostrophes as `\'`, so `don't ship writing tips` silently never matched — the term rendered unhighlighted while its neighbours did. The renderer now derives the escaped variant of any term containing an apostrophe. Caught by rasterising the page rather than trusting the term list.
+
+Verified: `python3 -m pytest -q` → 114 passed; all three pages of `speaker-scripts.pdf` rasterised and read. All four PDFs synced to iCloud, Google Drive and `docs/pdf/` with SHA-256 equality confirmed across the three copies.
+
+**Noted, not fixed** — Slide 8's script contains a lowercase sentence start ("at listing. test before you ship.") and a trailing space. Both live in the deck brief and the pptx speaker notes, so correcting them touches the submitted deck's notes; left for the team to decide.

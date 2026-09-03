@@ -38,6 +38,35 @@ DOCS = [
 ]
 
 
+# Yellow highlighting in the PDF: the HTML artifacts use <mark class="kw">;
+# markdown only carries bold, so the same terms are wrapped in typst
+# #highlight() here. Applied longest-first so a phrase is never broken by a
+# shorter substring inside it.
+HL_BASE = (
+    "96.4%", "96% of loans", "median 24.2 days", "24.2 days", "median 24 days",
+    "0.2\u201330.9", "0.2-30.9", "0.2 to 30.9", "programme/partner label", "programme label",
+    "39,088", "1.81 d vs 2.88 d", "Spearman 0.559",
+    "partner capital-cycle", "capital-replenishment cycle", "capital cycle",
+    "pre-disbursed", "before the page goes live",
+    "no robust evidence", "not proof of no effect", "test before you ship",
+    "country-stratified A/B test", "descriptive pattern", "conservative heuristic",
+    "2.3 vs. 7.7 days", "ROC AUC 0.90", "AUC 0.90", "t(1)", "12.7, not 1.96",
+)
+
+# Per-document additions. The rehearsal copy wants the load-bearing numbers
+# and the verbs that set each recommendation; marking those in the four
+# long-form prep documents as well would be noise.
+HL_EXTRA = {
+    "speaker-scripts.pdf": (
+        "1.45 million", "46% of loans", "under a third", "minus 0.3 points",
+        "2.3 days", "7.7", "ten times", "p below 0.001", "collapses to 0.44",
+        "eight coherent story themes", "ninefold",
+        "don't ship writing tips", "an experiment, not an action",
+        "review, not change", "prototype, not a deployment",
+        "Association, never causation",
+    ),
+}
+
 def typst_string(value: str) -> str:
     return '"' + value.replace("\\", "\\\\").replace('"', '\\"') + '"'
 
@@ -63,19 +92,11 @@ def render(src: Path, out: Path, session: str, topic: str) -> None:
              "--wrap=preserve", "-o", str(body)],
             check=True,
         )
-        # Yellow highlighting in the PDF: the HTML artifacts use
-        # <mark class="kw">; markdown only carries bold, so the same terms
-        # are wrapped in typst #highlight() here. Longest-first so a phrase
-        # is never broken by a shorter substring inside it.
-        HL = ["96.4%", "96% of loans", "median 24.2 days", "24.2 days", "median 24 days",
-              "0.2\u201330.9", "0.2-30.9", "0.2 to 30.9", "programme/partner label", "programme label",
-              "39,088", "1.81 d vs 2.88 d", "Spearman 0.559",
-              "partner capital-cycle", "capital-replenishment cycle", "capital cycle",
-              "pre-disbursed", "before the page goes live",
-              "no robust evidence", "not proof of no effect", "test before you ship",
-              "country-stratified A/B test", "descriptive pattern", "conservative heuristic",
-              "2.3 vs. 7.7 days", "ROC AUC 0.90", "AUC 0.90", "t(1)", "12.7, not 1.96"]
-        HL.sort(key=len, reverse=True)
+        # pandoc's typst writer escapes apostrophes as \', so a term
+        # carrying one has to be matched in that form too.
+        _terms = HL_BASE + HL_EXTRA.get(out.name, ())
+        _terms += tuple(t.replace("'", "\\'") for t in _terms if "'" in t)
+        HL = sorted(set(_terms), key=len, reverse=True)
         _out, _in_raw = [], False
         for _ln in body.read_text(encoding="utf-8").split("\n"):
             _st = _ln.strip()
