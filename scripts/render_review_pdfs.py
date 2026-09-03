@@ -1,0 +1,129 @@
+#!/usr/bin/env python3
+"""Render the hackathon review documents to styled PDFs via the uts-mdsi
+typst helper's template (Markdown --pandoc--> Typst --typst--> PDF).
+
+Reuses scripts/templates/lecture-notes.typ from the uts-mdsi repo verbatim;
+this only supplies hackathon metadata instead of lecture metadata, exactly
+the way render_lecture_notes.py does for lecture notes.
+"""
+import re
+import subprocess
+import tempfile
+from pathlib import Path
+
+UTS = Path("/Users/tuannm3812/Documents/GitHub/1. Study/uts-mdsi")
+TEMPLATE = UTS / "scripts/templates/lecture-notes.typ"
+CODE_THEME = UTS / "scripts/templates/lecture-notes.tmTheme"
+REPO = Path("/Users/tuannm3812/Documents/GitHub/4. Training/unsw-ma-hackathon-2026")
+OUT_DIR = Path(
+    "/Users/tuannm3812/Library/Mobile Documents/com~apple~CloudDocs/"
+    "01_Study/UNSW MA Hackathon 2026 Review"
+)
+FONT_PATHS = (
+    Path("/Applications/Google Drive.app/Contents/Resources"),
+    Path("/System/Library/Fonts"),
+)
+
+DOCS = [
+    # (markdown source, output name, header 'session' slot, topic)
+    (REPO / "docs/presentation/qa_pack.md", "question-time-report-and-qa.pdf",
+     "Final Round", "Question Time - Report & Q&A Prep"),
+    (REPO / "docs/presentation/deck_content.md", "beyond-a-good-story-deck-brief.pdf",
+     "Final Round", "Beyond a Good Story - Deck Content Brief"),
+]
+
+
+def typst_string(value: str) -> str:
+    return '"' + value.replace("\\", "\\\\").replace('"', '\\"') + '"'
+
+
+def render(src: Path, out: Path, session: str, topic: str) -> None:
+    with tempfile.TemporaryDirectory() as tmpdir:
+        tmp = Path(tmpdir)
+        # Internal anchor links ([text](#anchor)) are web-page navigation;
+        # the anchors don't exist as Typst labels, so unwrap them to text.
+        md = src.read_text(encoding="utf-8")
+        md = "\n".join(
+            ln for ln in md.split("\n")
+            if not re.fullmatch(r"(\s*\[[^\]]+\]\(#[A-Za-z0-9_-]+\)\s*)+", ln)
+        )
+        md = re.sub(r"\[([^\]]+)\]\(#[A-Za-z0-9_-]+\)", r"\1", md)
+        cleaned = tmp / "cleaned.md"
+        cleaned.write_text(md, encoding="utf-8")
+        body = tmp / "body.typ"
+        # gfm (not the lecture helper's tex_math_dollars variant): these docs
+        # are GitHub-flavoured markdown with pipe tables and no mathematics.
+        subprocess.run(
+            ["pandoc", str(cleaned), "-f", "gfm", "-t", "typst",
+             "--wrap=preserve", "-o", str(body)],
+            check=True,
+        )
+        # Yellow highlighting in the PDF: the HTML artifacts use
+        # <mark class="kw">; markdown only carries bold, so the same terms
+        # are wrapped in typst #highlight() here. Longest-first so a phrase
+        # is never broken by a shorter substring inside it.
+        HL = ["96.4%", "96% of loans", "median 24.2 days", "24.2 days", "median 24 days",
+              "0.2\u201330.9", "0.2-30.9", "programme/partner label", "programme label",
+              "39,088", "1.81 d vs 2.88 d", "Spearman 0.559",
+              "partner capital-cycle", "capital-replenishment cycle", "capital cycle",
+              "pre-disbursed", "before the page goes live",
+              "no robust evidence", "not proof of no effect", "test before you ship",
+              "country-stratified A/B test", "descriptive pattern", "conservative heuristic",
+              "2.3 vs. 7.7 days", "ROC AUC 0.90", "AUC 0.90", "t(1)", "12.7, not 1.96"]
+        HL.sort(key=len, reverse=True)
+        _out, _in_raw = [], False
+        for _ln in body.read_text(encoding="utf-8").split("\n"):
+            _st = _ln.strip()
+            # never touch: heading labels <...>, headings, raw/code blocks,
+            # or any line carrying a typst string literal we could unbalance
+            if _st.startswith("```"):
+                _in_raw = not _in_raw
+                _out.append(_ln); continue
+            if (_in_raw or not _st
+                    or (_st.startswith("<") and _st.endswith(">"))
+                    or _st.startswith("=")
+                    or "#raw(" in _ln or "#link(" in _ln):
+                _out.append(_ln); continue
+            for _kw in HL:
+                if _kw in _ln:
+                    _ln = _ln.replace(_kw, "\x01" + _kw + "\x02")
+            _out.append(_ln)
+        _b = ("\n".join(_out)
+              .replace("\x01", '#highlight(fill: rgb("#FFDD04"), extent: 1pt)[')
+              .replace("\x02", "]"))
+        body.write_text(_b, encoding="utf-8")
+
+        args = [
+            f"course: {typst_string('UNSW Marketing Analytics Hackathon 2026')}",
+            f"session: {typst_string(session)}",
+            f"topic: {typst_string(topic)}",
+        ]
+        if CODE_THEME.exists():
+            args.append(f"theme: {typst_string(str(CODE_THEME))}")
+        main = tmp / "main.typ"
+        main.write_text(
+            f"#import {typst_string(str(TEMPLATE))}: *\n"
+            "#show: conf.with(\n"
+            + "".join(f"  {a},\n" for a in args)
+            + ")\n\n"
+            + body.read_text(encoding="utf-8").replace(
+                "align(center)[#table(", "align(left)[#table("
+            ).replace(
+                # keep the continuation heading with its table: force it to
+                # start the next page instead of orphaning at a page bottom
+                "#strong[Numbers quick reference, continued:]",
+                "#pagebreak(weak: true)\n#strong[Numbers quick reference, continued:]",
+            ),
+            encoding="utf-8",
+        )
+        out.parent.mkdir(parents=True, exist_ok=True)
+        cmd = ["typst", "compile", str(main), str(out), "--root", "/"]
+        for fp in FONT_PATHS:
+            if fp.exists():
+                cmd += ["--font-path", str(fp)]
+        subprocess.run(cmd, check=True)
+        print(f"Wrote {out}")
+
+
+for src, name, session, topic in DOCS:
+    render(src, OUT_DIR / name, session, topic)
