@@ -37,6 +37,8 @@ DOCS = [
      "Final Round", "Q&A Answers - Question Time Copy"),
     (REPO / "docs/presentation/deck_review_notes.md", "deck-review-notes.pdf",
      "Final Round", "Deck Review Notes - Slides v2"),
+    (REPO / "docs/presentation/deck_edit_list.md", "deck-edit-list.pdf",
+     "Final Round", "Deck Edit List - Resubmission"),
 ]
 
 
@@ -54,6 +56,11 @@ HL_BASE = (
     "country-stratified A/B test", "descriptive pattern", "conservative heuristic",
     "2.3 vs. 7.7 days", "ROC AUC 0.90", "AUC 0.90", "t(1)", "12.7, not 1.96",
 )
+
+# Documents whose body is dominated by verbatim find/replace strings; those
+# render as typst raw literals, inside which #highlight() prints literally,
+# so keyword highlighting is skipped entirely.
+HL_NONE = {"deck-edit-list.pdf"}
 
 # Per-document additions. The rehearsal copy wants the load-bearing numbers
 # and the verbs that set each recommendation; marking those in the four
@@ -101,7 +108,7 @@ def render(src: Path, out: Path, session: str, topic: str) -> None:
         )
         # pandoc's typst writer escapes apostrophes as \', so a term
         # carrying one has to be matched in that form too.
-        _terms = HL_BASE + HL_EXTRA.get(out.name, ())
+        _terms = () if out.name in HL_NONE else HL_BASE + HL_EXTRA.get(out.name, ())
         _terms += tuple(t.replace("'", "\\'") for t in _terms if "'" in t)
         HL = sorted(set(_terms), key=len, reverse=True)
         _out, _in_raw = [], False

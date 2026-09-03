@@ -184,7 +184,7 @@ SLIDES = [
   "APPENDIX · A3"),
  ("24h classifier — operating detail", None, None,
   ["Holdout (posted 2024-01-01 onward): 278,887 loans; 87,466 funded within 24h vs 191,421 not.",
-   "ROC AUC 0.8997 · average precision 0.8301 · Brier 0.1156 · accuracy 0.840 — no narrative features needed.",
+   "ROC AUC 0.8997 · average precision 0.8301 · Brier 0.1156 · accuracy 0.840 — structure does the work: no framing feature in the SHAP top 10 (sentiment is 11th).",
    "Boundary: negative class = 'eventually funded, but not within 24h'. Expired/withdrawn listings never enter the data — a retrospective ranking prototype among eventual funders.",
    "Path to deployment: all posted listings incl. expired/withdrawn outcomes -> define operational target + censoring window -> retrain, validate -> threshold, calibration, fairness, prospective test."],
   None,
