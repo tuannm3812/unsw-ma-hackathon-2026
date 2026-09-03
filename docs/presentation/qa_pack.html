@@ -368,6 +368,13 @@
 
 </section>
 
+<div class="qa"><div class="qline"><span class="qnum">C9</span><h4>You present four narrative measures. Did you audit the rest of your text features? <span class="hard">HARD</span></h4></div>
+<div class="label">Answer</div>
+<p class="answer">Yes — and one signal came back. We re-tested every engineered text feature under richer controls than the primary model uses: country and activity fixed effects, finer time controls, country-clustered standard errors, and Benjamini-Hochberg correction across the whole family. Three things came out of it. The framing family is jointly significant in that specification. Most individual measures still are not — family, urgency and sentiment all fail after correction, which is consistent with what we present. And one does survive: third-person voice, in the duration model, at an FDR-adjusted p of 0.012. We are not presenting that as a finding, for two reasons. It does not replicate in the 24-hour model, where the sign reverses. And with country fixed effects in the specification, it plausibly tracks <em>who wrote the description</em> — Kiva descriptions prepared by field partners are third-person by convention — rather than a persuasion choice a borrower makes. It is the strongest candidate for the next round of testing, which is exactly where we would put it.</p>
+<div class="label">Backup</div>
+<p class="backup">Expanded sensitivity (Frisch-Waugh-Lovell with country + activity fixed effects, 48 country clusters, BH-FDR): joint family Wald tests — framing p = 0.000014 (duration) / 0.000073 (24h); description-form 0.000114 / 0.0079; sentiment 0.0128 / 0.0608. <code>third_person_mentions</code>: duration coef −0.0090, clustered p = 0.00048, FDR p = 0.0124; 24h coef +0.0015, FDR p = 0.227. Family FDR 0.50, urgency 0.63, sentiment compound 0.45.</p>
+<div class="trap"><strong>Trap:</strong> don't hide it. Volunteering an audit that found something is far stronger than being caught not having looked.</div></div>
+
 <section id="qa-methods">
   <h3 class="sub-sec">Methods &amp; data</h3>
 
@@ -446,6 +453,16 @@
 
 <h3 class="sub-sec">How this maps to the judging criteria</h3>
 <div class="table-wrap"><table><thead><tr><th>Criterion (20% each)</th><th>Where we earn it</th></tr></thead><tbody><tr><td>Originality of research question</td><td>We put the platform's core narrative assumption — on its only coachable lever — to a test it could fail, and it did not obtain robust support; the verification arc (three rounds, each changing the answer) is itself the original contribution</td></tr><tr><td>Analytical approach &amp; execution</td><td>Chronological holdout, country-clustered + few-cluster screening, three same-data fits compared, SHAP kept strictly complementary, every number traceable to a verified run</td></tr><tr><td>Insights &amp; communication</td><td>One message per slide, hook-first figure notes, two-presenter arc, and an honest vocabulary — “<mark class="kw">no robust evidence</mark>,” not fake certainty in either direction</td></tr><tr><td>Practical implications</td><td>Every recommendation has a named owner (content, growth + field partners, product, data science) and a stated next test; benefits framed as intended-and-testable, not assumed</td></tr><tr><td>Audience vote</td><td>The F3 one-liner, the −0.3pt “recovery,” and conceding hard questions fast — audiences reward candour</td></tr></tbody></table></div>
+
+<h3 class="sub-sec">Finding → recommendation → limitation</h3>
+<p class="lede">The answer to &ldquo;which finding supports that recommendation?&rdquo; — and note the verbs: <strong>the evidence grade sets the verb.</strong></p>
+<div class="table-wrap"><table><thead><tr><th>Finding</th><th>Evidence grade</th><th>Recommendation</th><th>Limitation</th></tr></thead><tbody>
+<tr><td>Market hasn't recovered (46→30→30)</td><td>Robust — survives clustering (p ≈ .001–.003)</td><td>Act now; four years without recovery means waiting isn't a strategy</td><td>Descriptive period comparison; can't say why; loan mix shifted too</td></tr>
+<tr><td>Structure dominates (~10×; 2.3 vs 7.7 days)</td><td>Robust — male coef survives HC3 <strong>and</strong> clustering</td><td><strong>Review</strong> the structural gaps — review, not change</td><td>Association, never causation; gender confounded with sector/amount/country</td></tr>
+<tr><td>No narrative result robust enough</td><td>Null + one unconfirmed pattern</td><td><strong>Don't</strong> ship writing tips; <strong>run</strong> the 4-market A/B test; borrowers don't over-invest in the story</td><td>Simple lexicons (attenuation); two-country problem; sentiment specification-sensitive</td></tr>
+<tr><td>Topics swing 1.5 → 13.5 days</td><td><strong>Descriptive only</strong> — unadjusted, 20K sample</td><td><em>(none — context, not an action)</em></td><td>Not a tested effect; topics track loan purpose, i.e. structure</td></tr>
+<tr><td>24h classifier AUC 0.90</td><td>Strong prediction, wrong population</td><td><strong>Prototype</strong>, then retrain — not deploy</td><td>Funded-only data; expired/withdrawn listings absent</td></tr>
+</tbody></table></div>
 
 <h2 class="sec"><span class="n">III</span> Numbers crib sheet</h2>
   <p class="lede">One table to re-read before the session. Sign conventions: duration models predict log(1+days), <strong>negative = faster</strong>; the 24-hour model predicts log-odds, <strong>positive = faster</strong>.</p>

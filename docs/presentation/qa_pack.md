@@ -248,6 +248,18 @@ Significant in exactly one of our three fits — the authoritative duration mode
 
 Haiti: 7,559 loans. Within-region slope +0.0127 (toward slower), clustered p = 0.0094 authoritative duration; p = 0.0621 notebook; p = 0.6570 authoritative 24h.
 
+#### C9 · You present four narrative measures. Did you audit the rest of your text features? `[HARD]`
+
+**Answer:**
+
+Yes — and one signal came back. We re-tested every engineered text feature under richer controls than the primary model uses: country and activity fixed effects, finer time controls, country-clustered standard errors, and Benjamini-Hochberg correction across the whole family. Three things came out of it. The framing family is jointly significant in that specification. Most individual measures still are not — family, urgency and sentiment all fail after correction, which is consistent with what we present. And one does survive: third-person voice, in the duration model, at an FDR-adjusted p of 0.012. We are not presenting that as a finding, for two reasons. It does not replicate in the 24-hour model, where the sign reverses. And with country fixed effects in the specification, it plausibly tracks *who wrote the description* — Kiva descriptions prepared by field partners are third-person by convention — rather than a persuasion choice a borrower makes. It is the strongest candidate for the next round of testing, which is exactly where we would put it.
+
+**Backup:**
+
+Expanded sensitivity (Frisch-Waugh-Lovell with country + activity fixed effects, 48 country clusters, BH-FDR): joint family Wald tests — framing p = 0.000014 (duration) / 0.000073 (24h); description-form 0.000114 / 0.0079; sentiment 0.0128 / 0.0608. `third_person_mentions`: duration coef −0.0090, clustered p = 0.00048, FDR p = 0.0124; 24h coef +0.0015, FDR p = 0.227. Family FDR 0.50, urgency 0.63, sentiment compound 0.45.
+
+**Trap:** don't hide it. Volunteering an audit that found something is far stronger than being caught not having looked.
+
 ### Methods & data
 
 #### D1 · Why OLS on log-days instead of a survival model?
@@ -355,6 +367,18 @@ Because we tested the platform's most cherished assumption on the one lever it c
 | Insights & communication | One message per slide, hook-first figure notes, two-presenter arc, and an honest vocabulary — "no robust evidence," not fake certainty in either direction |
 | Practical implications | Every recommendation has a named owner (content, growth + field partners, product, data science) and a stated next test; benefits framed as intended-and-testable, not assumed |
 | Audience vote | The F3 one-liner, the −0.3pt "recovery," and conceding hard questions fast — audiences reward candour |
+
+### Finding → recommendation → limitation
+
+The answer to "which finding supports that recommendation?" — and note the verbs: **the evidence grade sets the verb.**
+
+| Finding | Evidence grade | Recommendation | Limitation |
+|----|----|----|----|
+| Market hasn't recovered (46→30→30) | Robust — survives clustering (p ≈ .001–.003) | Act now; four years without recovery means waiting isn't a strategy | Descriptive period comparison; can't say why; loan mix shifted too |
+| Structure dominates (~10×; 2.3 vs 7.7 days) | Robust — male coef survives HC3 **and** clustering | **Review** the structural gaps — review, not change | Association, never causation; gender confounded with sector/amount/country |
+| No narrative result robust enough | Null + one unconfirmed pattern | **Don't** ship writing tips; **run** the 4-market A/B test; borrowers don't over-invest in the story | Simple lexicons (attenuation); two-country problem; sentiment specification-sensitive |
+| Topics swing 1.5 → 13.5 days | **Descriptive only** — unadjusted, 20K sample | *(none — it's context, not an action)* | Not a tested effect; topics track loan purpose, i.e. structure |
+| 24h classifier AUC 0.90 | Strong prediction, wrong population | **Prototype**, then retrain — not deploy | Funded-only data; expired/withdrawn listings absent |
 
 ## Part III · Numbers crib sheet
 
