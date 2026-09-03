@@ -182,3 +182,4 @@ data/**/*.parquet
 # Virtual Environment
 .venv/
 venv/
+docs/presentation/slides_draft.pdf

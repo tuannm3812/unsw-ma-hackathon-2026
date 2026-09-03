@@ -12,6 +12,8 @@
 - Team Cultural Blend  ·  Kiva loan data  ·  1.45 million real loans (2016–2025)
 
 > **Script** - (Tuan, ~30s) Good morning — we're Cultural Blend: I'm Tuan, and my teammate Sophia will take you through what this means for the business. Kiva is built on stories — every loan page leads with one, the way a landing page leads with copy. We asked 1.45 million real loans a single question: does the story actually move the money?
+>
+> **[Sources]** reports/generated_full_dataset/association_summary.txt (authoritative numbers); docs/presentation/deck_content.md SS2 numbers table
 
 ## Slide 2 - The question
 
@@ -22,6 +24,8 @@
 - Why it matters: framing is the one thing a platform can coach — loan size, sector and geography can't be rewritten after the fact.
 
 > **Script** - (Tuan, ~50s) Why should a marketing audience care? Because on Kiva, the lender is the customer and the loan page is the product page. Loan size, sector, geography — fixed at listing. The story is the one element a platform can coach, test, and optimise — classic conversion territory. So: when a story leans on family, competence, or urgency, does the loan fund faster? And does that depend on who's asking, and when? That's a testable claim — so we tested it, hard.
+>
+> **[Sources]** reports/generated_full_dataset/association_summary.txt (authoritative numbers); docs/presentation/deck_content.md SS2 numbers table
 
 ## Slide 3 - How we stress-tested our findings
 
@@ -130,12 +134,18 @@
 - Framing measured with transparent, simple rules — not every nuance of persuasive writing.
 
 > **Script** - (Sophia, ~35s) Three honest limits. Association, never causation — nobody randomly assigned writing styles. We measure how fast funded loans fund — not whether a loan funds at all. And our framing measures are transparent, simple rules — not every nuance of persuasion. We'd rather you know exactly what this can and cannot say — that's what makes the parts we do claim worth trusting.
+>
+> **[Sources]** reports/generated_full_dataset/association_summary.txt (authoritative numbers); docs/presentation/deck_content.md SS2 numbers table
 
 ## Slide 10 - (closing / divider)
 
 *Eyebrow:* `CLOSING`
 
+*Closing quote (rendered on-slide):* “The story barely registers. The structure carries the signal.”
+
 > **Script** - (Both, ~20s) (Sophia) In this data, the story barely registers — the structure carries the signal. (Tuan) And testing hard enough to say, honestly, that there is no robust evidence for the story — that's worth more to a platform than a good-sounding tip. Thank you — we're happy to take your questions.
+>
+> **[Sources]** reports/generated_full_dataset/association_summary.txt (authoritative numbers); docs/presentation/deck_content.md SS2 numbers table
 
 ## Appendix divider - Appendix
 
@@ -143,6 +153,8 @@
 *Subtitle:* Q&A backup — not part of the 10-minute presentation.
 
 > **Script** - Divider only. Everything after this slide exists to be pulled up during Q&A if a question calls for it.
+>
+> **[Sources]** reports/generated_full_dataset/association_summary.txt (authoritative numbers); docs/presentation/deck_content.md SS2 numbers table
 
 ## Appendix A1 - The two-country problem, in full
 
@@ -203,4 +215,6 @@
 - Path to deployment: all posted listings incl. expired/withdrawn outcomes -> define operational target + censoring window -> retrain, validate -> threshold, calibration, fairness, prospective test.
 
 > **Script** - Backup for classifier questions: exact metrics, class balance, and the population boundary stated before anyone asks.
+>
+> **[Sources]** reports/generated_full_dataset/association_summary.txt (authoritative numbers); docs/presentation/deck_content.md SS2 numbers table
 

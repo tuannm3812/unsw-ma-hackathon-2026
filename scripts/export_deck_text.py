@@ -53,11 +53,12 @@ for i, (title, sub, big, bullets, chart, script, eyebrow) in enumerate(gen.SLIDE
             lines.append(f"*Caption:* **Figure {no}.** {name}")
             lines.append(f"*Notes:* {notes}")
         lines.append("")
+    if i == 10:
+        lines.append("*Closing quote (rendered on-slide):* " + " ".join(gen.CLOSING_LINES))
+        lines.append("")
     lines.append(f"> **Script** - {script}")
-    src = gen.SOURCES.get(i)
-    if src:
-        lines.append(">")
-        lines.append(f"> **[Sources]** {src}")
+    lines.append(">")
+    lines.append(f"> **[Sources]** {gen.SOURCES.get(i, gen.DEFAULT_SOURCE)}")
     lines.append("")
 
 OUT.write_text("\n".join(lines) + "\n", encoding="utf-8")

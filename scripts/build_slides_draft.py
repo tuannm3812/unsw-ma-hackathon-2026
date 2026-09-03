@@ -68,6 +68,10 @@ FIGS = {
          "Loan amount correlates ~7x stronger with speed than the best narrative signal (0.429 vs 0.058). EDA \u00a79 printed correlation table."),
 }
 
+DEFAULT_SOURCE = ("reports/generated_full_dataset/association_summary.txt (authoritative numbers); docs/presentation/deck_content.md SS2 numbers table")
+
+CLOSING_LINES = ["\u201cThe story barely registers.", "The structure carries the signal.\u201d"]
+
 SOURCES = {
     3: "Split schematic drawn from analysis_summary.json split sizes (train 1,174,953 / holdout 278,887; boundary 2024-01-01).",
     4: "Chart rebuilt from EDA SS4 printed shares (0.460/0.303/0.300) and period counts; association_summary.txt audit trail.",
@@ -235,7 +239,7 @@ def build(out_path: str) -> None:
         elif i == 10:
             rect(sl, Inches(5.87), Inches(1.7), Inches(1.6), Pt(4), AMBER)
             tf = box(sl, Inches(1.2), Inches(2.5), Inches(10.9), Inches(2.6))
-            for j, line in enumerate(["“The story barely registers.", "The structure carries the signal.”"]):
+            for j, line in enumerate(CLOSING_LINES):
                 p = tf.paragraphs[0] if j == 0 else tf.add_paragraph()
                 p.text = line; style(p, 42, CREAM, DISPLAY, bold=True, align=PP_ALIGN.CENTER)
             tf = box(sl, Inches(1.2), Inches(5.3), Inches(10.9), Inches(0.7))
@@ -315,21 +319,22 @@ def build(out_path: str) -> None:
             tf = box(sl, Inches(0.75), Inches(7.05), Inches(9.0), Inches(0.35))
             tf.text = "Cultural Blend · Kiva 2016–2025 · 1.45M loans"
             style(tf.paragraphs[0], 10, MUTED, MONO)
-        src_note = SOURCES.get(i, "reports/generated_full_dataset/association_summary.txt (authoritative numbers); docs/presentation/deck_content.md SS2 numbers table")
+        src_note = SOURCES.get(i, DEFAULT_SOURCE)
         sl.notes_slide.notes_text_frame.text = script + "\n\n[Sources] " + src_note
     prs.save(out_path)
     # Post-build self-check: speaker-tagged script openers and a [Sources]
     # block on every notes page (fails the build on any drift).
     check = Presentation(out_path)
-    expected_openers = [t[5][:22] for t in SLIDES]
     for idx, slide in enumerate(check.slides):
+        i = idx + 1
+        expected = SLIDES[idx][5] + "\n\n[Sources] " + SOURCES.get(i, DEFAULT_SOURCE)
         notes = slide.notes_slide.notes_text_frame.text
-        if not notes.startswith(expected_openers[idx]):
-            raise SystemExit(f"slide {idx + 1}: notes opener drifted: {notes[:40]!r}")
-        if "[Sources]" not in notes:
-            raise SystemExit(f"slide {idx + 1}: notes missing [Sources] block")
+        if notes != expected:
+            raise SystemExit(
+                f"slide {i}: notes drifted from source structures\n"
+                f"  expected: {expected[:60]!r}...\n  got:      {notes[:60]!r}...")
     print("wrote", out_path, Path(out_path).stat().st_size,
-          "bytes; notes self-check passed for", len(expected_openers), "slides")
+          "bytes; exact notes self-check passed for", len(SLIDES), "slides")
 
 
 if __name__ == "__main__":

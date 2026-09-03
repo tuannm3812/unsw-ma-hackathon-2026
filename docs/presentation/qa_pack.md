@@ -248,7 +248,7 @@ A survival model earns its complexity when observations are censored — loans s
 
 **Answer:**
 
-It's a real scope limit and we state it: our outcome is *how fast a loan that funded got funded*, not whether loans fund. If some loans expire unfunded and framing affects *that*, we can't see it, and our associations are conditional on reaching full funding. What we can say is that within our question the data is essentially complete — only six loans out of **1.45 million** were dropped, for timestamp inconsistencies (funded date before posting), not missingness — and the practical outputs, like the at-risk-loan flag, are about speed among posted loans, where this scope is the right one. Extending to expiry outcomes is the top of our future-work list.
+It's a real scope limit and we state it: our outcome is *how fast a loan that funded got funded*, not whether loans fund. If some loans expire unfunded and framing affects *that*, we can't see it, and our associations are conditional on reaching full funding. What we can say is that within our question the data is essentially complete — only six loans out of **1.45 million** were dropped, for timestamp inconsistencies (funded date before posting), not missingness — and the practical outputs are scoped accordingly: the classifier is a speed-ranking prototype among loans that eventually funded — using it on new postings is a hypothesis that would first need data on non-funded outcomes and prospective validation. Extending to expiry outcomes is the top of our future-work list.
 
 #### D3 · Dictionary word-counting for framing seems crude. Why not embeddings or an LLM?
 
@@ -312,19 +312,19 @@ Four things, in order. Run the **country-stratified A/B test** in the two surviv
 
 **Answer:**
 
-The sharpest question in the room, and we'll concede its premise: measurement error attenuates estimates toward zero, and that is exactly why our claim is "no robust evidence for a recommendation," never "no effect exists." But three things stop attenuation from explaining our result. First, the same crude measures *did* produce large, highly significant associations under HC3 — attenuation didn't stop signals from appearing; the clustering re-test is what removed them, and clustering corrects **dependence, not sensitivity**. Second, topic modelling is lexicon-free — no word lists at all — and it tracks what the loan is *for*, not how it's written: a completely different text instrument pointing at the same structural story. Third, at 1.45 million loans, an effect large enough to justify platform-wide copy coaching should survive attenuated measurement; an effect so small that noise hides it at this scale would struggle to clear any cost-benefit bar. The honest residual: subtler narrative dimensions could exist below our instruments' resolution — which is precisely the LLM-scored follow-up we name as future work.
+The sharpest question in the room, and we'll concede its premise: measurement error attenuates estimates toward zero, and that is exactly why our claim is "no robust evidence for a recommendation," never "no effect exists." Attenuation cannot be ruled out. Three observations explain why we still act on the result — as context, not refutation. First, the same crude measures *did* produce large, highly significant associations under HC3 — attenuation didn't stop signals from appearing; the clustering re-test is what removed them, and clustering corrects **dependence, not sensitivity**. Second, topic modelling is lexicon-free — no word lists at all — and it tracks what the loan is *for*, not how it's written: a completely different text instrument pointing at the same structural story. Third, an effect large enough to justify platform-wide copy coaching would plausibly still surface even through noisy measures at this scale — though scale is no guarantee: our own dependence argument means 1.45 million rows are far fewer independent units, and some subgroup claims rest on two country clusters. The honest residual: subtler narrative dimensions could exist below our instruments' resolution, and nothing here bounds them. Before anyone bounds economically meaningful framing effects, the dictionaries need reliability and criterion validation — or replacement with pre-validated measures; that is exactly the follow-up we name as future work.
 
 **Backup:**
 
-Attenuation shrinks coefficients toward 0 but does not inflate clustered standard errors relative to HC3 — the HC3→clustered collapse (urgency p<0.001 → ≈0.44) is a dependence phenomenon. The lexicons are validated enough to move: family mentions median ~1.4/100 words with wide spread. Topic swing 1.5→**13.5 days** shows the description text is informative — just about structure.
+Attenuation shrinks coefficients toward 0 but does not inflate clustered standard errors relative to HC3 — the HC3→clustered collapse (urgency p<0.001 → ≈0.44) is a dependence phenomenon. The lexicons are unvalidated as constructs — spread in word counts demonstrates variation, not validity. Topic swing 1.5→**13.5 days** shows the description text is informative — just about structure.
 
-**Trap:** don't say "our measures are fine." Concede attenuation immediately, then redirect to why the *pattern* of results (big-then-clustered-away, lexicon-free topics agreeing) isn't what attenuation produces.
+**Trap:** don't say "our measures are fine." Concede attenuation immediately and never claim the observations rule it out — offer them as context and land on the validation follow-up.
 
 #### F2 · You spent the whole project on storytelling and concluded it doesn't have robust effects. Why is that valuable? `[HARD]`
 
 **Answer:**
 
-Because we tested the platform's most cherished assumption on the one lever it can actually coach — and knowing where *not* to spend is one of the most commercially valuable things analytics can deliver. A platform that believed the intuitive result would fund copy-coaching programs, borrower writing guides, A/B tests of urgency phrasing — all built on an association that doesn't survive honest standard errors. Our result redirects that budget: toward the structural levers that are **ten times** larger, and toward one cheap, targeted experiment in four named markets that would settle the family-framing question properly. The organizers asked for quality over quantity of findings; a defended null on the central question, plus the map of what actually matters, is that.
+Because we tested the platform's most cherished assumption on the one lever it can actually coach — and knowing where *not* to spend is one of the most commercially valuable things analytics can deliver. A platform that believed the intuitive result would fund copy-coaching programs, borrower writing guides, A/B tests of urgency phrasing — all built on an association that doesn't survive honest standard errors. Our result redirects that budget: toward the structural levers that are **ten times** larger, and toward one cheap, targeted experiment in four named markets that would settle the family-framing question properly. The organizers asked for quality over quantity of findings; a central question answered with discipline — no writing recommendation is supported — plus the map of what actually matters, is that.
 
 **Trap:** never sound defensive about the null. The confident version of this answer is the whole presentation in miniature.
 
@@ -332,13 +332,13 @@ Because we tested the platform's most cherished assumption on the one lever it c
 
 **Answer:**
 
-"On Kiva, the story barely registers — structure carries the signal. We tested the romantic assumption four times, killed it honestly, and found where the real levers are." If there's room for one more sentence: "And that discipline — **test before you ship** — is the most transferable thing we can offer a room full of marketers."
+"On Kiva, the story barely registers — structure carries the signal. We tested the romantic assumption four times, could not find robust support for it, and found where the real levers are." If there's room for one more sentence: "And that discipline — **test before you ship** — is the most transferable thing we can offer a room full of marketers."
 
 ### How this maps to the judging criteria
 
 | Criterion (20% each) | Where we earn it |
 |----|----|
-| Originality of research question | We test — and honestly kill — the platform's core narrative assumption, on its only coachable lever; the verification arc (three rounds, each changing the answer) is itself the original contribution |
+| Originality of research question | We put the platform's core narrative assumption — on its only coachable lever — to a test it could fail, and it did not obtain robust support; the verification arc (three rounds, each changing the answer) is itself the original contribution |
 | Analytical approach & execution | Chronological holdout (never scoring the past), country-clustered + few-cluster screening, three same-data fits compared, SHAP kept strictly complementary, every number traceable to a verified run |
 | Insights & communication | One message per slide, hook-first figure notes, two-presenter arc, and an honest vocabulary — "no robust evidence," not fake certainty in either direction |
 | Practical implications | Every recommendation has a named owner (content, growth + field partners, product, data science) and a stated next test; benefits framed as intended-and-testable, not assumed |
@@ -370,6 +370,6 @@ One table to re-read before the session. Sign conventions: duration models predi
 | Topic-modeling swing | 1.5 → 13.5 days across 8 topics (\>9×) | notebook (EDA) |
 | Repayment term spread | 2–133 months, middle 50% between 8–14 | raw data |
 
-**The one-sentence close, if a question goes sideways:** "The honest summary is that we tested our own best findings four times and killed every narrative one, including the last one standing; what's left — structure dominates, and no writing rule is supported — is what we'd stake the recommendation on."
+**The one-sentence close, if a question goes sideways:** "The honest summary is that we tested our own best findings four times and withdrew every narrative recommendation, including the last one standing; what's left — structure dominates, and no writing rule is supported — is what we'd stake the recommendation on."
 
 Compiled 2026-08-29 from verified runs: Kaggle kernels v10 (EDA) and v13 (modeling), the committed `reports/generated_full_dataset/` snapshot, and the authoritative pipeline's within-region average recomputation. Companion to the deck-content brief "Beyond a Good Story".
