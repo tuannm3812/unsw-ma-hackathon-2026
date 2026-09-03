@@ -2067,3 +2067,14 @@ The team spotted that the yellow highlighting appeared in the Q&A PDF but not in
 - The §0 research-question coverage grid rendered in the PDF as ten orphan paragraphs (`Central question` / `Answered` / …) because the HTML audit grid had flattened into the markdown mirror. It is now a two-column table.
 
 Verified by rasterising page 1 of both PDFs at 70 dpi and reading them: the deck brief's first page now shows five highlighted spans in the callout and the coverage table renders correctly; the Q&A pack is unchanged. PDFs re-rendered to iCloud, mirrored to `docs/pdf/` and to Google Drive (SHA-256 match confirmed on the deck brief), and both artifacts republished to their existing URLs.
+
+**Claude — Two single-purpose reading copies extracted from the prep documents (2026-09-03, evening)**
+
+The team asked for a file holding only the spoken scripts and a file holding only the Q&A entries, so each can be read without the surrounding brief. Both are **derived**, not new content: `scripts/export_scripts_and_qa.py` parses `deck_content.md` and `qa_pack.md` and writes `docs/presentation/speaker_scripts.md` (10 scripts, 1,137 words) and `docs/presentation/qa_answers.md` (30 questions, 6 groups, 14 flagged hard). The generator asserts rather than silently emitting a short file: it fails if the slide count is not 10, if a slide carries no script block or two, if a Q&A entry has an empty body, or if a duration string will not parse. Both output files carry a "edit the source, not this file" header. `render_review_pdfs.py` now renders them alongside the other four (`speaker-scripts.pdf` 3pp, `qa-answers.pdf` 16pp).
+
+Two corrections fell out of building it:
+
+- **The deck brief's timing sentence contradicted itself**, quoting both "≈960 spoken words — about 7½ minutes" and "≈1,150 words: 8:50 / 8:12" in the same breath. The counted figure is **1,137 words: 8:45 at a measured 130 wpm, 8:07 at 140**, and it is now produced by the generator rather than asserted by hand. The duplicated "rehearse as a pair with a timer" instruction in the same paragraph was merged.
+- **Q&A D6 sits out of place in the source**, appended after the judging-criteria and traceability sections rather than with D1–D5. The generator groups by question letter rather than by nearest preceding heading, so the reading copy files it under Methods & data; the source ordering is unchanged and the file says so.
+
+Also deduplicated two rows in `docs/pdf/README.md` (the Vietnamese notebook PDFs were listed twice). Verified: `python3 -m pytest -q` → 114 passed; both new PDFs rasterised and read at page 1.
