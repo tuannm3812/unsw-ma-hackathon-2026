@@ -124,6 +124,18 @@ Pre-pandemic, 46% of loans funded within a day. During the disruption that fell 
 
 **46.0% → 30.3% → 30.0%** across 589,823 / 298,549 / 565,474 loans. The era shift survives clustering in the authoritative duration model — both post-2019 period terms significant (clustered p = 0.0014 / 0.0031), direction: slower than pre-pandemic.
 
+#### A4 · Loan amount is your strongest single predictor. So should borrowers ask for less? `[HARD]`
+
+**Answer:**
+
+No — and we want to be explicit about that, because it's the most tempting misreading of our own top feature. Loan amount is the strongest single predictor of funding *speed*: the smallest decile of loans fills in about two days, the largest in about nineteen, and it sits at the top of the model's importance ranking. But three things stop that from becoming "ask for less." Our outcome is speed, not whether a borrower got the capital they actually needed — someone who needs a thousand dollars, asks for four hundred, and funds in two days has been optimised into a worse outcome. Part of the gradient is mechanical rather than persuasive: a larger loan simply needs proportionally more lenders to complete. And the amount is typically set with a field partner against a real business need, so it belongs in the same "fixed at listing" category as sector and geography, not the coachable one. What it *is* good for is planning: if capital is needed by a date, a larger ask should be posted earlier. That's the honest borrower-facing use of our strongest predictor — timing, not persuasion.
+
+**Backup:**
+
+SHAP mean |value| 0.446 for log loan amount, top of 15; |r| = 0.429 with funding speed versus 0.058 for the strongest narrative measure. Amount-decile mean speed 2.14 → 18.56 days (smallest → largest). Repayment term is second on both measures (SHAP 0.337, r = 0.285) and is likewise partner-set, not borrower-chosen.
+
+**Trap:** the failure mode is answering the feature-importance question and stopping. Say the guardrail yourself before someone in the room says it for you.
+
 ### The headline finding
 
 #### B1 · Your key claim rests on two countries per region. Is that a finding at all? `[HARD]`
