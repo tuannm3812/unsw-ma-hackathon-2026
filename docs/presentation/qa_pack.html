@@ -249,6 +249,22 @@
 </section>
 
 <!-- ============================ PART II ============================ -->
+<h3 class="sub-sec">Late findings (evening of 3 Sep) — read this first</h3>
+<p>A final feature audit, run after the deck was submitted, surfaced three things. <strong>None changes a number on your slides.</strong> Two change how you talk about them, and both are already corrected in the scripts.</p>
+<div class="table-wrap"><table><thead><tr><th>#</th><th>What we found</th><th>What it changes</th><th>Armed in</th></tr></thead><tbody>
+<tr><td>1</td><td><strong>96.4% of loans are disbursed to the borrower <em>before</em> the page goes live</strong> (median 24.2 days earlier)</td><td>Funding speed is the <strong>field partner's capital cycle</strong>, not the borrower's wait. Never say &ldquo;helps borrowers get money faster&rdquo;</td><td>D6 · Slide 8 script</td></tr>
+<tr><td>2</td><td><strong><code>whySpecial</code> is a programme/partner label</strong> spanning 0.2–30.9 mean days across its 141 well-populated levels</td><td>The widest structural gap in the data — wider than country, activity or sector. Makes &ldquo;structure dominates&rdquo; <strong>conservative</strong></td><td>C10</td></tr>
+<tr><td>3</td><td><strong>2.7% of loans (39,088) carry no description at all</strong>, and fund <em>faster</em> (median 1.81d vs 2.88d)</td><td>An intuition check pointing the same way as the tested results. Confounded by group size — not a finding</td><td>crib sheet</td></tr>
+</tbody></table></div>
+<p>Plus one qualitative pair worth memorising: a <strong>$250 loan with a dry, formulaic description funded in under a minute</strong>, while a <strong>$1,700 refugee-programme loan carrying a genuinely moving account took 46 days</strong>. Same sector, same repayment interval. If persuasive writing drove funding speed, that pair would be reversed.</p>
+<div class="callout"><strong>The three sentences to have ready:</strong>
+<ol>
+<li>&ldquo;96% of these loans are already disbursed before the page goes live — so funding speed is the partner's capital replenishment cycle, not the borrower's wait.&rdquo;</li>
+<li>&ldquo;The widest structural gap in the whole dataset is the programme label itself — wider than country, activity or sector. That makes our &lsquo;structure dominates&rsquo; claim conservative, not aggressive.&rdquo;</li>
+<li>&ldquo;Loans with no description at all fund faster than loans with one. It's confounded, so we don't claim it — but it points the same way as everything we did test.&rdquo;</li>
+</ol></div>
+<p><strong>What did not change:</strong> every deck claim survived, and several are conservative — loan amount's rank correlation with speed is 0.559 against the 0.429 we quote, and sector's 13× spread understates country's 100×. The outcome definition matches the competition dictionary verbatim: <code>funding speed = raisedDate &minus; fundraisingDate</code>.</p>
+
 <section id="qa-audience">
   <h2 class="sec"><span class="n">II</span> Q&amp;A preparation</h2>
   <p class="lede">Format: up to three audience questions first, then judges. Audience questions skew practical and non-technical; judge questions probe methods. Each card: the spoken answer (~30–45 seconds), backup numbers if pressed, and the trap to avoid. <span class="hard">HARD</span> marks the hostile versions.</p>
@@ -503,6 +519,12 @@
         <tr><td>Sentiment</td><td class="num">median 0.89 · clustered p 0.01/0.02 authoritative vs 0.25 notebook — open</td><td>both</td></tr>
         <tr><td>Topic-modeling swing</td><td class="num">1.5 → <mark class="kw">13.5 days</mark> across 8 topics (&gt;9×)</td><td>notebook (EDA)</td></tr>
         <tr><td>Repayment term spread</td><td class="num">2–133 months, middle 50% between 8–14</td><td>raw data</td></tr>
+<tr><td>Pre-disbursed loans</td><td class="num">96.4% before fundraising opens; median lead 24.2 d</td><td>raw data</td></tr>
+<tr><td>Programme label (<code>whySpecial</code>) spread</td><td class="num">0.2 – 30.9 mean days, 141 levels ≥1k loans</td><td>raw data</td></tr>
+<tr><td>Country spread (vs region)</td><td class="num">0.2 (Nepal) – 20.5 (Senegal); region only 3.7 – 15.6</td><td>raw data</td></tr>
+<tr><td>Loans with no description</td><td class="num">39,088 (2.7%); 1.81 d vs 2.88 d median</td><td>raw data</td></tr>
+<tr><td>Loan amount rank correlation</td><td class="num">Spearman 0.559 (we quote 0.429)</td><td>raw data</td></tr>
+<tr><td>Group vs individual loans</td><td class="num">median 5.7 d (n=146,692) vs 2.6 d</td><td>raw data</td></tr>
       </tbody>
     </table>
   </div>

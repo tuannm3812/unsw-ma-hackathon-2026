@@ -88,6 +88,26 @@ An interaction coefficient tests difference-from-Africa, not "does framing do an
 - **Investigate structure, not copy**: why Water and Education loans fund in a fraction of the time Agriculture does is a platform question worth more than any style guide.
 - **Adopt the test-before-recommending discipline** — the process finding is itself the practical implication.
 
+### Late findings (evening of 3 Sep) — read this first
+
+A final feature audit, run after the deck was submitted, surfaced three things. **None changes a number on your slides.** Two change how you talk about them, and both are already corrected in the scripts.
+
+| # | What we found | What it changes | Armed in |
+|----|----|----|----|
+| 1 | **96.4% of loans are disbursed to the borrower *before* the page goes live** (median 24.2 days earlier) | Funding speed is the **field partner's capital cycle**, not the borrower's wait. Never say "helps borrowers get money faster" | D6 · Slide 8 script |
+| 2 | **`whySpecial` is a programme/partner label** spanning 0.2–30.9 mean days across its 141 well-populated levels | The widest structural gap in the data — wider than country, activity or sector. Makes "structure dominates" **conservative** | C10 |
+| 3 | **2.7% of loans (39,088) carry no description at all**, and fund *faster* (median 1.81d vs 2.88d) | An intuition check pointing the same way as the tested results. Confounded by group size — not a finding | crib sheet |
+
+Plus one qualitative pair worth memorising: a **$250 loan with a dry, formulaic description funded in under a minute**, while a **$1,700 refugee-programme loan carrying a genuinely moving account took 46 days**. Same sector, same repayment interval. If persuasive writing drove funding speed, that pair would be reversed.
+
+**The three sentences to have ready:**
+
+1. *"96% of these loans are already disbursed before the page goes live — so funding speed is the partner's capital replenishment cycle, not the borrower's wait."*
+2. *"The widest structural gap in the whole dataset is the programme label itself — wider than country, activity or sector. That makes our 'structure dominates' claim conservative, not aggressive."*
+3. *"Loans with no description at all fund faster than loans with one. It's confounded, so we don't claim it — but it points the same way as everything we did test."*
+
+**What did not change:** every deck claim survived, and several are conservative — loan amount's rank correlation with speed is 0.559 against the 0.429 we quote, and sector's 13× spread understates country's 100×. The outcome definition matches the competition dictionary verbatim: `funding speed = raisedDate − fundraisingDate`.
+
 ## Part II · Q&A preparation
 
 Format: up to three audience questions first, then judges. Audience questions skew practical and non-technical; judge questions probe methods. Each card: the spoken answer (~30–45 seconds), backup numbers if pressed, and the trap to avoid. `[HARD]` marks the hostile versions.
@@ -429,6 +449,12 @@ One table to re-read before the session. Sign conventions: duration models predi
 | Sentiment | median 0.89 · clustered p 0.01/0.02 authoritative vs 0.25 notebook — open | both |
 | Topic-modeling swing | 1.5 → 13.5 days across 8 topics (\>9×) | notebook (EDA) |
 | Repayment term spread | 2–133 months, middle 50% between 8–14 | raw data |
+| Pre-disbursed loans | 96.4% disbursed before fundraising opens; median lead 24.2 d | raw data |
+| Programme label (`whySpecial`) spread | 0.2 – 30.9 mean days across 141 levels ≥1k loans (643 values, 92% single-country) | raw data |
+| Country spread (vs region) | 0.2 (Nepal) – 20.5 (Senegal) across 38 levels; region only 3.7 – 15.6 | raw data |
+| Loans with no description | 39,088 (2.7%); median speed 1.81 d vs 2.88 d with text | raw data |
+| Loan amount rank correlation | Spearman 0.559 (we quote 0.429, Pearson on logs — conservative) | raw data |
+| Group vs individual loans | median 5.7 d (n=146,692) vs 2.6 d | raw data |
 
 **The one-sentence close, if a question goes sideways:** "The honest summary is that we tested our own best findings four times and withdrew every narrative recommendation, including the last one standing; what's left — structure dominates, and no writing rule is supported — is what we'd stake the recommendation on."
 
