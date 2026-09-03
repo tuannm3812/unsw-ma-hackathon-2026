@@ -128,7 +128,7 @@ Pre-pandemic, 46% of loans funded within a day. During the disruption that fell 
 
 **Answer:**
 
-No — and we want to be explicit about that, because it's the most tempting misreading of our own top feature. Loan amount is the strongest single predictor of funding *speed*: the smallest decile of loans fills in about two days, the largest in about nineteen, and it sits at the top of the model's importance ranking. But three things stop that from becoming "ask for less." Our outcome is speed, not whether a borrower got the capital they actually needed — someone who needs a thousand dollars, asks for four hundred, and funds in two days has been optimised into a worse outcome. Part of the gradient is mechanical rather than persuasive: a larger loan simply needs proportionally more lenders to complete. And the amount is typically set with a field partner against a real business need, so it belongs in the same "fixed at listing" category as sector and geography, not the coachable one. What it *is* good for is planning: if capital is needed by a date, a larger ask should be posted earlier. That's the honest borrower-facing use of our strongest predictor — timing, not persuasion.
+No — and we want to be explicit about that, because it's the most tempting misreading of our own top feature. Loan amount is the strongest single predictor of funding *speed*: the smallest decile of loans fills in about two days, the largest in about nineteen, and it sits at the top of the model's importance ranking. But three things stop that from becoming "ask for less." Our outcome is speed, not whether a borrower got the capital they actually needed — someone who needs a thousand dollars, asks for four hundred, and funds in two days has been optimised into a worse outcome. Part of the gradient is mechanical rather than persuasive: a larger loan simply needs proportionally more lenders to complete. And the amount is typically set with a field partner against a real business need, so it belongs in the same "fixed at listing" category as sector and geography, not the coachable one. What it *is* good for is planning — but for the field partner, not the borrower. In this data 96% of loans are already disbursed to the borrower before the page goes live, a median of 24 days earlier, so a larger ask does not make a borrower wait longer for money; it keeps partner capital tied up longer, which is what constrains the next loan.
 
 **Backup:**
 
@@ -328,7 +328,7 @@ One is the authoritative tested pipeline — versioned, unit-tested, source of t
 
 **Answer:**
 
-Four things, in order. Run the **country-stratified A/B test** in the two surviving pooled categories — it's the only way to locate which countries, if any, actually drive the pooled association and turn it into something actionable. Get expired and unfunded loans into the data, so we can model funding success, not just speed. Get a field-partner identifier, which would let us cluster at the true dependence level and probably explain part of what "country" currently absorbs. And add LLM-scored narrative dimensions alongside our transparent dictionaries — with a validation protocol, so they'd meet the same auditability bar as everything else here.
+Four things, in order. Run the **country-stratified A/B test** in the two surviving pooled categories — it's the only way to locate which countries, if any, actually drive the pooled association and turn it into something actionable. Get expired and unfunded loans into the data, so we can model funding success, not just speed. Get a field-partner identifier, which would let us cluster at the true dependence level and probably explain part of what "country" currently absorbs. And add LLM-scored narrative dimensions alongside our transparent dictionaries — with a validation protocol, so they'd meet the same auditability bar as everything else here. A fifth, which we found late: `whySpecial` has only 643 distinct values across 1.45 million loans and 92% of them sit inside a single country — it is effectively a programme or field-partner label. Clustering or fixed effects at that level is the natural next step; note that country-clustering, which we used, is the more conservative choice precisely because those groups nest inside countries.
 
 ### The questions behind the questions
 
@@ -379,6 +379,18 @@ The answer to "which finding supports that recommendation?" — and note the ver
 | No narrative result robust enough | Null + one unconfirmed pattern | **Don't** ship writing tips; **run** the 4-market A/B test; borrowers don't over-invest in the story | Simple lexicons (attenuation); two-country problem; sentiment specification-sensitive |
 | Topics swing 1.5 → 13.5 days | **Descriptive only** — unadjusted, 20K sample | *(none — it's context, not an action)* | Not a tested effect; topics track loan purpose, i.e. structure |
 | 24h classifier AUC 0.90 | Strong prediction, wrong population | **Prototype**, then retrain — not deploy | Funded-only data; expired/withdrawn listings absent |
+
+#### D6 · Most Kiva loans are pre-disbursed. Does funding speed even matter to the borrower? `[HARD]`
+
+**Answer:**
+
+This is the question that sharpens who our recommendations are for, and we checked it directly: in this dataset **96.4% of loans were disbursed to the borrower before fundraising opened**, a median of 24 days earlier. So for almost every loan on the platform, the borrower already has the capital when a lender sees the page. Funding speed is therefore not the borrower's waiting time — it is the field partner's capital-replenishment cycle. A loan that fills slowly ties up partner capital that would otherwise fund the next borrower, so the benefit chain runs: funding velocity → partner capacity → future borrowers. That is why our timing recommendation is addressed to field partners rather than borrowers, and why we are careful never to claim that faster funding gets money to *this* borrower sooner. For the remaining 3.6% — where fundraising precedes disbursal — speed does translate into the borrower's wait.
+
+**Backup:**
+
+Computed over the 1,453,840 valid rows: `fundraisingDate − disbursalDate` positive in 96.4% of cases, median 24.2 days. This does not change any estimate in the deck — the outcome variable is unchanged — it changes who the speed result is *about*.
+
+**Trap:** don't let anyone frame our work as "helping borrowers get money faster." It isn't, and saying so would misdescribe the platform's own mechanics.
 
 ## Part III · Numbers crib sheet
 
