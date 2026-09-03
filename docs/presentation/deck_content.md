@@ -11,29 +11,25 @@ When — and for whom — does a persuasive loan story actually speed up funding
 
 **Format update from the organizer (2026-08-28):** presentation is strictly timed at 10 minutes, cut off when time is up. **No background/intro slide** — the organizer introduces Kiva and the dataset to everyone, so don't spend a slide on it. Explicit instruction: **quality over quantity of findings.** Below, Slide 3 is trimmed to methods-only for this reason, and Slides 7 and 9 are marked as trim candidates if the deck needs to shrink further to comfortably fit 10 minutes.
 
+**Late findings (evening of 3 Sep) — these affect delivery, not the slides.** A final feature audit ran after the deck was submitted. **None of it changes a number on any slide**; two items change what you say, and the scripts below already carry the corrections:
+
+- **96.4% of loans are disbursed to the borrower before the page goes live** (median 24 days earlier). Funding speed is the **field partner's capital cycle**, not the borrower's wait — so Slide 8's timing advice is addressed to partners. Never say "helps borrowers get money faster." Armed in Q&A **D6**.
+- **The programme label (`whySpecial`) is the widest structural gap in the data** — 0.2 to 30.9 mean days across its 141 well-populated levels, wider than country, activity or sector. It makes Slide 5's "structure dominates" **conservative, not aggressive**. Armed in Q&A **C10**.
+- **2.7% of loans (39,088) carry no description at all — and fund faster** (median 1.81 d vs 2.88 d). An intuition check pointing the same way as the tested results; confounded by group size, so not a claim.
+
+Everything else held: every deck claim survived the audit, several of them conservatively — loan amount's rank correlation with speed is **Spearman 0.559** against the 0.429 quoted on Slide 5.
+
 ## §0 · Research question coverage
 
 Checked against the proposal's central and supporting questions before writing a single slide — every question the project committed to has a real, verified answer.
 
-Central question
-
-Answered
-
-Framing vs. structure
-
-Answered
-
-Segment differences
-
-Answered
-
-Pandemic-era shift
-
-Answered
-
-Predictive value
-
-Answered
+| Question | Status |
+|----|----|
+| Central question | Answered |
+| Framing vs. structure | Answered |
+| Segment differences | Answered |
+| Pandemic-era shift | Answered |
+| Predictive value | Answered |
 
 **One thing to know before building slides:** two sets of numbers exist in this repo — the `authoritative` full pipeline (`reports/generated_full_dataset/`) and the `notebook` versions (self-contained Kaggle notebooks, built for readability). They agree directionally on most findings, but they do **not** always agree on statistical significance — sentiment tone is significant in one pipeline and not the other (the corrected within-region family slopes agree in all fits: Asia is non-significant everywhere). Where they disagree, this brief reports the disagreement rather than picking a side. **Use the authoritative numbers on slides** — the reference table at the bottom of this document has both, clearly marked.
 

@@ -63,7 +63,7 @@ def render(src: Path, out: Path, session: str, topic: str) -> None:
         # are wrapped in typst #highlight() here. Longest-first so a phrase
         # is never broken by a shorter substring inside it.
         HL = ["96.4%", "96% of loans", "median 24.2 days", "24.2 days", "median 24 days",
-              "0.2\u201330.9", "0.2-30.9", "programme/partner label", "programme label",
+              "0.2\u201330.9", "0.2-30.9", "0.2 to 30.9", "programme/partner label", "programme label",
               "39,088", "1.81 d vs 2.88 d", "Spearman 0.559",
               "partner capital-cycle", "capital-replenishment cycle", "capital cycle",
               "pre-disbursed", "before the page goes live",
