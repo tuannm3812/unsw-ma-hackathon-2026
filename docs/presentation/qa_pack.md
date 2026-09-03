@@ -272,7 +272,12 @@ Haiti: 7,559 loans. Within-region slope +0.0127 (toward slower), clustered p = 0
 
 **Answer:**
 
-Yes — and one signal came back. We re-tested every engineered text feature under richer controls than the primary model uses: country and activity fixed effects, finer time controls, country-clustered standard errors, and Benjamini-Hochberg correction across the whole family. Three things came out of it. The framing family is jointly significant in that specification. Most individual measures still are not — family, urgency and sentiment all fail after correction, which is consistent with what we present. And one does survive: third-person voice, in the duration model, at an FDR-adjusted p of 0.012. We are not presenting that as a finding, for two reasons. It does not replicate in the 24-hour model, where the sign reverses. And with country fixed effects in the specification, it plausibly tracks *who wrote the description* — Kiva descriptions prepared by field partners are third-person by convention — rather than a persuasion choice a borrower makes. It is the strongest candidate for the next round of testing, which is exactly where we would put it.
+Yes — and one signal came back. We re-tested every engineered text feature under richer controls than the primary model uses: country and activity fixed effects, finer time controls, country-clustered standard errors, and Benjamini-Hochberg correction across the whole family. Three things came out of it:
+
+- The **framing family is jointly significant** in that specification.
+- **Most individual measures still are not** — family, urgency and sentiment all fail after correction, consistent with what we present.
+- **One does survive**: third-person voice, in the duration model, at an FDR-adjusted p of 0.012.
+ We are not presenting that as a finding, for two reasons. It does not replicate in the 24-hour model, where the sign reverses. And with country fixed effects in the specification, it plausibly tracks *who wrote the description* — Kiva descriptions prepared by field partners are third-person by convention — rather than a persuasion choice a borrower makes. It is the strongest candidate for the next round of testing, which is exactly where we would put it.
 
 **Backup:**
 
@@ -284,7 +289,12 @@ Expanded sensitivity (Frisch-Waugh-Lovell with country + activity fixed effects,
 
 **Answer:**
 
-Yes, and it turns out to be the single widest structural gap in the data — wider than anything on our slides. The dataset has no explicit partner ID, but `whySpecial` is effectively a programme label: 643 distinct values across 1.45 million loans, 92% of them confined to a single country. Across its 141 well-populated levels, mean funding speed runs from **0.2 days to 30.9** — a wider spread than country (0.2 to 20.5), activity (0.9 to 19.8) or sector (0.9 to 12.1). Three consequences, and we'd rather state all three. First, our "structure dominates" claim is conservative, not aggressive — the strongest structural driver is one we don't even show. Second, it sharpens the recommendation: a structural review should start with programme and partner practices, not just sector and region. Third, and most important for how you read our narrative results, the programme is an unmodelled confounder for writing style — partners write descriptions in house voices — which is a further reason we decline to turn any framing pattern into advice, and the most likely explanation for the one text signal that did survive our expanded audit.
+Yes, and it turns out to be the single widest structural gap in the data — wider than anything on our slides. The dataset has no explicit partner ID, but `whySpecial` is effectively a programme label: 643 distinct values across 1.45 million loans, 92% of them confined to a single country. Across its 141 well-populated levels, mean funding speed runs from **0.2 days to 30.9** — a wider spread than country (0.2 to 20.5), activity (0.9 to 19.8) or sector (0.9 to 12.1). Three consequences, and we'd rather state all three:
+
+- Our "structure dominates" claim is **conservative, not aggressive** — the strongest structural driver is one we don't even show.
+- It **sharpens the recommendation**: a structural review should start with programme and partner practices, not just sector and region.
+- Most important for reading our narrative results: the programme is an **unmodelled confounder for writing style** — partners write descriptions in house voices. A further reason we decline to turn any framing pattern into advice, and the most likely explanation for the one text signal that survived our expanded audit.
+
 
 **Backup:**
 
@@ -368,7 +378,12 @@ Four things, in order. Run the **country-stratified A/B test** in the two surviv
 
 **Answer:**
 
-The sharpest question in the room, and we'll concede its premise: measurement error attenuates estimates toward zero, and that is exactly why our claim is "no robust evidence for a recommendation," never "no effect exists." Attenuation cannot be ruled out. Three observations explain why we still act on the result — as context, not refutation. First, the same crude measures *did* produce large, highly significant associations under HC3 — attenuation didn't stop signals from appearing; the clustering re-test is what removed them, and clustering corrects **dependence, not sensitivity**. Second, topic modelling is lexicon-free — no word lists at all — and it tracks what the loan is *for*, not how it's written: a completely different text instrument pointing at the same structural story. Third, an effect large enough to justify platform-wide copy coaching would plausibly still surface even through noisy measures at this scale — though scale is no guarantee: our own dependence argument means 1.45 million rows are far fewer independent units, and some subgroup claims rest on two country clusters. The honest residual: subtler narrative dimensions could exist below our instruments' resolution, and nothing here bounds them. Before anyone bounds economically meaningful framing effects, the dictionaries need reliability and criterion validation — or replacement with pre-validated measures; that is exactly the follow-up we name as future work.
+The sharpest question in the room, and we'll concede its premise: measurement error attenuates estimates toward zero, and that is exactly why our claim is "no robust evidence for a recommendation," never "no effect exists." Attenuation cannot be ruled out. Three observations explain why we still act on the result — as context, not refutation:
+
+- The same crude measures **did** produce large, highly significant associations under HC3. Attenuation didn't stop signals from appearing; the clustering re-test removed them, and clustering corrects **dependence, not sensitivity**.
+- **Topic modelling is lexicon-free** — no word lists at all — and tracks what the loan is *for*, not how it's written: a different text instrument pointing at the same structural story.
+- An effect large enough to justify platform-wide copy coaching would plausibly surface even through noisy measures at this scale — **though scale is no guarantee**: our own dependence argument means 1.45 million rows are far fewer independent units, and some subgroup claims rest on two country clusters.
+ The honest residual: subtler narrative dimensions could exist below our instruments' resolution, and nothing here bounds them. Before anyone bounds economically meaningful framing effects, the dictionaries need reliability and criterion validation — or replacement with pre-validated measures; that is exactly the follow-up we name as future work.
 
 **Backup:**
 
