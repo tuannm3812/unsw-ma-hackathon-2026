@@ -2092,3 +2092,20 @@ One real bug found while verifying: pandoc's typst writer escapes apostrophes as
 Verified: `python3 -m pytest -q` → 114 passed; all three pages of `speaker-scripts.pdf` rasterised and read. All four PDFs synced to iCloud, Google Drive and `docs/pdf/` with SHA-256 equality confirmed across the three copies.
 
 **Noted, not fixed** — Slide 8's script contains a lowercase sentence start ("at listing. test before you ship.") and a trailing space. Both live in the deck brief and the pptx speaker notes, so correcting them touches the submitted deck's notes; left for the team to decide.
+
+**Claude — Review of the Google Slides deck export, and a clean 1-5 / 6-10 presenter split (2026-09-03, evening)**
+
+*Deck review.* Checked `Team Cultural Blend - UNSW Hackathon 2026.pdf` (14 pages, exported from Google Slides) against `reports/generated_full_dataset/` and `docs/1_data_dictionary.md`. Every statistic reproduces — correlations, regional means, topic range, classifier metrics, few-cluster p-values. Written up in `docs/presentation/deck_review_notes.md` (rendered to `deck-review-notes.pdf`). Six items are wrong rather than awkward:
+
+- **"Borrowers now wait longer for capital"** (p4) contradicts the 96.4% pre-disbursal fact. This is the one claim on the deck that could be used to say we misread the platform.
+- **"region shows similarly large gaps"** (p5) is backwards: region spans 3.7-15.6 days (~4x), the narrowest structural field, because regions compress country's 100x spread. Sector is 13x.
+- **"Storytelling coaching won't move the needle."** (p6 headline) asserts no effect — the exact overclaim thirteen review rounds were spent avoiding, and it contradicts the deck's own limitations slide.
+- **"Female can represent household to submit loans"** (p9) turns an unexplained association into advice to game a demographic field, against our own limitations slide and Q&A E2.
+- **The borrower sector list** (p9) leads with Clothing, the slowest sector in the data (12.1 d vs Sanitation 0.9 d).
+- **"Focus on Loan Amount Range"** (p9) reads as "ask for less", which Q&A A4 explicitly declines to advise.
+
+Plus eight typos, a duplicated figure title, a missing A3 appendix label, and two slides sharing step 07. The note also records what is right and should not be touched, so the fix pass does not spread.
+
+*Presenter split.* Re-split the scripts at the team's request: Sophia takes slides 1-5, Tuan 6-10, replacing the interleaved 1-3/6-7 vs 4-5/8-10 arrangement. Four hand-off lines moved with it — Slide 1's introduction, Slide 3's "while Sophia shows you", Slide 4's "Thanks, Tuan", Slide 7's "Sophia —" — leaving a single hand-off at the end of Slide 5 ("Tuan —" / "Thanks, Sophia."), and Slide 10's two closing lines swapped so Tuan leads and Sophia closes. The scripts live in three files (pptx notes, deck brief md, deck brief html); every edit asserted exactly one match in each, and a final check confirms all three now report the identical owner sequence. Timing recomputed: **1,132 words, 8:42 at 130 wpm, 8:05 at 140**.
+
+Verified: `build_slides_draft.py` exact notes self-check passed for 15 slides; `python3 -m pytest -q` → 114 passed; speaker-scripts.pdf pages 1-2 rasterised to confirm the hand-off reads correctly. All five PDFs plus the pptx synced to iCloud, Google Drive and `docs/pdf/`.

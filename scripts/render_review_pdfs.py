@@ -35,6 +35,8 @@ DOCS = [
      "Final Round", "Speaker Scripts - Rehearsal Copy"),
     (REPO / "docs/presentation/qa_answers.md", "qa-answers.pdf",
      "Final Round", "Q&A Answers - Question Time Copy"),
+    (REPO / "docs/presentation/deck_review_notes.md", "deck-review-notes.pdf",
+     "Final Round", "Deck Review Notes - Slides v2"),
 ]
 
 
@@ -57,6 +59,11 @@ HL_BASE = (
 # and the verbs that set each recommendation; marking those in the four
 # long-form prep documents as well would be noise.
 HL_EXTRA = {
+    "deck-review-notes.pdf": (
+        "96.4%", "3.7 to 15.6 days", "0.2 to 20.5 days", "12.1 days", "0.9",
+        "minus 0.3 points", "association, not a cause",
+        "absence of robust evidence is not evidence of absence",
+    ),
     "speaker-scripts.pdf": (
         "1.45 million", "46% of loans", "under a third", "minus 0.3 points",
         "2.3 days", "7.7", "ten times", "p below 0.001", "collapses to 0.44",
