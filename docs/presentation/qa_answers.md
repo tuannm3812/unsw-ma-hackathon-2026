@@ -152,7 +152,7 @@ It means the standard *assumption* was wrong, and we corrected it — the model'
 
 **Backup:**
 
-Notebook: 20/45 coefficients flip (44%). Authoritative, both models: 64/128 (50%), of which 40 (62.5%) are narrative/sentiment terms. 48 country clusters. Urgency: HC3 p\<0.001 → clustered 0.44 (notebook duration); 0.49 / 0.22 (authoritative duration / 24h).
+Notebook: 20/45 coefficients flip (44%). Authoritative, both models: 64/128 of all coefficients (50%); the deck (v2) quotes 64 of the 120 HC3-significant ones — 53%. Of the 64, 40 (62.5%) are narrative/sentiment terms. 48 country clusters. Urgency: HC3 p\<0.001 → clustered 0.44 (notebook duration); 0.49 / 0.22 (authoritative duration / 24h).
 
 **Trap:** don't let "your p-values changed" be framed as instability. The framing is: *we'd rather report 10 findings that are real than 30 that are artifacts.*
 
@@ -335,7 +335,7 @@ One table to re-read before the session. Sign conventions: duration models predi
 | Gender medians | female 2.3 d · male 7.7 d; coef +0.43 ≈ 54% longer | notebook |
 | Explanatory OLS R² | 0.426 on 1,453,840 loans | notebook |
 | Cluster-check flips | 20/45 (44%) notebook · 64/128 (50%) authoritative, 62.5% of those narrative terms | both |
-| Urgency collapse | HC3 p\<0.001 → clustered p≈0.44 notebook dur · 0.49 / 0.22 authoritative dur / 24h | both |
+| Urgency collapse | HC3 p\<0.001 → clustered p≈0.49 / 0.22 authoritative dur / 24h · 0.44 notebook dur | both |
 | Family within Middle East | −0.124 / −0.073 / +0.175 · conventional clustered p ≤ 0.004 · few-cluster t(1) p = 0.12 (dur) / 0.21 (24h) | 3 fits |
 | Family within Central America | −0.062 / −0.074 / +0.103 · conventional clustered p \< 0.0001 · few-cluster t(1) p = 0.06 (dur) / 0.14 (24h) | 3 fits |
 | Family within Asia (corrected) | p = 0.0535 / 0.0846 / 0.2860 — not significant | 3 fits |
@@ -411,7 +411,7 @@ The sharpest question in the room, and we'll concede its premise: measurement er
 
 **Backup:**
 
-Attenuation shrinks coefficients toward 0 but does not inflate clustered standard errors relative to HC3 — the HC3→clustered collapse (urgency p<0.001 → ≈0.44) is a dependence phenomenon. The lexicons are unvalidated as constructs — spread in word counts demonstrates variation, not validity. Topic swing 1.5→**13.5 days** shows the description text is informative — just about structure.
+Attenuation shrinks coefficients toward 0 but does not inflate clustered standard errors relative to HC3 — the HC3→clustered collapse (urgency p<0.001 → ≈0.49) is a dependence phenomenon. The lexicons are unvalidated as constructs — spread in word counts demonstrates variation, not validity. Topic swing 1.5→**13.5 days** shows the description text is informative — just about structure.
 
 **Trap:** don't say "our measures are fine." Concede attenuation immediately and never claim the observations rule it out — offer them as context and land on the validation follow-up.
 

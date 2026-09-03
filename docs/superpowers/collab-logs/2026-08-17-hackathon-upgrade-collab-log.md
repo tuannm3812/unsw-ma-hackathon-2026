@@ -2121,3 +2121,15 @@ The team decided to refine the submitted Google Slides deck and resubmit to Dr D
 Also in the list: the p4 borrower-wait headline/bullet (D6), the p5 "region shows similarly large gaps" reversal, the p6 no-effect headline, the three p9 borrower-table rows, the A4→A3 relabel, and the typo sweep. Deliberately left alone: the shared step-07 rail (by design; renumbering collides with p10), the p12 appendix, the SHAP framing, the closing quote.
 
 One rendering fix fell out: the edit list's verbatim find/replace strings render as typst raw literals, inside which the yellow `#highlight()` injection prints literally — `render_review_pdfs.py` now has an `HL_NONE` per-document opt-out, verified by rasterising the page before and after.
+
+**Claude — All prep materials aligned with deck v2 (2026-09-04, morning of the final)**
+
+The team is applying the verified edit list and resubmitting the deck to Dr Songting. Every repo-side material now matches v2 on its primary path (authoritative within-region numbers):
+
+- `scripts/build_charts.py`: the few-cluster table exhibit now shows the **authoritative** average within-region slopes (Africa −0.016/0.323/t(26) 0.332 · Asia +0.023/0.085/t(11) 0.113 · CA −0.074/<0.001/t(1) 0.060 · ME −0.073/<0.001/t(1) 0.120 · NA +0.013/0.009/not estimable · Oceania +0.005/0.895/t(3) 0.903), replacing the notebook SS7.2 fit, with the title relabelled "(duration model, authoritative fit)" and wrapped to three lines after a rasterise check caught the longer title running off the canvas. The comment records the source switch. This closes the slide-6-vs-appendix inconsistency the edit list flagged.
+- `scripts/build_slides_draft.py` + `docs/presentation/deck_content.{md,html}`: urgency's collapse is now quoted as **p ≈ 0.49** (authoritative duration; every remaining 0.44 audited and explicitly labelled notebook), the slide 5 card cites country gaps (0.2–20.5 days) instead of the reversed "region shows similarly large gaps", and the slide 8 structural-review card and script now lead with **programmes** (the C10 finding). pptx rebuilt; exact notes self-check passed for 15 slides.
+- `docs/presentation/qa_pack.{md,html}`: six aligned edits — the verification-arc line, the findings table, F1 and both crib rows now lead with the authoritative 0.49, and the C1 backup reconciles denominators explicitly (64/128 of all coefficients = 50%; the deck v2 slide quotes 64 of the 120 HC3-significant ones = 53%) so nobody stumbles on the difference live.
+- Both prep documents carry a **Deck v2** note under the late-findings callout so the presenters know which numbers the projected deck shows.
+- Speaker scripts regenerated (1,133 words · 8:43 at 130 wpm); all six PDFs re-rendered and synced to iCloud, Google Drive and `docs/pdf/`; both artifacts republished. `python3 -m pytest -q` → 114 passed.
+
+Spoken-line changes for rehearsal: Slide 6 "collapses to 0.49" (was 0.44) and Slide 8 "programmes, sectors and regions" (was "sectors and regions"). Nothing else in the spoken text moved.

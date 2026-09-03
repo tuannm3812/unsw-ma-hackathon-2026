@@ -48,7 +48,7 @@ Round 2 · Cluster by country
 
 #### Half of it evaporates
 
-Loans from one country share partners, templates, conditions. Clustered standard errors: 44–50% of coefficients change significance conclusion. Urgency's p-value goes 0.000 → ~0.44. Not fabricated — fragile.
+Loans from one country share partners, templates, conditions. Clustered standard errors: 44–50% of coefficients change significance conclusion. Urgency's p-value goes 0.000 → ~0.49 (authoritative duration; ~0.44 in the notebook fit). Not fabricated — fragile.
 
 Round 3 · Test the right quantity
 
@@ -64,7 +64,7 @@ An interaction coefficient tests difference-from-Africa, not "does framing do an
 | Pandemic-era slowdown persists through 2025: share funded in 24h fell 46.0% → 30.3% and stayed at 30.0% | 589,823 / 298,549 / 565,474 loans per era | `robust` |
 | Gender gap: female-posted median 2.3 days vs male-posted 7.7 | +0.43 coefficient holding all else fixed; survives clustering | `robust` |
 | Family framing ↔ faster funding in two pooled categories (Palestine+Yemen; Honduras+Nicaragua) — pooled, not per-country | Same direction in all 3 fits; conventional clustered p\<0.05, but few-cluster t(1) p = 0.06–0.21 — intervals span zero | `descriptive pattern — not statistically supported` |
-| Urgency framing helps | HC3 p\<0.001 → clustered p≈0.44 (notebook) · 0.49 / 0.22 (authoritative) | `does not survive` |
+| Urgency framing helps | HC3 p\<0.001 → clustered p≈0.49 / 0.22 (authoritative dur / 24h) · 0.44 (notebook) | `does not survive` |
 | Family framing depends on timing / loan size | All period & size interactions fail clustering | `does not survive` |
 | Agency/competence language helps | Null in notebook; fragile (HC3-only) in authoritative 24h model | `no reliable link` |
 | Positive sentiment ↔ slower funding | Survives clustering in authoritative fits (p≈0.01/0.02), not in notebook (p≈0.25) | `genuinely open` |
@@ -90,7 +90,7 @@ An interaction coefficient tests difference-from-Africa, not "does framing do an
 
 ### Late findings (evening of 3 Sep) — read this first
 
-A final feature audit, run after the deck was submitted, surfaced three things. **None changes a number on your slides.** Two change how you talk about them, and both are already corrected in the scripts.
+A final feature audit, run after the deck was submitted, surfaced three things. **None changes a number on your slides.** Two change how you talk about them, and both are already corrected in the scripts. **Deck v2 (resubmitted 4 Sep)** applies the verified edit list (`docs/presentation/deck_edit_list.md`); its within-region table now shows the **authoritative fit** — quote urgency's collapse as **0.49**, not 0.44.
 
 | # | What we found | What it changes | Armed in |
 |----|----|----|----|
@@ -196,7 +196,7 @@ It means the standard *assumption* was wrong, and we corrected it — the model'
 
 **Backup:**
 
-Notebook: 20/45 coefficients flip (44%). Authoritative, both models: 64/128 (50%), of which 40 (62.5%) are narrative/sentiment terms. 48 country clusters. Urgency: HC3 p\<0.001 → clustered 0.44 (notebook duration); 0.49 / 0.22 (authoritative duration / 24h).
+Notebook: 20/45 coefficients flip (44%). Authoritative, both models: 64/128 of all coefficients (50%); the deck (v2) quotes 64 of the 120 HC3-significant ones — 53%. Of the 64, 40 (62.5%) are narrative/sentiment terms. 48 country clusters. Urgency: HC3 p\<0.001 → clustered 0.44 (notebook duration); 0.49 / 0.22 (authoritative duration / 24h).
 
 **Trap:** don't let "your p-values changed" be framed as instability. The framing is: *we'd rather report 10 findings that are real than 30 that are artifacts.*
 
@@ -387,7 +387,7 @@ The sharpest question in the room, and we'll concede its premise: measurement er
 
 **Backup:**
 
-Attenuation shrinks coefficients toward 0 but does not inflate clustered standard errors relative to HC3 — the HC3→clustered collapse (urgency p<0.001 → ≈0.44) is a dependence phenomenon. The lexicons are unvalidated as constructs — spread in word counts demonstrates variation, not validity. Topic swing 1.5→**13.5 days** shows the description text is informative — just about structure.
+Attenuation shrinks coefficients toward 0 but does not inflate clustered standard errors relative to HC3 — the HC3→clustered collapse (urgency p<0.001 → ≈0.49) is a dependence phenomenon. The lexicons are unvalidated as constructs — spread in word counts demonstrates variation, not validity. Topic swing 1.5→**13.5 days** shows the description text is informative — just about structure.
 
 **Trap:** don't say "our measures are fine." Concede attenuation immediately and never claim the observations rule it out — offer them as context and land on the validation follow-up.
 
@@ -453,7 +453,7 @@ One table to re-read before the session. Sign conventions: duration models predi
 | Gender medians | female 2.3 d · male 7.7 d; coef +0.43 ≈ 54% longer | notebook |
 | Explanatory OLS R² | 0.426 on 1,453,840 loans | notebook |
 | Cluster-check flips | 20/45 (44%) notebook · 64/128 (50%) authoritative, 62.5% of those narrative terms | both |
-| Urgency collapse | HC3 p\<0.001 → clustered p≈0.44 notebook dur · 0.49 / 0.22 authoritative dur / 24h | both |
+| Urgency collapse | HC3 p\<0.001 → clustered p≈0.49 / 0.22 authoritative dur / 24h · 0.44 notebook dur | both |
 | Family within Middle East | −0.124 / −0.073 / +0.175 · conventional clustered p ≤ 0.004 · few-cluster t(1) p = 0.12 (dur) / 0.21 (24h) | 3 fits |
 | Family within Central America | −0.062 / −0.074 / +0.103 · conventional clustered p \< 0.0001 · few-cluster t(1) p = 0.06 (dur) / 0.14 (24h) | 3 fits |
 | Family within Asia (corrected) | p = 0.0535 / 0.0846 / 0.2860 — not significant | 3 fits |

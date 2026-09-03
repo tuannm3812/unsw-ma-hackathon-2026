@@ -194,16 +194,20 @@ ax.set_title("Chronological holdout: train on the\npast, test on the future", fo
              weight="bold", pad=8, loc="left")
 finish(fig, "data_split.png")
 
-# ---- S6: few-cluster table (executed modeling notebook SS7.2, v15) -------
+# ---- S6: few-cluster table (authoritative duration model) ----------------
+# Deck v2 (2026-09-04): the table shows the AUTHORITATIVE pipeline's average
+# within-region slopes (association_summary.txt, "Average Within-Region
+# Family-Framing Slopes", duration model), replacing the notebook SS7.2 fit,
+# so this slide agrees with the appendix that quotes the same source.
 # Compact 6-column layout so the table fits its placed 4.55in at full 10pt
 # type (region label carries the country count; 3-dp rounding; full 4-dp
-# values live in SS7.2 / analysis_summary.json).
-rows = [("Africa (27)", "610,368", "-0.010", "0.554", "t(26) 0.559", "n.s."),
-        ("Asia (12)", "738,191", "+0.034", "0.054", "t(11) 0.080", "n.s."),
-        ("C. America (2)", "59,391", "-0.062", "<0.001", "t(1) 0.065", "normal-ref only"),
-        ("Middle East (2)", "14,946", "-0.124", "<0.001", "t(1) 0.075", "normal-ref only"),
-        ("N. America (1)", "7,559", "+0.011", "0.062", "not estimable", "single country"),
-        ("Oceania (4)", "23,385", "+0.016", "0.631", "t(3) 0.663", "n.s.")]
+# values live in association_summary.txt).
+rows = [("Africa (27)", "610,368", "-0.016", "0.323", "t(26) 0.332", "n.s."),
+        ("Asia (12)", "738,191", "+0.023", "0.085", "t(11) 0.113", "n.s."),
+        ("C. America (2)", "59,391", "-0.074", "<0.001", "t(1) 0.060", "normal-ref only"),
+        ("Middle East (2)", "14,946", "-0.073", "<0.001", "t(1) 0.120", "normal-ref only"),
+        ("N. America (1)", "7,559", "+0.013", "0.009", "not estimable", "single country"),
+        ("Oceania (4)", "23,385", "+0.005", "0.895", "t(3) 0.903", "n.s.")]
 hdr = ["region (ctys)", "loans", "slope", "cl. p", "few-cl. p", "verdict"]
 rows = [(a, b, c, d, e, f.replace("normal-ref only", "norm-ref only").replace("single country", "1 country"))
         for a, b, c, d, e, f in rows]
@@ -222,7 +226,7 @@ for (r, c), cell in tbl.get_celld().items():
         cell.set_facecolor("#EFEDE6")
     else:
         cell.set_facecolor("white")
-fig.suptitle("Within-region family-framing slope\n(duration model): none pass the screen",
+fig.suptitle("Within-region family-framing slope\n(duration model, authoritative fit):\nnone pass the screen",
              fontsize=TITLE, x=0.02, y=0.97, ha="left")
 fig.savefig(OUT + "few_cluster_table.png", facecolor="white", dpi=DPI); plt.close(fig)
 
