@@ -39,6 +39,8 @@ DOCS = [
      "Final Round", "Deck Review Notes - Slides v2"),
     (REPO / "docs/presentation/deck_edit_list.md", "deck-edit-list.pdf",
      "Final Round", "Deck Edit List - Resubmission"),
+    (REPO / "docs/presentation/tuan_delivery_crib.md", "tuan-delivery-crib.pdf",
+     "Final Round", "Tuan - Delivery Crib (Slides 6-10)"),
 ]
 
 
@@ -66,6 +68,18 @@ HL_NONE = {"deck-edit-list.pdf"}
 # and the verbs that set each recommendation; marking those in the four
 # long-form prep documents as well would be noise.
 HL_EXTRA = {
+    "tuan-delivery-crib.pdf": (
+        "we can't say yes", "no strong evidence", "an idea to test later, not a proven fact",
+        "by country", "only two countries", "genuinely open",
+        "eight", "nine times", "what the loan is for",
+        "partner cash flow", "never tell people to ask for less money",
+        "A/B test", "Test it before launching it", "programs", "ten times",
+        "test model", "expired ones",
+        "connections, not direct causes", "simple rules",
+        "In this data", "carries the signal",
+        "what to expect, not what to game",
+        "0.44", "0.49", "same direction, same conclusion",
+    ),
     "deck-review-notes.pdf": (
         "96.4%", "3.7 to 15.6 days", "0.2 to 20.5 days", "12.1 days", "0.9",
         "minus 0.3 points", "association, not a cause",
