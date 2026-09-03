@@ -2133,3 +2133,15 @@ The team is applying the verified edit list and resubmitting the deck to Dr Song
 - Speaker scripts regenerated (1,133 words · 8:43 at 130 wpm); all six PDFs re-rendered and synced to iCloud, Google Drive and `docs/pdf/`; both artifacts republished. `python3 -m pytest -q` → 114 passed.
 
 Spoken-line changes for rehearsal: Slide 6 "collapses to 0.49" (was 0.44) and Slide 8 "programmes, sectors and regions" (was "sectors and regions"). Nothing else in the spoken text moved.
+
+**Claude — Deck v2 verified as sent; prep materials re-aligned to the actual deck (2026-09-04, ~00:30)**
+
+The team exported v2 and emailed it to Dr Songting from Outlook before the full edit list was applied, so the deck as sent was verified page by page against the emailed PDF (13 pages) and every prep material re-aligned to what the judges will actually see.
+
+**Landed in v2:** the p4 partner-capital headline and bullet (the D6 fix — the one that mattered most), the borrower page fully reframed as expectations ("what to expect — not what to game", all three rows), "program" added to the structural-review card, the p10 "causation .No" typo, the footer corrected to "Marketing Analytics" on every page, and the A4 classifier appendix deleted — which removes both the false "no narrative features needed" line and the missing-A3 label problem. 13 pages, all footers correct.
+
+**Not applied:** the p6 headline slide is untouched (still "won't move the needle", still the notebook table, still 0.44), p5 keeps "region shows similarly large gaps" and the "median funding speed are" grammar, p3 keeps "results results did NOT survive ." and the unquantified "most", p4 keeps the 46% >> 30% >> 30% strip, p8 keeps "for Kiva team".
+
+**Realignment (the scripts had been moved to the edit list's primary path, which v2 did not take):** spoken Slide 6 line and pptx bullet reverted to **0.44** so the speaker matches the projected table; the few-cluster exhibit reverted to the notebook fit and now titled "(duration model, notebook fit)" so the label is honest even where the deck's own caption is not; the Q&A verification-arc line, findings table, F1 and crib rows reordered slide-first ("0.44 as shown on the slide; authoritative 0.49 — same conclusion"); and the Deck v2 notes in both packs rewritten from the aspirational version to the verified version, headed by the two live hazards: say 0.44 not 0.49, and concede the p5 region wording if pressed (region is the narrowest field, 3.7–15.6 d; country the widest, 0.2–20.5 d). The "programmes" script line stays — v2's card carries it.
+
+pptx rebuilt (notes self-check passed), speaker scripts regenerated (1,133 words · 8:43 at 130), six PDFs re-rendered, everything synced to iCloud, Drive and docs/pdf/, and the v2 PDF itself archived in both review folders. `python3 -m pytest -q` → 114 passed.

@@ -49,7 +49,7 @@ And what drives it is structure. Loan amount and repayment terms correlate with 
 
 Thanks, Sophia. So: does the story matter? Our honest answer: no narrative result is robust enough across specifications to support a recommendation.
 
-- Urgency language looked like a universal win — significant at p below 0.001. Cluster by country, and it collapses to 0.49. Gone.
+- Urgency language looked like a universal win — significant at p below 0.001. Cluster by country, and it collapses to 0.44. Gone.
 - Family framing — and here our own first version got it wrong: we tested whether regions differ from Africa, which is not the same as whether family framing helps within a region. Corrected, two pooled categories — Palestine plus Yemen, and Honduras plus Nicaragua — do show faster funding in every fit we ran. But each rests on exactly two countries, and against a deliberately harsh few-cluster screen — a conservative heuristic, not calibrated inference: a t distribution with one degree of freedom, critical value 12.7, not 1.96 — neither is significant: p between 0.06 and 0.21. So we report a hypothesis worth testing, not a finding.
 - Sentiment is the honest illustration: it survives country clustering in one of our two specifications and not the other — genuinely open, robust in neither direction.
 
