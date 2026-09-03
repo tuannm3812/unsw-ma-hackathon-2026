@@ -358,7 +358,7 @@ It's one of the most robust patterns in the data: female-posted loans fund in a 
 
 **Backup:**
 
-Raw median ratio ≈ 3.3×; adjusted coefficient +0.43 on log(1+days) ≈ ×1.54 — controls absorb roughly half the raw log-gap. Survives clustering (p \< 0.0001). Smaller than the biggest sector/region gaps, larger than every narrative term combined.
+Raw median ratio ≈ 3.3×; adjusted coefficient +0.43 on log(1+days) ≈ ×1.54 — controls absorb roughly half the raw log-gap. Survives clustering (p \< 0.0001). Smaller than the biggest sector/region gaps, larger than every narrative term combined. Candidate mechanism worth naming (live-site observation, not analysed): gender is a first-class filter on Kiva's lender search and "Woman-Owned Business" is the largest lender tag (8,247 loans) — lender demand routed through filters would be demand-side, not partner behaviour; instrumenting filter exposure is the first thing to check.
 
 #### E3 · What's the difference between your two pipelines, and which one is right?
 
@@ -371,6 +371,18 @@ One is the authoritative tested pipeline — versioned, unit-tested, source of t
 **Answer:**
 
 Four things, in order. Run the **country-stratified A/B test** in the two surviving pooled categories — it's the only way to locate which countries, if any, actually drive the pooled association and turn it into something actionable. Get expired and unfunded loans into the data, so we can model funding success, not just speed. Get a field-partner identifier, which would let us cluster at the true dependence level and probably explain part of what "country" currently absorbs. And add LLM-scored narrative dimensions alongside our transparent dictionaries — with a validation protocol, so they'd meet the same auditability bar as everything else here. A fifth, which we found late: `whySpecial` has only 643 distinct values across 1.45 million loans and 92% of them sit inside a single country — it is effectively a programme or field-partner label. Clustering or fixed effects at that level is the natural next step; note that country-clustering, which we used, is the more conservative choice precisely because those groups nest inside countries.
+
+#### E5 · What would the structural review concretely change on the platform?
+
+**Answer:**
+
+Open Kiva's lender search page and the review writes its own scope: every structural field we found is a first-class filter — sector, gender, individual vs group, loan length, and an **Attributes** facet that is essentially the programme label surfaced to lenders ("Refugees/displaced", "Conflict zones", "Underfunded areas"). The structural gaps in our data and the filter taxonomy are the same objects. So the review is concrete: instrument lender exposure by facet, find which consistently slow segments are under-surfaced, and A/B test surfacing changes — Kiva already has an "Underfunded areas" attribute to build on. And note where the story text enters that page: one keyword-search box, plus tags that lenders add *after* reading. The plausible causal path for text runs through findability, not persuasion — which is exactly the shape of our results: what the loan is *for* swings speed ninefold; how it's written shows nothing robust.
+
+**Backup:**
+
+Live-site observations (September 2026, not analysed in our data — a mechanism hypothesis, not a finding): gender is the top filter on the page and "Woman-Owned Business" is the largest lender tag (8,247 loans, an order of magnitude above the next) — a concrete, checkable demand-side candidate for the 2.3 vs 7.7 day gender gap. Live inventory also runs roughly inverse to our speed ranking — Sanitation & hygiene lists 7 loans (our fastest sector, 0.9 days: it clears), Agriculture 4,375 (slow: it pools).
+
+**Trap:** don't present any of this as measured. It is tonight's read of the live site; our data end in 2025 and contain no filter-traffic information. Say "if you open Kiva's lender search today…" and keep it as the review's starting checklist.
 
 ### The questions behind the questions
 
