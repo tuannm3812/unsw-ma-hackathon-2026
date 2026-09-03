@@ -260,6 +260,18 @@ Expanded sensitivity (Frisch-Waugh-Lovell with country + activity fixed effects,
 
 **Trap:** don't hide it. Volunteering an audit that found something is far stronger than being caught not having looked.
 
+#### C10 · The loan's programme or field partner is the obvious grouping. Did you look at it? `[HARD]`
+
+**Answer:**
+
+Yes, and it turns out to be the single widest structural gap in the data — wider than anything on our slides. The dataset has no explicit partner ID, but `whySpecial` is effectively a programme label: 643 distinct values across 1.45 million loans, 92% of them confined to a single country. Across its 141 well-populated levels, mean funding speed runs from **0.2 days to 30.9** — a wider spread than country (0.2 to 20.5), activity (0.9 to 19.8) or sector (0.9 to 12.1). Three consequences, and we'd rather state all three. First, our "structure dominates" claim is conservative, not aggressive — the strongest structural driver is one we don't even show. Second, it sharpens the recommendation: a structural review should start with programme and partner practices, not just sector and region. Third, and most important for how you read our narrative results, the programme is an unmodelled confounder for writing style — partners write descriptions in house voices — which is a further reason we decline to turn any framing pattern into advice, and the most likely explanation for the one text signal that did survive our expanded audit.
+
+**Backup:**
+
+Levels with ≥1,000 loans: whySpecial 141 levels spanning 0.2–30.9 days; country 38 levels, 0.2 (Nepal) – 20.5 (Senegal); activity 80 levels, 0.9 (Toilets & Sanitation Systems) – 19.8 (Vehicle); sector 17 levels, 0.9 – 12.1; region 6, 3.7 – 15.6. Also from the same sweep: loan amount's Spearman correlation with speed is 0.559 (we quote 0.429, the Pearson on logs — the conservative figure); group loans are slower than individual (median 5.7 vs 2.6 days, n = 146,692).
+
+**Trap:** don't claim we modelled partner effects — we did not. The honest line is that we identified the proxy, measured its spread, and treated it as the top item for the next iteration, not as a result.
+
 ### Methods & data
 
 #### D1 · Why OLS on log-days instead of a survival model?
