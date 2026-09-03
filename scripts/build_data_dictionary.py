@@ -75,6 +75,41 @@ SAMPLE_TABLE = ["| " + " | ".join(_cols) + " |", "|" + "---|" * len(_cols)]
 for _, _r in _picks[_cols].round(2).iterrows():
     SAMPLE_TABLE.append("| " + " | ".join(str(x) for x in _r.tolist()) + " |")
 import re as _re
+STRUCT_TABLE = ["| field | dtype | non-null | distinct |", "|---|---|---|---|"]
+for _c in df.columns:
+    if _c.startswith(("speed_days", "disb_lead")):
+        continue
+    STRUCT_TABLE.append(f"| `{_c}` | {str(df[_c].dtype)} | {df[_c].notna().mean():.1%} | {df[_c].nunique():,} |")
+
+_rng2 = np.random.RandomState(11)
+_pair = pd.concat([
+    _v.nsmallest(300, "speed_days").sample(1, random_state=_rng2),
+    _v.nlargest(3000, "speed_days").sample(1, random_state=_rng2),
+])
+_WITHHELD = {"id", "name", "image_url", "disbursalDate", "fundraisingDate", "raisedDate",
+             "city", "latitude", "longitude"}  # city + precise coords add locating
+                                               # specificity with no analytical value here
+COMPARE_TABLE = ["| field | fast row | slow row |", "|---|---|---|"]
+for _c in df.columns:
+    if _c.startswith(("speed_days", "disb_lead")):
+        continue
+    if _c in _WITHHELD:
+        COMPARE_TABLE.append(f"| `{_c}` | *withheld* | *withheld* |")
+        continue
+    if _c == "description":
+        _vals = []
+        for _t in _pair["description"]:
+            _w = len(str(_t).split())
+            _vals.append(f"*not reproduced* — {_w} words")
+        COMPARE_TABLE.append(f"| `description` | {_vals[0]} | {_vals[1]} |")
+        continue
+    _a, _b = [str(x)[:64] for x in _pair[_c].tolist()]
+    COMPARE_TABLE.append(f"| `{_c}` | {_a} | {_b} |")
+_sp = _pair["speed_days"].tolist()
+_ld = _pair["disb_lead"].tolist()
+COMPARE_TABLE.append(f"| **funding speed** (derived) | **{_sp[0]:.2f} days** | **{_sp[1]:.2f} days** |")
+COMPARE_TABLE.append(f"| **disbursal lead** (derived) | {_ld[0]:.1f} days before posting | {_ld[1]:.1f} days before posting |")
+
 SAMPLE_TEXT = ["| field | example (verbatim) | scope |", "|---|---|---|"]
 for _t in _picks["use"].head(2):
     SAMPLE_TEXT.append(f"| `use` | {_re.sub(chr(92)+'s+', ' ', str(_t))[:70]} | one loan |")
@@ -172,6 +207,44 @@ lines += [
 ] + SAMPLE_TEXT + [
  "",
 
+
+ "## The raw data as stored",
+ "",
+ "`Kiva_Loans.pkl` is a **list of " + f"{len(df):,}" + " dicts**, one per loan, each with the same 27",
+ "keys — not a pickled DataFrame, which is why `src/data_loader` uses `pickle.load`",
+ "rather than `pd.read_pickle`. Loaded into a DataFrame it occupies ~3 GB in memory.",
+ "",
+ "Note the empty-string convention: `description`, `use` and `city` are never null in",
+ "the Python sense — absent values arrive as `''` or the string `'None'`. A naive",
+ "`.isna()` check would report 100% coverage and silently treat 39,088 storyless loans",
+ "as having text. `src/features.py::_is_missing_text` tests `not raw.strip()`, so the",
+ "`*_missing` flags are correct.",
+ "",
+] + STRUCT_TABLE + [
+ "",
+ "**2.7% of loans (39,088) carry no description at all** — largely Kiva's own privacy",
+ "redaction of large group loans (8,454 records are named *Anonymized Kivans*, mean",
+ "18.4 borrowers). Unadjusted, those storyless loans fund **faster** than loans with a",
+ "description (median 1.81d vs 2.88d; mean 7.83d vs 9.51d). Confounded by size and",
+ "group structure, so not a finding — but a third independent pointer in the same",
+ "direction as the tested results.",
+ "",
+ "## Fast row vs slow row — every field",
+ "",
+ "The two loans behind the contrast above, field by field. Identifying fields are",
+ "marked *withheld*: names, loan ids, image urls, exact timestamps and precise",
+ "locations can be cross-referenced against live Kiva pages, so they are never",
+ "committed. Dates appear only as derived intervals, and geography only at country",
+ "level — which is also the level the analysis actually uses.",
+ "",
+] + COMPARE_TABLE + [
+ "",
+ "Reading down the table: the two loans agree on `status`, `borrowerCount`,",
+ "`sector` and `repaymentInterval`, and differ on exactly the axes the analysis",
+ "identifies as structural — amount, country, programme label — plus the outcome. The",
+ "narrative direction is the opposite of the storytelling hypothesis, which is the",
+ "point of recording them together.",
+ "",
  "### Two contrasting rows — the thesis in miniature",
  "",
  "Inspecting two complete rows (the full field set, including the free text this",

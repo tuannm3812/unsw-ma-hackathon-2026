@@ -115,6 +115,101 @@ not reliable enough to commit. `use` phrases (short, generic) and `whySpecial`
 | `whySpecial` | It helps this borrower grow their business. | 342,277 loans |
 | `whySpecial` | It finances smallholder farmers to purchase dairy cows, chickens, cere | 93,834 loans |
 
+## The raw data as stored
+
+`Kiva_Loans.pkl` is a **list of 1,453,846 dicts**, one per loan, each with the same 27
+keys — not a pickled DataFrame, which is why `src/data_loader` uses `pickle.load`
+rather than `pd.read_pickle`. Loaded into a DataFrame it occupies ~3 GB in memory.
+
+Note the empty-string convention: `description`, `use` and `city` are never null in
+the Python sense — absent values arrive as `''` or the string `'None'`. A naive
+`.isna()` check would report 100% coverage and silently treat 39,088 storyless loans
+as having text. `src/features.py::_is_missing_text` tests `not raw.strip()`, so the
+`*_missing` flags are correct.
+
+| field | dtype | non-null | distinct |
+|---|---|---|---|
+| `id` | int64 | 100.0% | 1,453,846 |
+| `status` | object | 100.0% | 2 |
+| `borrowerCount` | int64 | 100.0% | 50 |
+| `name` | object | 100.0% | 211,830 |
+| `gender` | object | 100.0% | 2 |
+| `loanAmount` | float64 | 100.0% | 1,265 |
+| `lenderRepaymentTerm` | int64 | 100.0% | 100 |
+| `repaymentInterval` | object | 100.0% | 3 |
+| `sector` | object | 100.0% | 19 |
+| `activity` | object | 100.0% | 168 |
+| `use` | object | 100.0% | 568,665 |
+| `city` | object | 95.8% | 14,512 |
+| `latitude` | float64 | 93.7% | 7,612 |
+| `longitude` | float64 | 93.7% | 6,349 |
+| `country_iso` | object | 100.0% | 48 |
+| `country_name` | object | 100.0% | 48 |
+| `region` | object | 100.0% | 6 |
+| `country_ppp` | float64 | 100.0% | 47 |
+| `fundsLentInCountry` | int64 | 100.0% | 69 |
+| `country_latitude` | float64 | 100.0% | 40 |
+| `country_longitude` | float64 | 100.0% | 41 |
+| `description` | object | 100.0% | 1,413,381 |
+| `whySpecial` | object | 97.3% | 643 |
+| `image_url` | object | 100.0% | 1,367,233 |
+| `disbursalDate` | object | 100.0% | 3,694 |
+| `fundraisingDate` | object | 100.0% | 796,945 |
+| `raisedDate` | object | 100.0% | 1,159,324 |
+
+**2.7% of loans (39,088) carry no description at all** — largely Kiva's own privacy
+redaction of large group loans (8,454 records are named *Anonymized Kivans*, mean
+18.4 borrowers). Unadjusted, those storyless loans fund **faster** than loans with a
+description (median 1.81d vs 2.88d; mean 7.83d vs 9.51d). Confounded by size and
+group structure, so not a finding — but a third independent pointer in the same
+direction as the tested results.
+
+## Fast row vs slow row — every field
+
+The two loans behind the contrast above, field by field. Identifying fields are
+marked *withheld*: names, loan ids, image urls, exact timestamps and precise
+locations can be cross-referenced against live Kiva pages, so they are never
+committed. Dates appear only as derived intervals, and geography only at country
+level — which is also the level the analysis actually uses.
+
+| field | fast row | slow row |
+|---|---|---|
+| `id` | *withheld* | *withheld* |
+| `status` | funded | funded |
+| `borrowerCount` | 1 | 1 |
+| `name` | *withheld* | *withheld* |
+| `gender` | female | male |
+| `loanAmount` | 250.0 | 1700.0 |
+| `lenderRepaymentTerm` | 8 | 10 |
+| `repaymentInterval` | monthly | monthly |
+| `sector` | Food | Food |
+| `activity` | Cereals | Grocery Store |
+| `use` | to buy more stocks of rice to sell. | to buy more food in bulk. |
+| `city` | *withheld* | *withheld* |
+| `latitude` | *withheld* | *withheld* |
+| `longitude` | *withheld* | *withheld* |
+| `country_iso` | PH | RW |
+| `country_name` | Philippines | Rwanda |
+| `region` | Asia | Africa |
+| `country_ppp` | 4321.0 | 1043.0 |
+| `fundsLentInCountry` | 240356130 | 81621500 |
+| `country_latitude` | 13.0 | -2.0 |
+| `country_longitude` | 122.0 | 30.0 |
+| `description` | *not reproduced* — 82 words | *not reproduced* — 136 words |
+| `whySpecial` | It helps this borrower grow their business. | It helps refugees launch businesses to rebuild their lives. |
+| `image_url` | *withheld* | *withheld* |
+| `disbursalDate` | *withheld* | *withheld* |
+| `fundraisingDate` | *withheld* | *withheld* |
+| `raisedDate` | *withheld* | *withheld* |
+| **funding speed** (derived) | **0.00 days** | **46.26 days** |
+| **disbursal lead** (derived) | 32.6 days before posting | 20.2 days before posting |
+
+Reading down the table: the two loans agree on `status`, `borrowerCount`,
+`sector` and `repaymentInterval`, and differ on exactly the axes the analysis
+identifies as structural — amount, country, programme label — plus the outcome. The
+narrative direction is the opposite of the storytelling hypothesis, which is the
+point of recording them together.
+
 ### Two contrasting rows — the thesis in miniature
 
 Inspecting two complete rows (the full field set, including the free text this
