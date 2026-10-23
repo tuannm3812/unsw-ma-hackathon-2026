@@ -6,19 +6,19 @@ Reuses scripts/templates/lecture-notes.typ from the uts-mdsi repo verbatim;
 this only supplies hackathon metadata instead of lecture metadata, exactly
 the way render_lecture_notes.py does for lecture notes.
 """
+from __future__ import annotations
+
+import argparse
 import re
 import subprocess
 import tempfile
 from pathlib import Path
 
-UTS = Path("/Users/tuannm3812/Documents/GitHub/1. Study/uts-mdsi")
+REPO = Path(__file__).resolve().parents[1]
+UTS = REPO.parents[1] / "1. Study/uts-mdsi"
 TEMPLATE = UTS / "scripts/templates/lecture-notes.typ"
-CODE_THEME = UTS / "scripts/templates/lecture-notes.tmTheme"
-REPO = Path("/Users/tuannm3812/Documents/GitHub/4. Training/unsw-ma-hackathon-2026")
-OUT_DIR = Path(
-    "/Users/tuannm3812/Library/Mobile Documents/com~apple~CloudDocs/"
-    "01_Study/UNSW MA Hackathon 2026 Review"
-)
+CODE_THEME = TEMPLATE.with_suffix(".tmTheme")
+OUT_DIR = REPO / "docs/pdf/generated"
 FONT_PATHS = (
     Path("/Applications/Google Drive.app/Contents/Resources"),
     Path("/System/Library/Fonts"),
@@ -179,5 +179,23 @@ def render(src: Path, out: Path, session: str, topic: str) -> None:
         print(f"Wrote {out}")
 
 
-for src, name, session, topic in DOCS:
-    render(src, OUT_DIR / name, session, topic)
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--template", type=Path, default=TEMPLATE)
+    parser.add_argument("--output-dir", type=Path, default=OUT_DIR)
+    args = parser.parse_args(argv)
+    if not args.template.is_file():
+        raise FileNotFoundError(
+            "Review template missing; pass --template /path/to/lecture-notes.typ"
+        )
+    # Retain the historical renderer while making external dependencies and
+    # export destinations explicit. Importing this module never renders files.
+    globals()["TEMPLATE"] = args.template.resolve()
+    globals()["CODE_THEME"] = args.template.with_suffix(".tmTheme").resolve()
+    for src, name, session, topic in DOCS:
+        render(src, args.output_dir / name, session, topic)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

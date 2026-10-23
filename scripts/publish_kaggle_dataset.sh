@@ -36,10 +36,10 @@ trap 'rm -rf "${STAGE_DIR}"' EXIT
 
 if command -v kaggle >/dev/null 2>&1; then
   KAGGLE=kaggle
-elif [ -x "/Users/tuannm3812/.local/bin/kaggle" ]; then
-  KAGGLE="/Users/tuannm3812/.local/bin/kaggle"
+elif [ -x "${HOME}/.local/bin/kaggle" ]; then
+  KAGGLE="${HOME}/.local/bin/kaggle"
 else
-  echo "kaggle CLI not found on PATH or at the known local install path." >&2
+  echo "kaggle CLI not found on PATH or in $HOME/.local/bin." >&2
   exit 1
 fi
 
