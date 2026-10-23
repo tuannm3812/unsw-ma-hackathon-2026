@@ -183,3 +183,46 @@ data/**/*.parquet
 .venv/
 venv/
 docs/presentation/slides_draft.pdf
+
+# Reviewed research snapshots: ignore generated reports by default and keep
+# only these selected aggregate artifacts. No row-level feature caches ship.
+reports/**/*
+!reports/**/
+!reports/README.md
+!reports/generated_full_dataset/analysis_summary.json
+!reports/generated_full_dataset/association_summary.txt
+!reports/generated_full_dataset/provenance.json
+!reports/expanded_feature_sensitivity/README.md
+!reports/expanded_feature_sensitivity/recovery_provenance.json
+!reports/expanded_feature_sensitivity/expanded_sensitivity.json
+!reports/expanded_feature_sensitivity/expanded_sensitivity.txt
+!reports/expanded_feature_sensitivity/narrative_coefficients.csv
+!reports/programme_proxy_audit/README.md
+!reports/programme_proxy_audit/programme_audit.json
+!reports/expanded_feature_sensitivity_reviewed/README.md
+!reports/expanded_feature_sensitivity_reviewed/provenance.json
+!reports/expanded_feature_sensitivity_reviewed/run.log
+!reports/expanded_feature_sensitivity_reviewed/expanded/expanded_sensitivity.json
+!reports/expanded_feature_sensitivity_reviewed/expanded/expanded_sensitivity.txt
+!reports/expanded_feature_sensitivity_reviewed/expanded/narrative_coefficients.csv
+!reports/expanded_feature_sensitivity_reviewed/programme_adjusted/expanded_sensitivity.json
+!reports/expanded_feature_sensitivity_reviewed/programme_adjusted/expanded_sensitivity.txt
+!reports/expanded_feature_sensitivity_reviewed/programme_adjusted/narrative_coefficients.csv
+
+# Fresh PDF exports do not replace archived review copies.
+docs/pdf/generated/
+!reports/expanded_feature_sensitivity_reviewed/environment_supplement.json
+
+# Preserve the rejected aggregate run with its explicit diagnostic notice.
+!reports/expanded_feature_sensitivity_diagnostic/README.md
+!reports/expanded_feature_sensitivity_diagnostic/provenance.json
+!reports/expanded_feature_sensitivity_diagnostic/run.log
+!reports/expanded_feature_sensitivity_diagnostic/expanded/expanded_sensitivity.json
+!reports/expanded_feature_sensitivity_diagnostic/expanded/expanded_sensitivity.txt
+!reports/expanded_feature_sensitivity_diagnostic/expanded/narrative_coefficients.csv
+!reports/expanded_feature_sensitivity_diagnostic/programme_adjusted/expanded_sensitivity.json
+!reports/expanded_feature_sensitivity_diagnostic/programme_adjusted/expanded_sensitivity.txt
+!reports/expanded_feature_sensitivity_diagnostic/programme_adjusted/narrative_coefficients.csv
+!reports/expanded_feature_sensitivity_diagnostic/environment_supplement.json
+!reports/expanded_feature_sensitivity_diagnostic/review_status.json
+!reports/expanded_feature_sensitivity_reviewed/review_status.json

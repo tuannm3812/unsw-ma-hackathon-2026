@@ -4,15 +4,15 @@
 a deliberate, labeled snapshot of `src.run_analysis` run against the real
 full 1,453,846-row dataset (see below). It, together with
 `notebooks/0_starter_eda.ipynb` (real output baked into 9 of its 13 code
-cells, from the 100-row sample), is this project's committed *executed*
+cells, from the 100-row sample), is part of this project's committed *executed*
 evidence. `notebooks/1_full_dataset_eda.ipynb`/
 `notebooks/2_full_dataset_modeling.ipynb` are different: their code cells
 carry zero stored output (they're committed as output-free sources, kept
 in sync with their `.py` pairs) - their real numbers are verified by
 executing them on Kaggle and cross-checking the run log, not by anything
 baked into the committed `.ipynb` file itself; their narrative
-conclusions are committed prose, not executed evidence. Everything else
-under `reports/` is generated fresh from the source data and gitignored.
+conclusions are committed prose, not executed evidence. Additional selected
+research snapshots are listed below. Other generated reports remain gitignored unless explicitly selected in `.gitignore`.
 
 ## `reports/generated_full_dataset/` (committed)
 
@@ -123,3 +123,22 @@ block) that still writes a file literally named `statistical_summary.txt`
 if invoked directly. It uses the current, robust `fit_explanatory_models`
 internally, so its content is not stale the way the old committed file
 was - it just isn't part of this project's actual reporting path.
+
+
+## Maintained research extensions (October 2026)
+
+- [Expanded sensitivity recovery](expanded_feature_sensitivity/README.md):
+  the September output is preserved with honest recovery provenance and
+  numerical-audit limitations; it is separate from the primary snapshot.
+- [Programme-text audit](programme_proxy_audit/README.md): a fresh full-data
+  aggregate audit of coverage and country nesting, with no raw text exported.
+- [Reviewed inference](expanded_feature_sensitivity_reviewed/README.md):
+  expanded OLS/LPM sensitivity and a programme-text control comparison, with
+  source/data hashes, execution log, package versions and matching-population
+  checks. It does not rerun prediction or replace the primary specification.
+  Reproduce with `python3 -m src.research_review --data data/Kiva_Loans.pkl
+  --output-dir reports/reviewed_new`, choosing a fresh output directory.
+- [Rejected diagnostic run](expanded_feature_sensitivity_diagnostic/README.md):
+  an absorbed missingness indicator survived numerical projection in the first
+  programme model. Its outputs are preserved to explain the regression fix;
+  do not use its affected coefficients or tests as substantive evidence.

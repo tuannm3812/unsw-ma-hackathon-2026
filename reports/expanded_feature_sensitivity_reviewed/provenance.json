@@ -1,0 +1,43 @@
+{
+  "started_at_utc": "2026-10-23T20:54:10.039092+00:00",
+  "git_revision": "2bd87d18aba3e7b7b29099a0ae978eb1abfafcb3",
+  "git_tree_dirty": true,
+  "source_hashes": {
+    "src/__init__.py": "20c00128512a7e6bd2760ac3be4659d938ace5cc5d84041baff06517a9eed709",
+    "src/advanced_modeling.py": "565ef38f4330d1a8de8aaec71f0754aa5a8c1d2718bcb19174243d696d8e256a",
+    "src/binary_modeling.py": "34ff88778f8e6944720abcc19e4417864d662e449190d8cdc855b3001cf61e2a",
+    "src/data_loader.py": "813c066c8ca60ae585e73f46032aed7cd1f27d0df5a66a6bcdf6c957c7b293c3",
+    "src/feature_sensitivity.py": "22b3c0e5ddc94025c230c2b86bdd4fb54cfcb172ffc0c0d79e2b1c361c886f71",
+    "src/features.py": "be53d2d07943b80c2d4dc18ba1de000afc2d833e03d44a2f00930ef9d3a3a367",
+    "src/modeling.py": "927c72591b934aeea51c4773bceae2c854f21e7e902ed7227855f95648e8f10c",
+    "src/programme_audit.py": "3708f85eb4be4745dacd8c0d96eede3c00ccb40d49b3f23d9df8f1af9fafe46e",
+    "src/research_review.py": "4f05c4f8e71bc7fc90e65bce919b0851e480e90a277a6cbee22b083c13c1d85e",
+    "src/run_analysis.py": "734d47ad30c646b0df4ecc3862e5bc8f87b9e7bd6c56dcefcdde10f85dbba2de",
+    "src/statistical_analysis.py": "ab7c6e99e08159b411d0b18a269e7dcb9d60c9caadb8797f72f974fecd925050",
+    "src/text_transformer.py": "f63f5789a31aa7eae5c974e43978878b5d3aa55710b41ed8bad2ac8718dbef82",
+    "src/topics.py": "7dc56bb6c8ad1433202581adcc45f7964eacac9f1d57018807b15c66c45ab27f",
+    "src/validation.py": "e550451dbdd01037534376853241a375f0b5affe09f4103f753ed11e8a56cc60"
+  },
+  "data_filename": "Kiva_Loans.pkl",
+  "data_sha256": "e292f135aefd31d8628934227ad320b8d2f25ede72e504dd82be37a30afc4bf1",
+  "data_size_bytes": 1597994508,
+  "software_versions": {
+    "python": "3.9.6",
+    "pandas": "2.3.3",
+    "numpy": "2.0.2",
+    "scipy": "1.13.1",
+    "sklearn": "1.6.1",
+    "statsmodels": "0.14.6"
+  },
+  "configuration": {
+    "chunk_size": 25000,
+    "country_clustering": "country_name",
+    "programme_proxy": "trimmed whySpecial; missing is a separate level",
+    "prediction_rerun": false
+  },
+  "input_rows": 1453846,
+  "valid_duration_rows": 1453840,
+  "excluded_invalid_duration_rows": 6,
+  "source_changed_during_run": [],
+  "completed_at_utc": "2026-10-23T21:17:15.258551+00:00"
+}

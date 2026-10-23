@@ -1,0 +1,92 @@
+Expanded Feature Sensitivity
+============================
+
+This is a sensitivity analysis, not a replacement for the pre-specified primary model.
+The 24-hour specification is a linear-probability model for tractable rich-control verification.
+
+Chronological Ridge block comparison
+-------------------------------------
+
+Clustered sensitivity: log_funding_speed
+----------------------------------------
+Rows: 1453840; country clusters: 48
+Control rank: 883 / 886 columns; total parameter rank: 907
+Complete-case exclusions: 0
+Dropped dependent/constant narrative columns: ['desc_sentiment_neu', 'whySpecial_char_count', 'whySpecial_word_count']
+
+Joint feature-family tests (BH within outcome; singular families unavailable):
+          family  n_features  covariance_rank  df_numerator  df_denominator test_status  statistic      p_value  fdr_p_value
+description_form           5                5             5              47   available  18.584425 3.796321e-10 1.898161e-09
+  auxiliary_text           5                5             5              47   available   2.648388 3.442573e-02 4.986909e-02
+     specificity           3                3             3              47   available   1.034848 3.858272e-01 3.858272e-01
+         framing           8                8             8              47   available   6.030515 2.505052e-05 6.262630e-05
+       sentiment           3                3             3              47   available   2.998757 3.989528e-02 4.986909e-02
+
+Narrative coefficients (country-clustered; BH-FDR across retained terms):
+                            feature  coefficient  standard_error   t_value  p_value  fdr_p_value        ci_low       ci_high
+                    desc_word_count    -0.001758    2.774309e-03 -0.633599 0.529414     0.977380 -7.338988e-03  3.823391e-03
+                    desc_char_count    -0.000037    4.888300e-04 -0.076061 0.939693     0.999999 -1.020580e-03  9.462180e-04
+                desc_sentence_count     0.017536    8.705673e-03  2.014275 0.049724     0.561090  2.206429e-05  3.504917e-02
+               desc_avg_word_length    -0.068969    6.662918e-02 -1.035110 0.305914     0.661424 -2.030091e-01  6.507210e-02
+           desc_avg_sentence_length     0.000769    4.168062e-03  0.184431 0.854469     0.999999 -7.616339e-03  9.153779e-03
+                description_missing    -0.542866    5.050373e-01 -1.074903 0.287906     0.661424 -1.558870e+00  4.731379e-01
+                        use_missing     0.051930    4.955625e-01  0.104790 0.916988     0.999999 -9.450131e-01  1.048873e+00
+                 whySpecial_missing    -3.603868    3.356206e+06 -0.000001 0.999999     0.999999 -6.751820e+06  6.751812e+06
+                     use_char_count    -0.000401    9.575341e-04 -0.418378 0.677576     0.999999 -2.326922e-03  1.525698e-03
+                     use_word_count     0.000729    5.474408e-03  0.133244 0.894569     0.999999 -1.028366e-02  1.174252e-02
+                 number_token_count     0.000072    4.612363e-03  0.015512 0.987689     0.999999 -9.207330e-03  9.350426e-03
+                  age_pattern_count    -0.020110    1.597944e-02 -1.258472 0.214437     0.661424 -5.225616e-02  1.203680e-02
+            years_in_business_count    -0.012269    1.248296e-02 -0.982854 0.330712     0.661424 -3.738139e-02  1.284355e-02
+      family_mentions_per_100_words     0.009435    5.511541e-03  1.711858 0.093515     0.561090 -1.652816e-03  2.052277e-02
+ basic_needs_mentions_per_100_words    -0.007026    6.503310e-03 -1.080314 0.285515     0.661424 -2.010859e-02  6.057356e-03
+    business_mentions_per_100_words     0.005424    3.416803e-03  1.587554 0.119093     0.571645 -1.449361e-03  1.229808e-02
+      agency_mentions_per_100_words     0.005774    4.317494e-03  1.337256 0.187575     0.661424 -2.912084e-03  1.445927e-02
+   gratitude_mentions_per_100_words     0.014667    1.185782e-02  1.236889 0.222273     0.661424 -9.188053e-03  3.852165e-02
+     urgency_mentions_per_100_words    -0.003930    3.661104e-02 -0.107352 0.914966     0.999999 -7.758219e-02  6.972163e-02
+first_person_mentions_per_100_words     0.009774    4.342273e-02  0.225095 0.822881     0.999999 -7.758102e-02  9.712950e-02
+third_person_mentions_per_100_words    -0.008088    2.546397e-03 -3.176156 0.002636     0.063260 -1.321045e-02 -2.965064e-03
+            desc_sentiment_compound     0.026731    1.532626e-02  1.744136 0.087673     0.561090 -4.101379e-03  5.756354e-02
+                 desc_sentiment_pos     0.045564    1.176993e-01  0.387125 0.700411     0.999999 -1.912161e-01  2.823448e-01
+                 desc_sentiment_neg    -0.135007    3.065626e-01 -0.440388 0.661675     0.999999 -7.517311e-01  4.817179e-01
+
+Clustered sensitivity: funded_within_24h
+----------------------------------------
+Rows: 1453840; country clusters: 48
+Control rank: 883 / 886 columns; total parameter rank: 907
+Complete-case exclusions: 0
+Dropped dependent/constant narrative columns: ['desc_sentiment_neu', 'whySpecial_char_count', 'whySpecial_word_count']
+
+Joint feature-family tests (BH within outcome; singular families unavailable):
+          family  n_features  covariance_rank  df_numerator  df_denominator test_status  statistic  p_value  fdr_p_value
+description_form           5                5             5              47   available   3.477941 0.009346     0.015576
+  auxiliary_text           5                5             5              47   available   2.580214 0.038352     0.038352
+     specificity           3                3             3              47   available   6.008539 0.001495     0.003737
+         framing           8                8             8              47   available   6.313080 0.000015     0.000077
+       sentiment           3                3             3              47   available   3.321306 0.027606     0.034507
+
+Narrative coefficients (country-clustered; BH-FDR across retained terms):
+                            feature  coefficient  standard_error       t_value  p_value  fdr_p_value        ci_low       ci_high
+                    desc_word_count     0.000954    1.169581e-03  8.160432e-01 0.418592     0.798392 -1.398465e-03  3.307323e-03
+                    desc_char_count    -0.000070    2.010371e-04 -3.505962e-01 0.727458     0.831380 -4.749172e-04  3.339516e-04
+                desc_sentence_count    -0.005730    3.581961e-03 -1.599756e+00 0.116354     0.518139 -1.293624e-02  1.475711e-03
+               desc_avg_word_length     0.012731    2.191317e-02  5.809616e-01 0.564042     0.798392 -3.135291e-02  5.681433e-02
+           desc_avg_sentence_length    -0.000778    1.731573e-03 -4.492199e-01 0.655338     0.827795 -4.261333e-03  2.705619e-03
+                description_missing     0.085727    1.618328e-01  5.297284e-01 0.598794     0.798392 -2.398382e-01  4.112931e-01
+                        use_missing    -0.003918    1.468445e-01 -2.667966e-02 0.978828     0.999999 -2.993307e-01  2.914952e-01
+                 whySpecial_missing     1.103478    1.114428e+06  9.901743e-07 0.999999     0.999999 -2.241940e+06  2.241942e+06
+                     use_char_count     0.000277    3.965777e-04  6.986458e-01 0.488216     0.798392 -5.207441e-04  1.074879e-03
+                     use_word_count    -0.001503    2.547647e-03 -5.898362e-01 0.558126     0.798392 -6.627899e-03  3.622510e-03
+                 number_token_count     0.000425    2.485288e-03  1.708532e-01 0.865073     0.943716 -4.575136e-03  5.424375e-03
+                  age_pattern_count     0.009194    4.658070e-03  1.973674e+00 0.054314     0.434511 -1.773176e-04  1.856434e-02
+            years_in_business_count     0.012195    4.763509e-03  2.560011e+00 0.013742     0.164902  2.611690e-03  2.177758e-02
+      family_mentions_per_100_words    -0.002331    2.373030e-03 -9.822432e-01 0.331009     0.722202 -7.104812e-03  2.443027e-03
+ basic_needs_mentions_per_100_words     0.003793    2.599355e-03  1.459338e+00 0.151124     0.518139 -1.435890e-03  9.022563e-03
+    business_mentions_per_100_words    -0.002579    6.559257e-04 -3.931575e+00 0.000276     0.006627 -3.898374e-03 -1.259269e-03
+      agency_mentions_per_100_words     0.000613    1.685761e-03  3.636746e-01 0.717732     0.831380 -2.778245e-03  4.004382e-03
+   gratitude_mentions_per_100_words    -0.005255    4.968825e-03 -1.057516e+00 0.295682     0.722202 -1.525060e-02  4.741376e-03
+     urgency_mentions_per_100_words     0.015374    1.127959e-02  1.363016e+00 0.179372     0.538117 -7.317347e-03  3.806587e-02
+first_person_mentions_per_100_words    -0.007796    1.344962e-02 -5.796558e-01 0.564915     0.798392 -3.485330e-02  1.926100e-02
+third_person_mentions_per_100_words     0.001436    9.617575e-04  1.492933e+00 0.142138     0.518139 -4.989668e-04  3.370646e-03
+            desc_sentiment_compound    -0.005648    5.562102e-03 -1.015520e+00 0.315057     0.722202 -1.683793e-02  5.541079e-03
+                 desc_sentiment_pos    -0.032709    6.022892e-02 -5.430730e-01 0.589646     0.798392 -1.538737e-01  8.845626e-02
+                 desc_sentiment_neg     0.127768    8.726142e-02  1.464198e+00 0.149797     0.518139 -4.777933e-02  3.033153e-01

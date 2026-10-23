@@ -10,16 +10,20 @@ or edited during recovery. They are exploratory research evidence, separate
 from the [primary pipeline snapshot](../generated_full_dataset/) and submitted
 hackathon materials.
 
-**The historical inference requires a corrected full-data rerun before reuse.**
+**Use the [reviewed inference extension](../expanded_feature_sensitivity_reviewed/README.md) for current sensitivity claims.**
 Synthetic regression tests exposed numerical defects in the recovered estimator:
 features absorbed by controls could be retained after normalizing solver noise;
 redundant controls were counted as extra parameters in the clustered correction;
 LSMR convergence was unchecked; and a singular family covariance could produce
 a misleading full-family p-value through a pseudoinverse. The corrected source
 records rank, exclusions and test availability and refuses singular family tests.
-The extent to which these changes affect this saved run has not been measured
-by recovery inspection. Do not combine old coefficients with corrected-code
-claims or present the saved inference as newly verified.
+The corrected expanded rerun matches these historical coefficients to within
+2.1e-8 in absolute value, while providing current execution provenance. This
+agreement does not reconstruct the old execution or make its provenance complete.
+A separate programme-controlled attempt exposed a further absorbed-indicator
+defect; its [diagnostic record](../expanded_feature_sensitivity_diagnostic/README.md)
+is explicitly rejected. Exact categorical absorption was then added before
+projection. Do not combine outputs from these distinct runs.
 
 The Ridge prediction comparison is a separate workflow; these regression fixes
 do not themselves change it. Its original execution provenance is still missing.
@@ -93,4 +97,9 @@ do not define a completely reproducible environment.
 and current environment information. The original source revision, dirty state,
 input hash, command, software versions, execution log and per-reason exclusions
 were unavailable in the recovered artifacts. Current hashes cannot fill those
-historical gaps. No full-data rerun is claimed by this recovery record.
+historical gaps. Its status and validation fields describe the inspection
+at that time. Later categorical-absorption fixes and notebook wording edits
+changed sources; inspection-time hashes are not hashes of the final revision.
+Use the reviewed run's source hashes for its numerical results.
+No full-data rerun is claimed by this recovery record; the later reviewed run
+has its own provenance.

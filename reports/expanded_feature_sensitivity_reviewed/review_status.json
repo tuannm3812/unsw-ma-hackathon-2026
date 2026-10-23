@@ -1,0 +1,32 @@
+{
+  "status": "accepted_as_exploratory_sensitivity_only",
+  "reviewed_at_utc": "2026-10-23T21:21:52.158078+00:00",
+  "source_content_commit": "e57e5f2174638abda0d6fd8f65494d478f709c22",
+  "run_started_with_dirty_tree": true,
+  "verification": {
+    "full_offline_tests_passed": 135,
+    "test_warnings": 1,
+    "warning": "Known joblib physical-core detection warning; logical-core fallback",
+    "independent_review": "passed; no blocking findings",
+    "matching_population_all_four_fits": 1453840,
+    "country_clusters": 48,
+    "complete_case_exclusions_all_fits": 0,
+    "programme_retained_narrative_terms": 23,
+    "programme_exactly_absorbed_features": [
+      "whySpecial_missing",
+      "whySpecial_char_count",
+      "whySpecial_word_count"
+    ],
+    "coefficient_and_joint_test_calculations": "independently verified t/F inference, CIs and within-outcome BH",
+    "csv_json_agreement": true,
+    "source_and_resource_hashes_unchanged": true
+  },
+  "scope_limits": [
+    "observational association only",
+    "programme text is not verified partner identity",
+    "multiplicity adjustment is not study-wide",
+    "primary models and prediction were not rerun",
+    "full paired notebook execution was not performed"
+  ],
+  "rejected_previous_attempt": "../expanded_feature_sensitivity_diagnostic/review_status.json"
+}

@@ -1,0 +1,14 @@
+{
+  "captured_at_utc": "2026-10-23T20:28:08.279633+00:00",
+  "capture_scope": "Environment/resource supplement captured during the reviewed full-data run; checked again at completion.",
+  "nltk_version": "3.9.2",
+  "python": "3.9.6",
+  "resource_hashes": {
+    "resources/nltk_data/sentiment/LICENSE.txt": "77072ac14ac6d86173d7d7ac7e750d7984c5397019218a88fc898dc57bc74717",
+    "resources/nltk_data/sentiment/README.md": "f25f3608b0ca29054c2f6a548ce4acce6889951a2151aec559377b9d4275c8ae",
+    "resources/nltk_data/sentiment/vader_lexicon.zip": "8adba4294eef3964d820bf655e37e61bdc3a341994356af59b74fb3b4a36ce5c"
+  },
+  "command": "python -u -m src.research_review --data data/Kiva_Loans.pkl --output-dir reports/expanded_feature_sensitivity_reviewed",
+  "note": "Core numeric versions, code hashes, and data hash are in provenance.json. This supplement is an inspection receipt, not an original September record.",
+  "verified_unchanged_at_utc": "2026-10-23T20:47:46.768843+00:00"
+}
