@@ -1,0 +1,81 @@
+{
+  "historical_artifact_sha256_at_recovery": {
+    "expanded_sensitivity.json": "3ec9352e05435c0ff12d8c22e6c30a9c1ff7f24e93523102bb195253ef1ad3c0",
+    "expanded_sensitivity.txt": "7ac4b81ddfdc4dff5ee29b323b2e0c28e96081c371914b0d1bfc5f2545fd34f1",
+    "narrative_coefficients.csv": "343deb5f8d67e2a11ff9f50c5182fb258fbed79dc6401547b7cd612849b488ea"
+  },
+  "historical_inference_status": "requires_corrected_full_data_rerun_before_reuse",
+  "inspected_at_utc": "2026-10-23T20:22:01.882991+00:00",
+  "inspection_git_revision_not_original_run_revision": "589add1a48550c8d90448685bf9ec67e93a8d7ca",
+  "inspection_source_sha256_not_original_run_source": {
+    "notebooks/3_expanded_feature_sensitivity.ipynb": "d594ce0c0be51d240da22e0b3935ea58c59750cca5ae252c528c6bc5fbb14994",
+    "notebooks/3_expanded_feature_sensitivity.py": "3beee7ee5e9119ad73f7d772d4dc58904a4365d3f7117471a938bce44659409b",
+    "src/feature_sensitivity.py": "53c7b901ef99b7bf880d1ab41716703abe78fd29fe5a5751cc1c1a5f9d1b47eb",
+    "tests/test_feature_sensitivity.py": "9ef0436d9fff83677f8ff2d67e40db81ae6a753f2e92f3edebcce094551e0c10"
+  },
+  "inspection_versions_not_original_run_environment": {
+    "jupytext": "1.19.5",
+    "numpy": "2.0.2",
+    "pandas": "2.3.3",
+    "pytest": "8.4.2",
+    "scikit-learn": "1.6.1",
+    "scipy": "1.13.1",
+    "statsmodels": "0.14.6"
+  },
+  "inspection_worktree_dirty": true,
+  "original_run": {
+    "command": null,
+    "data_sha256": null,
+    "dirty_state": null,
+    "exclusion_reasons": null,
+    "execution_log": null,
+    "software_versions": null,
+    "source_revision": null
+  },
+  "population_reported_by_artifacts": {
+    "holdout_rows": 278887,
+    "inference": {
+      "funded_within_24h": {
+        "clusters": 48,
+        "rows": 1453840
+      },
+      "log_funding_speed": {
+        "clusters": 48,
+        "rows": 1453840
+      }
+    },
+    "train_rows": 1174953
+  },
+  "record_type": "historical_snapshot_recovery_not_rerun",
+  "recovery_validation": {
+    "artifact_checks": [
+      "JSON/CSV numeric consistency",
+      "historical coefficient BH recomputation within each outcome",
+      "recovery artifact SHA256 consistency",
+      "paired notebook source equivalence",
+      "notebook metadata schema and empty output policy"
+    ],
+    "commands": [
+      ".venv/bin/python -m pytest -q tests/test_feature_sensitivity.py",
+      ".venv/bin/python -m pytest -q",
+      "git diff --check"
+    ],
+    "focused_tests": {
+      "failed": 0,
+      "passed": 14
+    },
+    "full_data_rerun": false,
+    "full_offline_suite": {
+      "date": "2026-10-24",
+      "elapsed_seconds": 40.32,
+      "failed": 0,
+      "passed": 133,
+      "warning": "joblib could not detect physical cores; logical core fallback",
+      "warnings": 1
+    },
+    "historical_files_preserved": true,
+    "notebook_execution": false,
+    "scope": "synthetic estimator regressions, artifact consistency, notebook source/metadata/output checks"
+  },
+  "saved_artifact_generated_at_claim": "2026-09-03T06:39:30.114468+00:00"
+}
