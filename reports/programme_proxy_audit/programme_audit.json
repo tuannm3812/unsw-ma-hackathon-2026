@@ -1,0 +1,44 @@
+{
+  "analysis_scope": "exploratory_programme_proxy_audit",
+  "provenance": {
+    "generated_at_utc": "2026-10-23T20:20:03.182277+00:00",
+    "git_revision": "589add1a48550c8d90448685bf9ec67e93a8d7ca",
+    "git_tree_dirty": true,
+    "data_filename": "Kiva_Loans.pkl",
+    "data_sha256": "e292f135aefd31d8628934227ad320b8d2f25ede72e504dd82be37a30afc4bf1",
+    "data_size_bytes": 1597994508,
+    "source_hashes": {
+      "src/programme_audit.py": "3708f85eb4be4745dacd8c0d96eede3c00ccb40d49b3f23d9df8f1af9fafe46e",
+      "src/data_loader.py": "813c066c8ca60ae585e73f46032aed7cd1f27d0df5a66a6bcdf6c957c7b293c3"
+    },
+    "software_versions": {
+      "python": "3.9.6",
+      "pandas": "2.3.3"
+    },
+    "configuration": {
+      "min_group_size": 1000
+    }
+  },
+  "audit": {
+    "input_rows": 1453846,
+    "valid_rows": 1453840,
+    "excluded_rows": 6,
+    "missing_programme_rows": 40012,
+    "observed_programme_rows": 1413828,
+    "observed_programme_levels": 642,
+    "fully_observed_country_levels": 642,
+    "single_country_levels": 590,
+    "single_country_level_share": 0.9190031152647975,
+    "single_country_loan_share_among_observed_programmes": 0.9335704201642633,
+    "min_group_size": 1000,
+    "well_populated_levels": 140,
+    "well_populated_rows": 1348259,
+    "well_populated_mean_days_range": [
+      0.22352131839566103,
+      30.93280628748643
+    ],
+    "rows_in_repeated_descriptions_among_observed_programmes": 2456,
+    "observed_nonblank_description_rows": 1413818,
+    "interpretation": "Exact programme-text groups are candidate controls, not verified field-partner identifiers. Descriptive mean gaps are unadjusted associations among completed-duration records. Repeated text alone does not prove partner authorship."
+  }
+}
