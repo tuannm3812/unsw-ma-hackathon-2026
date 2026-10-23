@@ -2163,3 +2163,39 @@ Toolchain: `export_scripts_and_qa.py` gained a `BEAT_RE` — a `> **Beat · name
 Tuan rewrote his half in simpler English with explicit linking words and asked for a check plus a personal card. Every number in his rewrite was verified correct; three lines violated the evidence discipline and are fixed in the saved copy: "our honest answer is no" → **"we can't say yes"** (asserting no effect contradicts the limits slide), "we would rather share no results" → **"no strong evidence"** (the structural results were shared), and the closing "structure **drives** the money" → **"in this data … carries the signal"** (causal verb, missing scope hedge). His slide 8 keeps the borrower material inside step one, so the crib adds a one-sentence borrower-page line at the page turn ("what to expect, not what to game") instead of the shared script's 40-second beat. Also: "programs" restored to step three (matches the projected card) and "three clear steps" reconciled with its fourth item as "plus one guardrail".
 
 Saved as `docs/presentation/tuan_delivery_crib.md` → `tuan-delivery-crib.pdf` (2pp): one beat per line (pandoc hard breaks), per-slide timing, its own highlight set in the renderer, and the two most likely counter-punches at the foot (the p6 headline quote-back, and 0.44-vs-0.49 on the table). ~460 words ≈ 3:30 at 130 wpm for his half. The shared scripts are unchanged — this is a personal copy, and the header says so. Exported to iCloud, Google Drive and `docs/pdf/`.
+
+
+**Codex — Tailor shared coding standards for research maintenance (2026-10-24)**
+
+The user requested applying the shared GitHub coding standard with project-specific
+adaptations. Compared the master `coding-standards/coding_standards.md` with this
+repository's rules, source layout, notebook contracts, dependency files, private
+kernel metadata, report provenance policy, and current Git status.
+
+- Reworked `docs/0_coding_standards.md` into current operational rules. Retained
+  the authoritative `src/` pipeline and existing document history; aligned naming
+  with the master's current Shape A guidance instead of claiming an obsolete
+  zero-padding exception. Removed deadline-era justifications and fixed test counts.
+- Added explicit research rules for full-data versus sample evidence, primary
+  versus sensitivity specifications, association versus causation, uncertainty,
+  interactions, outcome direction, completed-record selection, and pre-disbursal.
+- Clarified source-pair/output policies, narrowly scoped existing Kaggle exceptions,
+  run-log capture, snapshot provenance, the partial dependency lock, and verification
+  proportional to the change. These are requirements, not a claim that all existing
+  artifacts already comply.
+- Updated `AGENTS.md` to point to the exact master file, require explicit reading
+  when imports are not expanded, identify primary evidence, and record the completed
+  finalist stage. The user clarified finalist recognition; the official UNSW results
+  were inspected in the preceding project review. `CLAUDE.md` remains `@AGENTS.md`.
+
+Verification: `git diff --check` passed; all four local Markdown links in the
+updated standard resolve; the master path and agent instruction chain resolve;
+`.venv/bin/python -m pytest -q tests/test_notebook_contract.py` passed **8 tests**.
+No analysis logic or output changed, so the full-data pipeline and full test suite
+were not rerun for this documentation change. The preceding review's full suite
+passed 121 tests with one physical-core-detection warning; that was a separate run.
+
+Open: the README still contains historical final-round status/logistics. The
+pre-existing untracked expanded-sensitivity notebook/script, module, test, and
+reports were preserved and not staged or promoted. Their review/provenance work
+remains separate from this standards update. No commit or push was performed.

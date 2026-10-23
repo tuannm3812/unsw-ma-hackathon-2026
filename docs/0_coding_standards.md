@@ -1,232 +1,215 @@
-# Coding Standards
+# Project Coding and Research Standards
 
-## Baseline
+Reviewed against the shared master standard on **2026-10-24**.
 
-This project follows the shared `coding-standards/coding_standards.md` at
-the GitHub root (`/Users/tuannm3812/Documents/GitHub/coding-standards`) as
-its baseline. That file is the fallback for anything not overridden below.
-Everything here is either a project-specific addition or an explicit,
-reasoned override of the shared baseline - this project predates the
-shared standard (it grew out of a 10-task, Codex-reviewed engagement
-before the finalist round), so several conventions were already
-established in practice before this doc existed; this file records what's
-actually true, not a retroactive rewrite of working history.
+## 1. Baseline and scope
 
-## Repository Scope
+Follow `~/Documents/GitHub/coding-standards/coding_standards.md` for shared
+Python style, Git hygiene, verification, and collaboration rules. This file
+contains project-specific additions and deliberate overrides; it does not
+copy the master or certify that every existing file is compliant.
 
-**Deviates from the baseline's notebook-first default.** This is not a
-Kaggle competition project - it's a research/analytics submission with a
-tested, leakage-safe pipeline as its authoritative artifact:
+This is an inference-led research project using Kiva loan data. Predictive
+models provide complementary evidence; there is no competition leaderboard
+score to optimise. Prefer defensible associations and clear limitations to
+marginal gains in predictive fit.
 
-- `src/` - the tested, CLI-driven pipeline (`python3 -m src.run_analysis`).
-  This is the project's actual source of truth for any number that goes
-  into the proposal or the final slides, not a "shared logic reused across
-  notebooks" convenience module. It exists because the analysis itself
-  (chronological validation, HC3 robust inference, an explicit predictor
-  allowlist, leakage guards) is complex enough to need real test coverage,
-  not because notebooks needed a helper.
-- `tests/` - 95 tests covering `src/` against synthetic fixtures (never
-  the real dataset - see Git Hygiene) plus notebook/README contract checks.
-- `notebooks/` - `0_starter_eda` (local pipeline demonstration, imports
-  `src/`) and `1_full_dataset_eda`/`2_full_dataset_modeling` (self-contained
-  Kaggle kernels, no `src/` import - see Kaggle Workflow in README.md and
-  Notebook Naming below).
-- `docs/superpowers/` - plans, specs, and the collaboration log (see
-  Document Naming below).
-- `proposal/`, `reports/`, `data/` - the submitted proposal, committed
-  result snapshots, and gitignored raw data respectively; all documented
-  in their own `README.md`s.
+The hackathon is complete. Cultural Blend was a **finalist**, as confirmed
+by the team and the [official UNSW results](https://www.unsw.edu.au/business/our-schools/marketing/news-events/student-events/MA-hackathon).
+Preserve submitted materials as historical evidence. Label subsequent
+corrections and research extensions so they cannot be mistaken for the
+submitted analysis or a prize-winning result.
 
-## Document Naming
+## 2. Repository structure and authority
 
-**Deviates from the baseline's numbered `docs/0_..., 1_..., ...` scheme.**
-This project uses `docs/superpowers/{plans,specs,collab-logs}/` instead -
-an established convention from the Superpowers skill workflow this project
-was built with, already containing a full, reviewed history (10 tasks,
-multiple Codex rounds each) before this coding-standards doc was written.
-Renaming/restructuring that history now would cost real effort for no
-reader benefit this close to the 2026-09-03 deadline. This file
-(`docs/0_coding_standards.md`) is the one exception, added to match the
-baseline's expected filename so it's where a future contributor - or a
-fresh Claude/Codex session - looks for it first.
+**Override of the master's notebook-first default:** the tested pipeline in
+`src/`, invoked with `python3 -m src.run_analysis`, is the authoritative
+implementation. Its inference, leakage checks, and reporting warrant a
+separate tested package. Keep the existing structure:
 
-## Notebook Naming
+| Location | Role |
+| --- | --- |
+| `src/` | Reusable analysis, validation, feature extraction, and reporting |
+| `tests/` | Synthetic-fixture tests and notebook/documentation contracts |
+| `notebooks/` | Exploration, explanatory walkthroughs, and executable notebook sources |
+| `scripts/` | Data-dictionary, presentation, export, and compute helpers |
+| `reports/generated_full_dataset/` | Deliberately committed primary full-data snapshot |
+| `proposal/` | Submitted proposal; retain its historical sample-data scope |
+| `docs/presentation/`, `docs/pdf/` | Presentation sources and selected rendered artifacts |
+| `data/` | Gitignored restricted input files and a setup README |
 
-`0_starter_eda`, `1_full_dataset_eda`, `2_full_dataset_modeling` -
-single-digit, not zero-padded. **This is a deliberate override** of the
-baseline's zero-padded example (`01_eda.ipynb`, `02_...`): the user
-explicitly requested single-digit numbering over zero-padding for this
-project. Otherwise the baseline's naming rules hold: numbers are reserved
-for promoted, project-owned workflows (not parameter variants), and names
-describe the actual workflow, not just a step.
+The self-contained EDA and modeling notebooks implement simpler models.
+Their estimates are not interchangeable with the primary pipeline's
+estimates. Label notebook-derived results with their specification and run.
+Expanded feature sensitivity remains a separate analysis until explicitly
+reviewed and promoted; it must not silently replace the primary model.
 
-## Python Style
+## 3. Naming and documentation
 
-Follows the baseline's PEP 8 / type-hint requirements throughout `src/`.
-**One deliberate deviation**: docstrings on `src/`'s internal helpers are
-prose explaining *why* (a non-obvious constraint, a caveat about a
-caller's assumptions, a decision and its alternative) rather than the
-baseline's Google-style `Args:`/`Returns:` template - matching this
-project's own governing instruction that comments/docstrings should carry
-non-obvious reasoning, not restate a signature the type hints already
-make clear. Google-style `Args:`/`Returns:` remains the right choice for a
-function whose *parameters themselves* need explaining (units, valid
-ranges, shape) rather than its rationale - use judgment per function
-rather than one template for all of `src/`.
+This project's centre of gravity matches the master's **Shape A** modeling
+workflow, despite its hackathon name. Preserve existing paths and history:
 
-## Notebook Style
+- Use single-digit numbered notebook names, such as `1_full_dataset_eda`.
+  This now agrees with the master; it is not a zero-padding exception.
+- Keep numbered top-level reference documents, including this file and
+  [the data dictionary](1_data_dictionary.md).
+- Retain `docs/superpowers/{plans,specs,collab-logs}/` for the existing
+  planning and review history. Do not renumber it for cosmetic consistency.
+- Put the project summary, current status, and reproduction entry points
+  in [README.md](../README.md). Put detailed evidence beside its analysis.
+- Keep `AGENTS.md` as the concise project entry point and `CLAUDE.md` as
+  the single-line `@AGENTS.md` reference. Read the referenced standard
+  explicitly when an agent does not expand imports automatically.
+- Append meaningful changes, verification, and unresolved limitations to
+  the [collaboration log](superpowers/collab-logs/2026-08-17-hackathon-upgrade-collab-log.md).
+  Correct earlier entries by adding new evidence, not rewriting history.
 
-`1_full_dataset_eda.ipynb`/`2_full_dataset_modeling.ipynb` already follow
-the baseline's checklist: a config block near the top (`DATA_PATH`
-resolution, `HOLDOUT_START`), deterministic seeding (`random_state=42`
-throughout), platform path auto-detection (no hardcoded username - see the
-"Dynamic File Path Resolution" note below for the one place this differs
-from the baseline's literal recommendation), Markdown insight cells after
-every printed table/plot (added this round - see the collab log's
-finalist-round entry), numbered `##` sections, and a closing "Key
-takeaways for the deck" section. `0_starter_eda.ipynb` is lighter-weight
-by design - it's a pipeline demonstration on a 100-row sample, not a
-findings notebook, so it skips insight cells and a takeaways section in
-favor of just proving `src/` runs end-to-end.
+## 4. Data scope and reproducible evidence
 
-**Outputs policy** (matches `kaggle-rsna-knee-abnormality-detection`'s
-exact policy, now enforced by
-`tests/test_notebook_contract.py::test_kaggle_notebook_committed_copy_stays_output_free`):
-`1_full_dataset_eda.ipynb`/`2_full_dataset_modeling.ipynb` stay
-output-free in the repository, always - a trusted Kaggle run's real
-numbers get transcribed into the notebook's own Markdown insight cells
-(verified against the run's log, not from memory - see the collab log),
-never left as stored cell output. This avoids baking a Kaggle container's
-absolute paths or a since-superseded run's numbers into git history every
-time the notebook is edited and re-pushed. `0_starter_eda.ipynb` is the
-opposite by design: it's re-executed for real after every edit (13/13
-cells, local, seconds) and keeps its genuine output, because "does the
-tested pipeline actually run" is the thing it exists to prove.
+- Research findings use the full **1,453,846-row** input dataset. The
+  100-row sample is for demonstrations and smoke tests only. Identify the
+  dataset, eligible row count, exclusions, and analysis population for
+  every reported result; the input count is not every model's sample size.
+- Trace public numbers to a saved report or verified run log. Record the
+  command/configuration, source revision and dirty state, data identity,
+  run time, software versions, exclusions, and validation boundary.
+- Keep primary results, exploratory results, and sensitivity checks
+  distinguishable. Report disagreements rather than choosing whichever
+  specification gives the most attractive conclusion.
+- For the committed primary snapshot, retain both report formats and
+  `provenance.json` together, following [reports/README.md](../reports/README.md).
+  For new snapshots, capture equivalent provenance. Mark gaps in older
+  runs honestly; do not invent missing hashes or execution records.
+- Follow the master's run-capture policy: save logs, summary outputs, and
+  provenance before the next Kaggle push. Identify each archive by run
+  date/version; do not overwrite the only evidence for a published claim.
+- `requirements-lock.txt` pins direct dependencies, not the complete
+  environment or rendering toolchain. Record actual versions; do not
+  promise byte-identical reproduction from that file alone.
 
-**Offline-safety - deliberate override.** The baseline says final/
-submission notebooks shouldn't depend on internet access. Both Kaggle
-notebooks here run with `enable_internet: true`, but scoped to exactly
-two one-time fetches: `nltk.download("vader_lexicon")` (guarded by a
-`LookupError` check, so it's a no-op once cached) and a `pip install shap`
-fallback for the rare environment where Kaggle's stock image doesn't
-already have it. No other network access happens. This is acceptable here
-because these are **private compute-backend kernels for a team, not a
-Code Competition submission** re-executed against a hidden test set - the
-baseline's reasoning (reproducibility under someone else's re-run) doesn't
-apply the same way to a kernel only this team ever runs.
+## 5. Statistical claims and interpretation
 
-## Feature Engineering & Leakage Prevention
+- Describe associations, not causal effects. A non-significant coefficient
+  does not establish no effect or a practically negligible effect. Report
+  effect sizes, uncertainty, units, and the population to which they apply.
+- Distinguish full-sample explanatory inference from chronological
+  predictive evaluation. AUC, SHAP, and permutation importance do not
+  validate a causal mechanism or a particular explanatory coefficient.
+- Use the primary model's HC3 inference alongside country-clustered
+  sensitivity where relevant. State the cluster count and dependence
+  assumptions. Few-cluster reference calculations are heuristic screens,
+  not calibrated confirmation; one-country groups cannot estimate
+  between-country uncertainty.
+- An interaction relative to a reference category is not a within-group
+  association. Estimate the appropriate group-average contrast before
+  making a claim about a region or sector.
+- For exploratory feature searches, define the multiple-testing family
+  and report the correction. Distinguish joint family tests from tests of
+  individual features and label changes to controls or model families.
+- Interpret coefficient signs against outcome definitions: shorter
+  duration and higher probability of funding within 24 hours both mean
+  faster funding, even though their coefficient signs differ.
+- Results concern records with valid completed funding durations, including
+  the separately reported refunded records. They do not estimate funding
+  success across all listings. Unfunded/expired listings and censoring
+  require additional data and an explicitly revised outcome design.
+- Do not equate platform funding duration with borrower waiting time.
+  Account for pre-disbursal before discussing borrower or partner impact.
+- Treat programme/partner proxies as hypotheses requiring validation.
+  Do not describe `whySpecial` as an observed partner identifier, or its
+  descriptive differences as causal effects.
 
-Exceeds the baseline here rather than deviating from it - see
-`README.md`'s "Chronological Validation and Leakage Protections" section
-for the full detail: chronological (not random) train/holdout split
-shared by all three models, an explicit predictor **allowlist** (not a
-blocklist), fit-on-train-only transforms, and a dedicated
-`InsufficientDataError` so a too-small split degrades to a labeled
-diagnostic instead of a misleading number.
+## 6. Features, validation, and Python style
 
-## Plot Style
+Preserve the predictor allowlist and posting-time availability checks.
+Exclude outcomes, post-outcome fields, and borrower identifiers from model
+inputs. Never impute a missing outcome. Fit imputation, encoding, scaling,
+TF-IDF, and topic models only on training data for predictive evaluation.
+Use chronological validation consistently across compared models, with
+matching rows and outcomes for feature-block comparisons. Keep full-sample
+exploratory topic summaries explicitly separate from predictive transforms.
 
-Viridis, per the baseline - applied this round to every plot in
-`1_full_dataset_eda.ipynb` (`sns.set_theme(..., palette="viridis")` plus
-explicit `plt.cm.viridis(...)` sampling for the two single-series
-histograms and the period bar chart) and `2_full_dataset_modeling.ipynb`'s
-SHAP importance chart. Verified with a local smoke test against the
-100-row sample and a visual check of the rendered PNGs before committing -
-a pure color-parameter change doesn't need a fresh ~20-minute Kaggle round
-to trust, unlike a logic change.
+Follow the master's PEP 8, type-hint, and deterministic-seed guidance for
+new or changed code. Keep configuration visible and make failures diagnostic
+rather than silently substituting results. Preserve `InsufficientDataError`
+for genuinely undersized validation partitions.
 
-## Documentation Style
+**Docstring override:** internal helpers may use short prose explaining
+assumptions and non-obvious reasoning. Use Google-style parameter/return
+documentation when units, shapes, or semantics need explanation. Do not
+reformat unrelated code solely to restate typed signatures.
 
-Already matches the baseline's intent: `README.md` carries the broad
-narrative (status, getting started, results, limitations) and
-`docs/superpowers/` carries the detailed evidence trail (design specs,
-plans, the full collaboration log) - see Document Naming above for why
-the detail lives there instead of numbered `docs/` files. Facts that can
-change (the 2026-09-03 5pm Sydney deadline, judging-criteria weights) are
-timestamped or dated at the point they're recorded.
+## 7. Notebook and chart workflow
 
-## Git Hygiene
+Keep paired `.py` and `.ipynb` sources synchronised. Analysis notebooks need
+visible configuration, deterministic seeds, numbered sections, interpretation
+beside important outputs, and a closing limitations/next-steps section.
+Retain kernel and language metadata and portable local input resolution.
 
-Already compliant: `data/*.pkl` and the Kaggle notebooks' regenerated
-kernel copies (`notebooks/kernels/*/*.ipynb`) are gitignored; no
-credentials, checkpoints, or generated artifacts are committed. `reports/
-generated_full_dataset/` is a deliberate exception - see `reports/
-README.md`'s own stated policy for committing a specific, labeled
-snapshot of a trusted run.
+**Output policy override:** `1_full_dataset_eda.ipynb` and
+`2_full_dataset_modeling.ipynb` remain output-free, including cleared
+execution counts. Verified numbers may appear in Markdown insight cells
+with a traceable run source. `0_starter_eda.ipynb` retains genuine sample-run
+outputs and must be re-executed after edits. New research notebooks should
+start output-free; review any output-retention exception before committing.
 
-## Commit Message Convention
+Default analytical charts to Viridis. Show units, population, model source,
+and uncertainty where relevant, with one clear interpretation per chart.
+Presentation styling may follow the established deck design while retaining
+legibility and accurate scales. Visually inspect changed charts and rendered
+artifacts. Regenerate derived slide text/PDFs through their documented
+scripts rather than editing generated mirrors independently.
 
-**Adopting `type(scope): summary` going forward.** Existing history
-mostly uses `type: summary` (no parenthesized scope, e.g. `fix: correct
-overclaims...`) - close to the baseline's Conventional Commits format but
-not identical. Not rewriting history for this; new commits from this
-point should include a scope (`docs(notebooks): ...`,
-`test(contract): ...`) per the baseline.
+## 8. Private compute and data protection
 
-## Pre-Commit / Pre-Push Workflow
+Kaggle is a private compute backend; leaderboard submission rules do not
+apply. Keep kernels and datasets private and CPU-only by default. Public
+code does not imply permission to publish the restricted dataset. Review
+notebook outputs, logs, and exported artifacts for identifiers, raw text,
+credentials, and local paths before sharing.
 
-Exceeds the baseline's checklist in practice: every notebook or `src/`
-change in this project's history has been verified with fresh command
-output before being reported as done (full local test suite, and for the
-Kaggle notebooks specifically, a real `kaggle kernels status` /
-`kaggle kernels output` round-trip confirming the pushed kernel actually
-completed and printed the claimed numbers - not just that it uploaded).
-Continue that practice: proportional verification per §10 of the baseline
-means a pure-markdown or pure-color change gets a local smoke test, and a
-logic change to a Kaggle notebook gets a real Kaggle re-run before its
-numbers are trusted.
+Two existing exceptions remain narrowly scoped:
 
-## Kaggle Private Deployment Standards
+- **Network:** the EDA/modeling kernels enable internet for the guarded
+  VADER lexicon download and the modeling kernel's SHAP install fallback.
+  Local pipeline/tests use the vendored lexicon and remain offline.
+  Record fetched dependency versions; prefer attached/cached dependencies
+  when revising this setup. New kernels default to internet-disabled.
+- **Input discovery:** those notebooks use two known Kaggle mount candidates
+  for this dataset. Preserve this explicit selection while it is valid;
+  if generalising discovery, reject missing or ambiguous matches rather
+  than silently reading another dataset.
 
-Checked against the baseline's §12 checklist:
+Verify kernel metadata and actual completion/output before reporting a
+successful remote run. Upload acceptance alone is not execution evidence.
 
-- **Pre-upload validation gate**: `tests/test_notebook_contract.py` scans
-  for absolute paths and (for `0_starter_eda`) borrower-identifying
-  columns before anything is pushed; extended this round to cover
-  `1_full_dataset_eda.py`/`2_full_dataset_modeling.py`'s source and both
-  notebooks' committed (output-free) copies.
-- **Dynamic file path resolution - a deliberate, documented deviation.**
-  The baseline recommends `os.walk`/`rglob`-based discovery over a
-  hardcoded mount path, precisely to avoid guessing wrong about how
-  Kaggle mounts a dataset. This project's notebooks use a fixed
-  two-candidate check (`/kaggle/input/datasets/tuannm3812/kiva-loans-
-  hackathon-data`, falling back to `/kaggle/input/kiva-loans-hackathon-
-  data`) instead. That's not an oversight: the real mount path was already
-  empirically diagnosed via a dedicated diagnostic kernel earlier in the
-  Kaggle migration (`os.walk('/kaggle/input')` run for real, not assumed -
-  see the collab log's finalist-round entry), and the fixed check has
-  since been re-confirmed working across four consecutive real Kaggle
-  runs. A dynamic search would add complexity this project doesn't
-  currently need, and risks silently resolving to an unintended dataset
-  if a second one is ever attached to these kernels - a real, if unlikely,
-  failure mode the fixed check doesn't have.
-- **Kernel metadata**: handled by `jupytext`'s notebook generation: every
-  push includes a standard `kernelspec`/`language_info`, confirmed by four
-  successful real Kaggle runs.
-- **Plot/warning compatibility**: not currently a live issue - nothing in
-  either notebook uses a matplotlib API with known recent deprecations.
-  Revisit if a future Kaggle image bump introduces a warning.
-- **Visibility and collaborators**: both kernels are `is_private: true`,
-  CPU-only (`enable_gpu: false` - nothing in either pipeline benefits from
-  a GPU), and have no collaborators added.
+## 9. Git hygiene and proportional verification
 
-## Kaggle Submission Method
+Keep restricted data, credentials, caches, kernel push copies, and large
+regenerable artifacts out of Git. Selected aggregate reports, figures,
+rendered deliverables, and privacy-reviewed run logs may be committed when
+they directly support documented analysis. Make future generated-artifact
+exceptions explicit in `.gitignore`; existing selected artifacts remain
+part of the historical record.
 
-Not applicable - this project has no competition leaderboard or submission
-step. The Kaggle kernels here are a private compute backend for the team
-(see README's "Kaggle Workflow"), not a scored entry.
+Before staging, inspect `git status --short` and review every changed path.
+Preserve pre-existing untracked research work; do not sweep it into an
+unrelated commit or delete it as cleanup. Use scoped Conventional Commits
+(`docs(standards): ...`, `fix(inference): ...`) for coherent changes and
+avoid rewriting shared history.
 
----
+| Change | Required evidence before claiming completion |
+| --- | --- |
+| Documentation only | Check paths/links, factual sources, and `git diff --check`; run relevant existing documentation contracts |
+| Chart styling only | Render representative output and inspect it; no full-data inference rerun needed |
+| Analysis or feature logic | Relevant synthetic tests and full offline suite; rerun affected full-data analysis before publishing revised findings |
+| Notebook logic | Check source-pair consistency, metadata, output policy, and actual execution on the intended platform |
+| Dependency changes | Verify imports/tests and rerun affected numerical or rendering workflows before replacing trusted artifacts |
+| New result snapshot | Review provenance, population/exclusions, uncertainty, and consistency of reports and public claims |
 
-## Numbered reference docs
-
-Top-level documents in `docs/` are numbered so the reading order is explicit:
-
-- `0_coding_standards.md` — this file: conventions the code follows.
-- `1_data_dictionary.md` — every raw field: official definition, real coverage,
-  and how this project used it (generated by `scripts/build_data_dictionary.py`).
-
-Sub-directories keep their own naming: `docs/presentation/` (deck brief, Q&A pack,
-slide mirror, chart and asset READMEs), `docs/pdf/` (rendered review PDFs), and
-`docs/superpowers/` (plans, specs, and the external-review collaboration log).
+Use `python3 -m pytest -q` in the project's environment for the full offline
+suite. Report the observed count and warnings with the run date; do not
+hardcode a moving test count into this standard. A passing test suite does
+not establish that the full-data analysis was rerun. If execution is still
+pending, label the affected results unverified and retain the trusted
+snapshot until replacement evidence is available.
