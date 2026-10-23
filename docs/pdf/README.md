@@ -1,5 +1,10 @@
 # Review PDFs (2026-09-03)
 
+Historical preparation copies. For current reuse, read
+[the evidence corrections](../2_evidence_and_corrections.md); these archived
+PDFs have not been regenerated with the October maintenance interpretation.
+Fresh exports default to the gitignored `generated/` subdirectory.
+
 Repo mirrors of the team's iCloud review copies - styled typst renders, all
 regenerated from the final verified content (deck brief, Q&A pack and the two
 reading copies last rebuilt 2026-09-03):

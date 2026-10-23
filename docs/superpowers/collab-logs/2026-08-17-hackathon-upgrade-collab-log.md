@@ -2199,3 +2199,77 @@ Open: the README still contains historical final-round status/logistics. The
 pre-existing untracked expanded-sensitivity notebook/script, module, test, and
 reports were preserved and not staged or promoted. Their review/provenance work
 remains separate from this standards update. No commit or push was performed.
+
+**Codex — Apply research maintenance and portfolio improvements (2026-10-24)**
+
+The user authorised applying the review and tailored standards. Work stayed in
+this checkout on `codex/research-maintenance`, preserving the existing restricted
+data and untracked sensitivity work. Local commits separate standards, inference,
+tooling, research workflows, evidence snapshots and portfolio documentation.
+No remote push, upload, deployment or LinkedIn publication was performed.
+
+- Refreshed the README to completed **finalist** status and archived event logistics.
+  Added current evidence corrections and a portfolio case study with a LinkedIn
+  achievement entry, not a feed post. Official UNSW results identify Cultural
+  Blend as one of eight finalist teams from 44 registered teams.
+- Preserved the submitted proposal, primary August reports, historical presentation
+  sources and rendered artifacts. Current interpretation notices supersede the
+  old sign-reversal, robust-null and borrower-waiting claims. Added a source-backed
+  regional uncertainty chart, rendered and visually inspected.
+- Integrated the existing sensitivity module, notebook pair, tests and September
+  aggregate outputs. Original output hashes remain unchanged; recovery provenance
+  explicitly records what could not be recovered. Corrected solver convergence,
+  parameter-rank accounting, numerical absorption, unavailable singular family
+  tests, multiplicity reporting, and snapshot overwrite handling.
+- Added a fresh full-data programme-text audit: 1,453,846 input rows, 1,453,840
+  eligible completed durations, 642 observed nonblank categories, 40,012 missing
+  labels, and 590 categories confined to one country. Categories are an unvalidated
+  text proxy, not partner identities. No borrower records or raw text are exported.
+- Made Kaggle CLI discovery and PDF-export paths portable, with inert renderer
+  imports and a separate default generated-output folder. Tightened report ignores
+  to explicit aggregate snapshots. Historical PDFs/PPTX were not regenerated.
+
+The first fresh maintenance inference run completed in 24m34s but final inspection
+found another defect: `whySpecial_missing` exactly matched the missing programme
+category on all eligible rows, yet LSMR left relative residue 1.5246e-8 above the
+1e-8 absorption guard. Normalising that noise produced standard errors exceeding
+one million and contaminated auxiliary-family inference. The run is preserved in
+`reports/expanded_feature_sensitivity_diagnostic/`, with explicit machine-readable
+rejection status. A 12,000-row synthetic regression reproduced the failure RED.
+Exact within-category absorption on complete cases fixed it GREEN, without changing
+row eligibility or widening the numerical tolerance. An independent reviewer
+confirmed the root cause and the mathematical validity of the correction.
+
+The corrected full-data rerun completed in **23m05s**, saved separately in
+`reports/expanded_feature_sensitivity_reviewed/`. All four fits use the same
+1,453,840 eligible rows and 48 clusters, with zero additional complete-case
+exclusions or missingness. Programme controls have rank 883/886; all three
+programme-determined text features are absorbed, leaving 23 narrative terms and
+906 total parameters. Source/data identity, versions, execution log, NLTK/resource
+hashes, and independent review status accompany the accepted exploratory snapshot.
+Its source hashes reconstruct exactly from commit `e57e5f2`; the original dirty
+run-start provenance remains unchanged.
+
+The expanded baseline is bit-for-bit unchanged from the first maintenance run
+and agrees with historical coefficients within 2.1e-8. Programme adjustment moves
+third-person duration q from 0.01236 to 0.06062 with a modest point-estimate change.
+Business-framing 24-hour q is 0.00635. Corrected auxiliary-family q values are
+0.38583 (duration) and 0.61488 (24-hour), overturning the rejected attempt's apparent
+family support. Several other families remain associated. Neither blanket null
+claims nor causal writing recommendations are justified. Full estimates, units,
+pointwise intervals and multiplicity boundaries are documented beside the results.
+
+Verification: **135 tests passed**, one known joblib physical-core-detection warning
+(logical-core fallback), in 18.35s after the final code fix; 15 focused sensitivity
+tests passed. Eleven notebook/proposal contracts passed. All four notebook pairs,
+metadata and output policies were checked; current documentation links resolve.
+Independent review recomputed t/F inference, CIs, both BH families and CSV/JSON
+agreement; it verified matching populations and source/resource provenance, with
+no blocking findings. `git diff --check` passed. Primary reports, proposal and
+historical rendered artifacts remain unchanged from `589add1`.
+
+Scope boundary: this was a fresh explanatory sensitivity and programme audit,
+not a primary-model rerun, predictive rerun or full execution of notebook 3.
+The new notebook remains output-free and source-validated. The current evidence
+notice records future work requiring new partner/censoring data, validated text
+constructs and a prospective intervention design; those are not completed claims.
