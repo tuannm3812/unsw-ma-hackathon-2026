@@ -328,6 +328,25 @@ def fit_clustered_partial_regression(
         categorical_controls,
         cluster_col,
     )
+    # A feature constant within every level of one categorical control is
+    # exactly in that control's dummy span. Detect this before iterative
+    # projection: LSMR's backward-error stopping rule can leave residue above
+    # the relative-norm cutoff for an intercept-minus-many-dummies contrast.
+    categorically_absorbed = {}
+    for control in categorical_controls:
+        remaining = [name for name in narrative_features
+                     if name not in categorically_absorbed]
+        if not remaining:
+            break
+        grouped = data[remaining].groupby(data[control].astype(str), sort=False)
+        constant_within_groups = grouped.min().eq(grouped.max()).all()
+        for name in constant_within_groups.index[constant_within_groups]:
+            categorically_absorbed[name] = control
+    narrative_features = [name for name in narrative_features
+                          if name not in categorically_absorbed]
+    pre_dropped_features.extend(categorically_absorbed)
+    if not narrative_features:
+        raise ValueError("No independent narrative features remain after categorical absorption")
     controls, control_names = _control_matrix(data, numeric_controls, categorical_controls)
     # Only the small p-by-p cross-product is dense, never the n-by-p design.
     # Nested controls do not add degrees of freedom to the CR1 correction.
@@ -479,6 +498,7 @@ def fit_clustered_partial_regression(
         "control_columns": control_names,
         "requested_narrative_features": requested_narrative_features,
         "dropped_narrative_features": dropped_features,
+        "categorically_absorbed_features": categorically_absorbed,
         "coefficients": coefficient_table,
         "joint_tests": joint_table,
     }

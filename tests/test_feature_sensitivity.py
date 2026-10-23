@@ -415,3 +415,39 @@ def test_output_writer_uses_json_null_for_unavailable_inference(tmp_path):
     paths = write_sensitivity_outputs(payload, tmp_path)
     loaded = json.loads(paths["json"].read_text())
     assert loaded["diagnostic"] is None
+
+
+def test_absorbed_reference_indicator_with_many_categories_is_never_estimated():
+    # LSMR can stop successfully with residue above the numerical absorption
+    # cutoff when a reference indicator is intercept minus hundreds of dummies.
+    rng = np.random.default_rng(2)
+    n = 12000
+    country = rng.integers(0, 48, n)
+    programme = country * 13 + rng.integers(0, 13, n)
+    programme[rng.random(n) < 0.028] = -1
+    frame = pd.DataFrame({
+        "country": country.astype(str),
+        "programme": programme.astype(str),
+        "activity": rng.integers(0, 150, n).astype(str),
+        "year": rng.integers(0, 10, n).astype(str),
+        "month": rng.integers(0, 12, n).astype(str),
+        "z": rng.normal(size=n),
+    })
+    frame["missing"] = (programme == -1).astype(float)
+    frame["x"] = rng.normal(size=n)
+    frame["y"] = 0.6 * frame.x + rng.normal(size=n)
+    options = dict(
+        outcome="y", numeric_controls=["z"],
+        categorical_controls=["country", "programme", "activity", "year", "month"],
+        cluster_col="country", feature_families={"narrative": ["x", "missing"]},
+    )
+    result = fit_clustered_partial_regression(
+        frame, narrative_features=["x", "missing"], **options,
+    )
+    assert "missing" in result["dropped_narrative_features"]
+    reference = fit_clustered_partial_regression(
+        frame, narrative_features=["x"], **options,
+    )
+    pd.testing.assert_frame_equal(result["coefficients"], reference["coefficients"])
+    pd.testing.assert_frame_equal(result["joint_tests"], reference["joint_tests"])
+    assert result["full_parameter_count"] == reference["full_parameter_count"]
