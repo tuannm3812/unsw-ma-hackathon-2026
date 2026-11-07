@@ -1,0 +1,800 @@
+{
+  "meta": {
+    "title": "Beyond a good story",
+    "created": "2026-11-08",
+    "standard": "docs/presentation/DESIGN.md",
+    "claims": "docs/presentation/claims_register.md",
+    "presenters": {
+      "Sophia": "slides 1-7",
+      "Mike": "slides 8-16"
+    },
+    "note_pattern": "Project 15: bold purpose opening; explanation in visual reading order; [Point: label] cues; limits beside claims; transition; Reference block not read aloud"
+  },
+  "slides": [
+    {
+      "n": 1,
+      "id": "cover",
+      "section": null,
+      "layout": "cover",
+      "title": "Beyond a good story",
+      "subtitle": "What 1.45 million Kiva loan descriptions can and cannot tell us about funding speed",
+      "lines": [
+        "Mike Nguyen and Sophia Nguyen, Cultural Blend",
+        "Finalists, UNSW Marketing Analytics Hackathon Challenge 2026",
+        "Portfolio edition, November 2026"
+      ],
+      "visual": "Navy ground, yellow accent shape; reuse the sourced Kiva farmer photograph from docs/presentation/poster (credit in notes) in a rounded frame bleeding off the right edge",
+      "notes": {
+        "purpose": "Introduce the question and who we are.",
+        "script": "We are Cultural Blend, one of eight finalist teams in the UNSW Marketing Analytics Hackathon. We analysed 1.45 million Kiva loans to ask whether the way a borrower's story is written is linked to how fast the loan funds. This edition adds two months of follow-up research.",
+        "reference": "Official results: unsw.edu.au MA-hackathon page (reviewed 2026-10-24). Photo credit as recorded in docs/presentation/poster/."
+      }
+    },
+    {
+      "n": 2,
+      "id": "summary",
+      "section": "Summary",
+      "layout": "content+takeaways",
+      "title": "Text carries forecast information, but no writing tip is proven",
+      "subtitle": "Summary of the August, October and November evidence",
+      "body": [
+        {
+          "heading": "Uncertainty first",
+          "text": "64 of 120 significant terms lost significance once errors were clustered by 48 countries."
+        },
+        {
+          "heading": "Most framing links are small",
+          "text": "Family, agency, business and third-person framing are bounded within about ±5% of funding time per extra mention per 100 words. Urgency is unresolved."
+        },
+        {
+          "heading": "Text adds forecast information",
+          "text": "Adding text lowered linear forecast error in 5 of 5 years, by 0.26–0.39 days."
+        }
+      ],
+      "takeaways": [
+        {
+          "marker": 1,
+          "heading": "What it supports",
+          "text": "Use description text as context in research and forecasting."
+        },
+        {
+          "marker": 2,
+          "heading": "What it does not",
+          "text": "No evidence yet that rewriting a description speeds funding."
+        },
+        {
+          "marker": 3,
+          "heading": "Next decision",
+          "text": "Validate the text measures, then test one truthful prompt with partners."
+        }
+      ],
+      "notes": {
+        "purpose": "Give the answer before the detail.",
+        "script": "Three findings. First, the size of the data hid how uncertain many results were: once we accounted for countries, more than half the significant terms fell away. Second, most framing associations are small enough to bound, but urgency is too noisy to judge either way. Third, text does improve forecasts, by about a quarter to two fifths of a day. So text is informative, but we cannot yet say that changing it helps. [Point: Next decision] The next step is measurement and one small pilot.",
+        "reference": "claims_register.md rows: 64 of 120; equivalence screen; November linear gains."
+      }
+    },
+    {
+      "n": 3,
+      "id": "agenda",
+      "section": "Agenda",
+      "layout": "agenda",
+      "title": "Agenda",
+      "parts": [
+        {
+          "n": "01",
+          "name": "Problem",
+          "question": "What are we measuring, and why does it matter?",
+          "pages": "4–6"
+        },
+        {
+          "n": "02",
+          "name": "Approach",
+          "question": "How did we test the claims?",
+          "pages": "7"
+        },
+        {
+          "n": "03",
+          "name": "Evidence",
+          "question": "What holds up, and how well?",
+          "pages": "8–13"
+        },
+        {
+          "n": "04",
+          "name": "Next steps",
+          "question": "What should Kiva and partners do next?",
+          "pages": "14–15"
+        }
+      ],
+      "notes": {
+        "purpose": "Orient the reader.",
+        "script": "We start with the problem and what the outcome really measures, then our three layers of evidence, then what we found and what we recommend."
+      }
+    },
+    {
+      "n": 4,
+      "id": "lever",
+      "section": "Problem",
+      "layout": "content+takeaways",
+      "title": "The description is the one listing field a partner can still change",
+      "subtitle": "Context: what is fixed and what is editable when a Kiva loan is listed",
+      "exhibit": {
+        "type": "two_column_fields",
+        "fixed": [
+          "Loan amount and term",
+          "Sector and purpose",
+          "Country and partner",
+          "Borrower gender and group size"
+        ],
+        "editable": [
+          "Description text",
+          "Loan use statement",
+          "Photo"
+        ]
+      },
+      "takeaways": [
+        {
+          "marker": 1,
+          "heading": "Why the question matters",
+          "text": "Partners and Kiva staff coach descriptions; if framing mattered, coaching would be a cheap lever."
+        },
+        {
+          "marker": 2,
+          "heading": "What we asked",
+          "text": "Which narrative choices are associated with faster funding, for whom and when?"
+        }
+      ],
+      "notes": {
+        "purpose": "Explain why narrative is worth studying.",
+        "script": "Most of what describes a loan is fixed by the time it is listed. The text is the part someone can still edit, which is why platforms coach it. Our question is whether the way it is written is linked to faster funding."
+      }
+    },
+    {
+      "n": 5,
+      "id": "outcome",
+      "section": "Problem",
+      "layout": "content+takeaways",
+      "title": "The outcome is completed funding on the platform, not borrower waiting time",
+      "subtitle": "Descriptive audit of all records; August primary run",
+      "key_figures": [
+        {
+          "value": "1,453,840",
+          "label": "valid completed durations, 2016–2025"
+        },
+        {
+          "value": "96.4%",
+          "label": "disbursed to the borrower before listing (median 24.2 days earlier)"
+        }
+      ],
+      "body": [
+        {
+          "text": "1,453,846 input records; 6 negative durations excluded; 1,637 refunded records included."
+        }
+      ],
+      "takeaways": [
+        {
+          "marker": 1,
+          "heading": "Who waits",
+          "text": "For most loans the partner has already paid the borrower; platform time is the partner's capital cycle."
+        },
+        {
+          "marker": 2,
+          "heading": "Who is missing",
+          "text": "Only loans that eventually funded are in the data, so we cannot study whether a loan funds at all."
+        }
+      ],
+      "notes": {
+        "purpose": "Set the limits every later claim inherits.",
+        "script": "Our outcome is the time from listing to full funding. Two facts shape it. Almost all loans were paid out before they were listed, so a faster platform fill helps the partner replenish capital, not a waiting borrower. And the data only contain loans that funded.",
+        "reference": "association_summary.txt audit trail; docs/1_data_dictionary.md disbursalDate."
+      }
+    },
+    {
+      "n": 6,
+      "id": "slowdown",
+      "section": "Problem",
+      "layout": "content+takeaways",
+      "title": "Same-day funding fell from 46.0% to 30.3% and has not recovered",
+      "subtitle": "Share of loans fully funded within 24 hours by period; descriptive",
+      "exhibit": {
+        "type": "bar",
+        "unit": "% funded within 24 h",
+        "axis_from_zero": true,
+        "bars": [
+          {
+            "label": "Pre-pandemic",
+            "value": 46.0,
+            "n": 589823
+          },
+          {
+            "label": "Pandemic",
+            "value": 30.3,
+            "n": 298549
+          },
+          {
+            "label": "Post-pandemic",
+            "value": 30.0,
+            "n": 565474
+          }
+        ]
+      },
+      "takeaways": [
+        {
+          "marker": 1,
+          "heading": "A slower market",
+          "text": "The drop persisted for four years after the disruption."
+        },
+        {
+          "marker": 2,
+          "heading": "Why it matters here",
+          "text": "Period is a control in every model; narrative effects are judged within periods."
+        }
+      ],
+      "notes": {
+        "purpose": "Show the market context.",
+        "script": "Before 2020 almost half of loans funded within a day. That fell to under a third and stayed there. This is descriptive: we do not claim to know why.",
+        "reference": "notebooks/1_full_dataset_eda.py period trend; counts from association_summary.txt."
+      }
+    },
+    {
+      "n": 7,
+      "id": "approach",
+      "section": "Approach",
+      "layout": "full_width_diagram",
+      "title": "Three layers of evidence, each answering a different question",
+      "subtitle": "August primary run, October extension and November benchmark",
+      "exhibit": {
+        "type": "three_layer_diagram",
+        "layers": [
+          {
+            "name": "August primary run",
+            "question": "Which features are associated with speed, and how sure are we?",
+            "method": "OLS and GLM; HC3 versus country-clustered errors; 2024–2025 chronological holdout"
+          },
+          {
+            "name": "October extension",
+            "question": "Do associations survive richer controls?",
+            "method": "Country-clustered OLS and LPM with and without a programme-text proxy; BH adjustment"
+          },
+          {
+            "name": "November benchmark",
+            "question": "How much does text add to a structure-only forecast?",
+            "method": "Matched feature blocks on identical rows; as-of training; five annual windows 2021–2025"
+          }
+        ],
+        "footer": "8 November: exploratory equivalence screen of the October coefficients"
+      },
+      "notes": {
+        "purpose": "Explain how the evidence fits together.",
+        "script": "Each layer answers a different question, so we keep their numbers separate. August asks about associations and their uncertainty. October adds controls. November asks a prediction question: does text improve a forecast built on loan structure alone?"
+      }
+    },
+    {
+      "n": 8,
+      "id": "clustering",
+      "section": "Evidence",
+      "layout": "content+takeaways",
+      "title": "Large row counts did not remove country-level uncertainty",
+      "subtitle": "August primary run: HC3 versus 48-country clustered errors",
+      "key_figures": [
+        {
+          "value": "64 of 120",
+          "label": "significant terms lost significance under country clustering"
+        },
+        {
+          "value": "p = 0.49",
+          "label": "urgency, duration model, clustered (was p < 0.001 under HC3)"
+        }
+      ],
+      "takeaways": [
+        {
+          "marker": 1,
+          "heading": "Why it happens",
+          "text": "Loans in one country share context, so 1.45 million rows behave like far fewer independent observations."
+        },
+        {
+          "marker": 2,
+          "heading": "What it does not mean",
+          "text": "Losing significance is not evidence of no effect; the next slide tests that directly."
+        }
+      ],
+      "notes": {
+        "purpose": "Show why we distrust headline significance.",
+        "script": "With 1.45 million rows almost everything looks significant. When we let errors correlate within each of 48 countries, 64 of the 120 significant terms fell away, including urgency. [Point: What it does not mean] That tells us the evidence is weak, not that the effect is zero.",
+        "reference": "association_summary.txt sensitivity blocks; recount recorded in claims_register.md."
+      }
+    },
+    {
+      "n": 9,
+      "id": "equivalence",
+      "section": "Evidence",
+      "layout": "content+takeaways",
+      "title": "Most framing associations are small; urgency remains unresolved",
+      "subtitle": "Equivalence screen of October coefficients; exploratory, bound set after the estimates",
+      "exhibit": {
+        "type": "forest",
+        "unit": "change in log(1 + days) per extra mention per 100 words, 90% interval, expanded specification",
+        "bound_band": [
+          -0.05,
+          0.05
+        ],
+        "rows": [
+          {
+            "term": "agency",
+            "estimate": 0.0042,
+            "ci90_low": -0.0028,
+            "ci90_high": 0.0112,
+            "status_both_specs": "bounded"
+          },
+          {
+            "term": "basic needs",
+            "estimate": 0.0021,
+            "ci90_low": -0.019,
+            "ci90_high": 0.0233,
+            "status_both_specs": "bounded"
+          },
+          {
+            "term": "business",
+            "estimate": 0.009,
+            "ci90_low": -0.0027,
+            "ci90_high": 0.0207,
+            "status_both_specs": "bounded"
+          },
+          {
+            "term": "family",
+            "estimate": 0.0096,
+            "ci90_low": -0.0005,
+            "ci90_high": 0.0197,
+            "status_both_specs": "bounded"
+          },
+          {
+            "term": "third person",
+            "estimate": -0.009,
+            "ci90_low": -0.013,
+            "ci90_high": -0.005,
+            "status_both_specs": "bounded"
+          },
+          {
+            "term": "gratitude",
+            "estimate": 0.0163,
+            "ci90_low": -0.0701,
+            "ci90_high": 0.1027,
+            "status_both_specs": "mixed"
+          },
+          {
+            "term": "sentiment (+0.5 score)",
+            "estimate": 0.0272,
+            "ci90_low": 0.0026,
+            "ci90_high": 0.0519,
+            "status_both_specs": "mixed"
+          },
+          {
+            "term": "first person",
+            "estimate": -0.0723,
+            "ci90_low": -0.1431,
+            "ci90_high": -0.0016,
+            "status_both_specs": "unresolved"
+          },
+          {
+            "term": "urgency",
+            "estimate": -0.0482,
+            "ci90_low": -0.1259,
+            "ci90_high": 0.0295,
+            "status_both_specs": "unresolved"
+          }
+        ]
+      },
+      "takeaways": [
+        {
+          "marker": 1,
+          "heading": "Small, not just non-significant",
+          "text": "Five framings stay inside ±5% of funding time in both specifications."
+        },
+        {
+          "marker": 2,
+          "heading": "Too noisy to judge",
+          "text": "Urgency and first-person framing could still be linked to 6–14% faster or slower funding."
+        },
+        {
+          "marker": 3,
+          "heading": "Caveat",
+          "text": "The bound was chosen after seeing the estimates; a confirmatory test needs one agreed in advance."
+        }
+      ],
+      "notes": {
+        "purpose": "Separate 'small' from 'unknown'.",
+        "script": "The shaded band is a practical bound, about five percent of funding time per extra mention. When a whole interval sits inside the band, we can say the association is small. Most framings do. Urgency and first person do not: their intervals are wide enough to allow sizeable links either way. [Point: Caveat] We chose the bound after seeing the results, so treat this as exploratory.",
+        "reference": "reports/equivalence_screen_reviewed/README.md; src/equivalence.py."
+      }
+    },
+    {
+      "n": 10,
+      "id": "regions",
+      "section": "Evidence",
+      "layout": "content+takeaways",
+      "title": "Regional family-framing patterns rest on two countries each",
+      "subtitle": "August primary run: within-region slopes with country-clustered and heuristic few-cluster intervals",
+      "exhibit": {
+        "type": "interval_pairs",
+        "unit": "change in log(1 + days) per extra family mention per 100 words",
+        "rows": [
+          {
+            "region": "Middle East",
+            "countries": 2,
+            "loans": 14946,
+            "estimate": -0.0729,
+            "normal_ci": [
+              -0.1003,
+              -0.0456
+            ],
+            "heuristic_ci": [
+              -0.2502,
+              0.1043
+            ]
+          },
+          {
+            "region": "Central America",
+            "countries": 2,
+            "loans": 59391,
+            "estimate": -0.0742,
+            "normal_ci": [
+              -0.0879,
+              -0.0605
+            ],
+            "heuristic_ci": [
+              -0.1629,
+              0.0145
+            ]
+          }
+        ]
+      },
+      "takeaways": [
+        {
+          "marker": 1,
+          "heading": "Two countries is not a pattern",
+          "text": "With two clusters, between-country uncertainty cannot be estimated well; the heuristic intervals cross zero."
+        },
+        {
+          "marker": 2,
+          "heading": "No regional advice",
+          "text": "These are descriptive patterns, not grounds for country or regional writing rules."
+        }
+      ],
+      "notes": {
+        "purpose": "Prevent over-reading the most striking regional result.",
+        "script": "Family framing looks linked to faster funding in two regions. But each region is two countries. A t(1) screen, which is a heuristic and not a calibrated test, widens the intervals across zero.",
+        "reference": "docs/2_evidence_and_corrections.md regional table."
+      }
+    },
+    {
+      "n": 11,
+      "id": "persist",
+      "section": "Evidence",
+      "layout": "content+takeaways",
+      "title": "A few narrative associations hold under programme controls",
+      "subtitle": "October extension: country-clustered, BH-adjusted within specification",
+      "exhibit": {
+        "type": "table",
+        "columns": [
+          "Term and outcome",
+          "Expanded",
+          "Programme-adjusted"
+        ],
+        "rows": [
+          [
+            "Third person, log(1 + days)",
+            "−0.0090, BH p 0.012",
+            "−0.0081, BH p 0.061"
+          ],
+          [
+            "Business, 24-hour (pp)",
+            "not significant after BH",
+            "−0.258 pp, BH p 0.006"
+          ]
+        ],
+        "note": "Per extra mention per 100 words. Pointwise 95% intervals in the claims register."
+      },
+      "takeaways": [
+        {
+          "marker": 1,
+          "heading": "Small but real associations",
+          "text": "Third-person framing stays linked to slightly faster funding after programme controls."
+        },
+        {
+          "marker": 2,
+          "heading": "Still associations",
+          "text": "Programme text is an unvalidated proxy; neither result shows what editing would do."
+        }
+      ],
+      "notes": {
+        "purpose": "Show that not everything disappears.",
+        "script": "Two results survive richer controls. Third-person descriptions are linked to slightly faster funding, and business framing to a slightly lower same-day rate. Both are small and observational."
+      }
+    },
+    {
+      "n": 12,
+      "id": "forecast",
+      "section": "Evidence",
+      "layout": "content+takeaways",
+      "title": "Adding text lowered forecast error in 5 of 5 years",
+      "subtitle": "November benchmark: linear model, structure only versus structure plus text, identical evaluation rows",
+      "exhibit": {
+        "type": "grouped_bar",
+        "unit": "MAE, days (lower is better)",
+        "axis_from_zero": true,
+        "series": [
+          "Structure only",
+          "Structure + text"
+        ],
+        "data": [
+          {
+            "year": 2021,
+            "values": [
+              8.25,
+              7.957
+            ]
+          },
+          {
+            "year": 2022,
+            "values": [
+              8.57,
+              8.197
+            ]
+          },
+          {
+            "year": 2023,
+            "values": [
+              8.185,
+              7.926
+            ]
+          },
+          {
+            "year": 2024,
+            "values": [
+              7.515,
+              7.126
+            ]
+          },
+          {
+            "year": 2025,
+            "values": [
+              6.406,
+              6.147
+            ]
+          }
+        ]
+      },
+      "key_figures": [
+        {
+          "value": "0.29 days",
+          "label": "median annual error reduction"
+        }
+      ],
+      "takeaways": [
+        {
+          "marker": 1,
+          "heading": "Text is informative",
+          "text": "Gains of 0.26–0.39 days on 728,640 evaluation records."
+        },
+        {
+          "marker": 2,
+          "heading": "Not an editing effect",
+          "text": "Text may encode purpose, place or programme templates, not only persuasion."
+        }
+      ],
+      "notes": {
+        "purpose": "Present the strongest new result.",
+        "script": "We trained on earlier years and tested on each of 2021 to 2025, comparing the same model with and without text on the same loans. Text reduced error every year.",
+        "reference": "docs/6_matched_text_results.md; reports/text_benchmark_reviewed."
+      }
+    },
+    {
+      "n": 13,
+      "id": "gain_uncertainty",
+      "section": "Evidence",
+      "layout": "content+takeaways",
+      "title": "The gain is modest and depends on the model and the countries",
+      "subtitle": "November benchmark: annual MAE gain with month-resampled 95% intervals",
+      "exhibit": {
+        "type": "interval_dots",
+        "unit": "MAE gain, days (positive is better)",
+        "series": [
+          {
+            "name": "Linear, adds form, lexicon and TF-IDF",
+            "rows": [
+              [
+                2021,
+                0.293,
+                0.198,
+                0.384
+              ],
+              [
+                2022,
+                0.372,
+                0.208,
+                0.518
+              ],
+              [
+                2023,
+                0.259,
+                0.088,
+                0.406
+              ],
+              [
+                2024,
+                0.389,
+                0.287,
+                0.5
+              ],
+              [
+                2025,
+                0.26,
+                0.139,
+                0.396
+              ]
+            ]
+          },
+          {
+            "name": "Tree, adds form and lexicon",
+            "rows": [
+              [
+                2021,
+                0.035,
+                -0.073,
+                0.137
+              ],
+              [
+                2022,
+                0.028,
+                -0.036,
+                0.084
+              ],
+              [
+                2023,
+                0.006,
+                -0.025,
+                0.035
+              ],
+              [
+                2024,
+                0.001,
+                -0.02,
+                0.025
+              ],
+              [
+                2025,
+                0.042,
+                0.013,
+                0.074
+              ]
+            ]
+          }
+        ]
+      },
+      "takeaways": [
+        {
+          "marker": 1,
+          "heading": "Model matters",
+          "text": "The tree model, without TF-IDF, gains at most 0.04 days."
+        },
+        {
+          "marker": 2,
+          "heading": "Countries matter",
+          "text": "Country resampling includes zero in 4 of 5 linear years."
+        },
+        {
+          "marker": 3,
+          "heading": "Metrics disagree",
+          "text": "In 2025 text improved error and calibration but AUC fell from 0.893 to 0.888."
+        }
+      ],
+      "notes": {
+        "purpose": "Keep the gain in proportion.",
+        "script": "The linear gains are consistent month to month, but country resampling is less kind, and the tree model gains little. Different metrics also move in different directions."
+      }
+    },
+    {
+      "n": 14,
+      "id": "supports",
+      "section": "Next steps",
+      "layout": "two_column",
+      "title": "What the evidence supports, and what it does not",
+      "subtitle": "Synthesis across all layers",
+      "columns": [
+        {
+          "heading": "Supported",
+          "items": [
+            "Text adds forecast information in a linear model",
+            "Most framing associations are small",
+            "Platform time mostly reflects partner capital cycles"
+          ]
+        },
+        {
+          "heading": "Not established",
+          "items": [
+            "That editing a description speeds funding",
+            "Any country or regional writing rule",
+            "Effects of urgency or first-person framing",
+            "Performance on loans that never funded"
+          ]
+        }
+      ],
+      "notes": {
+        "purpose": "Draw the line clearly.",
+        "script": "On the left, what we can stand behind. On the right, what we cannot claim, however tempting."
+      }
+    },
+    {
+      "n": 15,
+      "id": "gates",
+      "section": "Next steps",
+      "layout": "three_steps",
+      "title": "Three gates before any writing advice",
+      "subtitle": "Proposed next research for Kiva and participating partners",
+      "steps": [
+        {
+          "n": "01",
+          "name": "Validate",
+          "text": "Dual-code a sample of narratives for clarity, specificity, need and agency; freeze definitions."
+        },
+        {
+          "n": "02",
+          "name": "Close data gaps",
+          "text": "Partner identifiers, all listings including expired ones, original text versions."
+        },
+        {
+          "n": "03",
+          "name": "Pilot",
+          "text": "One truthful clarity prompt versus control, with a practical threshold and power agreed in advance."
+        }
+      ],
+      "notes": {
+        "purpose": "End on a decision path.",
+        "script": "Before anyone tells borrowers how to write, three things need to happen, in order."
+      }
+    },
+    {
+      "n": 16,
+      "id": "close",
+      "section": null,
+      "layout": "close",
+      "title": "Thank you",
+      "lines": [
+        "Mike Nguyen and Sophia Nguyen, Cultural Blend",
+        "Code and evidence: github.com/tuannm3812 (repository link to confirm)"
+      ],
+      "notes": {
+        "purpose": "Close.",
+        "script": "Thank you. The code, saved results and every number on these slides are in our repository."
+      }
+    },
+    {
+      "n": "A1",
+      "id": "a_screen",
+      "section": "Appendix",
+      "title": "The two-country screen in full",
+      "content": "Regional slope table with clusters, loans, estimates, normal and t(1) intervals; explain why one- or two-country groups cannot estimate between-country uncertainty."
+    },
+    {
+      "n": "A2",
+      "id": "a_asof",
+      "section": "Appendix",
+      "title": "As-of training audit",
+      "content": "Cohort table from docs/6_matched_text_results.md (pre-cutoff postings completing later, eligible training, evaluation rows per year)."
+    },
+    {
+      "n": "A3",
+      "id": "a_primary",
+      "section": "Appendix",
+      "title": "Primary prediction metrics",
+      "content": "HistGradientBoosting duration MAE 5.2031 days, R² 0.5420; classifier ROC AUC 0.8997, AP 0.8301, Brier 0.1156; 1,174,953 train, 278,887 holdout; completed loans only."
+    },
+    {
+      "n": "A4",
+      "id": "a_topics",
+      "section": "Appendix",
+      "title": "Exploratory story themes",
+      "content": "NMF themes from the 20,000-loan exploratory sample, labelled as such; not full-data evidence."
+    }
+  ]
+}

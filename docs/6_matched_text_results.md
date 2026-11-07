@@ -6,6 +6,12 @@ Adding description form, lexical measures and TF-IDF reduced the sparse linear m
 
 The compact tree comparison adds form and lexical measures, without TF-IDF. Its gains ranged from 0.001 to 0.042 days. Treat the two families as different representation experiments; their gain difference does not isolate a model-family effect. The next research priority is to validate what the text measures and define a feasible factual presentation experiment.
 
+**Glossary.** S = structured loan context (amount, term, sector, geography, time).
+M = description form and presence. L = lexicon, specificity and sentiment measures.
+R = TF-IDF fitted on training rows only. P = programme text (`whySpecial`), an
+unvalidated proxy. "Gain" = structure-only error minus text-added error, so positive
+is better.
+
 ## Duration gains and uncertainty
 
 Each comparison uses identical evaluation records and subtracts the text-added model’s absolute error from the structure-only model’s error. Positive values mean better forecasts. S is structured context; M is description form/presence; L is lexicon, specificity and sentiment; R is training-fitted TF-IDF; P is programme text as an unvalidated proxy.
@@ -48,7 +54,12 @@ P derives from `whySpecial`; it does not identify lending partners or show that 
 In 2025, adding the full text block improves linear-model MAE and Brier score,
 while AUC falls from 0.8931 to 0.8883 and day-space R² remains negative.
 Improvement in one loss does not establish improvement in ranking or tail
-error. Loss alignment and extreme predictions need further attention before
+error. In plain terms: text makes the typical forecast a little closer and the
+probabilities a little better calibrated, but it slightly worsens how well the
+model orders loans from fastest to slowest. The linear model's negative day-space
+R² is probably driven by fitting log(1 + days) and exponentiating, which undershoots
+long waits; the tree model, on the same transform, reaches R² 0.46–0.48. A 2025
+loss-alignment check tests this explanation. Loss alignment and extreme predictions need further attention before
 any operational use.
 
 Both duration families minimise squared error on log1p days and then exponentiate predictions, clipping negative days at zero. This is not generally a conditional mean-days estimate. MAE, RMSE, R² and tail errors answer different questions. No separate probability calibration model or capacity-based allocation policy was fitted.

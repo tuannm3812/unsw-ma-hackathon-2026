@@ -1,3 +1,5 @@
+> **Superseded 2026-11-08.** This 17-slide brief reuses claims retired in `docs/2_evidence_and_corrections.md`. Kept as history. Use `docs/presentation/portfolio_deck/` and `claims_register.md` instead.
+
 # Authoritative Slide Content Briefing · Executive 3-Act Hybrid
 **Team Cultural Blend · UNSW Marketing Analytics Hackathon Challenge 2026**  
 *Investigation: 1,453,846 real Kiva loans (2016–2025) · 10-Minute Presentation & Q&A*  

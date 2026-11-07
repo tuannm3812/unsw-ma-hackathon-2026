@@ -246,3 +246,6 @@ docs/presentation/research_refresh/.build/
 !reports/text_benchmark_reviewed/status.json
 !reports/text_benchmark_reviewed/synthetic_warning_review.json
 !reports/text_benchmark_reviewed/notebook_execution.json
+!reports/equivalence_screen_reviewed/README.md
+!reports/equivalence_screen_reviewed/equivalence_screen.json
+!reports/equivalence_screen_reviewed/equivalence_screen.csv

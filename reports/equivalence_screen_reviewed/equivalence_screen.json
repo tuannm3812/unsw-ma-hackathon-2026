@@ -1,0 +1,747 @@
+{
+  "generated_by": "src.equivalence",
+  "inputs": "reports/expanded_feature_sensitivity_reviewed",
+  "n_clusters": 48,
+  "df": 47,
+  "alpha_per_side": 0.05,
+  "bounds": {
+    "log_funding_speed": {
+      "primary": 0.05,
+      "sensitivity": [
+        0.02,
+        0.1
+      ]
+    },
+    "funded_within_24h": {
+      "primary": 0.01,
+      "sensitivity": [
+        0.005,
+        0.02
+      ]
+    }
+  },
+  "bounds_chosen": "2026-11-08, after estimates were known (exploratory)",
+  "multiplicity": "BH within each specification x outcome family of nine terms; 'equivalent' uses the BH-adjusted TOST p at the primary bound; sensitivity-bound flags are unadjusted",
+  "results": [
+    {
+      "specification": "expanded",
+      "outcome": "log_funding_speed",
+      "feature": "family_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": 0.009638146402045224,
+      "standard_error": 0.0060232723843672365,
+      "ci90_low": -0.0004684632834119056,
+      "ci90_high": 0.019744756087502355,
+      "bound": 0.05,
+      "p_lower": 2.1715962361668062e-13,
+      "p_upper": 1.162153379086206e-08,
+      "p_tost": 1.162153379086206e-08,
+      "p_tost_bh": 3.486460137258618e-08,
+      "equivalent": true,
+      "equivalent_at_sensitivity_bounds": {
+        "0.02": true,
+        "0.1": true
+      }
+    },
+    {
+      "specification": "expanded",
+      "outcome": "log_funding_speed",
+      "feature": "basic_needs_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": 0.0021365056687634907,
+      "standard_error": 0.012594031410382591,
+      "ci90_low": -0.018995356167914094,
+      "ci90_high": 0.023268367505441073,
+      "bound": 0.05,
+      "p_lower": 7.15440594896144e-05,
+      "p_upper": 0.00020737905847001414,
+      "p_tost": 0.00020737905847001414,
+      "p_tost_bh": 0.00037328230524602546,
+      "equivalent": true,
+      "equivalent_at_sensitivity_bounds": {
+        "0.02": false,
+        "0.1": true
+      }
+    },
+    {
+      "specification": "expanded",
+      "outcome": "log_funding_speed",
+      "feature": "business_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": 0.008983303843037018,
+      "standard_error": 0.0069587257814841055,
+      "ci90_low": -0.002692928094293138,
+      "ci90_high": 0.020659535780367173,
+      "bound": 0.05,
+      "p_lower": 2.502753559951998e-11,
+      "p_upper": 1.9445713733690084e-07,
+      "p_tost": 1.9445713733690084e-07,
+      "p_tost_bh": 4.375285590080269e-07,
+      "equivalent": true,
+      "equivalent_at_sensitivity_bounds": {
+        "0.02": false,
+        "0.1": true
+      }
+    },
+    {
+      "specification": "expanded",
+      "outcome": "log_funding_speed",
+      "feature": "agency_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": 0.004193166521890675,
+      "standard_error": 0.0041593641878328105,
+      "ci90_low": -0.002785941793914096,
+      "ci90_high": 0.011172274837695445,
+      "bound": 0.05,
+      "p_lower": 0.0,
+      "p_upper": 2.0539125955565396e-15,
+      "p_tost": 2.0539125955565396e-15,
+      "p_tost_bh": 9.242606680004428e-15,
+      "equivalent": true,
+      "equivalent_at_sensitivity_bounds": {
+        "0.02": true,
+        "0.1": true
+      }
+    },
+    {
+      "specification": "expanded",
+      "outcome": "log_funding_speed",
+      "feature": "gratitude_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": 0.01629381518784101,
+      "standard_error": 0.05148586838228595,
+      "ci90_low": -0.07009569915773117,
+      "ci90_high": 0.10268332953341319,
+      "bound": 0.05,
+      "p_lower": 0.10209271263827624,
+      "p_upper": 0.2579361424744502,
+      "p_tost": 0.2579361424744502,
+      "p_tost_bh": 0.3316321831814359,
+      "equivalent": false,
+      "equivalent_at_sensitivity_bounds": {
+        "0.02": false,
+        "0.1": false
+      }
+    },
+    {
+      "specification": "expanded",
+      "outcome": "log_funding_speed",
+      "feature": "urgency_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": -0.048227185958889814,
+      "standard_error": 0.046310736558694054,
+      "ci90_low": -0.1259332083296381,
+      "ci90_high": 0.02947883641185848,
+      "bound": 0.05,
+      "p_lower": 0.4848129528406673,
+      "p_upper": 0.01961093327411295,
+      "p_tost": 0.4848129528406673,
+      "p_tost_bh": 0.5454145719457507,
+      "equivalent": false,
+      "equivalent_at_sensitivity_bounds": {
+        "0.02": false,
+        "0.1": false
+      }
+    },
+    {
+      "specification": "expanded",
+      "outcome": "log_funding_speed",
+      "feature": "first_person_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": -0.07232940788656561,
+      "standard_error": 0.042173272697051824,
+      "ci90_low": -0.14309306908403696,
+      "ci90_high": -0.0015657466890942467,
+      "bound": 0.05,
+      "p_lower": 0.7005135790871927,
+      "p_upper": 0.0028242413899057794,
+      "p_tost": 0.7005135790871927,
+      "p_tost_bh": 0.7005135790871927,
+      "equivalent": false,
+      "equivalent_at_sensitivity_bounds": {
+        "0.02": false,
+        "0.1": false
+      }
+    },
+    {
+      "specification": "expanded",
+      "outcome": "log_funding_speed",
+      "feature": "third_person_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": -0.009008124431089051,
+      "standard_error": 0.0023982974561507467,
+      "ci90_low": -0.013032291819210031,
+      "ci90_high": -0.004983957042968071,
+      "bound": 0.05,
+      "p_lower": 0.0,
+      "p_upper": 0.0,
+      "p_tost": 0.0,
+      "p_tost_bh": 0.0,
+      "equivalent": true,
+      "equivalent_at_sensitivity_bounds": {
+        "0.02": true,
+        "0.1": true
+      }
+    },
+    {
+      "specification": "expanded",
+      "outcome": "log_funding_speed",
+      "feature": "desc_sentiment_compound",
+      "edit_unit": "+0.5 VADER compound",
+      "estimate": 0.027235181785370263,
+      "standard_error": 0.014673086210424275,
+      "ci90_low": 0.0026148183439450093,
+      "ci90_high": 0.051855545226795516,
+      "bound": 0.05,
+      "p_lower": 1.7151809226234604e-06,
+      "p_upper": 0.06374899877705809,
+      "p_tost": 0.06374899877705809,
+      "p_tost_bh": 0.09562349816558713,
+      "equivalent": false,
+      "equivalent_at_sensitivity_bounds": {
+        "0.02": false,
+        "0.1": true
+      }
+    },
+    {
+      "specification": "expanded",
+      "outcome": "funded_within_24h",
+      "feature": "family_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": -0.0022781052947208127,
+      "standard_error": 0.0018445134976307542,
+      "ci90_low": -0.005373063780824503,
+      "ci90_high": 0.0008168531913828772,
+      "bound": 0.01,
+      "p_lower": 6.163873465925285e-05,
+      "p_upper": 1.357536238977275e-08,
+      "p_tost": 6.163873465925285e-05,
+      "p_tost_bh": 0.0001386871529833189,
+      "equivalent": true,
+      "equivalent_at_sensitivity_bounds": {
+        "0.005": false,
+        "0.02": true
+      }
+    },
+    {
+      "specification": "expanded",
+      "outcome": "funded_within_24h",
+      "feature": "basic_needs_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": -0.0008252392425889527,
+      "standard_error": 0.0030467494638492334,
+      "ci90_low": -0.005937461582129522,
+      "ci90_high": 0.004286983096951617,
+      "bound": 0.01,
+      "p_lower": 0.002088446800439181,
+      "p_upper": 0.000439639986656859,
+      "p_tost": 0.002088446800439181,
+      "p_tost_bh": 0.003759204240790526,
+      "equivalent": true,
+      "equivalent_at_sensitivity_bounds": {
+        "0.005": false,
+        "0.02": true
+      }
+    },
+    {
+      "specification": "expanded",
+      "outcome": "funded_within_24h",
+      "feature": "business_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": -0.0035741480616458504,
+      "standard_error": 0.001475431595656093,
+      "ci90_low": -0.006049814161951863,
+      "ci90_high": -0.0010984819613398377,
+      "bound": 0.01,
+      "p_lower": 3.575863877824936e-05,
+      "p_upper": 2.1994073229336664e-12,
+      "p_tost": 3.575863877824936e-05,
+      "p_tost_bh": 0.00010727591633474809,
+      "equivalent": true,
+      "equivalent_at_sensitivity_bounds": {
+        "0.005": false,
+        "0.02": true
+      }
+    },
+    {
+      "specification": "expanded",
+      "outcome": "funded_within_24h",
+      "feature": "agency_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": 0.0018738063195958869,
+      "standard_error": 0.0014212489652706336,
+      "ci90_low": -0.0005109452973375208,
+      "ci90_high": 0.004258557936529295,
+      "bound": 0.01,
+      "p_lower": 3.785749491669321e-11,
+      "p_upper": 3.590985980239658e-07,
+      "p_tost": 3.590985980239658e-07,
+      "p_tost_bh": 1.6159436911078462e-06,
+      "equivalent": true,
+      "equivalent_at_sensitivity_bounds": {
+        "0.005": true,
+        "0.02": true
+      }
+    },
+    {
+      "specification": "expanded",
+      "outcome": "funded_within_24h",
+      "feature": "gratitude_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": -0.002340971349199815,
+      "standard_error": 0.014940275295009594,
+      "ci90_low": -0.027409658495381798,
+      "ci90_high": 0.022727715796982167,
+      "bound": 0.01,
+      "p_lower": 0.3053010105878352,
+      "p_upper": 0.2064830377546112,
+      "p_tost": 0.3053010105878352,
+      "p_tost_bh": 0.3925298707557881,
+      "equivalent": false,
+      "equivalent_at_sensitivity_bounds": {
+        "0.005": false,
+        "0.02": false
+      }
+    },
+    {
+      "specification": "expanded",
+      "outcome": "funded_within_24h",
+      "feature": "urgency_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": 0.028446130465823522,
+      "standard_error": 0.018090346159825164,
+      "ci90_low": -0.001908144759497913,
+      "ci90_high": 0.05880040569114496,
+      "bound": 0.01,
+      "p_lower": 0.01942662151418917,
+      "p_upper": 0.8434467203475464,
+      "p_tost": 0.8434467203475464,
+      "p_tost_bh": 0.8434467203475464,
+      "equivalent": false,
+      "equivalent_at_sensitivity_bounds": {
+        "0.005": false,
+        "0.02": false
+      }
+    },
+    {
+      "specification": "expanded",
+      "outcome": "funded_within_24h",
+      "feature": "first_person_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": 0.02032595299818792,
+      "standard_error": 0.012820564070153365,
+      "ci90_low": -0.001186014041643646,
+      "ci90_high": 0.041837920038019484,
+      "bound": 0.01,
+      "p_lower": 0.011093817913534476,
+      "p_upper": 0.7876835919968757,
+      "p_tost": 0.7876835919968757,
+      "p_tost_bh": 0.8434467203475464,
+      "equivalent": false,
+      "equivalent_at_sensitivity_bounds": {
+        "0.005": false,
+        "0.02": false
+      }
+    },
+    {
+      "specification": "expanded",
+      "outcome": "funded_within_24h",
+      "feature": "third_person_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": 0.0015015408611741483,
+      "standard_error": 0.0006915653827108235,
+      "ci90_low": 0.0003411448257611936,
+      "ci90_high": 0.002661936896587103,
+      "bound": 0.01,
+      "p_lower": 0.0,
+      "p_upper": 0.0,
+      "p_tost": 0.0,
+      "p_tost_bh": 0.0,
+      "equivalent": true,
+      "equivalent_at_sensitivity_bounds": {
+        "0.005": true,
+        "0.02": true
+      }
+    },
+    {
+      "specification": "expanded",
+      "outcome": "funded_within_24h",
+      "feature": "desc_sentiment_compound",
+      "edit_unit": "+0.5 VADER compound",
+      "estimate": -0.006507136199414272,
+      "standard_error": 0.004468557805758846,
+      "ci90_low": -0.014005048748898253,
+      "ci90_high": 0.0009907763500697098,
+      "bound": 0.01,
+      "p_lower": 0.21916911913908654,
+      "p_upper": 0.0002872863137866055,
+      "p_tost": 0.21916911913908654,
+      "p_tost_bh": 0.3287536787086298,
+      "equivalent": false,
+      "equivalent_at_sensitivity_bounds": {
+        "0.005": false,
+        "0.02": true
+      }
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "log_funding_speed",
+      "feature": "family_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": 0.00943497481640081,
+      "standard_error": 0.005511539127626235,
+      "ci90_low": 0.00018701603678220914,
+      "ci90_high": 0.018682933596019413,
+      "bound": 0.05,
+      "p_lower": 9.547918011776346e-15,
+      "p_upper": 1.1652114273452696e-09,
+      "p_tost": 1.1652114273452696e-09,
+      "p_tost_bh": 2.6217257115268566e-09,
+      "equivalent": true,
+      "equivalent_at_sensitivity_bounds": {
+        "0.02": true,
+        "0.1": true
+      }
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "log_funding_speed",
+      "feature": "basic_needs_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": -0.007025615709060127,
+      "standard_error": 0.00650330755172713,
+      "ci90_low": -0.017937689229158234,
+      "ci90_high": 0.0038864578110379792,
+      "bound": 0.05,
+      "p_lower": 1.6083760545626546e-08,
+      "p_upper": 9.303724457510043e-12,
+      "p_tost": 1.6083760545626546e-08,
+      "p_tost_bh": 2.8950768982127785e-08,
+      "equivalent": true,
+      "equivalent_at_sensitivity_bounds": {
+        "0.02": true,
+        "0.1": true
+      }
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "log_funding_speed",
+      "feature": "business_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": 0.005424359921665538,
+      "standard_error": 0.003416801982286272,
+      "ci90_low": -0.0003087834269713966,
+      "ci90_high": 0.011157503270302474,
+      "bound": 0.05,
+      "p_lower": 0.0,
+      "p_upper": 1.942890293094024e-15,
+      "p_tost": 1.942890293094024e-15,
+      "p_tost_bh": 8.743006318923108e-15,
+      "equivalent": true,
+      "equivalent_at_sensitivity_bounds": {
+        "0.02": true,
+        "0.1": true
+      }
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "log_funding_speed",
+      "feature": "agency_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": 0.005773592815190908,
+      "standard_error": 0.00431749256019564,
+      "ci90_low": -0.0014708433220511847,
+      "ci90_high": 0.013018028952433001,
+      "bound": 0.05,
+      "p_lower": 0.0,
+      "p_upper": 7.255307465925398e-14,
+      "p_tost": 7.255307465925398e-14,
+      "p_tost_bh": 2.1765922397776194e-13,
+      "equivalent": true,
+      "equivalent_at_sensitivity_bounds": {
+        "0.02": true,
+        "0.1": true
+      }
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "log_funding_speed",
+      "feature": "gratitude_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": 0.014666799177215606,
+      "standard_error": 0.011857814508552847,
+      "ci90_low": -0.005229744646957484,
+      "ci90_high": 0.0345633430013887,
+      "bound": 0.05,
+      "p_lower": 8.943348628331904e-07,
+      "p_upper": 0.002277703212473059,
+      "p_tost": 0.002277703212473059,
+      "p_tost_bh": 0.002928475558893933,
+      "equivalent": true,
+      "equivalent_at_sensitivity_bounds": {
+        "0.02": false,
+        "0.1": true
+      }
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "log_funding_speed",
+      "feature": "urgency_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": -0.003930282333351052,
+      "standard_error": 0.03661102693557209,
+      "ci90_low": -0.06536090273529653,
+      "ci90_high": 0.05750033806859442,
+      "bound": 0.05,
+      "p_lower": 0.10723911019285493,
+      "p_upper": 0.07370026144294983,
+      "p_tost": 0.10723911019285493,
+      "p_tost_bh": 0.12064399896696179,
+      "equivalent": false,
+      "equivalent_at_sensitivity_bounds": {
+        "0.02": false,
+        "0.1": true
+      }
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "log_funding_speed",
+      "feature": "first_person_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": 0.009774238571853383,
+      "standard_error": 0.0434227115061009,
+      "ci90_low": -0.06308588939037778,
+      "ci90_high": 0.08263436653408456,
+      "bound": 0.05,
+      "p_lower": 0.08758456970482897,
+      "p_upper": 0.1794916045685277,
+      "p_tost": 0.1794916045685277,
+      "p_tost_bh": 0.1794916045685277,
+      "equivalent": false,
+      "equivalent_at_sensitivity_bounds": {
+        "0.02": false,
+        "0.1": true
+      }
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "log_funding_speed",
+      "feature": "third_person_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": -0.00808775506696367,
+      "standard_error": 0.0025463965947878997,
+      "ci90_low": -0.012360421957256068,
+      "ci90_high": -0.003815088176671271,
+      "bound": 0.05,
+      "p_lower": 2.220446049250313e-16,
+      "p_upper": 0.0,
+      "p_tost": 2.220446049250313e-16,
+      "p_tost_bh": 1.9984014443252818e-15,
+      "equivalent": true,
+      "equivalent_at_sensitivity_bounds": {
+        "0.02": true,
+        "0.1": true
+      }
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "log_funding_speed",
+      "feature": "desc_sentiment_compound",
+      "edit_unit": "+0.5 VADER compound",
+      "estimate": 0.013365541575166753,
+      "standard_error": 0.007663127857929041,
+      "ci90_low": 0.0005073745709896424,
+      "ci90_high": 0.026223708579343863,
+      "bound": 0.05,
+      "p_lower": 5.069433761661912e-11,
+      "p_upper": 8.795243882309123e-06,
+      "p_tost": 8.795243882309123e-06,
+      "p_tost_bh": 1.3192865823463684e-05,
+      "equivalent": true,
+      "equivalent_at_sensitivity_bounds": {
+        "0.02": false,
+        "0.1": true
+      }
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "funded_within_24h",
+      "feature": "family_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": -0.0023308923217325713,
+      "standard_error": 0.0023730287770376383,
+      "ci90_low": -0.006312660717949074,
+      "ci90_high": 0.001650876074483931,
+      "bound": 0.01,
+      "p_lower": 0.001125090522688721,
+      "p_upper": 2.1596017014680058e-06,
+      "p_tost": 0.001125090522688721,
+      "p_tost_bh": 0.002531453676049622,
+      "equivalent": true,
+      "equivalent_at_sensitivity_bounds": {
+        "0.005": false,
+        "0.02": true
+      }
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "funded_within_24h",
+      "feature": "basic_needs_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": 0.0037933363595859127,
+      "standard_error": 0.0025993536554400234,
+      "ci90_low": -0.0005681885978742916,
+      "ci90_high": 0.008154861317046118,
+      "bound": 0.01,
+      "p_lower": 1.4818965796692396e-06,
+      "p_upper": 0.010511453315430297,
+      "p_tost": 0.010511453315430297,
+      "p_tost_bh": 0.015767179973145445,
+      "equivalent": true,
+      "equivalent_at_sensitivity_bounds": {
+        "0.005": false,
+        "0.02": true
+      }
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "funded_within_24h",
+      "feature": "business_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": -0.002578821329395799,
+      "standard_error": 0.0006559254791661197,
+      "ci90_low": -0.0036794162182943574,
+      "ci90_high": -0.0014782264404972407,
+      "bound": 0.01,
+      "p_lower": 2.886579864025407e-15,
+      "p_upper": 1.6653345369377348e-16,
+      "p_tost": 2.886579864025407e-15,
+      "p_tost_bh": 2.5979218776228663e-14,
+      "equivalent": true,
+      "equivalent_at_sensitivity_bounds": {
+        "0.005": true,
+        "0.02": true
+      }
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "funded_within_24h",
+      "feature": "agency_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": 0.000613068500047575,
+      "standard_error": 0.001685760567815974,
+      "ci90_low": -0.0022155142029809645,
+      "ci90_high": 0.0034416512030761145,
+      "bound": 0.01,
+      "p_lower": 4.7948785164564356e-08,
+      "p_upper": 6.019055402428641e-07,
+      "p_tost": 6.019055402428641e-07,
+      "p_tost_bh": 1.8057166207285924e-06,
+      "equivalent": true,
+      "equivalent_at_sensitivity_bounds": {
+        "0.005": true,
+        "0.02": true
+      }
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "funded_within_24h",
+      "feature": "gratitude_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": -0.005254610409607437,
+      "standard_error": 0.004968823811318471,
+      "ci90_low": -0.01359193265774894,
+      "ci90_high": 0.0030827118385340644,
+      "bound": 0.01,
+      "p_lower": 0.1722238170736019,
+      "p_upper": 0.0017750626579727258,
+      "p_tost": 0.1722238170736019,
+      "p_tost_bh": 0.22143062195177388,
+      "equivalent": false,
+      "equivalent_at_sensitivity_bounds": {
+        "0.005": false,
+        "0.02": true
+      }
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "funded_within_24h",
+      "feature": "urgency_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": 0.015374260379888895,
+      "standard_error": 0.01127958551400593,
+      "ci90_low": -0.00355205756310583,
+      "ci90_high": 0.03430057832288362,
+      "bound": 0.01,
+      "p_lower": 0.014599663808949837,
+      "p_upper": 0.6820224701056381,
+      "p_tost": 0.6820224701056381,
+      "p_tost_bh": 0.6820224701056381,
+      "equivalent": false,
+      "equivalent_at_sensitivity_bounds": {
+        "0.005": false,
+        "0.02": false
+      }
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "funded_within_24h",
+      "feature": "first_person_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": -0.007796149893796277,
+      "standard_error": 0.01344961594937549,
+      "ci90_low": -0.03036361989107366,
+      "ci90_high": 0.014771320103481105,
+      "bound": 0.01,
+      "p_lower": 0.4352721058963698,
+      "p_upper": 0.09608978873365559,
+      "p_tost": 0.4352721058963698,
+      "p_tost_bh": 0.489681119133416,
+      "equivalent": false,
+      "equivalent_at_sensitivity_bounds": {
+        "0.005": false,
+        "0.02": false
+      }
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "funded_within_24h",
+      "feature": "third_person_mentions_per_100_words",
+      "edit_unit": "+1 mention per 100 words",
+      "estimate": 0.0014358396254602664,
+      "standard_error": 0.0009617571311472903,
+      "ci90_low": -0.000177918364621365,
+      "ci90_high": 0.003049597615541898,
+      "bound": 0.01,
+      "p_lower": 0.0,
+      "p_upper": 5.892675236651712e-12,
+      "p_tost": 5.892675236651712e-12,
+      "p_tost_bh": 2.6517038564932705e-11,
+      "equivalent": true,
+      "equivalent_at_sensitivity_bounds": {
+        "0.005": true,
+        "0.02": true
+      }
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "funded_within_24h",
+      "feature": "desc_sentiment_compound",
+      "edit_unit": "+0.5 VADER compound",
+      "estimate": -0.0028242138350557497,
+      "standard_error": 0.002781049963006745,
+      "ci90_low": -0.00749061188220581,
+      "ci90_high": 0.0018421842120943106,
+      "bound": 0.01,
+      "p_lower": 0.006528954154352951,
+      "p_upper": 1.5445553568360637e-05,
+      "p_tost": 0.006528954154352951,
+      "p_tost_bh": 0.01175211747783531,
+      "equivalent": true,
+      "equivalent_at_sensitivity_bounds": {
+        "0.005": false,
+        "0.02": true
+      }
+    }
+  ]
+}

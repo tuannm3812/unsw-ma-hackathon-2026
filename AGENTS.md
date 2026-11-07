@@ -37,6 +37,9 @@ benchmark; it does not contain the old self-contained fits.
 - `reports/expanded_feature_sensitivity_reviewed/` — separate reviewed inference extension
 - `reports/text_benchmark_reviewed/` — separate November matched predictive benchmark
 - `docs/6_matched_text_results.md` — current predictive findings and limitations
+- `reports/equivalence_screen_reviewed/` — exploratory equivalence screen of October coefficients (2026-11-08)
+- `docs/presentation/claims_register.md` — every number the current deck and case study quote
+- `docs/presentation/portfolio_deck/` — current portfolio deck source; governed by `docs/presentation/DESIGN.md`
 - `docs/2_evidence_and_corrections.md` — current interpretation and historical corrections
 - `proposal/` — the submitted proposal (round 1)
 - `README.md` — current overview and reproduction entry points

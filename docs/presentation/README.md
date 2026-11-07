@@ -1,8 +1,20 @@
 # Presentation record
 
-The official living presentation standard and current refined slide deck:
-- [Slide Deck Design Standard](DESIGN.md): The institutional 960 × 540 pt design standard, adapted from `aipa-text-to-sql-agent` and Project 15 (Blue `#0F4BEB` & Amber `#E6A23C` palette, exact spatial rails, takeaway column with red paired markers, content hierarchy, and speaker notes pattern).
-- [Refined PowerPoint Presentation (16 slides)](output/cultural-blend-beyond-a-good-story-refined.pptx) and [PDF Mirror](output/cultural-blend-beyond-a-good-story-refined.pdf): Complete 12 core slides + 4 technical appendix slides generated natively via `python-pptx` with rich evidence cards, paired takeaway badges, and structured speaker notes. Built by [`scripts/build_presentation_deck.py`](../../scripts/build_presentation_deck.py).
+**Current deck (8 November 2026):** the Cultural Blend portfolio deck in
+[`portfolio_deck/`](portfolio_deck/README.md), a native Google Slides deck built
+from [`portfolio_deck/storyline.json`](portfolio_deck/storyline.json) under the
+[design standard](DESIGN.md). Every number it quotes is listed in the
+[claims register](claims_register.md). It merges the August, October and November
+evidence and the 8 November equivalence screen.
+
+**Historical, do not reuse without the correction notice:**
+- The submitted competition deck and its v3 exports in `output/Team-Cultural-Blend-*`.
+- The 16-slide `output/cultural-blend-beyond-a-good-story-refined.*` and the 17-slide
+  live Google deck (`17rHwKFX…`) with [`SLIDE_CONTENT_BRIEF.md`](SLIDE_CONTENT_BRIEF.md),
+  built on 7–8 November by `scripts/build_presentation_deck.py`, `build_slides_v3.py`
+  and `build_slide_03_*.py`. These reuse retired claims.
+- The two November research-refresh decks below, which the portfolio deck supersedes
+  for presentation but which remain accurate for their own scope.
 
 The current [November research refresh](research_refresh/README.md) contains a
 new editable deck, slide-by-slide briefing and sources. Its latest version

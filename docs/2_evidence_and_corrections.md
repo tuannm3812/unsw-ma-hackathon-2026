@@ -55,7 +55,8 @@ conventional significance under country clustering (duration p = 0.4943;
 recommendation, not proof that urgency or narrative framing has no effect.
 Likewise, predictive importance and a small change in holdout error cannot
 establish either causal benefit or practical equivalence. No equivalence test
-or prespecified negligible-effect bound was used.
+or prespecified negligible-effect bound was used in the primary analysis; a
+post-hoc exploratory screen is reported below.
 
 **Regional interactions and regional slopes answer different questions.**
 A family-framing interaction compares a region with the reference region.
@@ -130,6 +131,18 @@ reports all coefficients/families, units, uncertainty, multiplicity boundaries
 and provenance. It supports neither a blanket null claim nor a causal writing
 strategy. That October execution covered explanatory sensitivity only;
 the November predictive study is a separate extension.
+
+## What the 8 November equivalence screen adds
+
+Failure to reject is not a null, so the October coefficients were also tested for
+equivalence against a stated practical bound: ±0.05 log(1 + days) and ±1 percentage
+point of 24-hour completion per extra mention per 100 words (two one-sided tests,
+country-clustered t(47), BH within each specification × outcome). Family, basic-needs,
+business, agency and third-person framing are bounded in both specifications.
+Urgency and first-person framing are unresolved in every fit: their 90% intervals
+still reach roughly 6–14% of (1 + days). The bound was chosen after the estimates
+were known, so the screen is exploratory. See the
+[equivalence report](../reports/equivalence_screen_reviewed/README.md).
 
 ## Next evidence needed
 

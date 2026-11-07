@@ -1,8 +1,8 @@
 # Cultural Blend — Kiva funding-speed research
 
-This case describes the competition evidence and October maintenance.
-For the separate November predictive extension and revised presentation, see
-the [matched text findings](6_matched_text_results.md).
+Updated 2026-11-08. One story across the competition work and the October and
+November research extensions. Every number here is traced in the
+[claims register](presentation/claims_register.md).
 
 **Finalist, UNSW Marketing Analytics Hackathon Challenge 2026.** Cultural
 Blend (Sophia and Tuan) was one of eight finalist teams selected from 44
@@ -10,73 +10,102 @@ registered teams involving 133 students at 19 universities across eight
 countries. The final took place on 4 September 2026.
 [Official UNSW results](https://www.unsw.edu.au/business/our-schools/marketing/news-events/student-events/MA-hackathon).
 
+## Bottom line
+
+Loan descriptions carry measurable information about how fast a Kiva loan
+funds: adding text to a structure-only forecast lowered error in every one of
+five test years. Most individual framing associations are also small enough to
+bound. What the data cannot show is that rewriting a description makes a loan
+fund faster, so the next step is measurement and a small truthful pilot, not
+platform-wide writing advice.
+
 ## Problem and data
 
 Which narrative choices in Kiva loan descriptions are associated with faster
-funding, and how do those patterns differ across contexts and periods?
-The project analysed **1,453,846 loan records from 2016–2025**. Six negative
+funding, and how do those patterns differ across contexts and periods? The
+project analysed **1,453,846 loan records from 2016–2025**; six negative
 durations were excluded, leaving **1,453,840 valid completed durations**,
-including 1,637 refunded records. Outcomes were time from fundraising to
-completed funding and completion within 24 hours. The analysis does not
-estimate whether all listed loans will eventually fund.
+including 1,637 refunded records. Outcomes were time from listing to completed
+funding and completion within 24 hours.
 
-## Approach
+Two facts shape every claim. First, the share of loans funded within a day fell
+from 46.0% before the pandemic to 30.3% during it and 30.0% after, a
+descriptive shift that never recovered. Second, 96.4% of loans were disbursed
+to borrowers before listing, so platform funding time often reflects a partner
+replenishing capital rather than a borrower waiting. The data contain only
+loans that eventually funded, so they cannot say whether a loan funds at all.
 
-The team combined deterministic text features, sentiment and topic features
-with loan, borrower, geography and time variables. The tested Python pipeline
-used explanatory duration OLS and a binomial GLM, compared HC3 uncertainty
-with country-clustered uncertainty, and estimated average within-region
-family-framing contrasts. Separate predictive models used a chronological
-2024–2025 holdout, fitting preprocessing and learned text transformations on
-earlier loans only. The [primary reports and provenance](../reports/generated_full_dataset/)
-retain the verified saved run; the primary metrics below come from that
-snapshot. Later maintenance extensions are identified separately.
+## Approach: three layers of evidence
 
-## Findings and practical interpretation
+| Layer | Question | Method |
+| --- | --- | --- |
+| August primary run | Which narrative features are associated with speed, and how certain is that? | OLS on log(1 + days) and a binomial GLM, HC3 versus country-clustered uncertainty, within-region contrasts; chronological 2024–2025 holdout for prediction |
+| October extension | Do the associations survive richer controls, including programme text? | Country-clustered OLS/LPM with and without an unvalidated programme-text proxy, BH-adjusted |
+| November benchmark | How much does text add to a forecast built on loan structure alone? | Matched feature blocks on identical rows, as-of training cohorts, five annual windows 2021–2025, paired month and country resampling |
 
-- **Predictive patterns were measurable:** on 278,887 holdout loans, the
-  nonlinear duration benchmark achieved MAE **5.20 days** and R² **0.542**;
-  the 24-hour classifier achieved **0.900 ROC AUC** and **0.830 average
-  precision**. Training used 1,174,953 loans. These are prediction metrics,
-  not causal estimates of narrative effectiveness.
-- **Uncertainty mattered more than a compelling story:** apparent urgency
-  associations under HC3 were not supported under country clustering.
-  Regional family-framing patterns were descriptive because each focal
-  region had only two country clusters. These results do not establish that
-  narrative choices have no effect.
-- **The outcome needed careful interpretation:** widespread pre-disbursal
-  means platform funding duration often follows an earlier disbursal. Faster
-  platform funding cannot simply be described as less waiting for borrowers.
+A fourth, exploratory check (8 November) asks which associations are small
+enough to rule out a practically large effect, using equivalence tests on the
+October coefficients.
 
-The practical contribution is a reproducible way to test narrative claims,
-check their uncertainty and identify what additional evidence would be needed
-before recommending a writing strategy. The observational evidence alone
-does not justify a universal narrative intervention.
+## Findings
 
-![Regional family-framing estimates with normal-reference and heuristic few-cluster intervals](presentation/charts/portfolio_uncertainty.png)
+**1. Large row counts did not remove country-level uncertainty.** Of 120 terms
+significant under HC3, 64 lost significance once errors were clustered by
+country. Urgency language went from p < 0.001 to p = 0.49 for duration. The two
+regional family-framing patterns each rest on two countries, so their wider
+heuristic intervals cross zero.
 
-The same point estimates can look more conclusive than their evidence permits.
-Both regional patterns depend on only two country clusters. This exhibit is
-built directly from the saved primary report; the wider intervals are a
-heuristic sensitivity screen, not a calibrated correction.
+**2. Most framing associations are small, and two are unresolved.** With a
+practical bound of about ±5% of funding time and ±1 percentage point of
+same-day completion per extra mention per 100 words, family, basic-needs,
+business, agency and third-person framing are bounded in both October
+specifications. Urgency and first-person framing are not: their intervals
+still allow associations of roughly 6–14%. "Not significant" for urgency meant
+"too uncertain", not "no effect". The bound was set after seeing the
+estimates, so this is exploratory.
 
-## Limits and maintained research record
+**3. Some associations persist under richer controls.** Third-person framing
+stays associated with faster funding with programme controls (−0.0081
+log points per mention per 100 words; BH p moves from 0.012 to 0.061), and
+business framing is linked to a 0.26 percentage-point lower same-day rate
+per extra mention per 100 words (programme-adjusted, BH p = 0.006).
+These are associations, not effects of writing.
 
-Country dependence, sparse regional clusters, omitted partner information,
-programme differences and selection into completed-funding records restrict
-interpretation. Feature importance cannot identify a causal mechanism.
-The self-contained modeling notebook and expanded feature sensitivity use
-different specifications. The [reviewed maintenance extension](../reports/expanded_feature_sensitivity_reviewed/README.md)
-adds programme-text controls and numerical safeguards, while preserving a
-rejected diagnostic run and the recovered historical snapshot. These later
-checks do not replace the primary pipeline or the submitted project record. See [evidence and corrections](2_evidence_and_corrections.md)
-for precise qualifications and links to the historical record.
+**4. Text adds forecast information.** On 728,640 evaluation records, adding
+description form, lexical measures and TF-IDF lowered the linear model's error
+in 5 of 5 years, by 0.26–0.39 days (median 0.29). A compact tree model gained
+only 0.001–0.042 days, and country resampling included zero in 4 of 5 linear
+comparisons. In 2025, text improved error and probability scores but slightly
+lowered ranking (AUC 0.893 to 0.888). Richer text may encode purpose,
+location or programme templates as well as framing.
 
-The October maintenance reran explanatory sensitivity on the full input and
-showed that statistical support changes with programme controls. It also
-caught and corrected an absorbed-predictor defect before accepting the results.
-These later checks strengthen the research record; they are separate from the
-September competition submission and its original predictive metrics.
+**5. Structure still predicts most of the variation.** The primary
+HistGradientBoosting benchmark reached MAE 5.20 days and R² 0.542 on 278,887
+holdout loans; the 24-hour classifier reached ROC AUC 0.900. These are
+retrospective predictions on completed loans, not deployment estimates.
+
+## What this means
+
+For Kiva and its partners, the evidence supports two things: treat
+description text as useful context in research and forecasting, and stop
+treating any single framing tip as proven. It does not support country-level
+writing rules or a claim that editing speeds funding. The three next steps are:
+
+1. **Validate the measures.** Dual-code a sample of narratives for clarity,
+   specificity, need and agency, then freeze definitions.
+2. **Close the data gaps.** Partner identifiers, all listings including expired
+   ones, and original text versions.
+3. **Design one truthful pilot** with partners: a clarity prompt, a control, a
+   practical-effect threshold agreed in advance, and enough power to detect it.
+
+## Limits
+
+Observational associations; 48 country clusters with sparse regions; a
+programme proxy that does not identify partners; completed-funding records only;
+snapshot rather than listing-time field values; retrospective prediction windows.
+Historical slide claims such as "the story barely registers" are superseded; see
+[evidence and corrections](2_evidence_and_corrections.md). The submitted proposal
+and competition deck are preserved as historical records.
 
 ## LinkedIn achievement entry
 

@@ -25,6 +25,11 @@ comparisons across five annual evaluation windows. Read the
 [new findings](docs/6_matched_text_results.md), run the
 [maintained insight notebook](notebooks/2_full_dataset_modeling.ipynb), or use
 the [updated deck and slide briefing](docs/presentation/research_refresh/README.md).
+The 8 November [equivalence screen](reports/equivalence_screen_reviewed/README.md)
+shows which framing associations are small enough to bound and which remain
+unresolved; the [portfolio case study](docs/3_portfolio_case_study.md) now tells
+the full story, and the current deck lives in
+[docs/presentation/portfolio_deck](docs/presentation/portfolio_deck/README.md).
 The [research review](docs/4_research_review.md) explains the decision framework;
 the [approved ML design](docs/5_ml_refinement_plan.md) preserves the pre-run plan.
 
