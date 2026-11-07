@@ -2578,3 +2578,4 @@ t(4) keeps 21 of 23 bounded results and all five duration verdicts. 48 no-descri
 unseen exact template, which cannot exclude near-duplicates.
 
 **Limits.** No independent review; the effective-country index and t(4) are heuristics; the cap is a diagnostic.
+- **2026-11-08, slide 13 (Mike chose "add the one line"):** edited live deck `1Q7n_sOn_4HL68_Mk-GogDOtS9P_pfPVXLNUeinV7pFM` in place, no rebuild; the slide had no owner edits. Title now "The gain is modest and depends on the model"; the "Countries matter" takeaway adds "Capping extreme forecasts, an exploratory check, leaves zero in 1 of 5." with notes to match, and marker 3 was replaced at the measured heading height. A first attempt inserted the sentence at the wrong position because the CLI ignored the insert index; the column was rewritten from the storyline with the builder's styles. Deck QA passes and the slide was checked at full size.

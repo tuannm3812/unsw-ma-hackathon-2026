@@ -603,7 +603,7 @@
       "id": "gain_uncertainty",
       "section": "Evidence",
       "layout": "content+takeaways",
-      "title": "The gain is modest and depends on the model and the countries",
+      "title": "The gain is modest and depends on the model",
       "subtitle": "November benchmark: annual MAE gain with month-resampled 95% intervals",
       "exhibit": {
         "type": "interval_dots",
@@ -690,7 +690,7 @@
         {
           "marker": 2,
           "heading": "Countries matter",
-          "text": "Country resampling includes zero in 4 of 5 linear years."
+          "text": "Country resampling includes zero in 4 of 5 linear years. Capping extreme forecasts, an exploratory check, leaves zero in 1 of 5."
         },
         {
           "marker": 3,
@@ -700,7 +700,8 @@
       ],
       "notes": {
         "purpose": "Keep the gain in proportion.",
-        "script": "The linear gains are consistent month to month, but country resampling is less kind, and the tree model gains little. Different metrics also move in different directions."
+        "script": "The linear gains are consistent month to month, but country resampling is less kind, and the tree model gains little. [Point: Countries matter] Part of that country fragility comes from a few extreme forecasts: when we cap forecasts at the longest training wait, an exploratory check, the country interval excludes zero in 4 of 5 years. Different metrics also move in different directions.",
+        "reference": "docs/6_matched_text_results.md; reports/loss_alignment_2025/README.md (all five years, capped diagnostic)."
       }
     },
     {
