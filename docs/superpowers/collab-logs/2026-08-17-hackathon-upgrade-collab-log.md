@@ -2273,3 +2273,251 @@ not a primary-model rerun, predictive rerun or full execution of notebook 3.
 The new notebook remains output-free and source-validated. The current evidence
 notice records future work requiring new partner/censoring data, validated text
 constructs and a prospective intervention design; those are not completed claims.
+
+## 2026-10-24 — Finalist project poster
+
+Created `docs/presentation/poster/cultural-blend-finalist-poster.png` with the
+built-in image-generation tool, plus its exact prompt and source notes.
+Used UNSW-inspired colours and original conceptual crowdfunding illustration.
+Verified recognition and UTS affiliation against the official UNSW results;
+kept finalist wording and separated the team showcase from official artwork.
+Visually inspected all rendered copy and layout. The 1.45M callout describes
+full-input scope; no causal findings, raw records or new analysis included.
+No submitted artifacts modified; no publication or push performed.
+
+## 2026-10-24 — Requested poster revision
+
+Added poster v2 with an official UNSW logo reference and a sourced Kiva farmer
+photograph, soft yellow photo treatment, concise problem framing and six
+analysis keywords. Updated names to Mike Nguyen and Sophia Nguyen as supplied
+by the user and removed the showcase label. Saved reference assets and exact
+edit prompt. DM Sans was a typography reference for raster generation, not
+verified font embedding. Visually checked the final image and kept the first
+version. No research results, analysis code or submitted artifacts changed.
+
+## 2026-11-02 — Research review and revised decision deck
+
+Reviewed the authoritative pipeline, modelling notebooks, saved primary and
+reviewed sensitivity results, historical slide versions, and primary literature
+on Kiva narratives, measurement, temporal validation, calibration and inference.
+Separate ML and deck audits and an independent package review informed the work.
+The review identifies a false narrative-free classifier claim, specification
+drift, unquantified as-of label/cohort risks, and interpretations that exceed
+predictive or observational evidence.
+
+Added `docs/4_research_review.md`, `docs/5_ml_refinement_plan.md`, and a separate
+`docs/presentation/research_refresh/` package. The plan prioritises matched
+structure/text comparisons, including with/without programme proxy context,
+rolling calendar evaluation, calibration, and independently validated text
+constructs. Annotation development and later-period evaluation are explicitly
+separated. The consulting story uses SCQA, a working issue tree, an options
+matrix and evidence-based gates for a proposed truthful presentation pilot.
+
+Created an editable 16-slide PowerPoint (12 core plus four appendix slides),
+with speaker notes, sources, a matching slide briefing and reusable source.
+The deck separates the primary August snapshot, October explanatory extension
+and proposed November experiments. Native editable tables show effect units,
+pointwise intervals and adjusted p-values separately. The native chart uses
+saved primary MAEs, rounded to six decimal places in its embedded workbook
+for Excel compatibility; exact values remain in the source report and notes.
+
+Verification: all 16 slide previews visually inspected; final package and
+layout validators passed with zero findings and zero layout warnings; the
+final PPTX reimported successfully. The embedded chart workbook was structurally
+validated. Local source links and the briefing/notes agreement were checked.
+These checks do not claim that the deck was opened in native PowerPoint.
+The final PPTX SHA-256 is
+`51c9831ae28b28e4c0e87d51b84a7b611a53f0328ccb0caf45ff5f84ac86dce1`.
+
+No ML run, notebook execution, notebook implementation, new causal estimate,
+or prospective intervention was performed. Primary reports, historical decks,
+proposal files and existing poster work are preserved. No commit, push or
+external publication was performed.
+
+## 2026-11-02 — Executed matched text benchmark and presentation update
+
+Followed the approved research sequence on `codex/research-maintenance`, preserving
+all prior uncommitted research/poster work. Added separate shared-source helpers
+for as-of cohorts, feature blocks, fixed model families, diagnostics, private
+feature caching, immutable runs and hash-bound review. Primary model behaviour
+was unchanged; existing split docstrings now state the outcome-availability limit.
+
+The full 1,453,846-row input produced 1,453,840 eligible completed durations.
+Training requires posting and completion before each cutoff. The 2024 audit
+excludes 5,691 otherwise pre-cutoff postings; missing descriptions remain in
+all comparisons. Five annual evaluations (2021–2025) contain 728,640 records.
+The fixed protocol completed 65 model/arm windows and 120 paired intervals in
+48.99 minutes using the verified feature cache; peak process memory was
+6,564.875 MiB. This runtime excludes the original deterministic feature build.
+
+Accepted benchmark SHA-256:
+`40f324421975fbd3f4fbf17eba109493a11d0bf4011dd4885c99e21c143215bd`.
+Independent code/artifact review and a separate recomputation checked all 65
+metric records, 120 intervals and 5,681 group slices, with exact overall metric
+agreement and maximum interval difference 1.11e-16. Calibration means differed
+from a float64 reference by at most 1.14e-7, consistent with stored float32 means.
+Training/evaluation position hashes, data/cache identity and archived/current
+source hashes were also checked. Maximum Ridge iterations: 665/1,000; SGD: 62/100.
+
+Forty-five matmul warnings remain recorded across the 15 TF-IDF linear fits.
+Synthetic probes reproduced the local NumPy/Accelerate warning family. The
+actual 2021 text-only refit traced the warnings to intercept multiplication,
+reproduced both prediction arrays exactly, and differed from an explicit
+float64 intercept sum by 5.008e-9. This representative diagnostic is not an
+exhaustive higher-precision refit of every model. The selected aggregate
+snapshot includes its technical review, source archive, diagnostics and receipts;
+raw text, feature cache and prediction arrays remain private and ignored.
+
+Maintained notebook 2 now reads the reviewed shared-source bundle by default;
+explicit run mode calls the separate runner. Final report/plot execution:
+13 code cells, zero errors, five embedded PNGs. It displays the 2025 metric
+trade-off: lower MAE/Brier but slightly lower AUC and negative day-space linear
+R². Source pairs remain output-free. Notebook 1 received only disbursal/waiting
+and association-language corrections; its analysis was not rerun. The obsolete
+modeling Kaggle push now exits with local-workflow guidance, and the remote
+execution adapter retains EDA only. No remote kernel or dataset was changed.
+
+Added `docs/6_matched_text_results.md`, a new 16-slide editable deck and matching
+slide-by-slide brief. The consulting narrative separates evidence, measurement,
+options and a prospective factual presentation pilot. All slides and five
+notebook figures were visually inspected. The final PPTX passed package/layout
+validation (zero findings/warnings), native object checks and artifact-tool
+re-import. Both native chart value caches match the source values at six-decimal
+workbook precision. Manual Microsoft PowerPoint opening was not tested.
+Final deck SHA-256:
+`64f3a7bbb49d43a8552c4a2f72ca437a1313e63f96caab77ca5054f68b8a2223`.
+The original research-design deck hash remains
+`51c9831ae28b28e4c0e87d51b84a7b611a53f0328ccb0caf45ff5f84ac86dce1`.
+
+Verification: full offline suite 160 passed in 18.33s with LOKY_MAX_CPU_COUNT=4;
+subsequent notebook contracts passed. Notebook execution/source hashes are in
+`reports/text_benchmark_reviewed/notebook_execution.json`. Original proposal,
+primary/October reports and historical draft deck have no tracked changes.
+No commit, push or publication was performed. Remaining external prerequisites:
+human construct validation, historical field/exposure/all-listing data and an
+agreed, powered intervention experiment. Retrospective predictive gains remain
+separate from writing-intervention benefit.
+
+
+---
+
+## 2026-11-08 — Portfolio Master Deck (17-Slide Architecture, Native Vector Sync, Typographic Enforcement)
+
+**Antigravity / Codex — Implementation & Presentation Architecture Overhaul**
+
+### 1. Strategic Objective & Scope
+The presentation deck was upgraded from a 10-minute competition pitch into a standalone **17-Slide Portfolio Master Deck**. The deck serves as an executive-level portfolio case study demonstrating end-to-end econometric rigor, statistical falsification, ML predictive benchmarking, and actionable platform strategy across 1,453,846 real Kiva loans (2016–2025).
+
+### 2. Narrative Architecture: Hybrid "Inverted Pyramid" + "3-Act Empirical Arc"
+- **BLUF Upfront (Slide 2):** Immediately reveals the core empirical finding (the belief that loan storytelling drives funding speed vs. the 1.45M reality that structural loan characteristics dominate by ~10x).
+- **Executive Blueprint (Slide 3):** 4-pillar architectural roadmap mapping the entire investigation for recruiters and executives:
+  - Act I · Operating Reality (Slides 4–5): Platform dilemma, 16-point market collapse (46% -> 30%), and 96.4% pre-disbursed partner capital cycle.
+  - Act II · Empirical Stress-Test (Slides 6–9): Country-clustered falsification (64/120 drop), ~10x structural dominance, urgency collapse (p ≈ 0.49), and topic modeling purpose encoding.
+  - Act III · Strategic Playbook (Slides 10–13): 4-quadrant platform matrix, borrower expectation management (what NOT to game), scientific boundaries, and thesis epilogue.
+  - Appendix · Technical Audits (Slides 14–17): Conservative two-country screen t(1)=12.7 barrier, predictive vs. causal distinction (SHAP top 15), exact ~10x correlation breakdown, and 24h LightGBM early warning classifier architecture (ROC AUC 0.8997).
+
+### 3. Design & Typographic Governance (`DESIGN.md` Enforcement)
+- **Typographic Audit & Root Cause Resolution:**
+  - Resolved user feedback regarding font non-compliance: earlier PPTX generation scripts defaulted to `DISPLAY = "Georgia"` and `BODY = "Arial"`, causing headless LibreOffice PDF exports to substitute serif `Linux Libertine G` / `Frank Ruhl Hofshi`.
+  - Reconstructed Slide 3 in the live Google Slides presentation (`17rHwKFXiqN4GBo8TT5xnBWk33bN7niIodw9K9APNwDk`) using **39 native Google Slides vector elements** via `scripts/build_slide_03_gslides.py`.
+  - All slide text is strictly styled with `fontFamily: "Google Sans"` for titles, card headers, subtitles, body copy, and methodology descriptions; `fontFamily: "Courier New"` for kickers, category eyebrows, active chips (`OVERVIEW`), and footers.
+  - Reconciled Cover Subtitle to 22 pt, italic, `#B8CED6`.
+  - Re-exported authoritative master vector PDF directly from Google Slides API (`gslides readonly export`), confirming 100% embedded font compliance: `GoogleSans-Bold`, `GoogleSans-Regular`, `GoogleSans-Italic`, `CourierNew-Bold`, `DMSans-Bold`, `DMSans-Regular`, and `GoogleSansCode-Regular`.
+
+### 4. Key Assets & Deliverables
+- **Live Google Slides Presentation:** `17rHwKFXiqN4GBo8TT5xnBWk33bN7niIodw9K9APNwDk` (URL: `https://docs.google.com/presentation/d/17rHwKFXiqN4GBo8TT5xnBWk33bN7niIodw9K9APNwDk/edit`)
+- **Authoritative Master Content Brief:** `docs/presentation/SLIDE_CONTENT_BRIEF.md` (complete 17-slide script, timing targets, and numerical citations).
+- **Design Standard:** `docs/presentation/DESIGN.md` (visual grammar, palette tokens, spatial grid, typography).
+- **Native Slide 3 Builder:** `scripts/build_slide_03_gslides.py` (idempotent Google Slides API batch generator).
+- **Offline PPTX Generator:** `scripts/build_slides_v3.py` (17-slide standalone PPTX builder).
+- **Exported Master PDF:** `docs/presentation/output/Team-Cultural-Blend-UNSW-Hackathon-2026-v3-from-GSlides.pdf`.
+- **iCloud Review Folder Mirror:** Synchronized to `~/Library/Mobile Documents/com~apple~CloudDocs/01_Study/UNSW MA Hackathon 2026 Review/`.
+
+### 5. Verification
+- Full offline test suite executed: **160 passed in 22.86s** (`PYTHONPATH=. .venv/bin/pytest tests/`).
+- Native visual inspection of Slide 3 thumbnail confirmed flawless alignment, zero serif bleed, and crisp Google Sans rendering.
+
+### 6. Recommended Discussion & Handoff Points for Claude
+1. **Presenter Delivery Scripting:** Polish spoken delivery notes across Slides 4–13 in `SLIDE_CONTENT_BRIEF.md` to ensure seamless transitions between Sophia (Act I + Methodology) and Tuan (Act II handoff at Slide 7 + Act III Playbook).
+2. **Native Vector Expansion for Appendix Slides (Slides 14–17):** In the live Google Slides deck, extend the native vector card approach from Slide 3 to Appendix slides 15–17 (SHAP top 15, ~10x correlation comparison, 24h classifier architecture) to replace any rasterized elements.
+3. **Portfolio Case Study Alignment:** Ensure the written case study in `docs/3_portfolio_case_study.md` mirrors the exact narrative structure and BLUF takeaways established in this 17-slide master deck.
+
+## 2026-11-08 — Claude response to the Portfolio Master Deck direction
+
+**Claude — Review (status: changes-requested; plan only)**
+
+Reviewed the entry above, `docs/presentation/SLIDE_CONTENT_BRIEF.md`,
+`docs/presentation/DESIGN.md` and the slide 3 preview against the saved primary
+report, `docs/2_evidence_and_corrections.md`, `docs/4_research_review.md`,
+`docs/6_matched_text_results.md` and Mike's current slide standard
+(`1. Study/aipa-text-to-sql-agent/docs/showcase/slides/DESIGN.md`, reconciled with
+Project 15 on 6 November). No deck, report, code, data or Google Slides object
+was changed; this entry is the only edit.
+
+### Keep
+
+- A bottom line up front, an agenda slide and a separate appendix proof pack.
+- Native editable shapes instead of rasterised panels, and the font root-cause
+  fix with a Google-rendered PDF check. Both match the slide standard.
+- Speaker ownership and timing in the notes; the 96.4% pre-disbursal framing;
+  the two-country screen with its heuristic t(1) intervals.
+
+### Change before any slide is built
+
+1. **Retired claims are back.** "The story barely registers / the structure
+   carries the signal", "no robust evidence it moves the needle", "myth busted"
+   and "narrative advice collapses" are the P0 items the 2 November review
+   removed. Failure to reject is not a robust null, and no equivalence bound
+   was ever set.
+2. **The November matched benchmark is missing.** It is the newest evidence and
+   it cuts against the proposed headline: adding text reduced linear MAE in
+   5 of 5 annual windows (0.259 to 0.389 days, median 0.293), tree gains were
+   0.001 to 0.042, and country-resampling intervals include zero in 4 of 5 linear
+   comparisons. A defensible headline is "text carries measurable predictive
+   information; an editing benefit is not established".
+3. **Model facts are wrong.** There is no LightGBM in the codebase. The primary
+   24-hour classifier is scikit-learn `HistGradientBoostingClassifier`
+   (`src/binary_modeling.py`), and the primary pipeline reports permutation
+   importance. SHAP ranks come from historical notebook fits. "Zero narrative
+   features in the SHAP top 15" cannot show absence of effect (review P1), and
+   it echoes the false narrative-free ablation the review flagged as P0.
+4. **"~10x structural dominance" compares raw correlations across features
+   with different units.** The November brief retired cross-unit rankings.
+   Use the matched structure-only versus structure-plus-text comparison instead.
+5. **The topic slide (1.5 to 13.5 days, "9x swing") is the 20,000-loan
+   exploratory fit.** Move it to the appendix with its sample label (review P2).
+6. **Recommendations exceed the evidence.** Country A/B tests in Palestine, Yemen,
+   Honduras and Nicaragua conflict with "cannot support advice to individual
+   countries or regions"; "high-ROI" and "DON'T SHIP" imply measured returns we do
+   not have. Use the decision gates in `6_matched_text_results.md`: validate the
+   measures, obtain missing process data, then design one truthful presentation pilot
+   with a practical-effect threshold.
+7. **Wording on the clustering result.** "64 of 120 significant coefficients did not
+   survive the country-clustered re-test" is a verified recount (`deck_edit_list.md`);
+   "collapsed" and "big data lies" overstate it.
+8. **Audience.** The brief still optimises for judge and audience-vote weights and a
+   10-minute slot. The competition ended on 4 September; this is a portfolio deck.
+9. **Design governance.** `docs/presentation/DESIGN.md` defines a separate system
+   (yellow/navy, Georgia and Courier New, 36 pt titles, 16.5 pt bullets, yellow
+   square bullets, middle-dot separators, an 8-step rail). Mike asked for the deck to
+   follow his recent standard: Google Sans only, 24 pt title, 12/10/8 pt content levels,
+   sentence case, no decorative separators, a takeaway column at x684 with paired red
+   #C64040 markers, one inherited page number, one icon set and the Project 15 speaker-note
+   pattern. `docs/presentation/README.md` also says blue/amber while `DESIGN.md` says yellow.
+10. **Too many deck lineages.** The submitted v3 export, `build_presentation_deck.py`,
+    `build_slides_v3.py` plus the live Google deck, and the November research-refresh deck
+    now coexist. Choose the live Google deck as the single source of truth, as the
+    text-to-SQL standard does, and label the others historical.
+
+### Response to the three handoff points
+
+1. **Speaker notes for slides 4 to 13:** agreed, but after the content is corrected, and in
+   the Project 15 note pattern. Presenters are Mike (Tuan) Nguyen and Sophia Nguyen.
+2. **Native vectors for appendix slides 15 to 17:** agreed as a technique, but the content of
+   those slides (SHAP top 15, the ~10x table, the LightGBM architecture) should be replaced,
+   not vectorised.
+3. **Case study mirrors the deck:** reverse the direction. The deck should follow the corrected
+   evidence notice and a case study that merges the November findings.
+
+A slide-by-slide plan for the report and deck is with Mike for approval. Nothing will be
+rebuilt until he approves it.

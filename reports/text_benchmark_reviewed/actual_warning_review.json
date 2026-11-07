@@ -1,0 +1,54 @@
+{
+  "diagnostic": "Actual 2021 T refit; full-data core source unchanged",
+  "private_prediction_archive_sha256": "ed1fd30d899b1de327dac23e1949f9d156e6a64519d8dc925c105eaa60b03ef0",
+  "intercept_checks": [
+    {
+      "features": 5022,
+      "finite_coefficients": true,
+      "intercept": 1.3639589548110962,
+      "float64_sum_intercept": 1.3639589598190158,
+      "log_prediction_difference": 5.007919634536506e-09,
+      "warnings": [
+        {
+          "category": "RuntimeWarning",
+          "message": "divide by zero encountered in matmul",
+          "filename": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "overflow encountered in matmul",
+          "filename": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "invalid value encountered in matmul",
+          "filename": "sklearn/linear_model/_base.py",
+          "line": 311
+        }
+      ]
+    }
+  ],
+  "repeat_prediction_max_absolute_difference": {
+    "days": 0.0,
+    "probability": 0.0,
+    "max_days_change_intercept_reference_upper_bound": 2.1649960757486042e-07,
+    "fit_metadata": {
+      "train_rows": 717672,
+      "test_rows": 163166,
+      "random_early_stopping": false,
+      "features": 5022,
+      "train_nonzero": 100301348,
+      "transform_seconds": 55.572475125000004,
+      "fit_seconds": 48.939625625,
+      "predict_seconds": 0.07513304200000448,
+      "duration_iterations": [
+        340
+      ],
+      "classifier_iterations": 37,
+      "negative_duration_predictions_clipped": 992,
+      "warnings": []
+    }
+  }
+}

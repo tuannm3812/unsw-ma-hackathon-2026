@@ -3,9 +3,10 @@ Leakage-safe modeling pipeline for predicting Kiva loan funding speed.
 
 The evaluation design here is chronological, not random: the model is
 trained on loans posted before `holdout_start` and evaluated on loans
-posted on or after it, mirroring how the model would actually be used
-(scoring newly-posted loans using only information knowable at posting
-time). All learned transformations - median/most-frequent imputation,
+posted on or after it. This historical split does not additionally require
+training outcomes to have completed by the cutoff; the separate benchmark
+in src/benchmark_data.py enforces that as-of membership rule. Snapshot
+predictor availability also remains an assumption. All learned transformations - median/most-frequent imputation,
 standard scaling, one-hot encoding, and the TF-IDF/NMF topic model - are
 fit on the training partition only and merely *applied* (never re-fit) to
 the holdout partition.

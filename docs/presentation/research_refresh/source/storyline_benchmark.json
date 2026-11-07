@@ -1,0 +1,663 @@
+{
+  "title": "What narrative text adds to funding-speed forecasts",
+  "date": "2026-11-02",
+  "audience": "Portfolio and industry readers, using a Kiva/partner decision case",
+  "slides": [
+    {
+      "title": "What narrative text adds\nto funding-speed forecasts",
+      "layout": "cover",
+      "subtitle": "Post-competition research: matched full-data forecasts",
+      "message": "Measure what narratives add, then test whether a truthful change helps.",
+      "status": "Reviewed post-competition predictive extension",
+      "evidence": "1,453,846 input records; 1,453,840 valid completed durations; 65 model/arm windows.",
+      "visual": "Minimal editorial cover, team names and recognition; no model-performance claim.",
+      "action": "Understand the project as a decision case with an explicit next test.",
+      "notes": "We are Mike Nguyen and Sophia Nguyen from Cultural Blend. This case began with a marketing question: which loan narratives are associated with faster funding? The maintained research now asks a more useful next question: what information does text add, and what evidence would justify changing how a loan is presented? We distinguish what the competition work established from later research. The new matched study is separate from the original competition results. The retrospective evaluation does not become an untouched test because we changed the protocol.",
+      "sources": [
+        "https://www.unsw.edu.au/business/our-schools/marketing/news-events/student-events/MA-hackathon",
+        "docs/2_evidence_and_corrections.md",
+        "reports/text_benchmark_reviewed/benchmark.json"
+      ]
+    },
+    {
+      "title": "Use the matched evidence to choose the next test",
+      "layout": "three",
+      "items": [
+        [
+          "Audit",
+          "Training outcomes and completed-cohort membership precede each cutoff."
+        ],
+        [
+          "Compare",
+          "Structure and text use matching rows within each model family."
+        ],
+        [
+          "Validate",
+          "Check text meaning and intervention feasibility before a pilot."
+        ]
+      ],
+      "message": "The next decision concerns measurement and intervention, informed by a completed comparison.",
+      "status": "Recommendation after the matched benchmark",
+      "evidence": "Availability audit and fixed-config comparisons completed; no measured editing benefit.",
+      "visual": "Three large numbered statements on a flat canvas; no invented impact scores.",
+      "action": "Approve the research sequence before commissioning additional model complexity.",
+      "notes": "The first two research steps are now completed. This does not remove completed-record selection, snapshot-field uncertainty or construct validity questions. Decide what the remaining information gaps justify before choosing a writing or allocation policy.",
+      "sources": [
+        "reports/text_benchmark_reviewed/benchmark.json",
+        "reports/text_benchmark_reviewed/availability_audit.json",
+        "docs/6_matched_text_results.md"
+      ]
+    },
+    {
+      "title": "The outcome is completed funding on the platform",
+      "layout": "population",
+      "message": "The observed sample and timing determine what the project can claim.",
+      "status": "Primary population and descriptive audit",
+      "evidence": "1,453,846 input rows; six negative durations excluded; 1,453,840 eligible, including 1,637 refunded records. Dictionary reports 96.4% pre-disbursal.",
+      "visual": "Large eligible count at left, listing-to-completion timeline in text at right, precise population footnote.",
+      "action": "Interpret later results within completed records and distinguish borrower disbursal.",
+      "notes": "The full input contains 1,453,846 records from 2016 to 2025. Six negative durations are excluded. The analysis includes 1,637 refunded records with valid completed durations. The dictionary's full-data descriptive audit reports 96.4% pre-disbursal, so listing-to-completion time often begins after money has already been disbursed. It does not directly measure borrower waiting, partner liquidity or welfare. Unfunded and expired listings are needed to study all-listing success. The new as-of training audit removes pre-cutoff postings whose completed membership was not yet known; the primary August snapshot is preserved.",
+      "sources": [
+        "reports/generated_full_dataset/analysis_summary.json",
+        "docs/1_data_dictionary.md",
+        "docs/2_evidence_and_corrections.md",
+        "https://www.kiva.org/blog/qa-expiring-loans-credit-limits-and-the-evolution-of-kiva",
+        "reports/text_benchmark_reviewed/availability_audit.json"
+      ]
+    },
+    {
+      "title": "Investigate four connected parts of the funding process",
+      "layout": "table",
+      "columns": [
+        "Mechanism",
+        "What we observe",
+        "What we still need"
+      ],
+      "widths": [
+        300,
+        400,
+        436
+      ],
+      "rows": [
+        [
+          "Financing request",
+          "Amount, term, purpose, borrower mix",
+          "Listing history and operational constraints"
+        ],
+        [
+          "Narrative",
+          "Text, lexicons, sentiment, topics",
+          "Validated constructs and editorial provenance"
+        ],
+        [
+          "Marketplace",
+          "Calendar and geography proxies",
+          "Exposure, placement and competing inventory"
+        ],
+        [
+          "Partner process",
+          "Pre-disbursal and programme text",
+          "Verified partner ID and process history"
+        ]
+      ],
+      "message": "Choose a mechanism to investigate before choosing a lever to change.",
+      "status": "Working issue tree",
+      "evidence": "Repository schema and Kiva process documentation; missing fields are data requests, not established causes.",
+      "visual": "Native editable issue-tree matrix with observed versus missing evidence.",
+      "action": "Prioritise the missing data required by the intended intervention.",
+      "notes": "This issue tree is a working decomposition. Its branches interact: a partner's process may affect both wording and exposure. Literature gives reasons to consider prosocial framing and lender preferences, while Kiva describes editing and translation in the posting process. None of these mechanisms is identified by a predictive importance chart. We should request data that can distinguish them.",
+      "sources": [
+        "docs/1_data_dictionary.md",
+        "https://www.kiva.org/blog/how-kiva-works-faqs",
+        "https://www.thallison.com/wp-content/uploads/2022/03/etap.12108.pdf",
+        "https://www.mckinsey.com/capabilities/strategy-and-corporate-finance/our-insights/how-to-master-the-seven-step-problem-solving-process"
+      ]
+    },
+    {
+      "title": "Text improves linear forecasts in all five years",
+      "layout": "research_benchmark",
+      "message": "Matched gains quantify additional predictive information; they are not the effects of editing.",
+      "status": "New full-data retrospective benchmark",
+      "evidence": "Sparse Ridge/logistic family, fixed configurations, as-of training cohorts. Annual rows and exact metrics are in the reviewed bundle.",
+      "visual": "Native grouped MAE chart for all five years, with matched structure/text inputs.",
+      "action": "Assess the size and temporal stability of added predictive information.",
+      "notes": "Compare structure-only and structure-plus-text within the same sparse linear family, using the same rows, outcomes and cutoffs. TF-IDF is fitted on each training window only. The side callout is the median of annual MAE gains, not a loan-weighted pooled estimate. The AUC change is text-added minus structure-only in the latest observed year: a negative value means ranking declined even though duration MAE improved. These fixed models are not tuned winners. Description contents may encode context as well as framing.",
+      "sources": [
+        "reports/text_benchmark_reviewed/benchmark.json",
+        "docs/6_matched_text_results.md"
+      ],
+      "years": [
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "series": [
+        {
+          "name": "Structure only",
+          "values": [
+            8.250034585396918,
+            8.569701452516403,
+            8.184983812648497,
+            7.515064391712846,
+            6.40625710634115
+          ],
+          "color": "#596271"
+        },
+        {
+          "name": "Structure + text",
+          "values": [
+            7.957401664067373,
+            8.197201827544616,
+            7.925509466155371,
+            7.126233318339922,
+            6.146542457617257
+          ],
+          "color": "#237F80"
+        }
+      ],
+      "gainLabel": "0.293",
+      "aucLabel": "-0.0048",
+      "latestYear": 2025
+    },
+    {
+      "title": "Read the added-text gain with its uncertainty",
+      "layout": "text_gain",
+      "columns": [
+        "Year",
+        "Linear gain",
+        "Month 95% interval",
+        "Tree gain",
+        "Month 95% interval"
+      ],
+      "widths": [
+        90,
+        160,
+        340,
+        160,
+        386
+      ],
+      "rows": [
+        [
+          "2021",
+          "0.293",
+          "[0.198, 0.384]",
+          "0.035",
+          "[-0.073, 0.137]"
+        ],
+        [
+          "2022",
+          "0.372",
+          "[0.208, 0.518]",
+          "0.028",
+          "[-0.036, 0.084]"
+        ],
+        [
+          "2023",
+          "0.259",
+          "[0.088, 0.406]",
+          "0.006",
+          "[-0.025, 0.035]"
+        ],
+        [
+          "2024",
+          "0.389",
+          "[0.287, 0.500]",
+          "0.001",
+          "[-0.020, 0.025]"
+        ],
+        [
+          "2025",
+          "0.260",
+          "[0.139, 0.396]",
+          "0.042",
+          "[0.013, 0.074]"
+        ]
+      ],
+      "message": "Country-resampling intervals include zero in 4 of 5 linear comparisons; read both sensitivity checks.",
+      "status": "New matched comparisons; pointwise fixed-model sensitivity intervals",
+      "evidence": "Linear adds M+L+R; trees add M+L only. Positive gain means lower MAE in days. Month-cluster bootstrap uses 1,000 draws.",
+      "visual": "Native table of paired gains and month-block sensitivity intervals, with units.",
+      "action": "Choose a practical threshold with decision owners; do not infer an intervention return.",
+      "notes": "Each gain subtracts candidate absolute error from the structure-only error on the same records. Whole calendar-month blocks are resampled, preserving paired losses and weighting by record count. These are fixed-model sensitivity intervals, not causal intervals or retraining uncertainty. Annual windows have few independent month blocks. The notebook also shows country sensitivities, paired Brier gains and S+P versus S+P+text comparisons. P remains an unvalidated programme-text proxy.",
+      "sources": [
+        "reports/text_benchmark_reviewed/benchmark.json",
+        "docs/5_ml_refinement_plan.md"
+      ]
+    },
+    {
+      "title": "Large row counts do not remove contextual uncertainty",
+      "layout": "uncertainty",
+      "message": "Regional narrative patterns require careful treatment of the number of independent countries.",
+      "status": "Primary August estimates",
+      "evidence": "Middle East slope −.0729, normal interval [−.1003,−.0456], heuristic [−.2502,.1043], 2 countries; Central America −.0742, normal [−.0879,−.0605], heuristic [−.1629,.0145], 2 countries. Slope units: change in log(1+days) per additional family mention per 100 words.",
+      "visual": "Two-region native table with point estimates, normal intervals and heuristic intervals. Clearly label the latter as uncalibrated sensitivity.",
+      "action": "Treat regional patterns as exploratory hypotheses, not country-specific writing advice.",
+      "notes": "The two regional point estimates suggest faster completed funding with more family mentions, conditional on the primary model. Each pooled region contains only two countries. The normal-reference country-clustered intervals and the much wider t(1) screen show why the uncertainty deserves attention. The screen is heuristic and is not a calibrated correction. In the same primary analysis, urgency has country-clustered p=.4943 for duration and .2233 for 24-hour completion. Failure to reject does not establish a negligible effect.",
+      "sources": [
+        "docs/2_evidence_and_corrections.md",
+        "reports/generated_full_dataset/analysis_summary.json",
+        "https://cameron.econ.ucdavis.edu/research/Cameron_Miller_JHR_2015.pdf"
+      ]
+    },
+    {
+      "title": "Later checks retain some narrative associations",
+      "layout": "sensitivity",
+      "columns": [
+        "October specification",
+        "Coefficient",
+        "Pointwise 95% interval",
+        "BH-adjusted p"
+      ],
+      "widths": [
+        340,
+        190,
+        386,
+        220
+      ],
+      "rows": [
+        [
+          "Expanded controls",
+          "−0.009008",
+          "[−0.013833, −0.004183]",
+          "0.01236"
+        ],
+        [
+          "Programme-text controls",
+          "−0.008088",
+          "[−0.013210, −0.002965]",
+          "0.06062"
+        ]
+      ],
+      "after": "Programme-adjusted business framing, 24-hour completion: −0.258 pp per additional mention / 100 words; 95% interval [−0.390, −0.126] pp; adjusted p = 0.00635.",
+      "message": "Statistical support changes with specification; a universal editing benefit remains unestablished.",
+      "status": "Reviewed October research extension",
+      "evidence": "Same 1,453,840 eligible rows and 48 countries across four fits. Joint framing families remain associated. Primary predictive models were not rerun.",
+      "visual": "Compact specification comparison plus one clearly unit-labelled 24-hour result. Keep the two outcomes separate.",
+      "action": "Retire the blanket null story while retaining the intervention boundary.",
+      "notes": "The October extension is later research, separate from the competition submission. The third-person duration estimate changes modestly, while its adjusted p-value crosses .05. This is not proof that the association disappeared. Business framing is associated with a lower 24-hour completion probability under the programme specification. Several joint families remain associated. The programme variable is a text-derived proxy, not a verified partner ID. Coefficients are per extra mention per 100 words, and the duration outcome is log(1+days). Multiplicity is handled within each outcome/specification, not across the entire research history. Duration pointwise 95% intervals are [−0.013833, −0.004183] for expanded controls and [−0.013210, −0.002965] for programme adjustment. Business framing has a pointwise interval [−0.390, −0.126] percentage points. Intervals are pointwise; the displayed p-values are BH-adjusted within each outcome/specification.",
+      "sources": [
+        "reports/expanded_feature_sensitivity_reviewed/README.md",
+        "reports/programme_proxy_audit/README.md"
+      ]
+    },
+    {
+      "title": "Choose actions by evidence and readiness",
+      "layout": "table",
+      "columns": [
+        "Option",
+        "Evidence today",
+        "Next decision"
+      ],
+      "widths": [
+        340,
+        440,
+        356
+      ],
+      "rows": [
+        [
+          "Context and content audit",
+          "Outcome maturity quantified; historical field versions missing",
+          "Request provenance and validate text measures"
+        ],
+        [
+          "Matched text benchmark",
+          "Full-data comparisons and stability diagnostics",
+          "Interpret gains and remaining measurement gaps"
+        ],
+        [
+          "Truthful editing pilot",
+          "Plausible, untested mechanism",
+          "Design after measurement and feasibility"
+        ],
+        [
+          "Automated allocation",
+          "All-listing validation is missing",
+          "Defer rollout until data and policy checks"
+        ]
+      ],
+      "message": "Prioritise learning value without inventing intervention returns.",
+      "status": "Proposed prioritisation",
+      "evidence": "Synthesises current evidence boundaries. No cost or benefit estimates were collected.",
+      "visual": "Native options matrix using verbal judgments, no artificial impact scores.",
+      "action": "Prioritise construct validation and the feasibility of a defined pilot.",
+      "notes": "The audit and matched comparison are completed. They support a decision about further measurement and feasibility work, not a claim that changing text will improve funding. All-listing validation and an agreed operational purpose are still required for allocation tools. A model identifying slow loans does not identify who benefits from attention.",
+      "sources": [
+        "docs/4_research_review.md",
+        "docs/5_ml_refinement_plan.md"
+      ]
+    },
+    {
+      "title": "Ranking and probability quality need separate checks",
+      "layout": "calibration",
+      "items": [
+        [
+          "Define",
+          "Population, as-of labels, feature blocks and validation contract."
+        ],
+        [
+          "Demonstrate",
+          "Matched gains, calibration, error slices and text validity."
+        ],
+        [
+          "Decide",
+          "What is supported, what is uncertain and which test comes next."
+        ]
+      ],
+      "message": "A ranking score cannot establish reliable probabilities for all new listings.",
+      "status": "2025 observed completed records; sparse linear S+M+L+R",
+      "evidence": "Equal-width probability bins; empty bins omitted. Brier/log loss, counts, tail errors and group diagnostics are in the notebook.",
+      "visual": "Native line chart comparing predicted and observed probability within fixed bins.",
+      "action": "Inspect reliability, coverage and the population before considering an operational queue.",
+      "notes": "This diagnostic uses the latest observed year and the prespecified text-added sparse linear model. Predictions are compared with observed completion within 24 hours in the same probability bins, with counts shown below. Empty bins are omitted. The notebook compares both model families and shows duration-tail and novelty diagnostics. No calibration model has been fitted and no all-listing deployment evaluation has been performed.",
+      "sources": [
+        "reports/text_benchmark_reviewed/benchmark.json",
+        "https://scikit-learn.org/stable/modules/calibration.html"
+      ],
+      "binLabels": [
+        "0–10%",
+        "10–20%",
+        "20–30%",
+        "30–40%",
+        "40–50%",
+        "50–60%",
+        "60–70%",
+        "70–80%",
+        "80–90%",
+        "90–100%"
+      ],
+      "series": [
+        {
+          "name": "Mean prediction",
+          "values": [
+            0.0376753956079483,
+            0.14585424959659576,
+            0.2452366203069687,
+            0.34733816981315613,
+            0.44992104172706604,
+            0.5494637489318848,
+            0.649238109588623,
+            0.7479070425033569,
+            0.8492343425750732,
+            0.950435221195221
+          ],
+          "color": "#596271"
+        },
+        {
+          "name": "Observed 24-hour completion",
+          "values": [
+            0.06662038008815979,
+            0.26744016699839795,
+            0.4665311102074014,
+            0.5822622107969152,
+            0.725904038272126,
+            0.7830977352181182,
+            0.7894173421012387,
+            0.8495361781076067,
+            0.9529411764705882,
+            0.9601953601953602
+          ],
+          "color": "#237F80"
+        }
+      ],
+      "countCaption": "Bin counts (left to right): 61,933, 20,599, 12,295, 7,780, 7,107, 6,579, 6,539, 5,390, 4,845, 4,095"
+    },
+    {
+      "title": "Test one truthful presentation change",
+      "layout": "pilot",
+      "message": "A prospective experiment should estimate a defined intervention on all eligible listings.",
+      "status": "Proposed pilot, no measured benefit",
+      "evidence": "Candidate factual clarity/specificity prompt, usual-content control. Assignment, horizon, practical threshold and power are not yet fixed.",
+      "visual": "Four numbered steps with endpoint and guardrails in a separate short statement.",
+      "action": "Agree the intervention and observation contract with participating partners.",
+      "notes": "One candidate is a prompt that makes the existing purpose and use of funds clearer while preserving facts. Compare the offer of that prompt with usual practice and include all eligible listings in analysis. Decide the assignment unit to limit staff/template contamination and marketplace spillovers. Choose one primary completion horizon, a practical effect threshold and sufficient independent units before launch. Do not compare duration only among loans that fund after treatment. Measure accuracy, editing burden, representation and displacement as guardrails. No sample size or duration is justified yet.",
+      "sources": [
+        "docs/4_research_review.md",
+        "https://digitaleconomy.stanford.edu/publication/interference-bias-and-variance-in-two-sided-marketplace-experimentation-guidance-for-platforms/"
+      ]
+    },
+    {
+      "title": "Validate the proposed lever before running a pilot",
+      "layout": "roadmap",
+      "message": "The retrospective comparison is complete; intervention benefit remains the next evidence gap.",
+      "status": "Recommended delivery sequence",
+      "evidence": "Research plan with dependency-based gates; no committed delivery dates.",
+      "visual": "Four horizontal work stages, owners and concrete exit tests.",
+      "action": "Validate narrative constructs and agree a feasible intervention design.",
+      "notes": "The as-of audit and matched full-data comparison are completed. Next validate the constructs, request historical field/exposure information and assess whether a factual presentation pilot is feasible. Agree its endpoint, assignment, practical threshold and guardrails before launch. The existing observational results do not establish the outcome of that experiment.",
+      "sources": [
+        "docs/5_ml_refinement_plan.md",
+        "docs/4_research_review.md"
+      ],
+      "stages": [
+        [
+          "Validate",
+          "Research / data",
+          "Review constructs and historical field availability."
+        ],
+        [
+          "Design",
+          "Platform / partners",
+          "Agree feasibility, endpoint, assignment and power."
+        ],
+        [
+          "Test",
+          "Participating partners",
+          "Measure the defined intervention and guardrails."
+        ],
+        [
+          "Decide",
+          "Decision owners",
+          "Use practical benefit and uncertainty to choose."
+        ]
+      ]
+    },
+    {
+      "title": "Appendix: evidence register",
+      "layout": "table",
+      "columns": [
+        "Record",
+        "What it contains",
+        "Use in this deck"
+      ],
+      "widths": [
+        330,
+        450,
+        356
+      ],
+      "rows": [
+        [
+          "August primary snapshot",
+          "Tested full-data pipeline; saved prediction and inference",
+          "Descriptive/explanatory context on slides 3/7; appendix 14"
+        ],
+        [
+          "Historical simpler notebooks",
+          "Alternative measurements and specifications",
+          "Source audit; do not relabel as primary"
+        ],
+        [
+          "September recovered extension",
+          "Historical sensitivity and Ridge comparison",
+          "History with incomplete original provenance"
+        ],
+        [
+          "October reviewed extension",
+          "Corrected full-data explanatory sensitivity",
+          "Later research on slide 8"
+        ],
+        [
+          "November matched benchmark",
+          "As-of full-data prediction and paired text gains",
+          "New retrospective results on slides 5, 6 and 10"
+        ]
+      ],
+      "message": "Every claim belongs to a specific result set and population.",
+      "status": "Evidence provenance",
+      "evidence": "Existing report manifests and correction notice.",
+      "visual": "Native evidence ledger.",
+      "action": "Use the right run when reusing any number.",
+      "notes": "The local historical PPTX has 15 slides. Other notes refer to separate 14-page and 13-page exports. We cannot assume they are identical. This revised deck preserves those historical files and uses an explicit evidence ledger. The 100-row proposal example is not comparable to the full-data run. New paired notebooks remain output-free/source-validated unless actual execution is recorded. This update adds the reviewed November predictive extension and preserves the earlier research-design deck as a separate artifact.",
+      "sources": [
+        "docs/2_evidence_and_corrections.md",
+        "docs/presentation/README.md",
+        "reports/text_benchmark_reviewed/benchmark.json"
+      ]
+    },
+    {
+      "title": "Appendix: primary predictive benchmark",
+      "layout": "table",
+      "columns": [
+        "Measure",
+        "Saved result",
+        "Interpretation"
+      ],
+      "widths": [
+        420,
+        220,
+        496
+      ],
+      "rows": [
+        [
+          "Training-median holdout MAE",
+          "8.7234 days",
+          "Available simple duration baseline"
+        ],
+        [
+          "Ridge holdout MAE / R²",
+          "6.6323 / −0.0158",
+          "Inspect tail error and loss alignment"
+        ],
+        [
+          "Nonlinear holdout MAE / R²",
+          "5.2031 / 0.5420",
+          "Prediction on completed-funding records"
+        ],
+        [
+          "24-hour ROC AUC / AP",
+          "0.8997 / 0.8301",
+          "Ranking, not a writing-intervention effect"
+        ],
+        [
+          "24-hour Brier score",
+          "0.1156",
+          "Needs reliability analysis, not sufficient alone"
+        ],
+        [
+          "Train / holdout rows",
+          "1,174,953 / 278,887",
+          "Posting cutoff: 2024-01-01"
+        ]
+      ],
+      "message": "Keep metrics, target units and population together.",
+      "status": "Primary August snapshot",
+      "evidence": "Exact JSON report values; no rerun.",
+      "visual": "Native benchmark table with negative R² retained.",
+      "action": "Read complementary metrics and audit the prediction task before deployment.",
+      "notes": "Primary numeric values are read from the saved report. Ridge trains on log duration and is scored in days after exponentiation. This target/loss choice warrants inspection of tail predictions; a negative R² can coexist with a lower MAE than the baseline. The classifier's negative class is completed funding after 24 hours, not expired or never-funded listings. The historical holdout has already been examined and informed later research, so it is not a fresh untouched evaluation.",
+      "sources": [
+        "reports/generated_full_dataset/analysis_summary.json",
+        "https://scikit-learn.org/stable/modules/calibration.html"
+      ]
+    },
+    {
+      "title": "Appendix: replace claims that exceed the evidence",
+      "layout": "table",
+      "columns": [
+        "Retire",
+        "Use instead"
+      ],
+      "widths": [
+        510,
+        626
+      ],
+      "rows": [
+        [
+          "“No narrative features needed”",
+          "Use the completed matched comparison, with model, window and uncertainty."
+        ],
+        [
+          "“The story barely registers”",
+          "Some narrative associations remain; editing benefit is unestablished."
+        ],
+        [
+          "“SHAP confirms the mechanism”",
+          "SHAP describes what the predictive model uses."
+        ],
+        [
+          "“Funding time is borrower waiting”",
+          "We measure listing-to-completion time, often after disbursal."
+        ],
+        [
+          "“Family framing works in four countries”",
+          "Sparse regional patterns motivate hypotheses, not geographic advice."
+        ]
+      ],
+      "message": "Accurate language is part of analytical quality.",
+      "status": "Corrections for current use",
+      "evidence": "Notebook/deck audit and current evidence map.",
+      "visual": "Two-column replacement table; historical materials remain preserved.",
+      "action": "Apply these replacements consistently in notebook prose and future slides.",
+      "notes": "Several old sentences are stronger than the data allow. The correction should be systematic rather than leaving a careful caveat at the end while overclaiming earlier. Also retire cross-unit coefficient rankings, the unsupported selectivity explanation for period trends, the 20,000-loan topic sample presented as full-data evidence, and claims that a heuristic few-cluster screen is calibrated inference. The missing comparison has now been run; its estimates remain predictive information gains.",
+      "sources": [
+        "docs/4_research_review.md",
+        "docs/2_evidence_and_corrections.md",
+        "https://shap.readthedocs.io/en/latest/example_notebooks/overviews/Be%20careful%20when%20interpreting%20predictive%20models%20in%20search%20of%20causal%20insights.html"
+      ]
+    },
+    {
+      "title": "Appendix: prioritised research experiments",
+      "layout": "table",
+      "columns": [
+        "Order",
+        "Experiment",
+        "Evidence needed to proceed"
+      ],
+      "widths": [
+        100,
+        440,
+        596
+      ],
+      "rows": [
+        [
+          "1",
+          "Human validation of narrative constructs",
+          "Freeze development codebook; audit later-period transfer"
+        ],
+        [
+          "2",
+          "Historical listing and exposure data",
+          "Verify field versions and marketplace context"
+        ],
+        [
+          "3",
+          "Operational calibration or interval forecasts",
+          "Agree population and decision; validate on earlier temporal data"
+        ],
+        [
+          "4",
+          "Prospective factual presentation pilot",
+          "Agree endpoint, assignment, power and guardrails"
+        ],
+        [
+          "5",
+          "All-listing survival extension",
+          "Obtain unsuccessful/censored histories and observation rules"
+        ]
+      ],
+      "message": "Complexity follows a demonstrated research need.",
+      "status": "Proposed experiments",
+      "evidence": "Next experiments after the matched study; no new annotations, survival data or pilot results exist.",
+      "visual": "Ranked work table with concrete gates.",
+      "action": "Run the inexpensive information and validity checks first.",
+      "notes": "Further model complexity should answer a documented need. The full matched study does not validate the psychological meaning of text features, produce a calibrated deployment tool or identify a writing intervention. Human measurement and missing process data are the next priorities.",
+      "sources": [
+        "docs/5_ml_refinement_plan.md",
+        "https://scikit-survival.readthedocs.io/en/stable/user_guide/evaluating-survival-models.html",
+        "https://collaborate.princeton.edu/en/publications/how-to-make-causal-inferences-using-texts/"
+      ]
+    }
+  ],
+  "benchmark_sha256": "40f324421975fbd3f4fbf17eba109493a11d0bf4011dd4885c99e21c143215bd"
+}

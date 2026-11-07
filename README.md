@@ -20,6 +20,14 @@ Submitted proposal files and generated presentation artifacts are historical;
 read the correction notice before reusing their claims. Event instructions
 are preserved in [historical final-round logistics](docs/presentation/2026_final_round_logistics.md).
 
+The separate November update adds an as-of training audit and matched text
+comparisons across five annual evaluation windows. Read the
+[new findings](docs/6_matched_text_results.md), run the
+[maintained insight notebook](notebooks/2_full_dataset_modeling.ipynb), or use
+the [updated deck and slide briefing](docs/presentation/research_refresh/README.md).
+The [research review](docs/4_research_review.md) explains the decision framework;
+the [approved ML design](docs/5_ml_refinement_plan.md) preserves the pre-run plan.
+
 **Field reference:** [`docs/1_data_dictionary.md`](docs/1_data_dictionary.md) documents every
 column in the raw data — the official definition from the competition's data dictionary, its
 real coverage, and exactly how this project used it (predictor, outcome, clustering unit, or
@@ -80,12 +88,15 @@ unsw-ma-hackathon-2026/
 │   ├── 0_coding_standards.md          # This project's coding standards (tailored from the shared baseline)
 │   ├── 2_evidence_and_corrections.md   # Current interpretation and historical claim corrections
 │   ├── 3_portfolio_case_study.md       # Concise case study and LinkedIn achievement text
-│   ├── presentation/                  # Historical final-round materials and portfolio chart
+│   ├── 4_research_review.md           # Research diagnosis and consulting framework
+│   ├── 5_ml_refinement_plan.md        # Approved pre-run study design
+│   ├── 6_matched_text_results.md      # Separate November predictive findings
+│   ├── presentation/                  # Historical materials and separate research-refresh decks
 │   └── superpowers/                   # Design spec, plan, and full collaboration log
 ├── notebooks/
 │   ├── 0_starter_eda.ipynb/.py            # Preliminary - 100-row sample, pipeline demonstration only
 │   ├── 1_full_dataset_eda.ipynb/.py       # Real full-dataset EDA (descriptive only)
-│   ├── 2_full_dataset_modeling.ipynb/.py  # Real full-dataset modeling (simplified re-implementation, not authoritative - see Kaggle Workflow)
+│   ├── 2_full_dataset_modeling.ipynb/.py  # Shared-source matched benchmark and reviewed insight workflow
 │   ├── 3_expanded_feature_sensitivity.ipynb/.py  # Separate exploratory sensitivity workflow
 │   └── kernels/<slug>/kernel-metadata.json  # Kaggle kernel definitions (see Kaggle Workflow)
 ├── proposal/
@@ -97,6 +108,7 @@ unsw-ma-hackathon-2026/
 │   ├── generated_full_dataset/       # Committed snapshot: the verified full-dataset run
 │   ├── expanded_feature_sensitivity/  # Historical sensitivity, preserved after numerical audit
 │   ├── expanded_feature_sensitivity_reviewed/  # Corrected inference and programme controls
+│   ├── text_benchmark_reviewed/       # Separate matched predictive benchmark and technical review
 │   ├── programme_proxy_audit/         # Aggregate full-data coverage and nesting audit
 │   └── README.md                     # Evidence boundaries and snapshot guidance
 ├── resources/nltk_data/sentiment/     # Vendored VADER lexicon + its upstream MIT license/provenance
@@ -110,7 +122,9 @@ unsw-ma-hackathon-2026/
 │   ├── text_transformer.py           # Leakage-safe TF-IDF/NMF topic transformer
 │   ├── topics.py                     # Full-sample exploratory topic-modeling convenience wrapper
 │   ├── validation.py                 # Chronological train/holdout split, InsufficientDataError
-│   ├── modeling.py                   # Leakage-safe chronological baseline + Ridge evaluation
+│   ├── modeling.py                   # Primary posting-date baseline + Ridge evaluation
+│   ├── benchmark_*.py                # Separate as-of cohorts, features, matched models and review contracts
+│   ├── run_text_benchmark.py          # Full-data matched benchmark CLI
 │   ├── statistical_analysis.py       # Robust OLS/GLM explanatory (association) models
 │   ├── advanced_modeling.py          # Nonlinear (HistGradientBoostingRegressor) benchmark
 │   ├── binary_modeling.py            # Leakage-safe chronological classifier for the 24h outcome
@@ -158,39 +172,59 @@ The `--extra-interaction` flag activates the sector interaction, which stays opt
 
 Choose a fresh run ID for full-data reruns and capture provenance alongside the outputs; preserve the committed primary snapshot. Either command writes `analysis_summary.json` (machine-readable metrics, dataset audit trail, software versions) and `association_summary.txt` (human-readable, association-language narrative) atomically to `--output-dir`. Paths accept relative or absolute forms and resolve against the caller's current working directory - but `python3 -m src.run_analysis` itself must be run from the repository root (or with the repo root on `PYTHONPATH`), since that is what makes the `src` package importable. `--holdout-start` (default `2024-01-01`) sets the chronological train/holdout boundary.
 
-To open and step through the notebook versions of the same analysis:
+Open the walkthrough for the intended evidence source:
 
 ```bash
 jupyter notebook notebooks/0_starter_eda.ipynb          # preliminary, sample-only
 jupyter notebook notebooks/1_full_dataset_eda.ipynb     # real EDA, full dataset
-jupyter notebook notebooks/2_full_dataset_modeling.ipynb  # real modeling, full dataset
+jupyter notebook notebooks/2_full_dataset_modeling.ipynb  # reviewed matched-benchmark insights
 ```
 
 or open any `.py` counterpart directly in VS Code / Spyder and run it as a percent-format script.
 
+Notebook 2 defaults to `RUN_MODE = "reviewed_report"`, reading
+`reports/text_benchmark_reviewed/` without loading raw loans or retraining.
+It validates execution completeness, artifact hashes and a matching accepted
+review. Set `KIVA_BENCHMARK_DIR` to another explicitly reviewed bundle to inspect
+it. Run the new benchmark separately, using a fresh output directory:
+
+```bash
+LOKY_MAX_CPU_COUNT=4 python3 -m src.run_text_benchmark \
+    --data data/Kiva_Loans.pkl \
+    --output-dir reports/text_benchmark_NEW_RUN_ID \
+    --feature-cache reports/text_benchmark_private/features.pkl
+```
+
+The optional private cache is reused only when input, source, resource and
+environment identities match; choose a new cache path after a relevant change.
+New runs end as `completed_pending_review`. Inspect their source/provenance,
+population, convergence, paired comparisons and private recomputable predictions
+before selecting aggregate evidence and recording acceptance. The notebook's
+explicit `RUN_MODE = "run"` offers the same runner and labels its new output
+pending review. This is a separate retrospective study; primary results stay
+unchanged.
+
 ## Kaggle Workflow
 
-`1_full_dataset_eda.ipynb` and `2_full_dataset_modeling.ipynb` can run as **private Kaggle kernels** instead of locally - useful for the modeling run in particular, which is CPU-heavy and slow to repeat on a laptop. Both are **self-contained**: standard public packages only (pandas, numpy, scikit-learn, statsmodels, patsy, nltk, `shap` for the modeling notebook's feature-importance section) - deliberately **no dependency on this repo's own `src/` package**, so they can never silently fail to find it. (The authoritative `src/` pipeline *can* also run on Kaggle - via a separate script kernel and a private "code" dataset, see "Regenerating the committed snapshot on Kaggle" below - but the two analysis notebooks do not use it.) `shap` ships in Kaggle's stock Python image; the notebook installs it automatically (`pip install shap`) on the rare environment where it's missing - like `jupytext`/`nbconvert` below, it's notebook-only tooling and deliberately not in `requirements.txt`. `0_starter_eda.ipynb` stays local-only - its whole purpose is to demonstrate the tested `src/` pipeline runs correctly, so it inherently needs that package, and it runs in seconds on the 100-row sample anyway.
+`1_full_dataset_eda.ipynb` retains its private, self-contained Kaggle workflow.
+The maintained `2_full_dataset_modeling.ipynb` now uses the repository's shared
+benchmark and reviewed aggregate reports. Run it locally from this checkout;
+the old modelling kernel metadata is historical and the push helper rejects
+that retired entry point. No revised notebook has been uploaded to Kaggle.
+The old two-notebook executor now executes only the unchanged EDA notebook.
 
-Two **private** Kaggle Datasets supply the inputs - competition data and this team's own code, used as a hosted compute backend, not a public release: `tuannm3812/kiva-loans-hackathon-data` (`Kiva_Loans.pkl`, `Kiva_Loans_Sample.pkl`, the data dictionary) and `tuannm3812/kiva-hackathon-src` (`src/`, `resources/nltk_data/`, the requirements files - only the pipeline kernel below reads it). Both kernels run with `enable_internet: true` for the guarded public NLTK VADER lexicon download; the modeling notebook also has a SHAP installation fallback. Record fetched versions when capturing a run.
-
-**Publish/update a dataset** (`data` only after `data/Kiva_Loans*.pkl` changes; `code` after any `src/` change the Kaggle pipeline run should pick up):
-
-```bash
-scripts/publish_kaggle_dataset.sh data version "describe the change"
-scripts/publish_kaggle_dataset.sh code version "describe the change"
-# first-time only: create instead of version
-```
-
-**Push a notebook to its kernel and run it on Kaggle's compute:**
+Two private datasets support the historical pipeline: `tuannm3812/kiva-loans-hackathon-data`
+and `tuannm3812/kiva-hackathon-src`. EDA retains its guarded VADER download;
+the new local benchmark uses the vendored lexicon and runs offline.
 
 ```bash
-scripts/push_kaggle_kernel.sh modeling       # notebooks/2_full_dataset_modeling.ipynb
-scripts/push_kaggle_kernel.sh eda            # notebooks/1_full_dataset_eda.ipynb
-kaggle kernels status tuannm3812/kiva-hackathon-full-dataset-modeling   # poll until "complete"
+scripts/push_kaggle_kernel.sh eda
+kaggle kernels status tuannm3812/kiva-hackathon-full-dataset-eda
 ```
 
-Each notebook auto-detects whether it's running locally or on Kaggle (checks for `/kaggle/input/...`) and resolves the data path accordingly - the same source file works in both places unchanged. Kaggle's Output tab offers the printed metrics/summary tables for review once a kernel finishes; nothing here is GPU-accelerated (Ridge/HistGradientBoosting/statsmodels are all CPU), so `enable_gpu` is `false` on both kernels.
+Publishing updated private datasets is a separate action; local source changes
+do not update those remote copies. Preserve and inspect run artifacts before
+starting another remote version.
 
 **Regenerating the committed snapshot on Kaggle.** The ~2 h full-dataset `run_analysis` that produces `reports/generated_full_dataset/` (see "Run it on the real full dataset" above) also runs as a private *script* kernel, so it never has to occupy a laptop:
 
@@ -205,11 +239,15 @@ cp /tmp/pipeline_out/generated_full_dataset/*.{json,txt} reports/full_dataset_NE
 
 Review the new run and its provenance before selecting it as a committed snapshot. The runner rebuilds the `src/` + `resources/` layout under `/kaggle/working` (so the vendored VADER lexicon resolves), then calls `run_analysis` with exactly the documented flags. One caveat to record honestly when committing a Kaggle-generated snapshot: its audit-trail line will show Kaggle's software versions (newer Python/pandas/statsmodels than the laptop venv recorded in earlier snapshots), so trailing digits may differ slightly from a local run - conclusions should not.
 
-**Note:** these two notebooks are a deliberately *simpler, streamlined* re-implementation of the same design ideas the tested `src/` pipeline uses (chronological split, robust HC3 standard errors, association-only language) - not a port of its exact code, so their numbers won't match `reports/generated_full_dataset/` exactly. `python3 -m src.run_analysis` (or `0_starter_eda.ipynb`/its full-dataset equivalent, run locally) remains the authoritative source for the primary results. Expanded feature sensitivity is a separate specification; see the [evidence map](docs/2_evidence_and_corrections.md).
+The historical self-contained modelling notebook used a simpler specification.
+The current notebook uses `src/run_text_benchmark.py` and validates an explicit
+reviewed bundle. The primary `python3 -m src.run_analysis` snapshot and expanded
+explanatory sensitivity remain separate specifications; see the
+[evidence map](docs/2_evidence_and_corrections.md).
 
 ## Chronological Validation and Leakage Protections
 
-All evaluation is **chronological, not random**: models train on loans posted before a cutoff date and are scored only on loans posted on or after it, mirroring how a model would actually be used to score newly posted loans (`src/validation.py::chronological_holdout`). `src/modeling.py`'s Ridge/baseline evaluation, `src/advanced_modeling.py`'s nonlinear regressor, and `src/binary_modeling.py`'s 24-hour classifier (reporting ROC AUC, average precision, and Brier score) all share this exact same split and preprocessing, not three separately derived ones. A dedicated `InsufficientDataError` distinguishes "this split has too little usable data" from unrelated bugs, so a too-small split degrades gracefully into a labeled diagnostic instead of a misleading number or a crash.
+The historical primary evaluation uses a **posting-date chronological split**: models train on loans posted before a cutoff and are scored on later postings. This alone does not enforce availability of completed outcomes at training time (`src/validation.py::chronological_holdout`). `src/modeling.py`'s Ridge/baseline evaluation, `src/advanced_modeling.py`'s nonlinear regressor, and `src/binary_modeling.py`'s 24-hour classifier (reporting ROC AUC, average precision, and Brier score) all share this exact same split and preprocessing, not three separately derived ones. A dedicated `InsufficientDataError` distinguishes "this split has too little usable data" from unrelated bugs, so a too-small split degrades gracefully into a labeled diagnostic instead of a misleading number or a crash.
 
 Every learned transformation is fit on the training partition only and merely *applied*, never refit, to the holdout:
 
@@ -306,6 +344,14 @@ versions and execution logs. A rejected first attempt is preserved with its
 failure diagnosis. Primary prediction metrics and submitted artifacts remain
 unchanged. [Next evidence needed](docs/2_evidence_and_corrections.md#next-evidence-needed)
 sets out the remaining research priorities.
+
+The [November research review](docs/4_research_review.md) audits the notebook and
+presentation claims against saved results and primary literature. Its
+[ML refinement plan](docs/5_ml_refinement_plan.md) prioritises as-of outcome
+availability, matched structure/text comparisons, temporal stability and text
+measurement. The [revised deck and slide briefing](docs/presentation/research_refresh/README.md)
+connect the evidence to a consulting decision framework. These are proposed
+research improvements, not a fresh predictive run.
 
 ## Proposal (Submitted)
 

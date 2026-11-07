@@ -1,0 +1,39 @@
+Edit the supplied poster into a refined new version, preserving its strong typographic confidence and yellow/black/white palette while changing the layout as needed to accommodate all requested content.
+INPUTS: image 1 is the existing poster (edit target). Image 2 is the genuine UNSW Sydney logo (supporting logo; reproduce its crest and lettering accurately, preserve aspect ratio, do not invent or redesign it). Image 3 is an actual Kiva photograph of farmer Tatiana in a greenhouse (supporting background photo; preserve her identity, do not invent extra farmers).
+OUTPUT: premium portrait 4:5 project poster at high resolution, ideally 2000 x 2500 or larger. Finished flat artwork, not a mockup.
+DESIGN:
+- Editorial university achievement poster. DM Sans from Google Fonts as the typographic design reference, very bold title and clean regular body, carefully controlled tracking, enough leading. Align to a crisp grid with generous side margins and no crowding.
+- Clean white header: genuine UNSW Sydney logo at left, 'Business School' and full competition title at right. Logo clearly legible against white.
+- Large yellow hero zone: FINALIST badge; huge 'Cultural Blend' title; one restrained achievement line. Replace the old paper/card illustration with the provided farmer photo as a broad low-opacity background, roughly 25–35% visual opacity under a warm yellow wash, face recognisable but never interfering with text. Position the portrait on the right where possible. Subtle dot/connection accents are optional; no floating document illustration or clock needed.
+- Slim stats row with three well-spaced numbers: 1.45M / 2016–2025 / 8 of 44. Each has its correct descriptive label. Avoid duplicating statistics excessively.
+- Lower white area: problem heading and concise problem summary, followed by 6 elegant compact keyword chips in a 2 by 3 grid or 3 by 2 grid, and one small evidence interpretation sentence. Keep the entire problem paragraph readable on mobile.
+- Black footer: full names exactly 'Mike Nguyen & Sophia Nguyen', university affiliation, date. REMOVE 'Team project showcase' and all similar labels completely. Tiny photo credit can sit at the boundary above the footer.
+TEXT TO INCLUDE EXACTLY (text in provided UNSW logo excluded from this list):
+'Business School'
+'Marketing Analytics Hackathon'
+'Challenge 2026'
+'FINALIST'
+'Cultural Blend'
+'Selected as one of eight finalist teams'
+'1.45M'
+'Kiva loan records'
+'2016–2025'
+'Data coverage'
+'8 of 44'
+'Teams reached the final'
+'THE PROBLEM'
+'Which loan stories are associated with faster funding?'
+'We examine how borrower narratives relate to funding speed in resource-constrained communities, and how these patterns vary across regions and time.'
+'ANALYSIS & TECHNIQUES'
+'TF-IDF'
+'Sentiment analysis'
+'Topic modelling'
+'OLS & binomial GLM'
+'Country-clustered uncertainty'
+'Chronological validation'
+'Observational associations, interpreted with uncertainty.'
+'Mike Nguyen & Sophia Nguyen'
+'University of Technology Sydney'
+'September 2026'
+'Photo: Kiva'
+CONSTRAINTS: no prize-winner claim, no trophy, no fabricated results, no extra text beyond specified copy. The photographer subject is illustrative context, not claimed as a specific analysed borrower or team member. The hero question is research framing; do not imply causal conclusions. Accurate spelling, unclipped text, superb balance, polished muted photo integration, genuine logo reproduced carefully. Do not add any team project showcase label.

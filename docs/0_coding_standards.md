@@ -38,9 +38,11 @@ separate tested package. Keep the existing structure:
 | `docs/presentation/`, `docs/pdf/` | Presentation sources and selected rendered artifacts |
 | `data/` | Gitignored restricted input files and a setup README |
 
-The self-contained EDA and modeling notebooks implement simpler models.
-Their estimates are not interchangeable with the primary pipeline's
-estimates. Label notebook-derived results with their specification and run.
+The EDA and historical self-contained modeling notebook implement simpler
+models. The maintained modeling notebook now consumes a reviewed matched
+benchmark from shared `src/` helpers. These research-extension estimates are
+not interchangeable with the primary pipeline snapshot. Label every result
+with its specification and run.
 Expanded feature sensitivity remains a separate analysis until explicitly
 reviewed and promoted; it must not silently replace the primary model.
 
@@ -170,8 +172,9 @@ credentials, and local paths before sharing.
 
 Two existing exceptions remain narrowly scoped:
 
-- **Network:** the EDA/modeling kernels enable internet for the guarded
-  VADER lexicon download and the modeling kernel's SHAP install fallback.
+- **Network:** the EDA kernel enables internet for its guarded VADER lexicon
+  download. The retired modeling kernel historically enabled a SHAP fallback;
+  the maintained modeling notebook is now local and offline.
   Local pipeline/tests use the vendored lexicon and remain offline.
   Record fetched dependency versions; prefer attached/cached dependencies
   when revising this setup. New kernels default to internet-disabled.

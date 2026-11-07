@@ -1,0 +1,27 @@
+{
+  "status": "accepted",
+  "review_date": "2026-11-02",
+  "scope": "Separate retrospective matched predictive benchmark; technical acceptance, not causal identification or deployment approval.",
+  "benchmark_sha256": "40f324421975fbd3f4fbf17eba109493a11d0bf4011dd4885c99e21c143215bd",
+  "audit_sha256": "1bca82928f8c939eaa2a3f857da357eb85ca1ae64fbc3a4c2ce0a0693ad5d7bb",
+  "provenance_sha256": "816d40f4d36e992b79cba983fa3ae080d787ca05167faff93386d4489052be15",
+  "review_basis": [
+    "Independent code and artifact review",
+    "Recomputed all metrics, group slices, calibration bins and paired intervals from private predictions",
+    "As-of row hashes and cache/data identity checks",
+    "Synthetic and representative full-data numerical-warning investigation"
+  ],
+  "supporting_artifact_hashes": {
+    "synthetic_warning_review.json": "8a0acbcbf95305907253dc26548893e2373bbda02f8405b4e9394ca8b78efba4",
+    "independent_review.md": "8579818db73f3be0da1f4ff81db2a42bd7076e9e31f997c5fa9e85b2a64c6870",
+    "actual_warning_review.json": "8c6c036f1d465e749b2d6976f874436aefdf41546721a5bc9d75e4e9d7bb7d8b",
+    "run.log": "3cf67db040cf5baf96878b1924ca0b0282ed8873a38507053dfd4ba0021e5c8e",
+    "source_snapshot.zip": "0738c35cb676bcc272432e74a868fba464dd66ccb9d2c707878ff7e2913a6963",
+    "review_scripts.zip": "a4eee05bfa5a39867bae02e38b27fbf9d49e632ddf8b34b462d22c52ed2b5803",
+    "README.md": "762c58dc5549d8dd70302d232af40e33e89b51a6adc89d967aa109f74686ef3a",
+    "environment_supplement.json": "751ab267c4c1517a636426b1a056b1d3501d5fa9a3d8c69a58fb1efcceefdd40",
+    "prediction_review.json": "8a1202cd2ba6d0987d7bdc60099a19d1abb0935979ac9ab537224ae29ca12e80",
+    "status.json": "25f87463efbe8ac041457c58e15915c564fa835badd95448c97fd877613e515b",
+    "notebook_execution.json": "bd2daa26222a4aa1d26e362bfd083aabb97deaac15c57a473ef07440d808febb"
+  }
+}

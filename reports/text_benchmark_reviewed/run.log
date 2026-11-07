@@ -1,0 +1,72 @@
+Verified deterministic-feature cache
+Window 2021: 717,672 as-of training; 163,166 evaluation
+  baseline/B0: MAE=10.50873; Brier=0.227760; warnings=0
+  baseline/B1: MAE=9.61611; Brier=0.225500; warnings=0
+  linear/S: MAE=8.25003; Brier=0.151527; warnings=0
+  linear/T: MAE=9.09634; Brier=0.196436; warnings=3
+  linear/S+M: MAE=8.22501; Brier=0.151129; warnings=0
+  linear/S+M+L: MAE=8.21539; Brier=0.152074; warnings=0
+  linear/S+M+L+R: MAE=7.95740; Brier=0.141234; warnings=3
+  linear/S+P: MAE=8.22517; Brier=0.144095; warnings=0
+  linear/S+P+M+L+R: MAE=8.05048; Brier=0.137291; warnings=3
+  histogram_boosting/S: MAE=7.50017; Brier=0.126045; warnings=0
+  histogram_boosting/S+M+L: MAE=7.46488; Brier=0.129832; warnings=0
+  histogram_boosting/S+P: MAE=7.36048; Brier=0.122676; warnings=0
+  histogram_boosting/S+P+M+L: MAE=7.33694; Brier=0.122925; warnings=0
+Window 2022: 884,448 as-of training; 143,354 evaluation
+  baseline/B0: MAE=10.44213; Brier=0.221691; warnings=0
+  baseline/B1: MAE=9.56205; Brier=0.204032; warnings=0
+  linear/S: MAE=8.56970; Brier=0.143431; warnings=0
+  linear/T: MAE=9.12128; Brier=0.177154; warnings=3
+  linear/S+M: MAE=8.55148; Brier=0.143853; warnings=0
+  linear/S+M+L: MAE=8.53349; Brier=0.143862; warnings=0
+  linear/S+M+L+R: MAE=8.19720; Brier=0.143211; warnings=3
+  linear/S+P: MAE=8.73750; Brier=0.141521; warnings=0
+  linear/S+P+M+L+R: MAE=8.39441; Brier=0.143276; warnings=3
+  histogram_boosting/S: MAE=6.96487; Brier=0.127244; warnings=0
+  histogram_boosting/S+M+L: MAE=6.93706; Brier=0.127048; warnings=0
+  histogram_boosting/S+P: MAE=6.74435; Brier=0.126207; warnings=0
+  histogram_boosting/S+P+M+L: MAE=6.76154; Brier=0.125937; warnings=0
+Window 2023: 1,028,174 as-of training; 143,233 evaluation
+  baseline/B0: MAE=10.67450; Brier=0.213383; warnings=0
+  baseline/B1: MAE=9.47622; Brier=0.182444; warnings=0
+  linear/S: MAE=8.18498; Brier=0.124615; warnings=0
+  linear/T: MAE=9.04429; Brier=0.156015; warnings=3
+  linear/S+M: MAE=8.06940; Brier=0.123612; warnings=0
+  linear/S+M+L: MAE=8.01450; Brier=0.123445; warnings=0
+  linear/S+M+L+R: MAE=7.92551; Brier=0.120686; warnings=3
+  linear/S+P: MAE=8.47411; Brier=0.123846; warnings=0
+  linear/S+P+M+L+R: MAE=8.11937; Brier=0.122357; warnings=3
+  histogram_boosting/S: MAE=6.71640; Brier=0.105005; warnings=0
+  histogram_boosting/S+M+L: MAE=6.71004; Brier=0.105025; warnings=0
+  histogram_boosting/S+P: MAE=6.63164; Brier=0.104526; warnings=0
+  histogram_boosting/S+P+M+L: MAE=6.61264; Brier=0.104526; warnings=0
+Window 2024: 1,169,262 as-of training; 141,725 evaluation
+  baseline/B0: MAE=10.03997; Brier=0.210351; warnings=0
+  baseline/B1: MAE=9.08080; Brier=0.191564; warnings=0
+  linear/S: MAE=7.51506; Brier=0.133211; warnings=0
+  linear/T: MAE=8.54721; Brier=0.163110; warnings=3
+  linear/S+M: MAE=7.45224; Brier=0.131103; warnings=0
+  linear/S+M+L: MAE=7.43866; Brier=0.130984; warnings=0
+  linear/S+M+L+R: MAE=7.12623; Brier=0.121571; warnings=3
+  linear/S+P: MAE=7.51004; Brier=0.130077; warnings=0
+  linear/S+P+M+L+R: MAE=7.23362; Brier=0.121369; warnings=3
+  histogram_boosting/S: MAE=5.70183; Brier=0.101683; warnings=0
+  histogram_boosting/S+M+L: MAE=5.70035; Brier=0.101917; warnings=0
+  histogram_boosting/S+P: MAE=5.51278; Brier=0.101037; warnings=0
+  histogram_boosting/S+P+M+L: MAE=5.52536; Brier=0.101048; warnings=0
+Window 2025: 1,312,417 as-of training; 137,162 evaluation
+  baseline/B0: MAE=7.37543; Brier=0.228779; warnings=0
+  baseline/B1: MAE=6.86166; Brier=0.208662; warnings=0
+  linear/S: MAE=6.40626; Brier=0.159814; warnings=0
+  linear/T: MAE=6.55249; Brier=0.192071; warnings=3
+  linear/S+M: MAE=6.37363; Brier=0.157704; warnings=0
+  linear/S+M+L: MAE=6.37090; Brier=0.157504; warnings=0
+  linear/S+M+L+R: MAE=6.14654; Brier=0.144638; warnings=3
+  linear/S+P: MAE=6.44484; Brier=0.158146; warnings=0
+  linear/S+P+M+L+R: MAE=6.16837; Brier=0.143810; warnings=3
+  histogram_boosting/S: MAE=4.87459; Brier=0.127400; warnings=0
+  histogram_boosting/S+M+L: MAE=4.83281; Brier=0.126967; warnings=0
+  histogram_boosting/S+P: MAE=4.68054; Brier=0.123494; warnings=0
+  histogram_boosting/S+P+M+L: MAE=4.65471; Brier=0.122940; warnings=0
+BENCHMARK_COMPLETE 65 model/arm windows; review pending

@@ -61,28 +61,22 @@ def test_notebook_committed_output_has_no_machine_specific_absolute_paths():
     assert "file:///" not in text
 
 
-KAGGLE_NOTEBOOK_STEMS = ["1_full_dataset_eda", "2_full_dataset_modeling"]
+MAINTAINED_NOTEBOOK_STEMS = ["1_full_dataset_eda", "2_full_dataset_modeling"]
 
 
-@pytest.mark.parametrize("notebook_stem", KAGGLE_NOTEBOOK_STEMS)
-def test_kaggle_notebook_source_has_no_hardcoded_absolute_paths(notebook_stem):
-    # These two notebooks are self-contained Kaggle kernels (see README's
-    # Kaggle Workflow section) - a hardcoded local path would silently
-    # break on Kaggle's infrastructure instead of failing loudly.
+@pytest.mark.parametrize("notebook_stem", MAINTAINED_NOTEBOOK_STEMS)
+def test_maintained_notebook_source_has_no_hardcoded_absolute_paths(notebook_stem):
+    # EDA remains self-contained; modeling reads repository modules/reports.
+    # Both maintained notebooks must remain portable between local checkouts.
     text = Path(f"notebooks/{notebook_stem}.py").read_text(encoding="utf-8")
     assert "/Users/" not in text
     assert "C:\\" not in text and "C:/" not in text
 
 
-@pytest.mark.parametrize("notebook_stem", KAGGLE_NOTEBOOK_STEMS)
-def test_kaggle_notebook_committed_copy_stays_output_free(notebook_stem):
-    # Policy: these two notebooks run as private Kaggle kernels against the
-    # full 1.45M-row dataset - a trusted run's real findings get written
-    # into the notebook's own Markdown insight cells (see the collab log),
-    # not left as stored cell output. Keeping the committed .ipynb
-    # output-free avoids re-baking a Kaggle run's absolute container paths
-    # or stale numbers into git history every time the notebook is edited
-    # and re-pushed.
+@pytest.mark.parametrize("notebook_stem", MAINTAINED_NOTEBOOK_STEMS)
+def test_maintained_notebook_committed_copy_stays_output_free(notebook_stem):
+    # Source pairs stay output-free; verified execution copies are private.
+    # Modeling reads reviewed aggregate findings dynamically from its bundle.
     notebook = json.loads(Path(f"notebooks/{notebook_stem}.ipynb").read_text(encoding="utf-8"))
     for cell in notebook["cells"]:
         if cell["cell_type"] != "code":
@@ -100,3 +94,15 @@ def test_readme_documents_current_portable_workflow():
     assert "file:///" not in text
     for module in ["text_transformer.py", "validation.py", "run_analysis.py"]:
         assert module in text
+
+
+def test_maintained_modeling_notebook_uses_reviewed_shared_pipeline():
+    text = Path('notebooks/2_full_dataset_modeling.py').read_text()
+    assert 'from src.benchmark_reporting import load_bundle' in text
+    assert 'from src.run_text_benchmark import run_benchmark' in text
+    assert 'RUN_MODE = "reviewed_report"' in text
+    assert 'without narrative-framing features' not in text
+    assert 'reliable tool' not in text
+    assert 'HistGradientBoostingClassifier(' not in text
+    assert 'SGDClassifier(' not in text
+    assert 'plt.show()' in text

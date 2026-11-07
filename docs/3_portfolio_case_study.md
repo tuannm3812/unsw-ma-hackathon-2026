@@ -1,5 +1,9 @@
 # Cultural Blend — Kiva funding-speed research
 
+This case describes the competition evidence and October maintenance.
+For the separate November predictive extension and revised presentation, see
+the [matched text findings](6_matched_text_results.md).
+
 **Finalist, UNSW Marketing Analytics Hackathon Challenge 2026.** Cultural
 Blend (Sophia and Tuan) was one of eight finalist teams selected from 44
 registered teams involving 133 students at 19 universities across eight

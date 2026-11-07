@@ -211,6 +211,9 @@ reports/**/*
 
 # Fresh PDF exports do not replace archived review copies.
 docs/pdf/generated/
+
+# Local rendering previews, intermediate packages and validation receipts.
+docs/presentation/research_refresh/.build/
 !reports/expanded_feature_sensitivity_reviewed/environment_supplement.json
 
 # Preserve the rejected aggregate run with its explicit diagnostic notice.
@@ -226,3 +229,20 @@ docs/pdf/generated/
 !reports/expanded_feature_sensitivity_diagnostic/environment_supplement.json
 !reports/expanded_feature_sensitivity_diagnostic/review_status.json
 !reports/expanded_feature_sensitivity_reviewed/review_status.json
+
+# Reviewed November matched benchmark: selected aggregates and review evidence only.
+!reports/text_benchmark_reviewed/README.md
+!reports/text_benchmark_reviewed/actual_warning_review.json
+!reports/text_benchmark_reviewed/availability_audit.json
+!reports/text_benchmark_reviewed/benchmark.json
+!reports/text_benchmark_reviewed/environment_supplement.json
+!reports/text_benchmark_reviewed/independent_review.md
+!reports/text_benchmark_reviewed/prediction_review.json
+!reports/text_benchmark_reviewed/provenance.json
+!reports/text_benchmark_reviewed/review_scripts.zip
+!reports/text_benchmark_reviewed/review_status.json
+!reports/text_benchmark_reviewed/run.log
+!reports/text_benchmark_reviewed/source_snapshot.zip
+!reports/text_benchmark_reviewed/status.json
+!reports/text_benchmark_reviewed/synthetic_warning_review.json
+!reports/text_benchmark_reviewed/notebook_execution.json

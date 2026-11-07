@@ -8,13 +8,9 @@
 #
 # Usage: scripts/push_kaggle_kernel.sh <eda|modeling|pipeline>
 #
-# Only 1_full_dataset_eda and 2_full_dataset_modeling run on Kaggle -
-# both are self-contained (standard public packages only: pandas,
-# scikit-learn, statsmodels, nltk - no import of this repo's own src/
-# package, deliberately; see README.md's "Kaggle Workflow" section). 0_starter_eda stays local-only:
-# its whole purpose is to demonstrate the tested src/ pipeline runs
-# correctly, so it inherently needs that package, and it runs in seconds
-# on the 100-row sample anyway - it never needed Kaggle's compute.
+# EDA remains self-contained. The maintained modelling notebook now reads
+# reviewed reports via src/ from a local repository checkout; the historical
+# modelling kernel is not an entry point for the new benchmark.
 #
 # `pipeline` is different: a script kernel (notebooks/kernels/
 # full_dataset_pipeline/run_full_pipeline.py) that runs the authoritative
@@ -40,8 +36,8 @@ case "${1:-}" in
     KERNEL_DIR="$NOTEBOOKS_DIR/kernels/full_dataset_eda"
     ;;
   modeling)
-    NOTEBOOK="2_full_dataset_modeling.ipynb"
-    KERNEL_DIR="$NOTEBOOKS_DIR/kernels/full_dataset_modeling"
+    echo "The maintained modelling notebook now runs locally with src/ and a reviewed benchmark bundle. See README.md." >&2
+    exit 2
     ;;
   pipeline)
     NOTEBOOK=""

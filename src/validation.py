@@ -23,10 +23,13 @@ def chronological_holdout(
     (strictly before `holdout_start`) and a holdout partition (on or after
     `holdout_start`).
 
-    This is the primary evaluation design for this project: a random split
+    This preserves the primary snapshot's posting-date evaluation design. It
+    does not enforce outcome maturity; new as-of benchmark splits live in
+    src/benchmark_data.py. A random split
     would let the model "see the future" relative to some training rows,
     which is not a fair test of how the model would perform when deployed
-    to score newly-posted loans. Splitting on time keeps evaluation honest.
+    to score newly-posted loans. Posting-time separation is one part of the
+    validation contract, not proof of historically available labels or fields.
 
     Dates are parsed with `utc=True` so naive and timezone-aware timestamps
     compare consistently. Rows with a missing/unparseable date are rejected

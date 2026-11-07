@@ -5,29 +5,26 @@ a deliberate, labeled snapshot of `src.run_analysis` run against the real
 full 1,453,846-row dataset (see below). It, together with
 `notebooks/0_starter_eda.ipynb` (real output baked into 9 of its 13 code
 cells, from the 100-row sample), is part of this project's committed *executed*
-evidence. `notebooks/1_full_dataset_eda.ipynb`/
-`notebooks/2_full_dataset_modeling.ipynb` are different: their code cells
-carry zero stored output (they're committed as output-free sources, kept
-in sync with their `.py` pairs) - their real numbers are verified by
-executing them on Kaggle and cross-checking the run log, not by anything
-baked into the committed `.ipynb` file itself; their narrative
-conclusions are committed prose, not executed evidence. Additional selected
-research snapshots are listed below. Other generated reports remain gitignored unless explicitly selected in `.gitignore`.
+evidence. `notebooks/1_full_dataset_eda.ipynb` and
+`notebooks/2_full_dataset_modeling.ipynb` are output-free source pairs.
+Their execution must be evidenced separately. The maintained modeling
+notebook now consumes a reviewed matched benchmark from shared `src/`
+helpers; it no longer contains the historical self-contained Kaggle fits.
+Additional selected research snapshots are listed below. Other generated
+reports remain ignored unless explicitly selected in `.gitignore`.
 
 ## `reports/generated_full_dataset/` (committed)
 
 `analysis_summary.json` and `association_summary.txt` here are the
 authoritative source for the full-dataset numbers in `README.md`'s
 "Full-Dataset Results" section - produced by `python3 -m src.run_analysis`
-against `data/Kiva_Loans.pkl`, **not** by either full-dataset notebook
-(those are a deliberately simpler, self-contained re-implementation for
-Kaggle; see `README.md`'s Kaggle Workflow section). Note that a few
-figures in that README section are deliberately quoted from the
-*notebooks'* own models instead - they are labelled as such inline, and
-exist to document where the two implementations differ (sentiment tone's
-significance is the genuine disagreement; the family-framing
-within-region averages agree across all fits). Those numbers will not be
-found in the files here; the Kaggle run logs are their source.
+against `data/Kiva_Loans.pkl`, **not** by the maintained notebooks.
+Historical notebook fits used different measurements/specifications and
+must not be relabelled as primary estimates. Consult the
+[current evidence corrections](../docs/2_evidence_and_corrections.md)
+before reusing those comparisons. The primary predictive split separates
+posting dates but does not enforce completion before the training cutoff;
+the separate matched benchmark audits that availability constraint.
 
 Beyond the audit trail, classifier metrics and coefficient tables,
 `association_summary.txt` contains **two pipeline-generated sections**
@@ -91,7 +88,7 @@ python3 -m src.run_analysis --data data/Kiva_Loans_Sample.pkl --output-dir repor
 This writes two auditable reports to `reports/generated/`:
 
 - `association_summary.txt`: the robust HC3 explanatory (association)
-  summary for the duration and 24-hour funding models, the leakage-safe
+  summary for the duration and 24-hour funding models, the posting-date
   chronological classifier's ROC AUC/average precision/Brier score, and
   an audit trail (dataset size, date range, exclusion counts,
   chronological holdout boundary, and software versions).
@@ -142,3 +139,18 @@ was - it just isn't part of this project's actual reporting path.
   an absorbed missingness indicator survived numerical projection in the first
   programme model. Its outputs are preserved to explain the regression fix;
   do not use its affected coefficients or tests as substantive evidence.
+
+## Matched predictive benchmark (November 2026)
+
+The [separate matched text study](text_benchmark_reviewed/README.md) compares
+structured, text and combined feature blocks on the full input using five
+annual retrospective evaluations. It requires training outcomes and completed
+cohort membership before each cutoff. Its 65 model/arm results and 120 paired
+intervals are separate from the primary August predictions and October
+explanatory extension. Exact sources, data identity, warnings and technical
+review accompany the selected aggregate snapshot.
+
+The maintained notebook 2 reads this bundle through shared `src/` helpers.
+It does not silently rerun the models in default reviewed-report mode. Read
+[the findings](../docs/6_matched_text_results.md) for interpretation and
+[the bundle README](text_benchmark_reviewed/README.md) for reproduction.

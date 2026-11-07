@@ -1,0 +1,23 @@
+{
+  "status": "passed",
+  "date": "2026-11-02",
+  "mode": "reviewed_report",
+  "boundary": "Executed report validation, insight tables and plots; model training ran separately through the CLI.",
+  "total_code_cells": 13,
+  "executed_code_cells": 13,
+  "error_outputs": 0,
+  "embedded_png_outputs": 5,
+  "benchmark_sha256": "40f324421975fbd3f4fbf17eba109493a11d0bf4011dd4885c99e21c143215bd",
+  "source_sha256": {
+    "notebooks/2_full_dataset_modeling.py": "e72740eae97df60fef1a551197055b67f2770f0b167b3b5222fd602d4bcb8e7f",
+    "notebooks/2_full_dataset_modeling.ipynb": "25c580e2a7ff716914930ad6627fb92004ed9418549a9360aafe9519347cf057"
+  },
+  "private_executed_copy_sha256": "e83b4a7a362f2274e70dc73900956f8d477ec934aa6ea85d157d05d148a2685b",
+  "figure_sha256": {
+    "availability.png": "815a9b45f75c35c9d3754867e94744d66e46b1b8dde613707a8427ba279f122a",
+    "baselines.png": "9f20d09bd9023ad8edd9ca0be34c15bda4d63b7e7ece549f49409e2a9935579d",
+    "calibration.png": "fe9d495c3cf388f467fa0039373d30624d629479132d27eeb15f30dd8e028b61",
+    "country_errors.png": "fab49db9a4c3cf1b4d3c5d2101326e381b9a721946a36cabc9a77f58293f842d",
+    "incremental_text.png": "9e2fd7d8a961570feb097d21539f49695115eab461f37b6a8e810614edbd4db3"
+  }
+}

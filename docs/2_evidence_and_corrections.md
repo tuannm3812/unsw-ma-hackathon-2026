@@ -1,6 +1,6 @@
 # Evidence map and interpretation corrections
 
-Reviewed 2026-10-24. This is the current interpretation guide for reusing the
+Updated 2026-11-02. This is the current interpretation guide for reusing the
 project. It qualifies earlier preparation claims while preserving the
 [submitted proposal](../proposal/proposal.md), its PDF, and generated
 presentation PDF/PPTX artifacts as historical records.
@@ -10,7 +10,8 @@ presentation PDF/PPTX artifacts as historical records.
 | Evidence | Scope and authority |
 | --- | --- |
 | [Primary JSON report](../reports/generated_full_dataset/analysis_summary.json), [text report](../reports/generated_full_dataset/association_summary.txt), [provenance](../reports/generated_full_dataset/provenance.json) | Authoritative tested `src/` pipeline; saved run generated 2026-08-31. Full input: 1,453,846; valid completed durations: 1,453,840; six negative durations excluded. |
-| [EDA notebook](../notebooks/1_full_dataset_eda.py) and [modeling notebook](../notebooks/2_full_dataset_modeling.py) | Self-contained walkthroughs; modeling specifications are simpler than the primary pipeline. Do not transfer their coefficients or p-values into primary-model claims. |
+| [EDA notebook](../notebooks/1_full_dataset_eda.py) and historical modeling notebook | Self-contained walkthroughs with simpler specifications. Historical coefficients are not primary estimates. The maintained notebook 2 has been replaced by the shared-source matched benchmark workflow below. |
+| [Matched predictive benchmark](../reports/text_benchmark_reviewed/README.md), [findings](6_matched_text_results.md), and [maintained notebook](../notebooks/2_full_dataset_modeling.py) | Separate November full-data study: as-of training membership, five annual retrospective evaluations, matched feature blocks, paired uncertainty and diagnostics. These estimates do not replace primary prediction or explanatory inference. |
 | [Expanded sensitivity snapshot](../reports/expanded_feature_sensitivity/expanded_sensitivity.json) and [coefficient table](../reports/expanded_feature_sensitivity/narrative_coefficients.csv) | Exploratory historical snapshot generated 2026-09-03, preserved with recovery provenance. Use the separately reviewed inference extension for current sensitivity claims. The old prediction comparison was not rerun during maintenance. |
 | [Reviewed inference extension](../reports/expanded_feature_sensitivity_reviewed/README.md) and [programme audit](../reports/programme_proxy_audit/README.md) | Post-competition full-data research maintenance. Richer OLS/LPM specifications and an unvalidated programme-text control; separate from primary metrics. Completion/provenance and rejected diagnostic outputs are explicitly recorded. |
 | [Starter notebook](../notebooks/0_starter_eda.py) and [proposal](../proposal/proposal.md) | 100-row illustrative sample; demonstration and submitted history, not full-data evidence. |
@@ -21,6 +22,16 @@ including 1,637 refunded records. Chronological predictive evaluation uses
 1,174,953 training loans and 278,887 holdout loans from 2024–2025. A full-data
 input count is not automatically the sample size for every analysis. Reading
 saved reports during maintenance is not a fresh run.
+
+The November study is a fresh, separate predictive run. Its 65 model/arm
+windows evaluate 728,640 records across 2021–2025 using expanding histories.
+For 2024, requiring completion before the cutoff removes 5,691 records from
+the posting-only training cohort. This quantifies unavailable completed-cohort
+membership; it does not measure the isolated effect on August performance.
+Fields and model specifications also differ. The annual windows remain
+retrospective, and snapshot field versions and eventual-completion selection
+still limit operational interpretations. See the [new findings](6_matched_text_results.md)
+for pointwise uncertainty and the numerical-warning review.
 
 ## Corrections that matter when presenting results
 
@@ -117,8 +128,8 @@ Several joint feature families remain associated, while the programme-adjusted
 auxiliary-text family is not supported. The [full comparison](../reports/expanded_feature_sensitivity_reviewed/README.md)
 reports all coefficients/families, units, uncertainty, multiplicity boundaries
 and provenance. It supports neither a blanket null claim nor a causal writing
-strategy. This was a fresh explanatory sensitivity run; primary models,
-prediction and the full paired notebook were not rerun.
+strategy. That October execution covered explanatory sensitivity only;
+the November predictive study is a separate extension.
 
 ## Next evidence needed
 

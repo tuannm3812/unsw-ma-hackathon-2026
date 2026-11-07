@@ -1,0 +1,37 @@
+{
+  "system": "Darwin",
+  "machine": "arm64",
+  "python": "3.9.6",
+  "packages": {
+    "pandas": "2.3.3",
+    "numpy": "2.0.2",
+    "scikit-learn": "1.6.1",
+    "scipy": "1.13.1",
+    "nltk": "3.9.2",
+    "threadpoolctl": "3.6.0",
+    "matplotlib": "3.9.4",
+    "ipykernel": "6.31.0",
+    "nbconvert": "7.17.1",
+    "jupytext": "1.19.5"
+  },
+  "numpy_blas": "accelerate",
+  "threadpool_libraries": [
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 10,
+      "prefix": "libopenblas",
+      "version": "0.3.27",
+      "threading_layer": "pthreads",
+      "architecture": "neoversen1"
+    },
+    {
+      "user_api": "openmp",
+      "internal_api": "openmp",
+      "num_threads": 10,
+      "prefix": "libomp",
+      "version": null
+    }
+  ],
+  "note": "Environment supplement; thread counts here describe this inspection process, not fitted-model threads (4)."
+}

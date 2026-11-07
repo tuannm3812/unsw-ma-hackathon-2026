@@ -10,8 +10,8 @@
 #         pipeline itself can run on Kaggle's compute via
 #         notebooks/kernels/full_dataset_pipeline/ - the ~2 h regeneration
 #         of reports/generated_full_dataset/ no longer needs a laptop.
-#         The two analysis notebooks stay self-contained (public packages
-#         only) and do not use this dataset.
+#         EDA remains self-contained; the maintained modeling notebook now
+#         uses shared source and a reviewed aggregate bundle locally.
 #
 # Usage: scripts/publish_kaggle_dataset.sh <data|code> <create|version> ["message"]
 #
@@ -66,10 +66,9 @@ EOF
     rsync -a --exclude '__pycache__' "${REPO_ROOT}/src" "${STAGE_DIR}/"
     rsync -a "${REPO_ROOT}/resources" "${STAGE_DIR}/"
     cp "${REPO_ROOT}/requirements.txt" "${REPO_ROOT}/requirements-lock.txt" "${STAGE_DIR}/"
-    # The two analysis notebooks ride along so the execute_notebooks kernel
-    # can re-execute them on Kaggle and expose the executed .ipynb files
-    # (with outputs) as downloadable kernel output - the Kaggle API never
-    # returns a notebook kernel's own executed notebook.
+    # Notebook sources ride along for reference. The historical executor
+    # now runs EDA only; the maintained modeling walkthrough requires an
+    # explicitly reviewed report bundle and is verified locally.
     mkdir -p "${STAGE_DIR}/notebooks"
     cp "${REPO_ROOT}/notebooks/1_full_dataset_eda.ipynb" \
        "${REPO_ROOT}/notebooks/2_full_dataset_modeling.ipynb" "${STAGE_DIR}/notebooks/"

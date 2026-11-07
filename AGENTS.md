@@ -24,8 +24,10 @@ to one from the full run — say which produced any figure quoted.
 **This is an inference project, not a leaderboard one.** There is no held-out
 score to optimise. Claims are about association between narrative framing and
 funding speed. Prefer a defensible, well-explained effect to a marginally
-better fit. The tested `src/` pipeline is authoritative; label the simpler
-notebook fits and expanded sensitivity results separately.
+better fit. The tested `src/` pipeline is authoritative; label historical
+simpler notebook fits, expanded sensitivity and matched predictive extensions
+separately. The maintained modeling notebook reads the reviewed shared-source
+benchmark; it does not contain the old self-contained fits.
 
 ## Evidence locations
 
@@ -33,6 +35,8 @@ notebook fits and expanded sensitivity results separately.
 - `src/` — authoritative pipeline; `notebooks/` — executable walkthroughs
 - `reports/generated_full_dataset/` — primary saved results and provenance
 - `reports/expanded_feature_sensitivity_reviewed/` — separate reviewed inference extension
+- `reports/text_benchmark_reviewed/` — separate November matched predictive benchmark
+- `docs/6_matched_text_results.md` — current predictive findings and limitations
 - `docs/2_evidence_and_corrections.md` — current interpretation and historical corrections
 - `proposal/` — the submitted proposal (round 1)
 - `README.md` — current overview and reproduction entry points
@@ -45,6 +49,8 @@ reviewed 2026-10-24. Do not describe the team as a prize winner.
 The primary August snapshot is verified saved evidence. Later full-data
 programme audits and sensitivity reruns are separate research extensions;
 they do not replace or rerun the primary models or predictive validation.
+The November matched benchmark is a fresh, separate predictive extension with
+as-of training cohorts and five retrospective annual evaluations.
 
 Final-round logistics are archived in `docs/presentation/2026_final_round_logistics.md`.
 Current work is research maintenance and portfolio presentation. Historical
@@ -58,7 +64,9 @@ The LinkedIn deliverable is an achievement entry, not a feed post.
   separately reviewed inference snapshot for current sensitivity claims.
 - `whySpecial` categories are an unvalidated programme-text proxy, not partner
   identities. Programme controls do not identify causal narrative effects.
-- New research notebooks remain output-free and source-validated; do not
-  describe this as proof of full notebook execution or a fresh predictive run.
+- Notebook 2 was executed in reviewed-report mode against the November
+  benchmark; training ran separately through `src.run_text_benchmark`.
+  Notebook 3 remains source-validated only. Source pairs stay output-free;
+  that policy alone is not proof of execution.
 - Deadlines and judging criteria came from the organisers and are mutable —
   re-check against their page rather than the README.

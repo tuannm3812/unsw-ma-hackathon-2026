@@ -19,25 +19,24 @@
 # [Kiva](https://www.kiva.org) is a nonprofit lending platform: everyday
 # people ("lenders") each contribute a small amount toward a loan for a
 # borrower somewhere in the world, usually to grow a small business or
-# cover a household need. Once enough lenders chip in, the loan is fully
-# funded and the money is disbursed.
+# cover a household need. A loan becomes fully funded when its requested
+# amount is reached. In this dataset, 96.4% of records are pre-disbursal:
+# the recorded disbursal preceded the platform's funding completion.
 #
 # This analysis asks: does **how a loan's story is written** line up with
 # **how quickly it gets funded**? Specifically, whether leaning on
 # family/communal appeals, competence/independence framing, or urgency
 # language correlates with faster funding - and whether that answer
-# changes depending on the economic climate or the type of loan. A loan
-# that sits unfunded longer is a worse experience for the borrower
-# waiting on it and a worse use of a lender's attention, so a real,
-# consistent link between narrative framing and funding speed would be an
-# **actionable lever** - the kind of finding that could shape guidance
-# for how loan write-ups get coached. If framing turns out to barely
-# matter next to more structural factors, that's just as useful to know.
+# changes depending on the economic climate or the type of loan.
+# Funding duration measures a platform interval; it does not directly
+# measure borrower waiting, partner liquidity or welfare. An association
+# can motivate a presentation experiment, but does not establish that
+# changing the narrative would improve funding outcomes.
 #
 # This notebook covers the descriptive groundwork across the complete,
 # real dataset (not the 100-row illustrative sample the original proposal
-# was built on); `2_full_dataset_modeling.ipynb` builds on it with
-# statistical models that weigh every factor at once.
+# was built on). The maintained `2_full_dataset_modeling.ipynb` reads a
+# separate reviewed benchmark of text's added predictive information.
 
 # %% [markdown]
 # ## 1. Setup

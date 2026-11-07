@@ -1,0 +1,23 @@
+{
+  "status": "passed",
+  "models_recomputed": 65,
+  "paired_intervals_recomputed": 120,
+  "group_slices_recomputed": 5681,
+  "max_metric_absolute_difference": 0.0,
+  "max_calibration_mean_difference_float64_reference": 1.137917355897855e-07,
+  "max_interval_absolute_difference": 1.1102230246251565e-16,
+  "calendar_splits_and_row_order": "independently checked counts, positions and both hashes against identity-verified private feature frame",
+  "feature_cache_and_data_identity": "hashes and metadata verified against benchmark provenance",
+  "reliability_bin_counts_and_means": "checked all models",
+  "ridge_iteration_max": 665,
+  "sgd_iteration_max": 62,
+  "warning_count": 45,
+  "private_prediction_archive_sha256": {
+    "2021": "ed1fd30d899b1de327dac23e1949f9d156e6a64519d8dc925c105eaa60b03ef0",
+    "2022": "ad9a685d0b7b5739baf9ee7e18d0fc87ab990db2458222af9eac6a1bb521ad95",
+    "2023": "383eb46bfb23efb9486083b0be5546111849811a0898af1dc67d4e544ec5c3c8",
+    "2024": "951812d2de8bdc918eba33f2abdda695cfd77076052ff2507bb3657211fcab82",
+    "2025": "a2641d7bd2c71348b89a05d607f42f7338fc6df890ed51c2837e0d36b2883f72"
+  },
+  "benchmark_sha256": "40f324421975fbd3f4fbf17eba109493a11d0bf4011dd4885c99e21c143215bd"
+}

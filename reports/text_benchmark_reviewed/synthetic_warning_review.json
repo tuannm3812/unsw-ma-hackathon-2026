@@ -1,0 +1,517 @@
+{
+  "created_at_utc": "2026-11-02T00:44:54.340023+00:00",
+  "scope": "Synthetic vectors and 300-row CSR matrices only; no loan data.",
+  "boundary": "This reproduction does not establish the numerical accuracy of the main full-data fit.",
+  "environment": {
+    "python": "3.9.6",
+    "system": "Darwin",
+    "machine": "arm64",
+    "numpy": "2.0.2",
+    "scipy": "1.13.1",
+    "sklearn": "1.6.1",
+    "numpy_blas": "accelerate"
+  },
+  "threads": 1,
+  "vector_probes": [
+    {
+      "size": 50,
+      "dtype": "float32",
+      "warnings": [],
+      "matmul": -1.8947980403900146,
+      "float64_product_sum": -1.8947984545288463,
+      "absolute_difference": 4.1413883167251697e-07,
+      "finite": true
+    },
+    {
+      "size": 500,
+      "dtype": "float32",
+      "warnings": [],
+      "matmul": -9.276887893676758,
+      "float64_product_sum": -9.276890754214257,
+      "absolute_difference": 2.8605374993162513e-06,
+      "finite": true
+    },
+    {
+      "size": 5000,
+      "dtype": "float32",
+      "warnings": [
+        {
+          "category": "RuntimeWarning",
+          "message": "divide by zero encountered in matmul",
+          "source": "diagnose_matmul.py",
+          "line": 55
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "overflow encountered in matmul",
+          "source": "diagnose_matmul.py",
+          "line": 55
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "invalid value encountered in matmul",
+          "source": "diagnose_matmul.py",
+          "line": 55
+        }
+      ],
+      "matmul": -117.44660949707031,
+      "float64_product_sum": -117.44659466887221,
+      "absolute_difference": 1.4828198104055446e-05,
+      "finite": true
+    },
+    {
+      "size": 5500,
+      "dtype": "float32",
+      "warnings": [
+        {
+          "category": "RuntimeWarning",
+          "message": "divide by zero encountered in matmul",
+          "source": "diagnose_matmul.py",
+          "line": 55
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "overflow encountered in matmul",
+          "source": "diagnose_matmul.py",
+          "line": 55
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "invalid value encountered in matmul",
+          "source": "diagnose_matmul.py",
+          "line": 55
+        }
+      ],
+      "matmul": 141.7998046875,
+      "float64_product_sum": 141.79982659108907,
+      "absolute_difference": 2.1903589072280738e-05,
+      "finite": true
+    },
+    {
+      "size": 10000,
+      "dtype": "float32",
+      "warnings": [
+        {
+          "category": "RuntimeWarning",
+          "message": "divide by zero encountered in matmul",
+          "source": "diagnose_matmul.py",
+          "line": 55
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "overflow encountered in matmul",
+          "source": "diagnose_matmul.py",
+          "line": 55
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "invalid value encountered in matmul",
+          "source": "diagnose_matmul.py",
+          "line": 55
+        }
+      ],
+      "matmul": 24.686962127685547,
+      "float64_product_sum": 24.686957057188852,
+      "absolute_difference": 5.070496694514759e-06,
+      "finite": true
+    }
+  ],
+  "ridge_probes": [
+    {
+      "seed": 0,
+      "shape": [
+        300,
+        5000
+      ],
+      "nonzero": 30000,
+      "configuration": {
+        "alpha": 10,
+        "solver": "lsqr",
+        "tol": 1e-05,
+        "max_iter": 1000
+      },
+      "float32_warnings": [
+        {
+          "category": "RuntimeWarning",
+          "message": "divide by zero encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "overflow encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "invalid value encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        }
+      ],
+      "float64_warnings": [
+        {
+          "category": "RuntimeWarning",
+          "message": "divide by zero encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "overflow encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "invalid value encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        }
+      ],
+      "sgd_warnings": [],
+      "coefficients_finite": true,
+      "sgd_coefficients_finite": true,
+      "predictions_finite": true,
+      "float32_intercept": -0.030661731958389282,
+      "float64_sum_reference_intercept": -0.03066173190511491,
+      "absolute_intercept_difference": 5.3274371025757716e-11,
+      "maximum_prediction_difference_after_intercept_correction": 8.946024143696718e-08,
+      "maximum_prediction_difference_to_float64_fit": 6.302296173821276e-07,
+      "iterations": [
+        7
+      ]
+    },
+    {
+      "seed": 0,
+      "shape": [
+        300,
+        5500
+      ],
+      "nonzero": 33000,
+      "configuration": {
+        "alpha": 10,
+        "solver": "lsqr",
+        "tol": 1e-05,
+        "max_iter": 1000
+      },
+      "float32_warnings": [
+        {
+          "category": "RuntimeWarning",
+          "message": "divide by zero encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "overflow encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "invalid value encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        }
+      ],
+      "float64_warnings": [
+        {
+          "category": "RuntimeWarning",
+          "message": "divide by zero encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "overflow encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "invalid value encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        }
+      ],
+      "sgd_warnings": [],
+      "coefficients_finite": true,
+      "sgd_coefficients_finite": true,
+      "predictions_finite": true,
+      "float32_intercept": -0.040482230484485626,
+      "float64_sum_reference_intercept": -0.04048223768184773,
+      "absolute_intercept_difference": 7.197362102140392e-09,
+      "maximum_prediction_difference_after_intercept_correction": 4.495670213877645e-08,
+      "maximum_prediction_difference_to_float64_fit": 7.479926187325958e-07,
+      "iterations": [
+        8
+      ]
+    },
+    {
+      "seed": 1,
+      "shape": [
+        300,
+        5000
+      ],
+      "nonzero": 30000,
+      "configuration": {
+        "alpha": 10,
+        "solver": "lsqr",
+        "tol": 1e-05,
+        "max_iter": 1000
+      },
+      "float32_warnings": [
+        {
+          "category": "RuntimeWarning",
+          "message": "divide by zero encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "overflow encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "invalid value encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        }
+      ],
+      "float64_warnings": [
+        {
+          "category": "RuntimeWarning",
+          "message": "divide by zero encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "overflow encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "invalid value encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        }
+      ],
+      "sgd_warnings": [],
+      "coefficients_finite": true,
+      "sgd_coefficients_finite": true,
+      "predictions_finite": true,
+      "float32_intercept": -0.04814623296260834,
+      "float64_sum_reference_intercept": -0.048146240430797925,
+      "absolute_intercept_difference": 7.468189587578333e-09,
+      "maximum_prediction_difference_after_intercept_correction": 1.117763179792064e-07,
+      "maximum_prediction_difference_to_float64_fit": 6.271592152273797e-07,
+      "iterations": [
+        8
+      ]
+    },
+    {
+      "seed": 1,
+      "shape": [
+        300,
+        5500
+      ],
+      "nonzero": 33000,
+      "configuration": {
+        "alpha": 10,
+        "solver": "lsqr",
+        "tol": 1e-05,
+        "max_iter": 1000
+      },
+      "float32_warnings": [
+        {
+          "category": "RuntimeWarning",
+          "message": "divide by zero encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "overflow encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "invalid value encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        }
+      ],
+      "float64_warnings": [
+        {
+          "category": "RuntimeWarning",
+          "message": "divide by zero encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "overflow encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "invalid value encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        }
+      ],
+      "sgd_warnings": [],
+      "coefficients_finite": true,
+      "sgd_coefficients_finite": true,
+      "predictions_finite": true,
+      "float32_intercept": -0.10219958424568176,
+      "float64_sum_reference_intercept": -0.10219957829251114,
+      "absolute_intercept_difference": 5.953170623129722e-09,
+      "maximum_prediction_difference_after_intercept_correction": 3.5755493010825035e-08,
+      "maximum_prediction_difference_to_float64_fit": 9.337611150961322e-07,
+      "iterations": [
+        8
+      ]
+    },
+    {
+      "seed": 42,
+      "shape": [
+        300,
+        5000
+      ],
+      "nonzero": 30000,
+      "configuration": {
+        "alpha": 10,
+        "solver": "lsqr",
+        "tol": 1e-05,
+        "max_iter": 1000
+      },
+      "float32_warnings": [
+        {
+          "category": "RuntimeWarning",
+          "message": "divide by zero encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "overflow encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "invalid value encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        }
+      ],
+      "float64_warnings": [
+        {
+          "category": "RuntimeWarning",
+          "message": "divide by zero encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "overflow encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "invalid value encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        }
+      ],
+      "sgd_warnings": [],
+      "coefficients_finite": true,
+      "sgd_coefficients_finite": true,
+      "predictions_finite": true,
+      "float32_intercept": -0.037475526332855225,
+      "float64_sum_reference_intercept": -0.037475524917955125,
+      "absolute_intercept_difference": 1.414900099860894e-09,
+      "maximum_prediction_difference_after_intercept_correction": 6.101954497239603e-08,
+      "maximum_prediction_difference_to_float64_fit": 4.6903113104512784e-07,
+      "iterations": [
+        8
+      ]
+    },
+    {
+      "seed": 42,
+      "shape": [
+        300,
+        5500
+      ],
+      "nonzero": 33000,
+      "configuration": {
+        "alpha": 10,
+        "solver": "lsqr",
+        "tol": 1e-05,
+        "max_iter": 1000
+      },
+      "float32_warnings": [
+        {
+          "category": "RuntimeWarning",
+          "message": "divide by zero encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "overflow encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "invalid value encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        }
+      ],
+      "float64_warnings": [
+        {
+          "category": "RuntimeWarning",
+          "message": "divide by zero encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "overflow encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        },
+        {
+          "category": "RuntimeWarning",
+          "message": "invalid value encountered in matmul",
+          "source": "sklearn/linear_model/_base.py",
+          "line": 311
+        }
+      ],
+      "sgd_warnings": [],
+      "coefficients_finite": true,
+      "sgd_coefficients_finite": true,
+      "predictions_finite": true,
+      "float32_intercept": -0.04639984667301178,
+      "float64_sum_reference_intercept": -0.04639984423368254,
+      "absolute_intercept_difference": 2.439329238601573e-09,
+      "maximum_prediction_difference_after_intercept_correction": 4.714281276463339e-08,
+      "maximum_prediction_difference_to_float64_fit": 6.298117454228702e-07,
+      "iterations": [
+        7
+      ]
+    }
+  ]
+}

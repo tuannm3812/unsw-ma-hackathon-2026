@@ -1,0 +1,147 @@
+{
+  "started_at_utc": "2026-11-02T00:34:18.865148+00:00",
+  "git_revision": "7afea5f3fb162e18a1d57f8609902702160d6593",
+  "git_tree_dirty": true,
+  "source_hashes": {
+    "src/__init__.py": "20c00128512a7e6bd2760ac3be4659d938ace5cc5d84041baff06517a9eed709",
+    "src/advanced_modeling.py": "565ef38f4330d1a8de8aaec71f0754aa5a8c1d2718bcb19174243d696d8e256a",
+    "src/benchmark_cache.py": "f12cf75d84513975062a56e8d75a372919dc57c9eafa60cb1004aa575056d435",
+    "src/benchmark_data.py": "143779f56baa7e957c9544b04a9e1c721fd90d6f99dc34e60205fa2645ef87de",
+    "src/benchmark_metrics.py": "7aca39cefbcabcc6fa88e64454c5bafaf4743b326171a0e5282903b189f1f5b8",
+    "src/benchmark_models.py": "7520ee820f44bbaa9c568750b89dd3adf97a3eb09718ca2142530f3a18cbe8ae",
+    "src/benchmark_reporting.py": "f6fa6e7693e46238b0e1f44520659baa352dd1a5ba5cdd602dc61cdddb8ec53f",
+    "src/binary_modeling.py": "34ff88778f8e6944720abcc19e4417864d662e449190d8cdc855b3001cf61e2a",
+    "src/data_loader.py": "813c066c8ca60ae585e73f46032aed7cd1f27d0df5a66a6bcdf6c957c7b293c3",
+    "src/feature_sensitivity.py": "22b3c0e5ddc94025c230c2b86bdd4fb54cfcb172ffc0c0d79e2b1c361c886f71",
+    "src/features.py": "be53d2d07943b80c2d4dc18ba1de000afc2d833e03d44a2f00930ef9d3a3a367",
+    "src/modeling.py": "59a6b37f4ae5fb4d6f203d8851dacda088dec5dfbc25be2a86290e209d71ee8f",
+    "src/programme_audit.py": "3708f85eb4be4745dacd8c0d96eede3c00ccb40d49b3f23d9df8f1af9fafe46e",
+    "src/research_review.py": "4f05c4f8e71bc7fc90e65bce919b0851e480e90a277a6cbee22b083c13c1d85e",
+    "src/run_analysis.py": "734d47ad30c646b0df4ecc3862e5bc8f87b9e7bd6c56dcefcdde10f85dbba2de",
+    "src/run_text_benchmark.py": "634dd01fe7d1cb4930a3d2d7f58a42bc8552cb47a66c01bb3d3e057de8c4231a",
+    "src/statistical_analysis.py": "ab7c6e99e08159b411d0b18a269e7dcb9d60c9caadb8797f72f974fecd925050",
+    "src/text_transformer.py": "f63f5789a31aa7eae5c974e43978878b5d3aa55710b41ed8bad2ac8718dbef82",
+    "src/topics.py": "7dc56bb6c8ad1433202581adcc45f7964eacac9f1d57018807b15c66c45ab27f",
+    "src/validation.py": "7bdae3d53df8a2ac86ba2bad6c8a5ab2d34db1e9b39215e812fc64817859ce09"
+  },
+  "configuration": {
+    "years": [
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "seed": 42,
+    "max_text_features": 5000,
+    "min_df": 5,
+    "tree_iterations": 100,
+    "linear_arms": [
+      "S",
+      "T",
+      "S+M",
+      "S+M+L",
+      "S+M+L+R",
+      "S+P",
+      "S+P+M+L+R"
+    ],
+    "tree_arms": [
+      "S",
+      "S+M+L",
+      "S+P",
+      "S+P+M+L"
+    ],
+    "bootstrap_resamples": 1000,
+    "min_slice_rows": 200,
+    "threads": 4
+  },
+  "feature_registry": {
+    "S_numeric": [
+      "borrowerCount",
+      "is_group_loan",
+      "log_loan_amount",
+      "lenderRepaymentTerm",
+      "fundraising_year",
+      "fundraising_month"
+    ],
+    "S_categorical": [
+      "gender_classification",
+      "loan_size_band",
+      "repaymentInterval",
+      "country_iso",
+      "region",
+      "sector",
+      "activity"
+    ],
+    "M": [
+      "description_missing",
+      "desc_word_count",
+      "desc_char_count",
+      "desc_sentence_count",
+      "desc_avg_word_length",
+      "desc_avg_sentence_length"
+    ],
+    "L": [
+      "family_mentions_per_100_words",
+      "basic_needs_mentions_per_100_words",
+      "business_mentions_per_100_words",
+      "agency_mentions_per_100_words",
+      "gratitude_mentions_per_100_words",
+      "urgency_mentions_per_100_words",
+      "first_person_mentions_per_100_words",
+      "third_person_mentions_per_100_words",
+      "number_token_count",
+      "age_pattern_count",
+      "years_in_business_count",
+      "desc_sentiment_compound",
+      "desc_sentiment_pos",
+      "desc_sentiment_neg",
+      "desc_sentiment_neu",
+      "sentiment_available"
+    ],
+    "R": [
+      "description_clean"
+    ],
+    "P": [
+      "programme_proxy"
+    ]
+  },
+  "versions": {
+    "python": "3.9.6",
+    "pandas": "2.3.3",
+    "numpy": "2.0.2",
+    "sklearn": "1.6.1",
+    "scipy": "1.13.1"
+  },
+  "evaluation_status": "Retrospective benchmark; no untouched final test or all-listing deployment evaluation.",
+  "duration_estimand": "expm1 of a log-target squared-error prediction, clipped at zero; not a conditional mean-days estimate.",
+  "data_and_feature_identity": {
+    "data_filename": "Kiva_Loans.pkl",
+    "data_sha256": "e292f135aefd31d8628934227ad320b8d2f25ede72e504dd82be37a30afc4bf1",
+    "data_size_bytes": 1597994508,
+    "years": [
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "source_hashes": {
+      "src/benchmark_cache.py": "f12cf75d84513975062a56e8d75a372919dc57c9eafa60cb1004aa575056d435",
+      "src/benchmark_data.py": "143779f56baa7e957c9544b04a9e1c721fd90d6f99dc34e60205fa2645ef87de",
+      "src/features.py": "be53d2d07943b80c2d4dc18ba1de000afc2d833e03d44a2f00930ef9d3a3a367",
+      "src/data_loader.py": "813c066c8ca60ae585e73f46032aed7cd1f27d0df5a66a6bcdf6c957c7b293c3",
+      "resources/nltk_data/sentiment/vader_lexicon.zip": "8adba4294eef3964d820bf655e37e61bdc3a341994356af59b74fb3b4a36ce5c"
+    },
+    "versions": {
+      "python": "3.9.6",
+      "pandas": "2.3.3",
+      "numpy": "2.0.2",
+      "nltk": "3.9.2"
+    }
+  },
+  "finished_at_utc": "2026-11-02T01:23:18.409977+00:00",
+  "benchmark_sha256": "40f324421975fbd3f4fbf17eba109493a11d0bf4011dd4885c99e21c143215bd",
+  "audit_sha256": "1bca82928f8c939eaa2a3f857da357eb85ca1ae64fbc3a4c2ce0a0693ad5d7bb",
+  "source_snapshot_sha256": "0738c35cb676bcc272432e74a868fba464dd66ccb9d2c707878ff7e2913a6963"
+}
