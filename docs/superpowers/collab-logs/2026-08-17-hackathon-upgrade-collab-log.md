@@ -2562,3 +2562,19 @@ written from the cited sources.
 model family. Slide 4's statement that partners and staff coach descriptions has no cited source in this repo.
 A second base upload failed twice, so the live base was repaired in place, leaving the wide page-number box
 described in `docs/presentation/portfolio_deck/README.md`. No Material Symbols icons were used. Nothing was pushed.
+
+## 2026-11-08 — Further experiments (Claude, on Mike's Mac; Mike invited more experiments)
+
+All exploratory and chosen after results were known. The deck was not changed.
+
+**Five-year loss alignment.** Reproduced benchmark MAE in all years. This corrects the earlier entry's mechanism:
+over-prediction dominates 2022–2025 but not 2021 (31.8% and 38.2%). Capping keeps the gain positive every year
+(0.265–0.405), and the country interval includes zero in 1 of 5 years, against 4 of 5 uncapped.
+
+**Evidence sources** (`reports/evidence_sources/`). 48 countries act like 5.7 effective countries. The hypothesis that
+urgency is unresolved because its users are concentrated failed (7.1 effective countries). The equivalence screen at
+t(4) keeps 21 of 23 bounded results and all five duration verdicts. 48 no-description records with predictions up to
+22,436 days cut the 2023 gain from 0.364 to 0.259. No single country carries the gain; at least 99.2% of described rows use an
+unseen exact template, which cannot exclude near-duplicates.
+
+**Limits.** No independent review; the effective-country index and t(4) are heuristics; the cap is a diagnostic.
