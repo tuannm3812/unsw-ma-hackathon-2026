@@ -2521,3 +2521,44 @@ was changed; this entry is the only edit.
 
 A slide-by-slide plan for the report and deck is with Mike for approval. Nothing will be
 rebuilt until he approves it.
+
+## 2026-11-08 — Loss alignment, edit size and the portfolio deck (Claude, on Mike's Mac)
+
+**Run.** Offline suite 164 passed before this work and 173 passed after it
+(`LOKY_MAX_CPU_COUNT=4 .venv/bin/python -m pytest -q`). New modules `src/loss_alignment.py` and
+`src/feature_distribution.py` each have tests. Both read the private feature cache (hash verified) and
+write aggregates only.
+
+**Experiment A, 2025 loss alignment** (`reports/loss_alignment_2025/`, about 6 minutes, 6 GiB peak).
+The log1p row reproduced the benchmark exactly (MAE 6.4063, 6.1465; R² −0.4189, −0.3147). The negative
+day-space R² does come from the back-transform, but the earlier "undershoots long waits" explanation was
+wrong: 74.7% and 69.0% of squared error is over-prediction, and predictions reach 1,394 and 714 days against
+a 2025 maximum of 79.5. Log-space R² is 0.330 and 0.433; raw-days Ridge gives day-space R² 0.165 and 0.296 but
+worse MAE (8.14, 7.01). Duan smearing worsens R² (−2.61, −1.86). A training-maximum cap, added as a diagnostic
+beyond the brief, gives −0.079 and −0.099. Text lowers MAE under all four estimators, but with the cap it
+slightly worsens RMSE. `docs/6_matched_text_results.md` was corrected. Case-study finding 4 was left as is
+because it does not state the back-transform explanation.
+
+**Experiment B, edit size** (`reports/equivalence_screen_reviewed/feature_distribution.json`). Urgency SD
+0.102, 98.7% zero; first person SD 0.190, 99.0% zero. One mention is about 10 SD for urgency, and also about
+one word in the median 92-word description. Per 1 SD both sit inside the bound, which reflects rarity and does
+not resolve them. Common terms move the other way: some intervals leave the bound per SD.
+
+**Deck.** New native deck `1Q7n_sOn_4HL68_Mk-GogDOtS9P_pfPVXLNUeinV7pFM`, 20 slides, 960 x 540 pt. The old live deck was not opened for writing;
+its modified time predates this session. The gslides OAuth sign-in was completed in the browser on this Mac for Mike's account. The CLI cannot
+set page size, so the base came from a .pptx uploaded through the Drive connector. Checks on the
+Google-rendered PDF: frame, title wrapping, Google Sans only, no yellow text, one automatic page number on
+slides 2-15 and 17-20, notes styled on all 20, every displayed number found in the claims register. All 20
+previews viewed at full size. The register check is a substring match, so it cannot prove a number is
+attached to the right claim. Markers were placed from measured PDF positions.
+
+**Storyline changed from the approved text.** Slide 4 title (it said "the one field" beside three editable
+fields); slide 5 title and takeaway, slide 14 item ("capital cycles" stated as supported, the evidence says
+plausible); slide 9 takeaway (edit-size context); slide 11 title, takeaway and notes ("hold" and "survive" did
+not fit third-person BH p 0.061); close slide link (repository is public). Appendix exhibits and notes were
+written from the cited sources.
+
+**Remaining limits.** Experiments A and B have no independent review. The loss check covers one year and one
+model family. Slide 4's statement that partners and staff coach descriptions has no cited source in this repo.
+A second base upload failed twice, so the live base was repaired in place, leaving the wide page-number box
+described in `docs/presentation/portfolio_deck/README.md`. No Material Symbols icons were used. Nothing was pushed.
