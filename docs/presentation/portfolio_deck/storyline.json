@@ -27,7 +27,7 @@
       "notes": {
         "purpose": "Introduce the question and who we are.",
         "script": "We are Cultural Blend, one of eight finalist teams in the UNSW Marketing Analytics Hackathon. We analysed 1.45 million Kiva loans to ask whether the way a borrower's story is written is linked to how fast the loan funds. This edition adds two months of follow-up research.",
-        "reference": "Official results: unsw.edu.au MA-hackathon page (reviewed 2026-10-24). Photo credit as recorded in docs/presentation/poster/."
+        "reference": "Official results: unsw.edu.au MA-hackathon page (reviewed 2026-10-24). Photo: Kiva farmer photograph, credit Kiva, hosted on kiva.org; provenance in docs/presentation/poster/README.md. It gives context and does not identify a record in the dataset."
       }
     },
     {
@@ -116,7 +116,7 @@
       "id": "lever",
       "section": "Problem",
       "layout": "content+takeaways",
-      "title": "The description is the one listing field a partner can still change",
+      "title": "The description is one of the few listing fields still editable",
       "subtitle": "Context: what is fixed and what is editable when a Kiva loan is listed",
       "exhibit": {
         "type": "two_column_fields",
@@ -154,7 +154,7 @@
       "id": "outcome",
       "section": "Problem",
       "layout": "content+takeaways",
-      "title": "The outcome is completed funding on the platform, not borrower waiting time",
+      "title": "The outcome is platform funding time, not borrower waiting time",
       "subtitle": "Descriptive audit of all records; August primary run",
       "key_figures": [
         {
@@ -175,7 +175,7 @@
         {
           "marker": 1,
           "heading": "Who waits",
-          "text": "For most loans the partner has already paid the borrower; platform time is the partner's capital cycle."
+          "text": "For most loans the partner has already paid the borrower. Platform time plausibly reflects replenishing partner capital; it is not measured directly."
         },
         {
           "marker": 2,
@@ -185,7 +185,7 @@
       ],
       "notes": {
         "purpose": "Set the limits every later claim inherits.",
-        "script": "Our outcome is the time from listing to full funding. Two facts shape it. Almost all loans were paid out before they were listed, so a faster platform fill helps the partner replenish capital, not a waiting borrower. And the data only contain loans that funded.",
+        "script": "Our outcome is the time from listing to full funding. Two facts shape it. Almost all loans were paid out before they were listed, so a faster platform fill plausibly helps the partner replenish capital rather than a waiting borrower. We do not measure that directly. And the data only contain loans that funded.",
         "reference": "association_summary.txt audit trail; docs/1_data_dictionary.md disbursalDate."
       }
     },
@@ -393,7 +393,7 @@
         {
           "marker": 2,
           "heading": "Too noisy to judge",
-          "text": "Urgency and first-person framing could still be linked to 6–14% faster or slower funding."
+          "text": "Urgency and first-person framing could still be linked to 6–14% faster or slower funding per mention. Each is absent from over 98% of records."
         },
         {
           "marker": 3,
@@ -403,8 +403,8 @@
       ],
       "notes": {
         "purpose": "Separate 'small' from 'unknown'.",
-        "script": "The shaded band is a practical bound, about five percent of funding time per extra mention. When a whole interval sits inside the band, we can say the association is small. Most framings do. Urgency and first person do not: their intervals are wide enough to allow sizeable links either way. [Point: Caveat] We chose the bound after seeing the results, so treat this as exploratory.",
-        "reference": "reports/equivalence_screen_reviewed/README.md; src/equivalence.py."
+        "script": "The shaded band is a practical bound, about five percent of funding time per extra mention. When a whole interval sits inside the band, we can say the association is small. Most framings do. Urgency and first person do not: their intervals are wide enough to allow sizeable links either way. [Point: Caveat] We chose the bound after seeing the results, so treat this as exploratory. Edit size matters too: one mention in a typical description is a realistic edit, but almost no descriptions contain these words, so the data say little about them.",
+        "reference": "reports/equivalence_screen_reviewed/README.md; src/equivalence.py. Edit-size context: reports/equivalence_screen_reviewed/feature_distribution.json."
       }
     },
     {
@@ -471,7 +471,7 @@
       "id": "persist",
       "section": "Evidence",
       "layout": "content+takeaways",
-      "title": "A few narrative associations hold under programme controls",
+      "title": "Few narrative associations remain after programme controls",
       "subtitle": "October extension: country-clustered, BH-adjusted within specification",
       "exhibit": {
         "type": "table",
@@ -492,13 +492,13 @@
             "−0.258 pp, BH p 0.006"
           ]
         ],
-        "note": "Per extra mention per 100 words. Pointwise 95% intervals in the claims register."
+        "note": "Per extra mention per 100 words. BH-adjusted within each specification."
       },
       "takeaways": [
         {
           "marker": 1,
-          "heading": "Small but real associations",
-          "text": "Third-person framing stays linked to slightly faster funding after programme controls."
+          "heading": "Small and mixed",
+          "text": "Third-person framing keeps its size but rises to BH p 0.061; business framing is the one term below BH 0.05."
         },
         {
           "marker": 2,
@@ -508,8 +508,18 @@
       ],
       "notes": {
         "purpose": "Show that not everything disappears.",
-        "script": "Two results survive richer controls. Third-person descriptions are linked to slightly faster funding, and business framing to a slightly lower same-day rate. Both are small and observational."
-      }
+        "script": "Few results remain under richer controls. Third-person framing keeps about the same size, but its adjusted p-value rises just above 0.05. Business framing is the one term that passes after programme controls, with a slightly lower same-day rate. Both are small and observational."
+      },
+      "key_figures": [
+        {
+          "value": "0.012 → 0.061",
+          "label": "third-person BH p, expanded to programme-adjusted"
+        },
+        {
+          "value": "−0.258 pp",
+          "label": "business framing, same-day rate, programme-adjusted"
+        }
+      ]
     },
     {
       "n": 12,
@@ -706,7 +716,7 @@
           "items": [
             "Text adds forecast information in a linear model",
             "Most framing associations are small",
-            "Platform time mostly reflects partner capital cycles"
+            "Platform funding time is not borrower waiting time for most loans"
           ]
         },
         {
@@ -761,40 +771,192 @@
       "title": "Thank you",
       "lines": [
         "Mike Nguyen and Sophia Nguyen, Cultural Blend",
-        "Code and evidence: github.com/tuannm3812 (repository link to confirm)"
+        "Code and evidence: github.com/tuannm3812/unsw-ma-hackathon-2026"
       ],
       "notes": {
         "purpose": "Close.",
         "script": "Thank you. The code, saved results and every number on these slides are in our repository."
-      }
+      },
+      "link": "https://github.com/tuannm3812/unsw-ma-hackathon-2026"
     },
     {
       "n": "A1",
       "id": "a_screen",
       "section": "Appendix",
       "title": "The two-country screen in full",
-      "content": "Regional slope table with clusters, loans, estimates, normal and t(1) intervals; explain why one- or two-country groups cannot estimate between-country uncertainty."
+      "content": "Regional slope table with clusters, loans, estimates, normal and t(1) intervals; explain why one- or two-country groups cannot estimate between-country uncertainty.",
+      "subtitle": "August primary run: within-region family-framing slopes in log(1 + days) per extra mention per 100 words",
+      "exhibit": {
+        "type": "table",
+        "columns": [
+          "Region",
+          "Countries",
+          "Loans",
+          "Slope",
+          "Clustered 95%, normal",
+          "t(1) interval",
+          "Heuristic p"
+        ],
+        "rows": [
+          [
+            "Middle East",
+            "2",
+            "14,946",
+            "−0.0729",
+            "[−0.1003, −0.0456]",
+            "[−0.2502, 0.1043]",
+            "0.1203"
+          ],
+          [
+            "Central America",
+            "2",
+            "59,391",
+            "−0.0742",
+            "[−0.0879, −0.0605]",
+            "[−0.1629, 0.0145]",
+            "0.0597"
+          ]
+        ]
+      },
+      "body": [
+        {
+          "heading": "Why two countries are not enough",
+          "text": "A one-country group cannot estimate between-country uncertainty, and two countries estimate it poorly. The t(1) reference keeps the same clustered standard error and widens the interval."
+        },
+        {
+          "heading": "What the screen is",
+          "text": "A heuristic sensitivity screen, not a calibrated correction. Passing it would not certify a result, so these patterns stay descriptive."
+        }
+      ],
+      "notes": {
+        "purpose": "Show the regional screen in full.",
+        "script": "This is the detail behind the regional slide. With two countries per region, the usual interval is too narrow, and the t(1) screen shows how much it could widen.",
+        "reference": "docs/2_evidence_and_corrections.md regional table."
+      }
     },
     {
       "n": "A2",
       "id": "a_asof",
       "section": "Appendix",
       "title": "As-of training audit",
-      "content": "Cohort table from docs/6_matched_text_results.md (pre-cutoff postings completing later, eligible training, evaluation rows per year)."
+      "content": "Cohort table from docs/6_matched_text_results.md (pre-cutoff postings completing later, eligible training, evaluation rows per year).",
+      "subtitle": "November benchmark: training records must have completed before each cutoff",
+      "exhibit": {
+        "type": "table",
+        "columns": [
+          "Evaluation year",
+          "Pre-cutoff postings completing later",
+          "Eligible as-of training",
+          "Evaluation rows"
+        ],
+        "rows": [
+          [
+            "2021",
+            "7,528",
+            "717,672",
+            "163,166"
+          ],
+          [
+            "2022",
+            "3,918",
+            "884,448",
+            "143,354"
+          ],
+          [
+            "2023",
+            "3,546",
+            "1,028,174",
+            "143,233"
+          ],
+          [
+            "2024",
+            "5,691",
+            "1,169,262",
+            "141,725"
+          ],
+          [
+            "2025",
+            "4,261",
+            "1,312,417",
+            "137,162"
+          ]
+        ]
+      },
+      "note": "Note: The 2024 replay excludes 5,691 training records that a posting-only split would keep. Evaluation windows still select eventual completions.",
+      "notes": {
+        "purpose": "Show how training stayed honest about time.",
+        "script": "A training record only counts if it had finished funding before the cutoff, so the model never learns from outcomes that were not yet known.",
+        "reference": "docs/6_matched_text_results.md training availability table."
+      }
     },
     {
       "n": "A3",
       "id": "a_primary",
       "section": "Appendix",
       "title": "Primary prediction metrics",
-      "content": "HistGradientBoosting duration MAE 5.2031 days, R² 0.5420; classifier ROC AUC 0.8997, AP 0.8301, Brier 0.1156; 1,174,953 train, 278,887 holdout; completed loans only."
+      "content": "HistGradientBoosting duration MAE 5.2031 days, R² 0.5420; classifier ROC AUC 0.8997, AP 0.8301, Brier 0.1156; 1,174,953 train, 278,887 holdout; completed loans only.",
+      "subtitle": "August primary run: chronological holdout, completed loans only",
+      "key_figures": [
+        {
+          "value": "5.2031 days",
+          "label": "duration MAE, HistGradientBoosting"
+        },
+        {
+          "value": "0.5420",
+          "label": "duration R²"
+        },
+        {
+          "value": "0.8997",
+          "label": "24-hour ROC AUC"
+        },
+        {
+          "value": "0.8301",
+          "label": "24-hour average precision"
+        },
+        {
+          "value": "0.1156",
+          "label": "24-hour Brier score"
+        }
+      ],
+      "note": "Scope: 1,174,953 training and 278,887 holdout loans (2024–2025). Retrospective predictions on completed loans, not deployment estimates.",
+      "notes": {
+        "purpose": "Record the primary benchmark.",
+        "script": "These are the August benchmark scores. They come from a different model and split from the November benchmark, so the two sets of numbers should not be compared directly.",
+        "reference": "association_summary.txt; analysis_summary.json."
+      }
     },
     {
       "n": "A4",
       "id": "a_topics",
       "section": "Appendix",
       "title": "Exploratory story themes",
-      "content": "NMF themes from the 20,000-loan exploratory sample, labelled as such; not full-data evidence."
+      "content": "NMF themes from the 20,000-loan exploratory sample, labelled as such; not full-data evidence.",
+      "subtitle": "Exploratory NMF themes from a 20,000-loan sample; descriptive, not full-data evidence",
+      "key_figures": [
+        {
+          "value": "1.5 days",
+          "label": "mean funding time, fastest theme (sanitation)"
+        },
+        {
+          "value": "13.5 days",
+          "label": "mean funding time, slowest theme (group solar and farm plots)"
+        }
+      ],
+      "body": [
+        {
+          "heading": "What the themes show",
+          "text": "8 themes, including sanitation, clean water, livestock, smallholder farming and retail. They track loan purpose as much as writing style."
+        },
+        {
+          "heading": "How to read them",
+          "text": "Means are unadjusted and come from a sample, so the gap is context, not a tested effect of story content."
+        }
+      ],
+      "notes": {
+        "purpose": "Keep the themes in proportion.",
+        "script": "Topic modelling gave coherent themes, but on a 20,000-loan sample and without adjustment. Topics mostly describe what the loan is for, so they are context rather than evidence about writing.",
+        "reference": "notebooks/1_full_dataset_eda.py topic section; docs/4_research_review.md P2."
+      }
     }
   ]
 }
