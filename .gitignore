@@ -254,3 +254,9 @@ docs/presentation/research_refresh/.build/
 # 2025 loss-alignment extension: README and summary aggregates only.
 !reports/loss_alignment_2025/README.md
 !reports/loss_alignment_2025/loss_alignment.json
+!reports/loss_alignment_2025/loss_alignment_2021.json
+!reports/loss_alignment_2025/loss_alignment_2022.json
+!reports/loss_alignment_2025/loss_alignment_2023.json
+!reports/loss_alignment_2025/loss_alignment_2024.json
+!reports/evidence_sources/README.md
+!reports/evidence_sources/evidence_sources.json

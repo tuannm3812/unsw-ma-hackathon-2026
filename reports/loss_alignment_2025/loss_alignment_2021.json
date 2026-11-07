@@ -1,0 +1,372 @@
+{
+  "schema_version": "loss_alignment_2025.v1",
+  "status": "separate retrospective extension; aggregates only",
+  "generated_at_utc": "2026-11-07T15:17:06.400050+00:00",
+  "year": 2021,
+  "train_rows": 717672,
+  "test_rows": 163166,
+  "configuration": {
+    "seed": 42,
+    "ridge": "alpha=10, lsqr, tol=1e-5, max_iter=1000",
+    "max_text_features": 5000,
+    "min_df": 5,
+    "threads": 4,
+    "evaluation_dependent_tuning": false
+  },
+  "feature_cache_sha256": "f30722394487d03f5cfd788ccda9467ae8e3d9bc2c01b7fb34eb35363a2fe4f1",
+  "arm_fit": {
+    "S": {
+      "features": 247,
+      "smearing_factor": 1.6312480633240873,
+      "train_log_residual_sd": 0.9533199299730686,
+      "log_space_r2": 0.3500805212562018,
+      "negative_predictions_clipped_days_target": 2818,
+      "days_iterations": [
+        233
+      ],
+      "log_iterations": [
+        239
+      ]
+    },
+    "S+M+L+R": {
+      "features": 5269,
+      "smearing_factor": 1.528858317595233,
+      "train_log_residual_sd": 0.8933725884269571,
+      "log_space_r2": 0.39875670758390247,
+      "negative_predictions_clipped_days_target": 3345,
+      "days_iterations": [
+        549
+      ],
+      "log_iterations": [
+        524
+      ]
+    }
+  },
+  "constants": {
+    "training_mean_days": 7.836614968822932,
+    "training_max_days": 97.7541550925926,
+    "training_median_days": 1.6735416666666667,
+    "evaluation_mean_days": 11.369459963957972,
+    "evaluation_median_days": 5.144994212962963,
+    "training_mean_predictor": {
+      "mae_days": 10.251205873097568,
+      "rmse_days": 13.046327460810783,
+      "r2_days": -0.07913102566098362,
+      "median_ae_days": 7.488090663267377,
+      "bias_days": -3.532844995135041
+    },
+    "training_median_predictor": {
+      "mae_days": 10.508728576194956,
+      "rmse_days": 15.866206165394525,
+      "r2_days": -0.5960401610002866,
+      "median_ae_days": 3.471452546296296,
+      "bias_days": -9.695918297291307
+    }
+  },
+  "estimators": {
+    "log1p": {
+      "arms": {
+        "S": {
+          "mae_days": 8.250034585396918,
+          "rmse_days": 13.138876931132819,
+          "r2_days": -0.09449584770432051,
+          "median_ae_days": 4.061010194649514,
+          "bias_days": -4.082157155163156
+        },
+        "S+M+L+R": {
+          "mae_days": 7.957401664067373,
+          "rmse_days": 13.175371681004355,
+          "r2_days": -0.10058446944066324,
+          "median_ae_days": 4.039962925394303,
+          "bias_days": -3.5330297679768004
+        }
+      },
+      "anatomy": {
+        "S": {
+          "share_squared_error_overprediction": 0.3176601059891164,
+          "share_squared_error_top_1pct_predictions": 0.22496614053659036,
+          "prediction_quantiles_days": {
+            "0.5": 4.311737603258117,
+            "0.9": 16.547179030924255,
+            "0.99": 44.926427652864746,
+            "0.999": 109.96874684585381
+          },
+          "prediction_max_days": 669.4750865877566,
+          "predictions_above_observed_max": 364,
+          "observed_max_days": 86.93792824074075
+        },
+        "S+M+L+R": {
+          "share_squared_error_overprediction": 0.3815763568235668,
+          "share_squared_error_top_1pct_predictions": 0.2926208090306698,
+          "prediction_quantiles_days": {
+            "0.5": 4.8126639208564574,
+            "0.9": 16.932999719419783,
+            "0.99": 47.707043828150084,
+            "0.999": 124.47884183187404
+          },
+          "prediction_max_days": 1339.3185826251356,
+          "predictions_above_observed_max": 433,
+          "observed_max_days": 86.93792824074075
+        }
+      },
+      "text_gain": {
+        "mae_days": 0.2926329213295453,
+        "rmse_days": -0.03649474987153667,
+        "r2_days": -0.006088621736342725,
+        "median_ae_days": 0.021047269255211276
+      },
+      "text_gain_mae_intervals": {
+        "calendar_month": {
+          "gain": 0.29263292132954616,
+          "clusters": 12,
+          "interval_95": [
+            0.19821249028954413,
+            0.38379528837254334
+          ],
+          "resamples": 1000,
+          "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+        },
+        "country": {
+          "gain": 0.29263292132954616,
+          "clusters": 37,
+          "interval_95": [
+            -0.0415018778789983,
+            0.5426102587336304
+          ],
+          "resamples": 1000,
+          "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+        }
+      }
+    },
+    "days": {
+      "arms": {
+        "S": {
+          "mae_days": 8.264881559833041,
+          "rmse_days": 10.234020915460624,
+          "r2_days": 0.3359661337812091,
+          "median_ae_days": 6.962836098141141,
+          "bias_days": 0.5922800285684324
+        },
+        "S+M+L+R": {
+          "mae_days": 8.247166677049696,
+          "rmse_days": 10.189311106223787,
+          "r2_days": 0.3417554469551072,
+          "median_ae_days": 7.234064824139631,
+          "bias_days": 1.3422582833930174
+        }
+      },
+      "anatomy": {
+        "S": {
+          "share_squared_error_overprediction": 0.4315069732369074,
+          "share_squared_error_top_1pct_predictions": 0.018884437216980025,
+          "prediction_quantiles_days": {
+            "0.5": 11.578374862670898,
+            "0.9": 20.703523635864258,
+            "0.99": 29.10180702209473,
+            "0.999": 35.67124982833848
+          },
+          "prediction_max_days": 49.2558479309082,
+          "predictions_above_observed_max": 0,
+          "observed_max_days": 86.93792824074075
+        },
+        "S+M+L+R": {
+          "share_squared_error_overprediction": 0.5010981084333,
+          "share_squared_error_top_1pct_predictions": 0.012896355835393513,
+          "prediction_quantiles_days": {
+            "0.5": 12.485977172851562,
+            "0.9": 21.78462314605713,
+            "0.99": 30.48041648864747,
+            "0.999": 37.830880889892185
+          },
+          "prediction_max_days": 54.63505554199219,
+          "predictions_above_observed_max": 0,
+          "observed_max_days": 86.93792824074075
+        }
+      },
+      "text_gain": {
+        "mae_days": 0.017714882783344876,
+        "rmse_days": 0.04470980923683676,
+        "r2_days": 0.005789313173898081,
+        "median_ae_days": -0.27122872599849046
+      },
+      "text_gain_mae_intervals": {
+        "calendar_month": {
+          "gain": 0.017714882783344637,
+          "clusters": 12,
+          "interval_95": [
+            -0.043397838697163627,
+            0.09110986306293581
+          ],
+          "resamples": 1000,
+          "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+        },
+        "country": {
+          "gain": 0.017714882783344637,
+          "clusters": 37,
+          "interval_95": [
+            -0.36033899070802367,
+            0.5510692264378667
+          ],
+          "resamples": 1000,
+          "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+        }
+      }
+    },
+    "log1p_smeared": {
+      "arms": {
+        "S": {
+          "mae_days": 9.016490030308178,
+          "rmse_days": 16.319186680865208,
+          "r2_days": -0.6884750586919675,
+          "median_ae_days": 5.14763095121578,
+          "bias_days": 1.1461515766860992
+        },
+        "S+M+L+R": {
+          "mae_days": 8.671344275463829,
+          "rmse_days": 16.339007025492748,
+          "r2_days": -0.6925789985815314,
+          "median_ae_days": 5.057741846250145,
+          "bias_days": 1.137119921285322
+        }
+      },
+      "anatomy": {
+        "S": {
+          "share_squared_error_overprediction": 0.7470649250253358,
+          "share_squared_error_top_1pct_predictions": 0.48399680931725336,
+          "prediction_quantiles_days": {
+            "0.5": 7.664761678200533,
+            "0.9": 27.623801810996227,
+            "0.99": 73.91739616412941,
+            "0.999": 180.01755338179996
+          },
+          "prediction_max_days": 1092.7111865033276,
+          "predictions_above_observed_max": 1127,
+          "observed_max_days": 86.93792824074075
+        },
+        "S+M+L+R": {
+          "share_squared_error_overprediction": 0.7608504258464205,
+          "share_squared_error_top_1pct_predictions": 0.5393460314692271,
+          "prediction_quantiles_days": {
+            "0.5": 7.886739582787114,
+            "0.9": 26.417015780467914,
+            "0.99": 73.46616908214281,
+            "0.999": 190.83937101687727
+          },
+          "prediction_max_days": 2048.157213273892,
+          "predictions_above_observed_max": 1123,
+          "observed_max_days": 86.93792824074075
+        }
+      },
+      "text_gain": {
+        "mae_days": 0.3451457548443493,
+        "rmse_days": -0.01982034462754001,
+        "r2_days": -0.004103939889563923,
+        "median_ae_days": 0.08988910496563562
+      },
+      "text_gain_mae_intervals": {
+        "calendar_month": {
+          "gain": 0.34514575484435084,
+          "clusters": 12,
+          "interval_95": [
+            0.1930967679136781,
+            0.4740040784829807
+          ],
+          "resamples": 1000,
+          "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+        },
+        "country": {
+          "gain": 0.34514575484435084,
+          "clusters": 37,
+          "interval_95": [
+            0.021198263181353757,
+            1.2076303177790257
+          ],
+          "resamples": 1000,
+          "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+        }
+      }
+    },
+    "log1p_capped": {
+      "arms": {
+        "S": {
+          "mae_days": 8.191857971573393,
+          "rmse_days": 12.509957290229199,
+          "r2_days": 0.0077770161272116,
+          "median_ae_days": 4.061010194649514,
+          "bias_days": -4.1403337689866815
+        },
+        "S+M+L+R": {
+          "mae_days": 7.8682917902404,
+          "rmse_days": 12.032657037018664,
+          "r2_days": 0.08204645049464843,
+          "median_ae_days": 4.039962925394303,
+          "bias_days": -3.6221396418037717
+        }
+      },
+      "anatomy": {
+        "S": {
+          "share_squared_error_overprediction": 0.24732827917069602,
+          "share_squared_error_top_1pct_predictions": 0.14507993182940462,
+          "prediction_quantiles_days": {
+            "0.5": 4.311737603258117,
+            "0.9": 16.547179030924255,
+            "0.99": 44.926427652864746,
+            "0.999": 97.7541550925926
+          },
+          "prediction_max_days": 97.7541550925926,
+          "predictions_above_observed_max": 364,
+          "observed_max_days": 86.93792824074075
+        },
+        "S+M+L+R": {
+          "share_squared_error_overprediction": 0.25853823694928824,
+          "share_squared_error_top_1pct_predictions": 0.15188458936090518,
+          "prediction_quantiles_days": {
+            "0.5": 4.8126639208564574,
+            "0.9": 16.932999719419783,
+            "0.99": 47.707043828150084,
+            "0.999": 97.7541550925926
+          },
+          "prediction_max_days": 97.7541550925926,
+          "predictions_above_observed_max": 433,
+          "observed_max_days": 86.93792824074075
+        }
+      },
+      "text_gain": {
+        "mae_days": 0.32356618133299264,
+        "rmse_days": 0.4773002532105348,
+        "r2_days": 0.07426943436743683,
+        "median_ae_days": 0.021047269255211276
+      },
+      "text_gain_mae_intervals": {
+        "calendar_month": {
+          "gain": 0.3235661813329911,
+          "clusters": 12,
+          "interval_95": [
+            0.24371309699621369,
+            0.3987421897251104
+          ],
+          "resamples": 1000,
+          "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+        },
+        "country": {
+          "gain": 0.3235661813329911,
+          "clusters": 37,
+          "interval_95": [
+            0.08531658018782637,
+            0.5403811265296464
+          ],
+          "resamples": 1000,
+          "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+        }
+      }
+    }
+  },
+  "runtime_seconds": 170.5188425,
+  "peak_process_memory_mib": 3778.34375,
+  "versions": {
+    "python": "3.9.6",
+    "pandas": "2.3.3",
+    "numpy": "2.0.2",
+    "sklearn": "1.6.1"
+  }
+}

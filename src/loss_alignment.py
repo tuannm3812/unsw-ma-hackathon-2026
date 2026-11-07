@@ -91,7 +91,7 @@ def _gain(base: dict, new: dict) -> dict:
             'median_ae_days': base['median_ae_days'] - new['median_ae_days']}
 
 
-def run(cache: Path, output: Path) -> dict:
+def run(cache: Path, output: Path, year: int = YEAR) -> dict:
     started = time.perf_counter()
     config = default_config()
     metadata = json.loads(cache.with_suffix('.metadata.json').read_text())
@@ -99,7 +99,7 @@ def run(cache: Path, output: Path) -> dict:
     if cache_sha != metadata['cache_sha256']:
         raise ValueError('feature cache does not match its metadata')
     frame = pd.read_pickle(cache)
-    train, test = calendar_split(frame, YEAR)
+    train, test = calendar_split(frame, year)
     yd_train = frame.iloc[train]['funding_speed_days'].to_numpy(dtype=float)
     yd = frame.iloc[test]['funding_speed_days'].to_numpy(dtype=float)
     ylog_train = np.log1p(yd_train)
@@ -156,7 +156,7 @@ def run(cache: Path, output: Path) -> dict:
         'schema_version': 'loss_alignment_2025.v1',
         'status': 'separate retrospective extension; aggregates only',
         'generated_at_utc': datetime.now(timezone.utc).isoformat(),
-        'year': YEAR, 'train_rows': len(train), 'test_rows': len(test),
+        'year': year, 'train_rows': len(train), 'test_rows': len(test),
         'configuration': {'seed': config['seed'], 'ridge': 'alpha=10, lsqr, tol=1e-5, max_iter=1000',
                           'max_text_features': config['max_text_features'], 'min_df': config['min_df'],
                           'threads': config['threads'], 'evaluation_dependent_tuning': False},
@@ -166,7 +166,8 @@ def run(cache: Path, output: Path) -> dict:
         'versions': {'python': platform.python_version(), 'pandas': pd.__version__,
                      'numpy': np.__version__, 'sklearn': sklearn.__version__}}
     output.mkdir(parents=True, exist_ok=True)
-    (output / 'loss_alignment.json').write_text(json.dumps(result, indent=2, allow_nan=False) + '\n')
+    name = 'loss_alignment.json' if year == YEAR else f'loss_alignment_{year}.json'
+    (output / name).write_text(json.dumps(result, indent=2, allow_nan=False) + '\n')
     return result
 
 
@@ -175,8 +176,9 @@ def main(argv=None) -> int:
     parser.add_argument('--feature-cache', type=Path,
                         default=Path('reports/text_benchmark_private/features.pkl'))
     parser.add_argument('--output-dir', type=Path, default=Path('reports/loss_alignment_2025'))
+    parser.add_argument('--year', type=int, default=YEAR)
     args = parser.parse_args(argv)
-    run(args.feature_cache, args.output_dir)
+    run(args.feature_cache, args.output_dir, args.year)
     return 0
 
 

@@ -59,7 +59,7 @@ probabilities a little better calibrated, but it slightly worsens how well the
 model orders loans from fastest to slowest.
 
 **2025 loss-alignment check (2026-11-08).** The negative day-space R² comes from the
-back-transform, through over-prediction rather than undershoot of long waits. The same
+back-transform. In 2025 that works through over-prediction rather than undershoot of long waits. The same
 linear fits score R² 0.330 and 0.433 in log space, and Ridge on raw days
 scores 0.165 and 0.296 in day space. After exponentiating,
 69%–75% of squared error is over-prediction, and predictions reach
@@ -69,6 +69,15 @@ Text lowers MAE under every target, but the size depends on the estimator: 0.26 
 estimator and 1.13 on raw days, which has a weaker baseline (MAE 8.14). With the cap, text
 slightly worsens RMSE. See the [check](../reports/loss_alignment_2025/README.md). Extreme
 predictions need attention before any operational use.
+
+**All five years (exploratory).** Day-space R² is negative under log1p in every year while log-space and raw-days
+R² are positive, but the mechanism varies: 2021 is mostly under-prediction, and 2022–2025 mostly over-prediction.
+In 2023, 48 records with no description reach predictions of 22,436 days; without them the 2023 gain is 0.364, not
+0.259. Capping predictions at the training maximum keeps the MAE gain positive every year (0.265–0.405) and the
+country interval excludes zero in 4 of 5 years, against 1 of 5 uncapped. So much of the country fragility comes from
+the extreme tail. The cap was chosen after seeing results and does not replace the reviewed figures above. Removing
+any one country leaves the gain positive, and over 99% of described evaluation rows use an exact template unseen in training.
+See the [check](../reports/loss_alignment_2025/README.md) and [sources](../reports/evidence_sources/README.md).
 
 Both duration families minimise squared error on log1p days and then exponentiate predictions, clipping negative days at zero. This is not generally a conditional mean-days estimate. MAE, RMSE, R² and tail errors answer different questions. No separate probability calibration model or capacity-based allocation policy was fitted.
 

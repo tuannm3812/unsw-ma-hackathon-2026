@@ -79,10 +79,43 @@ waits. The evidence shows the opposite.
 
 ## Limits
 
-One year and one model family. Retrospective, completed loans only. The cap is a
+The sections above cover 2025; the five-year section below qualifies them. One model family. Retrospective, completed loans only. The cap is a
 diagnostic, not a proposed estimator; the training maximum is a fixed, training-only
 value. Smearing assumes a residual distribution that does not vary with the predictors,
 which a skewed duration outcome is unlikely to satisfy. sklearn printed matmul
 RuntimeWarnings while computing intercepts on this machine, as in earlier reviewed runs;
 the exact reproduction above indicates they did not affect the results. This run has no
 independent review. None of it measures what editing a description does.
+
+## All five years (added 2026-11-08)
+
+`python -m src.loss_alignment --year YEAR` for 2021–2024 (`loss_alignment_YEAR.json`), same protocol. The log1p
+rows reproduce the benchmark's MAE in every year. Each cell is S → S+M+L+R unless noted.
+
+| Year | Day-space R², log1p | Log-space R² | R², raw days | R², capped | Squared error from over-prediction | Largest prediction, S+M+L+R (days) | Observed maximum (days) |
+| --- | --- | --- | --- | --- | --- | ---: | ---: |
+| 2021 | −0.094 → −0.101 | 0.350 → 0.399 | 0.336 → 0.342 | 0.008 → 0.082 | 31.8% → 38.2% | 1,339 | 86.9 |
+| 2022 | −0.299 → −0.179 | 0.378 → 0.409 | 0.310 → 0.346 | 0.058 → 0.151 | 57.3% → 56.0% | 832 | 78.8 |
+| 2023 | −13.616 → −25.404 | 0.475 → 0.515 | 0.376 → 0.438 | 0.193 → 0.229 | 97.0% → 98.2% | 22,436 | 139.0 |
+| 2024 | −0.929 → −0.437 | 0.459 → 0.550 | 0.376 → 0.488 | 0.242 → 0.266 | 77.3% → 67.1% | 3,400 | 173.4 |
+| 2025 | −0.419 → −0.315 | 0.330 → 0.433 | 0.165 → 0.296 | −0.079 → −0.099 | 74.7% → 69.0% | 714 | 79.5 |
+
+| Year | MAE text gain, log1p | Country 95% | MAE text gain, capped | Country 95% | RMSE text gain, capped | MAE text gain, raw days |
+| --- | ---: | --- | ---: | --- | ---: | ---: |
+| 2021 | 0.293 | [−0.042, 0.543] | 0.324 | [0.085, 0.540] | 0.477 | 0.018 |
+| 2022 | 0.372 | [0.101, 0.847] | 0.377 | [0.116, 0.810] | 0.634 | 0.379 |
+| 2023 | 0.259 | [−0.056, 0.726] | 0.277 | [0.027, 0.738] | 0.261 | 0.745 |
+| 2024 | 0.389 | [−0.061, 0.892] | 0.405 | [0.081, 0.862] | 0.175 | 1.424 |
+| 2025 | 0.260 | [−0.180, 0.565] | 0.265 | [−0.123, 0.580] | −0.098 | 1.130 |
+
+**This corrects the 2025 reading in one respect.** Over-prediction dominates in 2022–2025, but not in 2021,
+when only 31.8% and 38.2% of squared error is over-prediction: evaluation waits averaged 11.37 days against a
+training mean of 7.84. So "the back-transform over-predicts" is not a general mechanism. What holds in
+all five years is that log-space R² is positive, raw-days R² is positive, and exponentiated day-space R² is negative.
+
+**The extreme tail is much of the country fragility.** Uncapped, the country interval includes zero in 4 of 5
+years. Capped, it includes zero in 1 of 5, and the MAE gain stays positive every year (0.265–0.405). The cap uses
+only a training quantity, but it was chosen after seeing these results, so it is an exploratory diagnostic. It
+does not replace the reviewed benchmark figures.
+
+Raw-days gains vary too widely (0.018 to 1.424 days) to quote as a stable text effect.

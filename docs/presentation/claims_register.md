@@ -89,6 +89,21 @@ Separate extension of the November benchmark; S → S+M+L+R; `reports/loss_align
 | Share of squared error from over-prediction | 74.7% → 69.0% | November extension |
 | Largest prediction, observed 2025 maximum | 1,394 → 714 days; 79.5 days | November extension |
 
+## Exploratory checks, 2026-11-08
+
+Chosen after results were known. `reports/evidence_sources/README.md`; `reports/loss_alignment_2025/README.md`.
+
+| Claim | Value | Layer |
+| --- | --- | --- |
+| Effective countries, all records | 5.7 of 48; 10 countries hold 80% of records | Descriptive |
+| Effective countries, term users | urgency 7.1; first person 11.3 | Descriptive |
+| Equivalence screen at t(4) | 21 of 23 bounded results hold; all five duration verdicts hold | Equivalence, heuristic |
+| 2023 gain without 48 records with no description | 0.364 days (0.259 all records); largest prediction 22,436 days | November extension |
+| Capped MAE gain, all years | 0.324, 0.377, 0.277, 0.405, 0.265 days (2021–2025) | November extension, diagnostic |
+| Country interval includes zero | uncapped 4 of 5; capped 1 of 5 | November extension, diagnostic |
+| Described rows with unseen exact template | at least 99.2% each year (96.0% of all rows in 2021) | November extension |
+| Leave-one-country-out gain | positive in every year; lowest 0.155 days | November extension |
+
 ## Exploratory topics
 
 | Claim | Value | Source | Layer |

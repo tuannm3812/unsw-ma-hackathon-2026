@@ -1,0 +1,1148 @@
+{
+  "schema_version": "evidence_sources.v1",
+  "status": "exploratory aggregates only",
+  "gain_sources": [
+    {
+      "year": 2021,
+      "gain_days": 0.2926329213295453,
+      "rows": 163166,
+      "countries_with_saved_slice": 30,
+      "rows_in_saved_slices": 162926,
+      "countries_with_positive_gain": 21,
+      "share_rows_in_positive_countries": 0.8416704460488091,
+      "largest_country_contributions": [
+        {
+          "group": "PH",
+          "rows": 66303,
+          "gain_days": 0.33737089857037184,
+          "gain_total_days": 22368.702687911366,
+          "share_of_total_gain": 0.46847664767528163
+        },
+        {
+          "group": "KE",
+          "rows": 36458,
+          "gain_days": 0.36003452161372707,
+          "gain_total_days": 13126.13858899326,
+          "share_of_total_gain": 0.27490594733578144
+        },
+        {
+          "group": "KH",
+          "rows": 3019,
+          "gain_days": 1.7452231303317394,
+          "gain_total_days": 5268.828630471521,
+          "share_of_total_gain": 0.11034717607082284
+        },
+        {
+          "group": "PK",
+          "rows": 1123,
+          "gain_days": 4.422532114570968,
+          "gain_total_days": 4966.503564663197,
+          "share_of_total_gain": 0.10401546183088015
+        },
+        {
+          "group": "PS",
+          "rows": 1466,
+          "gain_days": 3.309204898600928,
+          "gain_total_days": 4851.294381348961,
+          "share_of_total_gain": 0.10160259002809882
+        }
+      ],
+      "largest_country_losses": [
+        {
+          "group": "KG",
+          "rows": 3654,
+          "gain_days": -0.6434639307709737,
+          "gain_total_days": -2351.217203037138
+        },
+        {
+          "group": "NG",
+          "rows": 1322,
+          "gain_days": -1.8107721806724886,
+          "gain_total_days": -2393.84082284903
+        },
+        {
+          "group": "TJ",
+          "rows": 9522,
+          "gain_days": -1.200503327425528,
+          "gain_total_days": -11431.192683745876
+        }
+      ],
+      "leave_one_country_out_min": 0.26200964820153444,
+      "leave_one_country_out_max": 0.3851691958384478,
+      "template_novelty": [
+        {
+          "group": "unseen",
+          "rows": 156613,
+          "gain_days": 0.30246051183203004,
+          "gain_total_days": 47369.24813954972
+        },
+        {
+          "group": "missing",
+          "rows": 6231,
+          "gain_days": 0.05148772911071564,
+          "gain_total_days": 320.8200400888692
+        },
+        {
+          "group": "seen",
+          "rows": 322,
+          "gain_days": 0.17911509943523285,
+          "gain_total_days": 57.67506201814498
+        }
+      ],
+      "description_missing": [
+        {
+          "group": "0.0",
+          "rows": 156935,
+          "gain_days": 0.3022074311120386,
+          "gain_total_days": 47426.923201567784
+        },
+        {
+          "group": "1.0",
+          "rows": 6231,
+          "gain_days": 0.05148772911071564,
+          "gain_total_days": 320.8200400888692
+        }
+      ],
+      "duration_band": [
+        {
+          "group": "over 30 days",
+          "rows": 11225,
+          "gain_days": 0.2764077772387026,
+          "gain_total_days": 3102.6772995044366
+        },
+        {
+          "group": "0\u20131 days",
+          "rows": 46814,
+          "gain_days": -0.11360081979973069,
+          "gain_total_days": -5318.108778104593
+        },
+        {
+          "group": "3\u20137 days",
+          "rows": 19636,
+          "gain_days": 0.3773768589154596,
+          "gain_total_days": 7410.172001663965
+        },
+        {
+          "group": "1\u20133 days",
+          "rows": 22573,
+          "gain_days": -0.025583330455155373,
+          "gain_total_days": -577.4925183642223
+        },
+        {
+          "group": "7\u201330 days",
+          "rows": 62918,
+          "gain_days": 0.6855032778689303,
+          "gain_total_days": 43130.49523695736
+        }
+      ]
+    },
+    {
+      "year": 2022,
+      "gain_days": 0.37249962497178757,
+      "rows": 143354,
+      "countries_with_saved_slice": 29,
+      "rows_in_saved_slices": 142942,
+      "countries_with_positive_gain": 23,
+      "share_rows_in_positive_countries": 0.5392036497063214,
+      "largest_country_contributions": [
+        {
+          "group": "KE",
+          "rows": 28937,
+          "gain_days": 0.749301804240261,
+          "gain_total_days": 21682.546309300433,
+          "share_of_total_gain": 0.4060454302973707
+        },
+        {
+          "group": "KH",
+          "rows": 4213,
+          "gain_days": 2.74767707743335,
+          "gain_total_days": 11575.963527226702,
+          "share_of_total_gain": 0.21678113928451648
+        },
+        {
+          "group": "PS",
+          "rows": 1234,
+          "gain_days": 5.22866769327246,
+          "gain_total_days": 6452.175933498215,
+          "share_of_total_gain": 0.12082882314185868
+        },
+        {
+          "group": "NI",
+          "rows": 4699,
+          "gain_days": 0.6872710414849639,
+          "gain_total_days": 3229.4866239378453,
+          "share_of_total_gain": 0.060478057657553506
+        },
+        {
+          "group": "UG",
+          "rows": 5982,
+          "gain_days": 0.3734987417435036,
+          "gain_total_days": 2234.2694731096385,
+          "share_of_total_gain": 0.04184079197469282
+        }
+      ],
+      "largest_country_losses": [
+        {
+          "group": "NG",
+          "rows": 288,
+          "gain_days": -0.8821247860488057,
+          "gain_total_days": -254.05193838205605
+        },
+        {
+          "group": "TG",
+          "rows": 3302,
+          "gain_days": -0.08040335582461555,
+          "gain_total_days": -265.4918809328806
+        },
+        {
+          "group": "TJ",
+          "rows": 6594,
+          "gain_days": -0.4276691306656204,
+          "gain_total_days": -2820.050247609101
+        }
+      ],
+      "leave_one_country_out_min": 0.2772032558877195,
+      "leave_one_country_out_max": 0.5859149481445515,
+      "template_novelty": [
+        {
+          "group": "unseen",
+          "rows": 139444,
+          "gain_days": 0.3787037427447384,
+          "gain_total_days": 52807.9647032973
+        },
+        {
+          "group": "missing",
+          "rows": 3360,
+          "gain_days": 0.15874173474551156,
+          "gain_total_days": 533.3722287449189
+        },
+        {
+          "group": "seen",
+          "rows": 550,
+          "gain_days": 0.10540782938764615,
+          "gain_total_days": 57.974306163205384
+        }
+      ],
+      "description_missing": [
+        {
+          "group": "0.0",
+          "rows": 139994,
+          "gain_days": 0.3776300342118972,
+          "gain_total_days": 52865.93900946034
+        },
+        {
+          "group": "1.0",
+          "rows": 3360,
+          "gain_days": 0.15874173474551156,
+          "gain_total_days": 533.3722287449189
+        }
+      ],
+      "duration_band": [
+        {
+          "group": "3\u20137 days",
+          "rows": 17667,
+          "gain_days": 0.5266133934644923,
+          "gain_total_days": 9303.678822337186
+        },
+        {
+          "group": "0\u20131 days",
+          "rows": 42811,
+          "gain_days": 0.20160075417956014,
+          "gain_total_days": 8630.729887181149
+        },
+        {
+          "group": "over 30 days",
+          "rows": 26667,
+          "gain_days": 0.6383781719112989,
+          "gain_total_days": 17023.630710358608
+        },
+        {
+          "group": "7\u201330 days",
+          "rows": 36004,
+          "gain_days": 0.3357212180624831,
+          "gain_total_days": 12087.306735121641
+        },
+        {
+          "group": "1\u20133 days",
+          "rows": 20205,
+          "gain_days": 0.3144748865729632,
+          "gain_total_days": 6353.965083206721
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "gain_days": 0.25947434649312573,
+      "rows": 143233,
+      "countries_with_saved_slice": 28,
+      "rows_in_saved_slices": 142520,
+      "countries_with_positive_gain": 18,
+      "share_rows_in_positive_countries": 0.5313649787409326,
+      "largest_country_contributions": [
+        {
+          "group": "KE",
+          "rows": 29929,
+          "gain_days": 0.6543932695833972,
+          "gain_total_days": 19585.336165361492,
+          "share_of_total_gain": 0.526979250122723
+        },
+        {
+          "group": "PK",
+          "rows": 2161,
+          "gain_days": 6.298519266070261,
+          "gain_total_days": 13611.100133977834,
+          "share_of_total_gain": 0.36623151532291015
+        },
+        {
+          "group": "KH",
+          "rows": 3527,
+          "gain_days": 0.8457413316556508,
+          "gain_total_days": 2982.92967674948,
+          "share_of_total_gain": 0.08026117248895553
+        },
+        {
+          "group": "UG",
+          "rows": 6960,
+          "gain_days": 0.35896118662615173,
+          "gain_total_days": 2498.3698589180162,
+          "share_of_total_gain": 0.06722320534433006
+        },
+        {
+          "group": "PS",
+          "rows": 1104,
+          "gain_days": 2.0801402510877,
+          "gain_total_days": 2296.4748372008207,
+          "share_of_total_gain": 0.0617908509415393
+        }
+      ],
+      "largest_country_losses": [
+        {
+          "group": "PH",
+          "rows": 48437,
+          "gain_days": -0.017832629607077877,
+          "gain_total_days": -863.7590802780311
+        },
+        {
+          "group": "CD",
+          "rows": 1328,
+          "gain_days": -0.8176210323344097,
+          "gain_total_days": -1085.8007309400962
+        },
+        {
+          "group": "TJ",
+          "rows": 7171,
+          "gain_days": -1.3350885023273484,
+          "gain_total_days": -9573.919650189415
+        }
+      ],
+      "leave_one_country_out_min": 0.15515738990581432,
+      "leave_one_country_out_max": 0.4011672238441275,
+      "template_novelty": [
+        {
+          "group": "unseen",
+          "rows": 142920,
+          "gain_days": 0.3645403317450677,
+          "gain_total_days": 52100.10421300508
+        },
+        {
+          "group": "seen",
+          "rows": 265,
+          "gain_days": 0.2373755476788766,
+          "gain_total_days": 62.9045201349023
+        }
+      ],
+      "description_missing": [
+        {
+          "group": "0.0",
+          "rows": 143185,
+          "gain_days": 0.36430498120012356,
+          "gain_total_days": 52163.00873313969
+        }
+      ],
+      "duration_band": [
+        {
+          "group": "0\u20131 days",
+          "rows": 39334,
+          "gain_days": 0.6957247977518195,
+          "gain_total_days": 27365.63919477007
+        },
+        {
+          "group": "7\u201330 days",
+          "rows": 38544,
+          "gain_days": -0.04973321924980745,
+          "gain_total_days": -1916.9172027645782
+        },
+        {
+          "group": "over 30 days",
+          "rows": 26895,
+          "gain_days": -0.6117299572273254,
+          "gain_total_days": -16452.477199628916
+        },
+        {
+          "group": "1\u20133 days",
+          "rows": 19400,
+          "gain_days": 0.6438154006221648,
+          "gain_total_days": 12490.018772069998
+        },
+        {
+          "group": "3\u20137 days",
+          "rows": 19060,
+          "gain_days": 0.822614139916233,
+          "gain_total_days": 15679.0255068034
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "gain_days": 0.38883107337292433,
+      "rows": 141725,
+      "countries_with_saved_slice": 27,
+      "rows_in_saved_slices": 141018,
+      "countries_with_positive_gain": 22,
+      "share_rows_in_positive_countries": 0.9176927147645088,
+      "largest_country_contributions": [
+        {
+          "group": "KE",
+          "rows": 27298,
+          "gain_days": 1.3320586417175537,
+          "gain_total_days": 36362.536801605784,
+          "share_of_total_gain": 0.6598523138131182
+        },
+        {
+          "group": "PH",
+          "rows": 53910,
+          "gain_days": 0.2045691605894575,
+          "gain_total_days": 11028.323447377654,
+          "share_of_total_gain": 0.2001253318473163
+        },
+        {
+          "group": "PK",
+          "rows": 4689,
+          "gain_days": 0.8474146849698156,
+          "gain_total_days": 3973.5274578234657,
+          "share_of_total_gain": 0.0721055657186433
+        },
+        {
+          "group": "UG",
+          "rows": 6889,
+          "gain_days": 0.4714378668429031,
+          "gain_total_days": 3247.7354646807594,
+          "share_of_total_gain": 0.05893499050175962
+        },
+        {
+          "group": "TG",
+          "rows": 3288,
+          "gain_days": 0.6166907671894375,
+          "gain_total_days": 2027.6792425188705,
+          "share_of_total_gain": 0.036795255709107244
+        }
+      ],
+      "largest_country_losses": [
+        {
+          "group": "TZ",
+          "rows": 343,
+          "gain_days": -0.4600984272018209,
+          "gain_total_days": -157.81376053022458
+        },
+        {
+          "group": "SN",
+          "rows": 3411,
+          "gain_days": -0.6764787232842444,
+          "gain_total_days": -2307.4689251225577
+        },
+        {
+          "group": "TJ",
+          "rows": 6235,
+          "gain_days": -1.684669568002942,
+          "gain_total_days": -10503.914756498343
+        }
+      ],
+      "leave_one_country_out_min": 0.1638122739578239,
+      "leave_one_country_out_max": 0.5019502411478682,
+      "template_novelty": [
+        {
+          "group": "unseen",
+          "rows": 141479,
+          "gain_days": 0.3882985772244343,
+          "gain_total_days": 54936.09440713574
+        },
+        {
+          "group": "seen",
+          "rows": 227,
+          "gain_days": 0.7585508023297072,
+          "gain_total_days": 172.19103212884352
+        }
+      ],
+      "description_missing": [
+        {
+          "group": "0.0",
+          "rows": 141706,
+          "gain_days": 0.38889168729104107,
+          "gain_total_days": 55108.28543926426
+        }
+      ],
+      "duration_band": [
+        {
+          "group": "7\u201330 days",
+          "rows": 34848,
+          "gain_days": -0.5042436687353762,
+          "gain_total_days": -17571.883368090388
+        },
+        {
+          "group": "1\u20133 days",
+          "rows": 22900,
+          "gain_days": 1.3531664834177248,
+          "gain_total_days": 30987.512470265898
+        },
+        {
+          "group": "over 30 days",
+          "rows": 25762,
+          "gain_days": -0.7448843934016196,
+          "gain_total_days": -19189.711742812524
+        },
+        {
+          "group": "0\u20131 days",
+          "rows": 38964,
+          "gain_days": 0.9969684790967457,
+          "gain_total_days": 38845.8798195256
+        },
+        {
+          "group": "3\u20137 days",
+          "rows": 19251,
+          "gain_days": 1.1446307565783238,
+          "gain_total_days": 22035.286694889313
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "gain_days": 0.25971464872389305,
+      "rows": 137162,
+      "countries_with_saved_slice": 24,
+      "rows_in_saved_slices": 136501,
+      "countries_with_positive_gain": 11,
+      "share_rows_in_positive_countries": 0.7625216896808154,
+      "largest_country_contributions": [
+        {
+          "group": "PH",
+          "rows": 54485,
+          "gain_days": 0.3324274747403999,
+          "gain_total_days": 18112.31096123069,
+          "share_of_total_gain": 0.5084445667269569
+        },
+        {
+          "group": "PK",
+          "rows": 4630,
+          "gain_days": 2.8430935728559676,
+          "gain_total_days": 13163.52324232313,
+          "share_of_total_gain": 0.3695233527002367
+        },
+        {
+          "group": "KE",
+          "rows": 27273,
+          "gain_days": 0.4549409831097009,
+          "gain_total_days": 12407.605432350872,
+          "share_of_total_gain": 0.34830340433499396
+        },
+        {
+          "group": "PS",
+          "rows": 626,
+          "gain_days": 3.0662498154696465,
+          "gain_total_days": 1919.4723844839987,
+          "share_of_total_gain": 0.05388298086104702
+        },
+        {
+          "group": "NG",
+          "rows": 606,
+          "gain_days": 2.201178346451422,
+          "gain_total_days": 1333.9140779495617,
+          "share_of_total_gain": 0.03744532472227219
+        }
+      ],
+      "largest_country_losses": [
+        {
+          "group": "LR",
+          "rows": 4205,
+          "gain_days": -0.5038803928607929,
+          "gain_total_days": -2118.817051979634
+        },
+        {
+          "group": "TJ",
+          "rows": 4260,
+          "gain_days": -1.2028626744015334,
+          "gain_total_days": -5124.194992950533
+        },
+        {
+          "group": "SN",
+          "rows": 3254,
+          "gain_days": -1.9107986929840717,
+          "gain_total_days": -6217.738946970169
+        }
+      ],
+      "leave_one_country_out_min": 0.16946441165864462,
+      "leave_one_country_out_max": 0.3124586999674163,
+      "template_novelty": [
+        {
+          "group": "unseen",
+          "rows": 136109,
+          "gain_days": 0.25765434816372945,
+          "gain_total_days": 35069.07567421705
+        },
+        {
+          "group": "seen",
+          "rows": 1048,
+          "gain_days": 0.5556035221263249,
+          "gain_total_days": 582.2724911883885
+        }
+      ],
+      "description_missing": [
+        {
+          "group": "0.0",
+          "rows": 137157,
+          "gain_days": 0.25993094166105646,
+          "gain_total_days": 35651.34816540552
+        }
+      ],
+      "duration_band": [
+        {
+          "group": "7\u201330 days",
+          "rows": 35327,
+          "gain_days": -0.8630516077938823,
+          "gain_total_days": -30489.02414853448
+        },
+        {
+          "group": "0\u20131 days",
+          "rows": 48502,
+          "gain_days": 0.7538783776137552,
+          "gain_total_days": 36564.60907102236
+        },
+        {
+          "group": "over 30 days",
+          "rows": 11984,
+          "gain_days": -1.208721101680677,
+          "gain_total_days": -14485.313682541233
+        },
+        {
+          "group": "1\u20133 days",
+          "rows": 23609,
+          "gain_days": 1.1345740786407772,
+          "gain_total_days": 26786.15942263011
+        },
+        {
+          "group": "3\u20137 days",
+          "rows": 17740,
+          "gain_days": 0.972184328392899,
+          "gain_total_days": 17246.549985690028
+        }
+      ]
+    }
+  ],
+  "described_only_gains": [
+    {
+      "year": 2021,
+      "rows": 163166,
+      "rows_no_description": 6231,
+      "gain_all_records": 0.29263292132954616,
+      "gain_described_records": 0.3022074311120392,
+      "largest_prediction_no_description": 1339.3185826251356,
+      "largest_prediction_all": 1339.3185826251356
+    },
+    {
+      "year": 2022,
+      "rows": 143354,
+      "rows_no_description": 3360,
+      "gain_all_records": 0.37249962497178596,
+      "gain_described_records": 0.3776300342118982,
+      "largest_prediction_no_description": 142.73260096980283,
+      "largest_prediction_all": 832.116090265664
+    },
+    {
+      "year": 2023,
+      "rows": 143233,
+      "rows_no_description": 48,
+      "gain_all_records": 0.25947434649312545,
+      "gain_described_records": 0.3643049812001244,
+      "largest_prediction_no_description": 22435.72830835475,
+      "largest_prediction_all": 22435.72830835475
+    },
+    {
+      "year": 2024,
+      "rows": 141725,
+      "rows_no_description": 19,
+      "gain_all_records": 0.38883107337292594,
+      "gain_described_records": 0.3888916872910427,
+      "largest_prediction_no_description": 51.76301845898861,
+      "largest_prediction_all": 3400.2487627380915
+    },
+    {
+      "year": 2025,
+      "rows": 137162,
+      "rows_no_description": 5,
+      "gain_all_records": 0.25971464872389366,
+      "gain_described_records": 0.25993094166105596,
+      "largest_prediction_no_description": 29.594317091336,
+      "largest_prediction_all": 713.9258568738513
+    }
+  ],
+  "term_concentration": {
+    "population": "eligible completed durations",
+    "countries": 48,
+    "effective_countries_all_records": 5.743847719086985,
+    "countries_for_80pct_of_records": 10,
+    "terms": {
+      "urgency_mentions_per_100_words": {
+        "records_using_term": 18949,
+        "countries_using_term": 39,
+        "effective_countries": 7.143041461555858,
+        "countries_for_80pct_of_users": 7,
+        "top_country_share": 0.2703045015568104,
+        "top_five_countries": {
+          "KE": 0.2703045015568104,
+          "CD": 0.18343975935405563,
+          "TJ": 0.11420127711224867,
+          "PK": 0.0897672700406354,
+          "PH": 0.07984590215842524
+        },
+        "median_country_use_rate": 0.007836990595611285
+      },
+      "first_person_mentions_per_100_words": {
+        "records_using_term": 14782,
+        "countries_using_term": 42,
+        "effective_countries": 11.29289324712372,
+        "countries_for_80pct_of_users": 11,
+        "top_country_share": 0.15403869571099987,
+        "top_five_countries": {
+          "KE": 0.15403869571099987,
+          "PS": 0.15099445271275877,
+          "GH": 0.1457854146935462,
+          "KH": 0.08280340955215804,
+          "ZW": 0.05811121634420241
+        },
+        "median_country_use_rate": 0.00853534155105426
+      },
+      "gratitude_mentions_per_100_words": {
+        "records_using_term": 284683,
+        "countries_using_term": 43,
+        "effective_countries": 11.275033711889979,
+        "countries_for_80pct_of_users": 11,
+        "top_country_share": 0.21781420035618565,
+        "top_five_countries": {
+          "KE": 0.21781420035618565,
+          "LR": 0.09913482715862908,
+          "SL": 0.0650723787511021,
+          "UG": 0.06423636114555488,
+          "PK": 0.0621252410575974
+        },
+        "median_country_use_rate": 0.20463215258855585
+      },
+      "agency_mentions_per_100_words": {
+        "records_using_term": 786977,
+        "countries_using_term": 45,
+        "effective_countries": 5.989217224718544,
+        "countries_for_80pct_of_users": 10,
+        "top_country_share": 0.344210821917286,
+        "top_five_countries": {
+          "PH": 0.344210821917286,
+          "KE": 0.19116187639537116,
+          "UG": 0.05110187464182562,
+          "TJ": 0.04671292807794891,
+          "MG": 0.036403859324986625
+        },
+        "median_country_use_rate": 0.5643715158199594
+      },
+      "family_mentions_per_100_words": {
+        "records_using_term": 1289969,
+        "countries_using_term": 45,
+        "effective_countries": 5.757775594378135,
+        "countries_for_80pct_of_users": 10,
+        "top_country_share": 0.3590357597740721,
+        "top_five_countries": {
+          "PH": 0.3590357597740721,
+          "KE": 0.1810407847010277,
+          "TJ": 0.04934537186552545,
+          "UG": 0.04874690787142947,
+          "KH": 0.04394446688253749
+        },
+        "median_country_use_rate": 0.9258362478701462
+      },
+      "third_person_mentions_per_100_words": {
+        "records_using_term": 1414331,
+        "countries_using_term": 47,
+        "effective_countries": 5.898092855824025,
+        "countries_for_80pct_of_users": 10,
+        "top_country_share": 0.3491438708477718,
+        "top_five_countries": {
+          "PH": 0.3491438708477718,
+          "KE": 0.1881730655695166,
+          "UG": 0.049134891337317785,
+          "TJ": 0.04863005901730217,
+          "KH": 0.040899195450004276
+        },
+        "median_country_use_rate": 0.9977315472857533
+      }
+    }
+  },
+  "few_cluster_df": 4,
+  "few_cluster_screen": [
+    {
+      "specification": "expanded",
+      "outcome": "log_funding_speed",
+      "feature": "family_mentions_per_100_words",
+      "ci90_low": -0.0032025474737381304,
+      "ci90_high": 0.02247884027782858,
+      "p_tost_bh": 0.0038708936617999345,
+      "bounded": true,
+      "bounded_at_t47": true
+    },
+    {
+      "specification": "expanded",
+      "outcome": "log_funding_speed",
+      "feature": "basic_needs_mentions_per_100_words",
+      "ci90_low": -0.02471203972035753,
+      "ci90_high": 0.028985051057884507,
+      "p_tost_bh": 0.017186044918164767,
+      "bounded": true,
+      "bounded_at_t47": true
+    },
+    {
+      "specification": "expanded",
+      "outcome": "log_funding_speed",
+      "feature": "business_mentions_per_100_words",
+      "ci90_low": -0.005851633351148281,
+      "ci90_high": 0.02381824103722232,
+      "p_tost_bh": 0.00466146650279213,
+      "bounded": true,
+      "bounded_at_t47": true
+    },
+    {
+      "specification": "expanded",
+      "outcome": "log_funding_speed",
+      "feature": "agency_mentions_per_100_words",
+      "ci90_low": -0.00467396065510286,
+      "ci90_high": 0.01306029369888421,
+      "p_tost_bh": 0.0008693965500779222,
+      "bounded": true,
+      "bounded_at_t47": true
+    },
+    {
+      "specification": "expanded",
+      "outcome": "log_funding_speed",
+      "feature": "gratitude_mentions_per_100_words",
+      "ci90_low": -0.0934661678641722,
+      "ci90_high": 0.12605379823985421,
+      "p_tost_bh": 0.3525528482698797,
+      "bounded": false,
+      "bounded_at_t47": false
+    },
+    {
+      "specification": "expanded",
+      "outcome": "log_funding_speed",
+      "feature": "urgency_mentions_per_100_words",
+      "ci90_low": -0.14695458086396185,
+      "ci90_high": 0.05050020894618223,
+      "p_tost_bh": 0.546355197867063,
+      "bounded": false,
+      "bounded_at_t47": false
+    },
+    {
+      "specification": "expanded",
+      "outcome": "log_funding_speed",
+      "feature": "first_person_mentions_per_100_words",
+      "ci90_low": -0.162236363754653,
+      "ci90_high": 0.01757754798152178,
+      "p_tost_bh": 0.6877482698999902,
+      "bounded": false,
+      "bounded_at_t47": false
+    },
+    {
+      "specification": "expanded",
+      "outcome": "log_funding_speed",
+      "feature": "third_person_mentions_per_100_words",
+      "ci90_low": -0.0141209271556394,
+      "ci90_high": -0.003895321706538701,
+      "p_tost_bh": 0.0003092705418921149,
+      "bounded": true,
+      "bounded_at_t47": true
+    },
+    {
+      "specification": "expanded",
+      "outcome": "log_funding_speed",
+      "feature": "desc_sentiment_compound",
+      "ci90_low": -0.004045589897816618,
+      "ci90_high": 0.05851595346855715,
+      "p_tost_bh": 0.1468013626359891,
+      "bounded": false,
+      "bounded_at_t47": false
+    },
+    {
+      "specification": "expanded",
+      "outcome": "funded_within_24h",
+      "feature": "family_mentions_per_100_words",
+      "ci90_low": -0.006210325466981066,
+      "ci90_high": 0.0016541148775394404,
+      "p_tost_bh": 0.015577307214594494,
+      "bounded": true,
+      "bounded_at_t47": true
+    },
+    {
+      "specification": "expanded",
+      "outcome": "funded_within_24h",
+      "feature": "basic_needs_mentions_per_100_words",
+      "ci90_low": -0.007320442295838386,
+      "ci90_high": 0.005669963810660481,
+      "p_tost_bh": 0.03554883856233304,
+      "bounded": true,
+      "bounded_at_t47": true
+    },
+    {
+      "specification": "expanded",
+      "outcome": "funded_within_24h",
+      "feature": "business_mentions_per_100_words",
+      "ci90_low": -0.0067195421672900935,
+      "ci90_high": -0.0004287539560016069,
+      "p_tost_bh": 0.015577307214594494,
+      "bounded": true,
+      "bounded_at_t47": true
+    },
+    {
+      "specification": "expanded",
+      "outcome": "funded_within_24h",
+      "feature": "agency_mentions_per_100_words",
+      "ci90_low": -0.0011560787195863903,
+      "ci90_high": 0.004903691358778164,
+      "p_tost_bh": 0.010416279787542976,
+      "bounded": true,
+      "bounded_at_t47": true
+    },
+    {
+      "specification": "expanded",
+      "outcome": "funded_within_24h",
+      "feature": "gratitude_mentions_per_100_words",
+      "ci90_low": -0.03419134922370146,
+      "ci90_high": 0.029509406525301835,
+      "p_tost_bh": 0.4083503478303695,
+      "bounded": false,
+      "bounded_at_t47": false
+    },
+    {
+      "specification": "expanded",
+      "outcome": "funded_within_24h",
+      "feature": "urgency_mentions_per_100_words",
+      "ci90_low": -0.010119715858536413,
+      "ci90_high": 0.06701197679018346,
+      "p_tost_bh": 0.8172298981527697,
+      "bounded": false,
+      "bounded_at_t47": false
+    },
+    {
+      "specification": "expanded",
+      "outcome": "funded_within_24h",
+      "feature": "first_person_mentions_per_100_words",
+      "ci90_low": -0.007005525313663455,
+      "ci90_high": 0.04765743131003929,
+      "p_tost_bh": 0.8172298981527697,
+      "bounded": false,
+      "bounded_at_t47": false
+    },
+    {
+      "specification": "expanded",
+      "outcome": "funded_within_24h",
+      "feature": "third_person_mentions_per_100_words",
+      "ci90_low": 2.7229422507318987e-05,
+      "ci90_high": 0.0029758522998409778,
+      "p_tost_bh": 0.0011334507941383465,
+      "bounded": true,
+      "bounded_at_t47": true
+    },
+    {
+      "specification": "expanded",
+      "outcome": "funded_within_24h",
+      "feature": "desc_sentiment_compound",
+      "ci90_low": -0.016033416797136137,
+      "ci90_high": 0.0030191443983075914,
+      "p_tost_bh": 0.3585724808696665,
+      "bounded": false,
+      "bounded_at_t47": false
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "log_funding_speed",
+      "feature": "family_mentions_per_100_words",
+      "ci90_low": -0.0023147821605427697,
+      "ci90_high": 0.02118473179334439,
+      "p_tost_bh": 0.0020424169328640968,
+      "bounded": true,
+      "bounded_at_t47": true
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "log_funding_speed",
+      "feature": "basic_needs_mentions_per_100_words",
+      "ci90_low": -0.020889671013703447,
+      "ci90_high": 0.006838439595583192,
+      "p_tost_bh": 0.0024464416328595197,
+      "bounded": true,
+      "bounded_at_t47": true
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "log_funding_speed",
+      "feature": "business_mentions_per_100_words",
+      "ci90_low": -0.0018597384037859791,
+      "ci90_high": 0.012708458247117055,
+      "p_tost_bh": 0.0004483323053345867,
+      "bounded": true,
+      "bounded_at_t47": true
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "log_funding_speed",
+      "feature": "agency_mentions_per_100_words",
+      "ci90_low": -0.0034306398242513894,
+      "ci90_high": 0.014977825454633206,
+      "p_tost_bh": 0.0007679650030988916,
+      "bounded": true,
+      "bounded_at_t47": true
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "log_funding_speed",
+      "feature": "gratitude_mentions_per_100_words",
+      "ci90_low": -0.010612244575700308,
+      "ci90_high": 0.03994584293013152,
+      "p_tost_bh": 0.02619602266442239,
+      "bounded": true,
+      "bounded_at_t47": true
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "log_funding_speed",
+      "feature": "urgency_mentions_per_100_words",
+      "ci90_low": -0.08197938245006885,
+      "ci90_high": 0.07411881778336675,
+      "p_tost_bh": 0.15564616537706757,
+      "bounded": false,
+      "bounded_at_t47": false
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "log_funding_speed",
+      "feature": "first_person_mentions_per_100_words",
+      "ci90_low": -0.08279632940601708,
+      "ci90_high": 0.10234480654972386,
+      "p_tost_bh": 0.20334181475514485,
+      "bounded": false,
+      "bounded_at_t47": false
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "log_funding_speed",
+      "feature": "third_person_mentions_per_100_words",
+      "ci90_low": -0.01351628246427538,
+      "ci90_high": -0.00265922766965196,
+      "p_tost_bh": 0.0003589979374234442,
+      "bounded": true,
+      "bounded_at_t47": true
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "log_funding_speed",
+      "feature": "desc_sentiment_compound",
+      "ci90_low": -0.0029710729219695024,
+      "ci90_high": 0.029702156072303008,
+      "p_tost_bh": 0.00657869015979376,
+      "bounded": true,
+      "bounded_at_t47": true
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "funded_within_24h",
+      "feature": "family_mentions_per_100_words",
+      "ci90_low": -0.007389826093920922,
+      "ci90_high": 0.002728041450455779,
+      "p_tost_bh": 0.03591180357149509,
+      "bounded": true,
+      "bounded_at_t47": true
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "funded_within_24h",
+      "feature": "basic_needs_mentions_per_100_words",
+      "ci90_low": -0.0017480873772903324,
+      "ci90_high": 0.009334760096462159,
+      "p_tost_bh": 0.05651245140460581,
+      "bounded": false,
+      "bounded_at_t47": true
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "funded_within_24h",
+      "feature": "business_mentions_per_100_words",
+      "ci90_low": -0.0039771539542258596,
+      "ci90_high": -0.0011804887045657386,
+      "p_tost_bh": 0.0015653231429646475,
+      "bounded": true,
+      "bounded_at_t47": true
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "funded_within_24h",
+      "feature": "agency_mentions_per_100_words",
+      "ci90_low": -0.0029807147489670986,
+      "ci90_high": 0.004206851749062249,
+      "p_tost_bh": 0.007643323939337698,
+      "bounded": true,
+      "bounded_at_t47": true
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "funded_within_24h",
+      "feature": "gratitude_mentions_per_100_words",
+      "ci90_low": -0.015847381483590058,
+      "ci90_high": 0.005338160664375184,
+      "p_tost_bh": 0.2530562511894255,
+      "bounded": false,
+      "bounded_at_t47": false
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "funded_within_24h",
+      "feature": "urgency_mentions_per_100_words",
+      "ci90_low": -0.008672087749241286,
+      "ci90_high": 0.03942060850901907,
+      "p_tost_bh": 0.6706966298794222,
+      "bounded": false,
+      "bounded_at_t47": false
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "funded_within_24h",
+      "feature": "first_person_mentions_per_100_words",
+      "ci90_low": -0.036468670432800075,
+      "ci90_high": 0.020876370645207518,
+      "p_tost_bh": 0.49375566740733606,
+      "bounded": false,
+      "bounded_at_t47": false
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "funded_within_24h",
+      "feature": "third_person_mentions_per_100_words",
+      "ci90_low": -0.0006144792238028233,
+      "ci90_high": 0.003486158474723356,
+      "p_tost_bh": 0.00197786759484353,
+      "bounded": true,
+      "bounded_at_t47": true
+    },
+    {
+      "specification": "programme_adjusted",
+      "outcome": "funded_within_24h",
+      "feature": "desc_sentiment_compound",
+      "ci90_low": -0.008752986261305528,
+      "ci90_high": 0.0031045585911940294,
+      "p_tost_bh": 0.055180499012103826,
+      "bounded": false,
+      "bounded_at_t47": true
+    }
+  ]
+}
