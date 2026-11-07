@@ -17,12 +17,12 @@
       "section": null,
       "layout": "cover",
       "title": "Beyond a good story",
-      "subtitle": "What 1.45 million Kiva loan descriptions can and cannot tell us about funding speed",
-      "visual": "White ground; Kiva photo in one frame with a 24 pt rounded corner, bleeding off the right and bottom edges; one yellow rounded block behind that corner; official UNSW logo directly on white, bottom-left",
+      "subtitle": "What 1.45 million Kiva loan descriptions\ncan and cannot tell us about funding speed",
+      "visual": "White ground; three photos (Kiva farmer, Unsplash market seller and tailor) in rounded frames; one yellow block and one violet offset",
       "notes": {
         "purpose": "Introduce the question and who we are.",
         "script": "We are Cultural Blend, one of eight finalist teams in the UNSW Marketing Analytics Hackathon. We analysed 1.45 million Kiva loans to ask whether the way a borrower's story is written is linked to how fast the loan funds.",
-        "reference": "Portfolio edition, November 2026. Official results: unsw.edu.au MA-hackathon page (reviewed 2026-10-24). Photo: Kiva farmer photograph, credit Kiva, hosted on kiva.org; provenance in docs/presentation/poster/README.md. It gives context and does not identify a record in the dataset."
+        "reference": "Portfolio edition, November 2026. Official results: unsw.edu.au MA-hackathon page (reviewed 2026-10-24). Photo: Kiva farmer photograph, credit Kiva, hosted on kiva.org; provenance in docs/presentation/poster/README.md. It gives context and does not identify a record in the dataset. Unsplash photos: Muhammad-Taha Ibrahim (market) and David Geneugelijk (tailor), Unsplash Licence; see docs/presentation/portfolio_deck/assets/photos/PROVENANCE.md."
       },
       "names": "Mike Nguyen and Sophia Nguyen",
       "team": "Cultural Blend, finalist team",
@@ -39,19 +39,19 @@
         {
           "figure": "64 of 120",
           "heading": "Uncertainty first",
-          "text": "Significant terms that lost significance once errors were clustered by 48 countries.",
+          "text": "Yellow squares: significant terms that lost significance once errors were clustered by 48 countries.",
           "layer": "Explanatory models"
         },
         {
           "figure": "±5%",
           "heading": "Most framing links are small",
-          "text": "Family, agency, business and third-person framing are bounded within about ±5% of funding time per extra mention per 100 words. Urgency is unresolved.",
+          "text": "Five framings stay inside the ±5% band per extra mention per 100 words; urgency does not.",
           "layer": "Equivalence test, exploratory"
         },
         {
           "figure": "5 of 5 years",
           "heading": "Text adds forecast information",
-          "text": "Adding text lowered linear forecast error every year, by 0.26–0.39 days. That is not evidence that rewriting a description speeds funding.",
+          "text": "Text lowered linear forecast error every year, by 0.26–0.39 days; the median is about 7 hours.",
           "layer": "Forecast benchmark"
         }
       ],
@@ -61,7 +61,12 @@
         "reference": "claims_register.md rows: 64 of 120 (explanatory models, 2026-08-31 run); equivalence test (2026-11-08); forecast benchmark linear gains (2026-11-02)."
       },
       "sublabel": "All evidence layers",
-      "decision": "Next decision: validate the text measures, then test one truthful prompt with partners."
+      "decision": "Next decision: validate the text measures, then test one truthful prompt with partners.",
+      "steps": [
+        "Validate measures",
+        "Close data gaps",
+        "Pilot one prompt"
+      ]
     },
     {
       "n": 3,
@@ -780,10 +785,11 @@
       ],
       "notes": {
         "purpose": "Close.",
-        "script": "Thank you. The code, saved results and every number on these slides are in our repository."
+        "script": "Thank you. The code, saved results and every number on these slides are in our repository.",
+        "reference": "Photo: Muhammad-Taha Ibrahim on Unsplash (Unsplash Licence)."
       },
       "link": "https://github.com/tuannm3812/unsw-ma-hackathon-2026",
-      "visual": "White ground; smaller photo frame with the same yellow corner block"
+      "visual": "White ground; Unsplash market photo in a rounded frame with the yellow corner block"
     },
     {
       "n": "A1",

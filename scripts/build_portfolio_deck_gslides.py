@@ -38,9 +38,15 @@ PHOTO = ROOT / 'docs/presentation/poster/assets/kiva-tatiana-farmer.jpg'
 # Official UNSW logo (competition host mark), provenance in docs/presentation/poster/README.md.
 # Full colour on transparency with no reversed version, so it sits on a white tile, never recoloured.
 LOGO = ROOT / 'docs/presentation/poster/assets/unsw-official-logo.png'
-# Photo frames (x, y, width, height), bleeding off the right and bottom edges.
-COVER_FRAME = (528, 72, 432, 468)
+ASSETS = DECK / 'assets'
+MARKET = ASSETS / 'photos/unsplash-market-muhammad-taha-ibrahim.jpg'
+TAILOR = ASSETS / 'photos/unsplash-tailor-david-geneugelijk.jpg'
+# Photo frames (x, y, width, height). The large frames bleed off the right and bottom edges
+# and round only their visible top-left corner; the small cover frames round all four.
+COVER_FRAME = (652, 96, 308, 444)
+COVER_SMALL = [(MARKET, (504, 140, 132, 176)), (TAILOR, (504, 330, 132, 176))]
 CLOSE_FRAME = (672, 196, 288, 344)
+CREDIT = 'Photos: Kiva; Muhammad-Taha Ibrahim and David Geneugelijk on Unsplash'
 FOOTER = 'Cultural Blend   Kiva funding speed, 1.45 million loans, 2016–2025'
 
 # Violet replaced teal on 2026-11-08 (Mike's decision); see DESIGN.md.
@@ -216,15 +222,18 @@ def photo_accent(page, x, y, size):
 
 
 def cover(page, slide):
-    """White ground; photo frame (inserted after this batch) bleeds off the right and bottom."""
+    """White ground; three photo frames (inserted after this batch) with one yellow and one violet accent."""
     page.ops.append({'op': 'set-background', 'slide': page.id, 'color': WHITE})
-    photo_accent(page, *COVER_FRAME[:2], 128)
+    photo_accent(page, *COVER_FRAME[:2], 112)
+    x, y, w, h = COVER_SMALL[0][1]
+    page.rect(x + 8, y + 8, w, h, VIOLET, 'ROUND_RECTANGLE')
     page.rect(L, 156, 28, 3, YELLOW)
-    page.text('UNSW MARKETING ANALYTICS HACKATHON 2026', L, 166, 460, 14, size=10, color=VIOLET, bold=True)
-    page.text(slide['title'], L, 186, 470, 56, size=44, bold=True)
-    page.text(slide['subtitle'], L, 252, 440, 50, size=16, color=SLATE, spacing=115)
-    page.text(slide['names'], L, 394, 440, 16, size=12, bold=True)
-    page.text(slide['team'], L, 413, 440, 16, size=12, color=GREY)
+    page.text('UNSW MARKETING ANALYTICS HACKATHON 2026', L, 166, 440, 14, size=10, color=VIOLET, bold=True)
+    page.text(slide['title'], L, 186, 450, 56, size=44, bold=True)
+    page.text(slide['subtitle'], L, 252, 430, 50, size=16, color=SLATE, spacing=115)
+    page.text(slide['names'], L, 394, 420, 16, size=12, bold=True)
+    page.text(slide['team'], L, 413, 420, 16, size=12, color=GREY)
+    page.text(CREDIT, L, 500, 440, 12, size=8, color=GREY)
 
 
 def close(page, slide):
@@ -240,22 +249,70 @@ def close(page, slide):
               spans=[(0, len(first), {'bold': True}), (start, len(text), {'link': slide['link'], 'color': VIOLET})])
 
 
+SUMMARY_ICONS = ['query_stats-violet.png', 'target-violet.png', 'trending_up-violet.png']
+STEP_ICONS = ['fact_check-white.png', 'table_rows-white.png', 'science-white.png']
+SUMMARY_CARDS = [(L + i * 298, TOP, 279, 244) for i in range(3)]
+BAND = (L, 390, FULL - L - .5, 66)
+STEP_X = [548, 670, 792]
+
+
 def summary(page, slide, pos):
-    """Three findings across the full width, then the decision; no takeaway column."""
+    """Three mini-exhibits, each with an icon, key figure and a native chart, then the decision."""
     page.chrome(slide)
-    width, gap, top, h = 279, 19, TOP, 232
-    for i, body in enumerate(slide['body']):
-        x = L + i * (width + gap)
-        card(page, x, top, width, h, [VIOLET, SLATE, NAVY][i])
-        page.text(body['figure'], x + 16, top + 20, width - 32, 40, size=28, bold=True)
-        page.block(body['heading'], body['text'], x + 16, top + 76, width - 32, 110)
-        page.line(x + 16, top + h - 34, x + width - 16, top + h - 34, HAIR, .75)
-        page.text(body['layer'], x + 16, top + h - 26, width - 32, 14, size=10, color=GREY, bold=True)
-    page.rect(L, 388, FULL - L - .5, 48, NAVY)
-    page.rect(L, 388, 6, 48, YELLOW)
+    exhibits = [waffle_mini, bound_mini, gain_mini]
+    for (x, y, w, h), body, draw, colour in zip(SUMMARY_CARDS, slide['body'], exhibits, [VIOLET, SLATE, NAVY]):
+        card(page, x, y, w, h, colour)
+        page.text(body['layer'].upper(), x + 46, y + 18, w - 62, 14, size=10, color=GREY, bold=True)
+        page.text(body['figure'], x + 16, y + 42, w - 32, 40, size=32, bold=True)
+        draw(page, x + 16, y + 94, w - 32, slide)
+        page.block(body['heading'], body['text'], x + 16, y + 180, w - 32, 60)
+    bx, by, bw, bh = BAND
+    page.rect(bx, by, bw, bh, NAVY)
+    page.rect(bx, by, 6, bh, YELLOW)
     label = 'Next decision:'
-    page.text(slide['decision'], L + 22, 388, FULL - L - 40, 48, size=12, color=WHITE, middle=True,
+    page.text(slide['decision'], bx + 22, by, 470, bh, size=12, color=WHITE, middle=True, spacing=110,
               spans=[(0, len(label), {'bold': True})])
+    for x, step in zip(STEP_X, slide['steps']):
+        page.text(step, x + 26, by, 96, bh, size=10, color=WHITE, middle=True, spacing=110)
+
+
+def waffle_mini(page, x, y, w, slide):
+    """120 terms, the first 64 in yellow: significant under HC3, lost under country clustering."""
+    cell, gap = 10, 2.3
+    for i in range(120):
+        row, col = divmod(i, 20)
+        page.rect(x + col * (cell + gap), y + row * (cell + gap), cell, cell, YELLOW if i < 64 else HAIR)
+
+
+def bound_mini(page, x, y, w, slide):
+    """Five bounded framings and urgency against the ±0.05 band; values from the equivalence test."""
+    rows = {r['term']: r for r in [s for s in slide_data()['9']['exhibit']['rows']]}
+    lo, hi = -.15, .15
+    px = lambda value: x + (value - lo) * w / (hi - lo)
+    page.rect(px(-.05), y - 2, px(.05) - px(-.05), 76, TINT)
+    page.line(px(0), y - 2, px(0), y + 74, NAVY, .75)
+    for i, term in enumerate(['family', 'basic needs', 'business', 'agency', 'third person', 'urgency']):
+        r, cy = rows[term], y + 6 + i * 12.5
+        colour = VIOLET if term == 'urgency' else NAVY
+        page.line(px(r['ci90_low']), cy, px(r['ci90_high']), cy, colour, 1.5)
+        page.rect(px(r['estimate']) - 2.5, cy - 2.5, 5, 5, colour, 'ELLIPSE')
+    page.text('urgency', px(.0295) + 4, y + 6 + 5 * 12.5 - 7, 60, 12, size=8, color=VIOLET, bold=True)
+
+
+def gain_mini(page, x, y, w, slide):
+    """Linear MAE gain by year, bars from zero with direct labels."""
+    years = [row[:2] for row in slide_data()['13']['exhibit']['series'][0]['rows']]
+    bar, step, base, per = 30, 54, y + 62, 120
+    for i, (year, gain) in enumerate(years):
+        bx = x + 2 + i * step
+        page.rect(bx, base - gain * per, bar, gain * per, NAVY)
+        page.text(f'{gain:.3f}', bx - 8, base - gain * per - 14, bar + 16, 12, size=8, color=NAVY, bold=True, align='center')
+        page.text(str(year), bx - 8, base + 2, bar + 16, 12, size=8, color=GREY, align='center')
+    page.line(x, base, x + w, base, NAVY, .75)
+
+
+def slide_data():
+    return {str(s['n']): s for s in json.loads((DECK / 'storyline.json').read_text())['slides']}
 
 
 def agenda(page, slide, urls):
@@ -604,20 +661,24 @@ def add_notes(page, slide, notes_id):
         page.ops.append({'op': 'style-text', 'element': notes_id, 'start': start, 'end': end, **style})
 
 
-def cover_image(work: Path, frame: tuple, name: str) -> Path:
-    """Crop the photograph to a frame and round its one visible (top-left) corner, 24 pt."""
+def framed_photo(work: Path, source_path: Path, frame: tuple, name: str, all_corners: bool = False) -> Path:
+    """Crop a photograph to a frame and round its visible corners with a 24 pt radius."""
     scale = 2.5
     width, height, radius = int(frame[2] * scale), int(frame[3] * scale), int(24 * scale)
-    source = Image.open(PHOTO).convert('RGB')
+    source = Image.open(source_path).convert('RGB')
     ratio = width / height
     w, h = source.size
     crop = (int((w - h * ratio) / 2), 0, int((w + h * ratio) / 2), h) if w / h > ratio else \
            (0, int((h - w / ratio) / 2), w, int((h + w / ratio) / 2))
     image = source.crop(crop).resize((width, height), Image.LANCZOS).convert('RGBA')
-    mask = Image.new('L', (width, height), 255)
-    corner = Image.new('L', (radius * 2, radius * 2), 0)
-    ImageDraw.Draw(corner).pieslice((0, 0, radius * 2, radius * 2), 180, 270, fill=255)
-    mask.paste(corner.crop((0, 0, radius, radius)), (0, 0))
+    mask = Image.new('L', (width, height), 0)
+    if all_corners:
+        ImageDraw.Draw(mask).rounded_rectangle((0, 0, width - 1, height - 1), radius, fill=255)
+    else:
+        mask.paste(255, (0, 0, width, height))
+        corner = Image.new('L', (radius * 2, radius * 2), 0)
+        ImageDraw.Draw(corner).pieslice((0, 0, radius * 2, radius * 2), 180, 270, fill=255)
+        mask.paste(corner.crop((0, 0, radius, radius)), (0, 0))
     image.putalpha(mask)
     target = work / name
     image.save(target)
@@ -714,16 +775,21 @@ def main() -> None:
         add_notes(page, slide, notes_id)
         submit(pres, page.ops)
         print(f"slide {slide['n']}: {len(page.ops)} ops", flush=True)
-    # Images last so they sit above the yellow accent blocks.
+    # Images last so they sit above the accent blocks.
     with tempfile.TemporaryDirectory() as work:
-        for index, frame in [(0, COVER_FRAME), (15, CLOSE_FRAME)]:
-            x, y, w, h = frame
+        images = [(0, framed_photo(Path(work), PHOTO, COVER_FRAME, 'cover.png'), COVER_FRAME),
+                  (15, framed_photo(Path(work), MARKET, CLOSE_FRAME, 'close.png'), CLOSE_FRAME)]
+        images += [(0, framed_photo(Path(work), path, frame, f'small-{i}.png', all_corners=True), frame)
+                   for i, (path, frame) in enumerate(COVER_SMALL)]
+        # Logo: UNSW host mark on white, 330 x 140 px source at its own proportions.
+        images.append((0, LOGO, (L, 446, 84.9, 36)))
+        for icon, (x, y, _, _) in zip(SUMMARY_ICONS, SUMMARY_CARDS):
+            images.append((1, ASSETS / 'icons' / icon, (x + 16, y + 14, 22, 22)))
+        for icon, x in zip(STEP_ICONS, STEP_X):
+            images.append((1, ASSETS / 'icons' / icon, (x, BAND[1] + BAND[3] / 2 - 10, 20, 20)))
+        for index, path, (x, y, w, h) in images:
             run('mutate', 'insert-image-from-file', pres, '--slide', slides[index]['objectId'],
-                '--file', str(cover_image(Path(work), frame, f'frame-{index}.png')),
-                '--x', str(x), '--y', str(y), '--width', str(w), '--height', str(h))
-    # UNSW host mark directly on white, 330 x 140 px source at its own proportions.
-    run('mutate', 'insert-image-from-file', pres, '--slide', slides[0]['objectId'],
-        '--file', str(LOGO), '--x', str(L), '--y', '446', '--width', '84.9', '--height', '36')
+                '--file', str(path), '--x', str(x), '--y', str(y), '--width', str(w), '--height', str(h))
     print(f'https://docs.google.com/presentation/d/{pres}/edit')
 
 

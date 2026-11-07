@@ -76,7 +76,7 @@ benchmark. **Equivalence** = exploratory screen of October coefficients (2026-11
 | Linear MAE by year, S → S+M+L+R | 2021 8.250 → 7.957; 2022 8.570 → 8.197; 2023 8.185 → 7.926; 2024 7.515 → 7.126; 2025 6.406 → 6.147 | `docs/6_matched_text_results.md` | November |
 | Linear MAE gain, month 95% intervals | 2021 0.293 [0.198, 0.384]; 2022 0.372 [0.208, 0.518]; 2023 0.259 [0.088, 0.406]; 2024 0.389 [0.287, 0.500]; 2025 0.260 [0.139, 0.396] | same | November |
 | Tree MAE gain, month 95% intervals | 2021 0.035 [−0.073, 0.137]; 2022 0.028 [−0.036, 0.084]; 2023 0.006 [−0.025, 0.035]; 2024 0.001 [−0.020, 0.025]; 2025 0.042 [0.013, 0.074] | same | November |
-| Rounded linear gain range and median | 0.26–0.39 days; 0.29 days | same | November |
+| Rounded linear gain range and median | 0.26–0.39 days; 0.29 days; median 0.293 days × 24 ≈ 7 hours | same | November |
 | 2025 rounded AUC | 0.893 → 0.888 | same | November |
 | As-of cohort, pre-cutoff completing later; eligible training; evaluation rows | 2021 7,528; 717,672; 163,166. 2022 3,918; 884,448; 143,354. 2023 3,546; 1,028,174; 143,233. 2024 5,691; 1,169,262; 141,725. 2025 4,261; 1,312,417; 137,162 | same | November |
 
