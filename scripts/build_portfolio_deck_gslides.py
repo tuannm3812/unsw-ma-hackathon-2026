@@ -38,6 +38,9 @@ PHOTO = ROOT / 'docs/presentation/poster/assets/kiva-tatiana-farmer.jpg'
 # Official UNSW logo (competition host mark), provenance in docs/presentation/poster/README.md.
 # Full colour on transparency with no reversed version, so it sits on a white tile, never recoloured.
 LOGO = ROOT / 'docs/presentation/poster/assets/unsw-official-logo.png'
+# Photo frames (x, y, width, height), bleeding off the right and bottom edges.
+COVER_FRAME = (528, 72, 432, 468)
+CLOSE_FRAME = (672, 196, 288, 344)
 FOOTER = 'Cultural Blend   Kiva funding speed, 1.45 million loans, 2016–2025'
 
 NAVY, YELLOW, TEAL, PAPER = '#1C2333', '#FFDD04', '#31688E', '#FBFAF6'
@@ -206,39 +209,34 @@ def table(page, columns, rows, x, y, w, row_h=30, size=10):
 
 # --- slides ---------------------------------------------------------------------------------
 
-def bands(page, x, y):
-    """The cover's shape language: parallelogram bands bleeding off the right and bottom edges."""
-    page.rect(x, y, 1000 - x, 60, YELLOW, 'PARALLELOGRAM')
-    page.rect(x - 70, y + 70, 300, 40, TEAL, 'PARALLELOGRAM')
-    page.rect(x + 245, y + 70, 90, 40, PAPER, 'PARALLELOGRAM')
-    page.rect(x + 120, y + 120, 1000 - x - 120, 30, SLATE, 'PARALLELOGRAM')
+def photo_accent(page, x, y, size):
+    """The cover's one decorative shape: a yellow block behind the photo's rounded corner."""
+    page.rect(x - 16, y - 16, size, size, YELLOW, 'ROUND_RECTANGLE')
 
 
 def cover(page, slide):
-    """Navy ground, full-bleed photo (inserted first), bands across its edge, host logo tile."""
-    page.ops.append({'op': 'set-background', 'slide': page.id, 'color': NAVY})
-    bands(page, 520, 396)
-    page.rect(L, 112, 44, 5, YELLOW)
-    page.text('PORTFOLIO EDITION  |  NOVEMBER 2026', L, 128, 420, 14, size=10, color=WHITE, bold=True,
-              spans=[(17, 22, {'color': RULE})])
-    page.text(slide['title'], L, 152, 500, 54, size=40, color=WHITE, bold=True)
-    page.text(slide['subtitle'], L, 212, 470, 50, size=16, color=WHITE, spacing=110)
-    page.text(slide['lines'][0], L, 290, 470, 18, size=12, color=WHITE, bold=True)
-    page.rect(L, 430, 122, 54, WHITE, 'ROUND_RECTANGLE')
-    page.text(slide['lines'][1], L + 136, 430, 300, 54, size=10, color=WHITE, spacing=115, middle=True)
+    """White ground; photo frame (inserted after this batch) bleeds off the right and bottom."""
+    page.ops.append({'op': 'set-background', 'slide': page.id, 'color': WHITE})
+    photo_accent(page, *COVER_FRAME[:2], 128)
+    page.rect(L, 156, 28, 3, YELLOW)
+    page.text('UNSW MARKETING ANALYTICS HACKATHON 2026', L, 166, 460, 14, size=10, color=TEAL, bold=True)
+    page.text(slide['title'], L, 186, 470, 56, size=44, bold=True)
+    page.text(slide['subtitle'], L, 252, 440, 50, size=16, color=SLATE, spacing=115)
+    page.text(slide['names'], L, 394, 440, 16, size=12, bold=True)
+    page.text(slide['team'], L, 413, 440, 16, size=12, color=GREY)
 
 
 def close(page, slide):
-    page.ops.append({'op': 'set-background', 'slide': page.id, 'color': NAVY})
-    bands(page, 640, 396)
-    page.rect(L, 200, 44, 5, YELLOW)
-    page.text(slide['title'], L, 220, 700, 54, size=40, color=WHITE, bold=True)
+    page.ops.append({'op': 'set-background', 'slide': page.id, 'color': WHITE})
+    photo_accent(page, *CLOSE_FRAME[:2], 104)
+    page.rect(L, 196, 28, 3, YELLOW)
+    page.text(slide['title'], L, 210, 520, 56, size=44, bold=True)
     first, second = slide['lines']
     prefix = 'Code and evidence: '
     start = len(first) + 1 + len(prefix)
     text = f'{first}\n{second}'
-    page.text(text, L, 290, 800, 50, size=12, color=WHITE, spacing=120,
-              spans=[(start, len(text), {'link': slide['link'], 'color': WHITE})])
+    page.text(text, L, 284, 560, 50, size=12, color=NAVY, spacing=120,
+              spans=[(0, len(first), {'bold': True}), (start, len(text), {'link': slide['link'], 'color': TEAL})])
 
 
 def summary(page, slide, pos):
@@ -605,23 +603,23 @@ def add_notes(page, slide, notes_id):
         page.ops.append({'op': 'style-text', 'element': notes_id, 'start': start, 'end': end, **style})
 
 
-def cover_image(work: Path) -> Path:
-    """Crop the sourced photograph to a full-height right frame, rounding its top-left corner."""
-    width, height, radius = 920, 1350, 60
+def cover_image(work: Path, frame: tuple, name: str) -> Path:
+    """Crop the photograph to a frame and round its one visible (top-left) corner, 24 pt."""
+    scale = 2.5
+    width, height, radius = int(frame[2] * scale), int(frame[3] * scale), int(24 * scale)
     source = Image.open(PHOTO).convert('RGB')
     ratio = width / height
     w, h = source.size
     crop = (int((w - h * ratio) / 2), 0, int((w + h * ratio) / 2), h) if w / h > ratio else \
            (0, int((h - w / ratio) / 2), w, int((h + w / ratio) / 2))
-    image = source.crop(crop).resize((width, height), Image.LANCZOS)
+    image = source.crop(crop).resize((width, height), Image.LANCZOS).convert('RGBA')
     mask = Image.new('L', (width, height), 255)
     corner = Image.new('L', (radius * 2, radius * 2), 0)
     ImageDraw.Draw(corner).pieslice((0, 0, radius * 2, radius * 2), 180, 270, fill=255)
     mask.paste(corner.crop((0, 0, radius, radius)), (0, 0))
-    canvas = Image.new('RGB', (width, height), NAVY)
-    canvas.paste(image, (0, 0), mask)
-    target = work / 'cover-frame.jpg'
-    canvas.save(target, quality=88)
+    image.putalpha(mask)
+    target = work / name
+    image.save(target)
     return target
 
 
@@ -692,10 +690,6 @@ def main() -> None:
         pres = args.reuse
     slides = prepare_slides(pres, bool(args.reuse), len(story))
     ensure_footer(pres)
-    with tempfile.TemporaryDirectory() as work:
-        # The photo goes in first so the cover's bands sit on top of its edge.
-        run('mutate', 'insert-image-from-file', pres, '--slide', slides[0]['objectId'],
-            '--file', str(cover_image(Path(work))), '--x', '592', '--y', '0', '--width', '368', '--height', '540')
     urls = {i + 1: f'https://docs.google.com/presentation/d/{pres}/edit#slide=id.{s["objectId"]}'
             for i, s in enumerate(slides)}
     builders = {'summary': summary, 'lever': lever, 'outcome': outcome, 'slowdown': slowdown,
@@ -719,9 +713,16 @@ def main() -> None:
         add_notes(page, slide, notes_id)
         submit(pres, page.ops)
         print(f"slide {slide['n']}: {len(page.ops)} ops", flush=True)
-    # Logo last, above its white tile; 330 x 140 px source at its own proportions.
+    # Images last so they sit above the yellow accent blocks.
+    with tempfile.TemporaryDirectory() as work:
+        for index, frame in [(0, COVER_FRAME), (15, CLOSE_FRAME)]:
+            x, y, w, h = frame
+            run('mutate', 'insert-image-from-file', pres, '--slide', slides[index]['objectId'],
+                '--file', str(cover_image(Path(work), frame, f'frame-{index}.png')),
+                '--x', str(x), '--y', str(y), '--width', str(w), '--height', str(h))
+    # UNSW host mark directly on white, 330 x 140 px source at its own proportions.
     run('mutate', 'insert-image-from-file', pres, '--slide', slides[0]['objectId'],
-        '--file', str(LOGO), '--x', str(L + 9), '--y', '437.5', '--width', '103.7', '--height', '44')
+        '--file', str(LOGO), '--x', str(L), '--y', '446', '--width', '84.9', '--height', '36')
     print(f'https://docs.google.com/presentation/d/{pres}/edit')
 
 

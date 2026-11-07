@@ -18,17 +18,15 @@
       "layout": "cover",
       "title": "Beyond a good story",
       "subtitle": "What 1.45 million Kiva loan descriptions can and cannot tell us about funding speed",
-      "lines": [
-        "Mike Nguyen and Sophia Nguyen, Cultural Blend",
-        "Finalists, UNSW Marketing Analytics Hackathon Challenge 2026",
-        "Portfolio edition, November 2026"
-      ],
-      "visual": "Navy ground; layered yellow and teal parallelogram bands crossing the photo edge; Kiva photo full-bleed right; official UNSW logo on a white tile as the competition host mark",
+      "visual": "White ground; Kiva photo in one frame with a 24 pt rounded corner, bleeding off the right and bottom edges; one yellow rounded block behind that corner; official UNSW logo directly on white, bottom-left",
       "notes": {
         "purpose": "Introduce the question and who we are.",
         "script": "We are Cultural Blend, one of eight finalist teams in the UNSW Marketing Analytics Hackathon. We analysed 1.45 million Kiva loans to ask whether the way a borrower's story is written is linked to how fast the loan funds. This edition adds two months of follow-up research.",
-        "reference": "Official results: unsw.edu.au MA-hackathon page (reviewed 2026-10-24). Photo: Kiva farmer photograph, credit Kiva, hosted on kiva.org; provenance in docs/presentation/poster/README.md. It gives context and does not identify a record in the dataset."
-      }
+        "reference": "Portfolio edition, November 2026. Official results: unsw.edu.au MA-hackathon page (reviewed 2026-10-24). Photo: Kiva farmer photograph, credit Kiva, hosted on kiva.org; provenance in docs/presentation/poster/README.md. It gives context and does not identify a record in the dataset."
+      },
+      "names": "Mike Nguyen and Sophia Nguyen",
+      "team": "Cultural Blend, finalist team",
+      "label": "UNSW Marketing Analytics Hackathon 2026"
     },
     {
       "n": 2,
@@ -783,7 +781,7 @@
         "script": "Thank you. The code, saved results and every number on these slides are in our repository."
       },
       "link": "https://github.com/tuannm3812/unsw-ma-hackathon-2026",
-      "visual": "Navy ground echoing the cover bands"
+      "visual": "White ground; smaller photo frame with the same yellow corner block"
     },
     {
       "n": "A1",
