@@ -43,7 +43,8 @@ COVER_FRAME = (528, 72, 432, 468)
 CLOSE_FRAME = (672, 196, 288, 344)
 FOOTER = 'Cultural Blend   Kiva funding speed, 1.45 million loans, 2016–2025'
 
-NAVY, YELLOW, TEAL, PAPER = '#1C2333', '#FFDD04', '#31688E', '#FBFAF6'
+# Violet replaced teal on 2026-11-08 (Mike's decision); see DESIGN.md.
+NAVY, YELLOW, VIOLET, PAPER = '#1C2333', '#FFDD04', '#5B4B8A', '#FBFAF6'
 GREY, SLATE, RED, RULE, WHITE = '#59636E', '#46576C', '#C64040', '#999999', '#FFFFFF'
 TINT, HAIR = '#FFF6B8', '#D9D7CE'
 FONT = 'Google Sans'
@@ -147,7 +148,7 @@ class Page:
         spans = [(len(section), len(section) + 5, {'color': RULE}),
                  (len(section) + 5, len(label), {'color': GREY})] if sub else []
         # Sublabel uses body grey, not the parent's #999999, so it meets WCAG AA (DESIGN.md).
-        self.text(label, L, 29.5, 600, 14, size=10, color=TEAL, bold=True, spans=spans)
+        self.text(label, L, 29.5, 600, 14, size=10, color=VIOLET, bold=True, spans=spans)
         self.text(slide['title'], L, 48.4, FULL - L, 34, size=24, bold=True)
         if slide.get('subtitle'):
             self.text(slide['subtitle'], L, 90.9, FULL - L, 18, size=12, color=GREY)
@@ -181,12 +182,12 @@ def marker_positions(slide, layout):
     return stored if stored and len(stored) == count else [137 + 80 * i for i in range(count)]
 
 
-def card(page, x, y, w, h, bar=TEAL):
+def card(page, x, y, w, h, bar=VIOLET):
     page.rect(x, y, w, h, PAPER)
     page.rect(x, y, w, 2.5, bar)
 
 
-def key_card(page, figure, x, y, w, h, bar=TEAL, size=26):
+def key_card(page, figure, x, y, w, h, bar=VIOLET, size=26):
     card(page, x, y, w, h, bar)
     page.text(figure['value'], x + 12, y + 12, w - 24, 34, size=size, bold=True)
     page.text(figure['label'], x + 12, y + 12 + size * 1.5, w - 24, h - 50, size=10, color=GREY, spacing=110)
@@ -219,7 +220,7 @@ def cover(page, slide):
     page.ops.append({'op': 'set-background', 'slide': page.id, 'color': WHITE})
     photo_accent(page, *COVER_FRAME[:2], 128)
     page.rect(L, 156, 28, 3, YELLOW)
-    page.text('UNSW MARKETING ANALYTICS HACKATHON 2026', L, 166, 460, 14, size=10, color=TEAL, bold=True)
+    page.text('UNSW MARKETING ANALYTICS HACKATHON 2026', L, 166, 460, 14, size=10, color=VIOLET, bold=True)
     page.text(slide['title'], L, 186, 470, 56, size=44, bold=True)
     page.text(slide['subtitle'], L, 252, 440, 50, size=16, color=SLATE, spacing=115)
     page.text(slide['names'], L, 394, 440, 16, size=12, bold=True)
@@ -236,7 +237,7 @@ def close(page, slide):
     start = len(first) + 1 + len(prefix)
     text = f'{first}\n{second}'
     page.text(text, L, 284, 560, 50, size=12, color=NAVY, spacing=120,
-              spans=[(0, len(first), {'bold': True}), (start, len(text), {'link': slide['link'], 'color': TEAL})])
+              spans=[(0, len(first), {'bold': True}), (start, len(text), {'link': slide['link'], 'color': VIOLET})])
 
 
 def summary(page, slide, pos):
@@ -245,7 +246,7 @@ def summary(page, slide, pos):
     width, gap, top, h = 279, 19, TOP, 232
     for i, body in enumerate(slide['body']):
         x = L + i * (width + gap)
-        card(page, x, top, width, h, [TEAL, SLATE, NAVY][i])
+        card(page, x, top, width, h, [VIOLET, SLATE, NAVY][i])
         page.text(body['figure'], x + 16, top + 20, width - 32, 40, size=28, bold=True)
         page.block(body['heading'], body['text'], x + 16, top + 76, width - 32, 110)
         page.line(x + 16, top + h - 34, x + width - 16, top + h - 34, HAIR, .75)
@@ -259,7 +260,7 @@ def summary(page, slide, pos):
 
 def agenda(page, slide, urls):
     page.chrome(slide)
-    colours = [(NAVY, WHITE), (TEAL, WHITE), (SLATE, WHITE), (YELLOW, NAVY)]
+    colours = [(NAVY, WHITE), (VIOLET, WHITE), (SLATE, WHITE), (YELLOW, NAVY)]
     contents = [[('Editable fields', 4), ('The outcome', 5), ('A slower market', 6)],
                 [('Three evidence layers', 7)],
                 [('Country uncertainty', 8), ('Small or unknown', 9), ('Regional patterns', 10),
@@ -303,7 +304,7 @@ def outcome(page, slide, pos):
     page.chrome(slide)
     first, second = slide['key_figures']
     key_card(page, first, L, TOP, 296, 96, NAVY)
-    key_card(page, second, 353.5, TOP, 296.5, 96, TEAL)
+    key_card(page, second, 353.5, TOP, 296.5, 96, VIOLET)
     page.marker(2, L + 296 - 22, TOP + 10)
     y = 330
     x1, x2, x3 = 105, 335, 585
@@ -342,7 +343,7 @@ def slowdown(page, slide, pos):
 
 def approach(page, slide):
     page.chrome(slide)
-    fills = [NAVY, TEAL, SLATE]
+    fills = [NAVY, VIOLET, SLATE]
     width, gap = 277, 22
     for i, layer in enumerate(slide['exhibit']['layers']):
         x = L + i * (width + gap)
@@ -361,7 +362,7 @@ def clustering(page, slide, pos):
     page.chrome(slide)
     first, second = slide['key_figures']
     key_card(page, first, L, TOP, 296, 100, YELLOW)
-    key_card(page, second, 353.5, TOP, 296.5, 100, TEAL)
+    key_card(page, second, 353.5, TOP, 296.5, 100, VIOLET)
     page.marker(2, 353.5 + 296.5 - 22, TOP + 10)
     cell, gap, x0, y0 = 20, 5, L, 250
     for i in range(120):
@@ -373,7 +374,7 @@ def clustering(page, slide, pos):
     page.text('Lost significance under country clustering', L + 17, legend, 260, 14, size=10)
     page.rect(320, legend + 2, 11, 11, NAVY)
     page.text('Kept significance', 337, legend, 200, 14, size=10)
-    page.caption('Figure 2.', 'Each square is one term significant under HC3, across both August models.', legend + 22)
+    page.caption('Figure 2.', 'Each square is one term significant under HC3, across both explanatory models.', legend + 22)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -387,7 +388,7 @@ def forest(page, slide, pos):
     page.rect(px(-.05), top - 6, px(.05) - px(-.05), bottom - top + 6, TINT)
     page.text('±0.05 bound', px(-.05), top - 20, px(.05) - px(-.05), 13, size=8, color=NAVY, bold=True, align='center')
     page.line(px(0), top - 6, px(0), bottom, NAVY, .75)
-    status = {'bounded': ('Bounded', NAVY), 'mixed': ('Mixed', SLATE), 'unresolved': ('Unresolved', TEAL)}
+    status = {'bounded': ('Bounded', NAVY), 'mixed': ('Mixed', SLATE), 'unresolved': ('Unresolved', VIOLET)}
     for i, row in enumerate(rows):
         y = top + i * pitch + pitch / 2 - 3
         label, colour = status[row['status_both_specs']]
@@ -420,9 +421,9 @@ def regions(page, slide, pos):
         page.text(f'Country-clustered, normal reference {fmt(normal)}', x0, y, 450, 14, size=10)
         page.line(px(normal[0]), y + 26, px(normal[1]), y + 26, NAVY, 3)
         page.rect(px(row['estimate']) - 4.5, y + 21.5, 9, 9, NAVY, 'ELLIPSE')
-        page.text(f't(1) heuristic screen {fmt(heuristic)}', x0, y + 50, 450, 14, size=10, color=TEAL, bold=True)
-        page.line(px(heuristic[0]), y + 76, px(heuristic[1]), y + 76, TEAL, 3)
-        page.rect(px(row['estimate']) - 4.5, y + 71.5, 9, 9, TEAL, 'ELLIPSE')
+        page.text(f't(1) heuristic screen {fmt(heuristic)}', x0, y + 50, 450, 14, size=10, color=VIOLET, bold=True)
+        page.line(px(heuristic[0]), y + 76, px(heuristic[1]), y + 76, VIOLET, 3)
+        page.rect(px(row['estimate']) - 4.5, y + 71.5, 9, 9, VIOLET, 'ELLIPSE')
     for value, name in [(-.2, '−0.20'), (-.1, '−0.10'), (0, '0'), (.1, '+0.10')]:
         page.text(name, px(value) - 20, bottom + 3, 40, 12, size=8, color=GREY, align='center')
     y = top + 14
@@ -437,7 +438,7 @@ def persist(page, slide, pos):
     exhibit = slide['exhibit']
     table(page, exhibit['columns'], exhibit['rows'], L, TOP, R - L - 6, 40)
     first, second = slide['key_figures']
-    key_card(page, first, L, 268, 296, 110, TEAL, 24)
+    key_card(page, first, L, 268, 296, 110, VIOLET, 24)
     key_card(page, second, 353.5, 268, 296.5, 110, NAVY, 24)
     page.marker(1, L + 296 - 22, 278)
     page.marker(2, 353.5 + 296.5 - 22, 278)
@@ -466,7 +467,7 @@ def forecast(page, slide, pos):
     page.line(L, base, L + 5 * group - 8, base, NAVY, 1)
     figure = slide['key_figures'][0]
     key_card(page, figure, 498, TOP, 152, 104, YELLOW, 24)
-    key_card(page, {'value': '5 of 5', 'label': 'years with lower error'}, 498, 246, 152, 92, TEAL, 24)
+    key_card(page, {'value': '5 of 5', 'label': 'years with lower error'}, 498, 246, 152, 92, VIOLET, 24)
     key_card(page, {'value': '728,640', 'label': 'evaluation records'}, 498, 350, 152, 92, SLATE, 24)
     page.marker(1, 498 + 152 - 22, TOP + 10)
     page.marker(2, 290, legend_y + 1)
@@ -482,7 +483,7 @@ def gains(page, slide, pos):
         px0 = L + p * 310
         plot = px0 + 40
         px = lambda value: plot + (value - lo) * width / (hi - lo)
-        colour = [NAVY, TEAL][p]
+        colour = [NAVY, VIOLET][p]
         page.text(panel['name'], px0, TOP + 2, 290, 16, size=10, bold=True, color=colour)
         page.line(px(0), top - 12, px(0), top + 5 * pitch - 12, GREY, .75)
         for i, (year, gain, low, high) in enumerate(panel['rows']):
@@ -508,7 +509,7 @@ def supports(page, slide):
     width = 426
     for i, column in enumerate(slide['columns']):
         x = L + i * (width + 22.5)
-        fill = [NAVY, TEAL][i]
+        fill = [NAVY, VIOLET][i]
         page.rect(x, TOP, width, 320, PAPER)
         page.badge(column['heading'], x, TOP, (width, 36), fill, WHITE, 12, 'RECTANGLE')
         pitch = 280 / len(column['items'])
@@ -522,7 +523,7 @@ def supports(page, slide):
 def gates(page, slide):
     page.chrome(slide)
     width, gap = 262, 44
-    fills = [(NAVY, WHITE), (TEAL, WHITE), (YELLOW, NAVY)]
+    fills = [(NAVY, WHITE), (VIOLET, WHITE), (YELLOW, NAVY)]
     for i, step in enumerate(slide['steps']):
         x = L + i * (width + gap)
         card(page, x, 160, width, 176, fills[i][0])
@@ -551,14 +552,14 @@ def a_metrics(page, slide):
     for i, figure in enumerate(figures[:2]):
         key_card(page, figure, L + i * (width + 25), TOP, width, 104, NAVY)
     for i, figure in enumerate(figures[2:]):
-        key_card(page, figure, L + i * (width + 25), 250, width, 104, TEAL)
+        key_card(page, figure, L + i * (width + 25), 250, width, 104, VIOLET)
     page.caption('Scope:', slide['note'].removeprefix('Scope: '), 372, w=FULL - L)
 
 
 def a_topics(page, slide):
     page.chrome(slide)
     for i, figure in enumerate(slide['key_figures']):
-        key_card(page, figure, L + i * 449, TOP, 426, 104, [TEAL, SLATE][i])
+        key_card(page, figure, L + i * 449, TOP, 426, 104, [VIOLET, SLATE][i])
     for i, body in enumerate(slide['body']):
         page.block(body['heading'], body['text'], L + i * 449, 262, 426, 90)
 

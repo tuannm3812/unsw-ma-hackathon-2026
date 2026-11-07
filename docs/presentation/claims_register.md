@@ -4,6 +4,10 @@ Every number the portfolio deck and case study quote, with its source file and
 evidence layer. Created 2026-11-08. A slide or paragraph may only quote a number
 listed here; add the row first, with its source, before using a new one.
 
+Slide names for the layers (decided 2026-11-08): August = **Explanatory models**,
+October = **Robustness checks**, November = **Forecast benchmark**, Equivalence =
+**Equivalence test**. The layer column below keeps the run names for provenance.
+
 Layers: **August** = primary saved run (2026-08-31, `src/` pipeline).
 **October** = reviewed explanatory sensitivity. **November** = matched predictive
 benchmark. **Equivalence** = exploratory screen of October coefficients (2026-11-08).

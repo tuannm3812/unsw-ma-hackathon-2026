@@ -24,7 +24,7 @@ it is preserved in git history (commit `d9a234f`).
 | --- | --- | --- |
 | Primary evidence, titles | blue #0F4BEB | navy #1C2333 |
 | Comparison and callout accent | amber #E6A23C | yellow #FFDD04, shapes only, never text |
-| Section label and dark fills | navy #17243B | teal #31688E |
+| Section label and dark fills | navy #17243B | violet #5B4B8A |
 | Card fill | cream #FAF7F0 | paper #FBFAF6 |
 | Body grey | #59636E | #59636E |
 | Neutral comparison bars | slate #46576C | slate #46576C |
@@ -43,8 +43,18 @@ use a navy ground with white text and a yellow accent shape.
 **Typeface.** Google Sans throughout, as in the parent. No Georgia, Courier New or
 DM Sans on slides.
 
-**Evidence labels.** Each evidence slide's subtitle names its layer: August primary
-run, October extension, November benchmark, equivalence screen, or descriptive.
+**Violet (Mike's decision, 8 November).** Violet #5B4B8A replaced teal #31688E in every role.
+It reaches about 7.4:1 on white and on paper; text on violet fills is white.
+
+**Evidence labels (Mike's decision, 8 November).** Slide faces name evidence by what it is,
+not when it ran, so the deck reads as one body of work: **Explanatory models** (primary
+saved run, 31 August), **Robustness checks** (reviewed expanded-feature sensitivity),
+**Forecast benchmark** (2 November) and **Equivalence test** (8 November, exploratory), or
+descriptive. Each evidence slide's sublabel and subtitle use these names. Run dates and
+provenance go in the speaker-note Reference blocks and the claims register.
+
+**Sublabels.** Section label in violet, separator #999999, sublabel in #59636E: the
+parent's #999999 sublabel fails AA on white.
 
 ## Source of truth
 

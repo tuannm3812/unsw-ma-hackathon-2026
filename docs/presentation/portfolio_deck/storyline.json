@@ -21,7 +21,7 @@
       "visual": "White ground; Kiva photo in one frame with a 24 pt rounded corner, bleeding off the right and bottom edges; one yellow rounded block behind that corner; official UNSW logo directly on white, bottom-left",
       "notes": {
         "purpose": "Introduce the question and who we are.",
-        "script": "We are Cultural Blend, one of eight finalist teams in the UNSW Marketing Analytics Hackathon. We analysed 1.45 million Kiva loans to ask whether the way a borrower's story is written is linked to how fast the loan funds. This edition adds two months of follow-up research.",
+        "script": "We are Cultural Blend, one of eight finalist teams in the UNSW Marketing Analytics Hackathon. We analysed 1.45 million Kiva loans to ask whether the way a borrower's story is written is linked to how fast the loan funds.",
         "reference": "Portfolio edition, November 2026. Official results: unsw.edu.au MA-hackathon page (reviewed 2026-10-24). Photo: Kiva farmer photograph, credit Kiva, hosted on kiva.org; provenance in docs/presentation/poster/README.md. It gives context and does not identify a record in the dataset."
       },
       "names": "Mike Nguyen and Sophia Nguyen",
@@ -34,31 +34,31 @@
       "section": "Summary",
       "layout": "three_cards+decision",
       "title": "Text carries forecast information, but no writing tip is proven",
-      "subtitle": "Summary of the August, October and November evidence",
+      "subtitle": "Summary across the explanatory models, robustness checks and forecast benchmark",
       "body": [
         {
           "figure": "64 of 120",
           "heading": "Uncertainty first",
           "text": "Significant terms that lost significance once errors were clustered by 48 countries.",
-          "layer": "August primary run"
+          "layer": "Explanatory models"
         },
         {
           "figure": "±5%",
           "heading": "Most framing links are small",
           "text": "Family, agency, business and third-person framing are bounded within about ±5% of funding time per extra mention per 100 words. Urgency is unresolved.",
-          "layer": "Equivalence screen, exploratory"
+          "layer": "Equivalence test, exploratory"
         },
         {
           "figure": "5 of 5 years",
           "heading": "Text adds forecast information",
           "text": "Adding text lowered linear forecast error every year, by 0.26–0.39 days. That is not evidence that rewriting a description speeds funding.",
-          "layer": "November benchmark"
+          "layer": "Forecast benchmark"
         }
       ],
       "notes": {
         "purpose": "Give the answer before the detail.",
         "script": "Three findings. First, the size of the data hid how uncertain many results were: once we accounted for countries, more than half the significant terms fell away. Second, most framing associations are small enough to bound, but urgency is too noisy to judge either way. Third, text does improve forecasts, by about a quarter to two fifths of a day. So text is informative, but we cannot yet say that changing it helps. [Point: Next decision] The next step is measurement and one small pilot.",
-        "reference": "claims_register.md rows: 64 of 120; equivalence screen; November linear gains."
+        "reference": "claims_register.md rows: 64 of 120 (explanatory models, 2026-08-31 run); equivalence test (2026-11-08); forecast benchmark linear gains (2026-11-02)."
       },
       "sublabel": "All evidence layers",
       "decision": "Next decision: validate the text measures, then test one truthful prompt with partners."
@@ -146,7 +146,7 @@
       "section": "Problem",
       "layout": "content+takeaways",
       "title": "The outcome is platform funding time, not borrower waiting time",
-      "subtitle": "Descriptive audit of all records; August primary run",
+      "subtitle": "Descriptive audit of all records",
       "key_figures": [
         {
           "value": "1,453,840",
@@ -235,31 +235,32 @@
       "section": "Approach",
       "layout": "full_width_diagram",
       "title": "Three layers of evidence, each answering a different question",
-      "subtitle": "August primary run, October extension and November benchmark",
+      "subtitle": "Explanatory models, robustness checks and a forecast benchmark",
       "exhibit": {
         "type": "three_layer_diagram",
         "layers": [
           {
-            "name": "August primary run",
+            "name": "Explanatory models",
             "question": "Which features are associated with speed, and how sure are we?",
             "method": "OLS and GLM; HC3 versus country-clustered errors; 2024–2025 chronological holdout"
           },
           {
-            "name": "October extension",
+            "name": "Robustness checks",
             "question": "Do associations survive richer controls?",
             "method": "Country-clustered OLS and LPM with and without a programme-text proxy; BH adjustment"
           },
           {
-            "name": "November benchmark",
+            "name": "Forecast benchmark",
             "question": "How much does text add to a structure-only forecast?",
             "method": "Matched feature blocks on identical rows; as-of training; five annual windows 2021–2025"
           }
         ],
-        "footer": "8 November: exploratory equivalence screen of the October coefficients"
+        "footer": "Equivalence test: are the robustness-check associations small enough to bound?"
       },
       "notes": {
         "purpose": "Explain how the evidence fits together.",
-        "script": "Each layer answers a different question, so we keep their numbers separate. August asks about associations and their uncertainty. October adds controls. November asks a prediction question: does text improve a forecast built on loan structure alone?"
+        "script": "Each layer answers a different question, so we keep their numbers separate. The explanatory models ask about associations and their uncertainty. The robustness checks add controls. The forecast benchmark asks a prediction question: does text improve a forecast built on loan structure alone? An equivalence test then asks which associations are small enough to bound.",
+        "reference": "Run provenance: explanatory models, primary saved run 2026-08-31 (reports/generated_full_dataset); robustness checks, reviewed sensitivity (reports/expanded_feature_sensitivity_reviewed); forecast benchmark, 2026-11-02 (reports/text_benchmark_reviewed); equivalence test, 2026-11-08 (reports/equivalence_screen_reviewed)."
       },
       "sublabel": "Three layers"
     },
@@ -269,7 +270,7 @@
       "section": "Evidence",
       "layout": "content+takeaways",
       "title": "Large row counts did not remove country-level uncertainty",
-      "subtitle": "August primary run: HC3 versus 48-country clustered errors",
+      "subtitle": "Explanatory models: HC3 versus 48-country clustered errors",
       "key_figures": [
         {
           "value": "64 of 120",
@@ -295,9 +296,9 @@
       "notes": {
         "purpose": "Show why we distrust headline significance.",
         "script": "With 1.45 million rows almost everything looks significant. When we let errors correlate within each of 48 countries, 64 of the 120 significant terms fell away, including urgency. [Point: What it does not mean] That tells us the evidence is weak, not that the effect is zero.",
-        "reference": "association_summary.txt sensitivity blocks; recount recorded in claims_register.md."
+        "reference": "Explanatory models, primary saved run 2026-08-31. association_summary.txt sensitivity blocks; recount recorded in claims_register.md."
       },
-      "sublabel": "August primary run"
+      "sublabel": "Explanatory models"
     },
     {
       "n": 9,
@@ -305,7 +306,7 @@
       "section": "Evidence",
       "layout": "content+takeaways",
       "title": "Most framing associations are small; urgency remains unresolved",
-      "subtitle": "Equivalence screen of October coefficients; exploratory, bound set after the estimates",
+      "subtitle": "Equivalence test of the robustness-check coefficients; exploratory, bound set after the estimates",
       "exhibit": {
         "type": "forest",
         "unit": "change in log(1 + days) per extra mention per 100 words, 90% interval, expanded specification",
@@ -399,9 +400,9 @@
       "notes": {
         "purpose": "Separate 'small' from 'unknown'.",
         "script": "The shaded band is a practical bound, about five percent of funding time per extra mention. When a whole interval sits inside the band, we can say the association is small. Most framings do. Urgency and first person do not: their intervals are wide enough to allow sizeable links either way. [Point: Caveat] We chose the bound after seeing the results, so treat this as exploratory. Edit size matters too: one mention in a typical description is a realistic edit, but almost no descriptions contain these words, so the data say little about them.",
-        "reference": "reports/equivalence_screen_reviewed/README.md; src/equivalence.py. Edit-size context: reports/equivalence_screen_reviewed/feature_distribution.json."
+        "reference": "Equivalence test run 2026-11-08. reports/equivalence_screen_reviewed/README.md; src/equivalence.py. Edit-size context: reports/equivalence_screen_reviewed/feature_distribution.json."
       },
-      "sublabel": "Equivalence screen"
+      "sublabel": "Equivalence test"
     },
     {
       "n": 10,
@@ -409,7 +410,7 @@
       "section": "Evidence",
       "layout": "content+takeaways",
       "title": "Regional family-framing patterns rest on two countries each",
-      "subtitle": "August primary run: within-region slopes with country-clustered and heuristic few-cluster intervals",
+      "subtitle": "Explanatory models: within-region slopes with country-clustered and heuristic few-cluster intervals",
       "exhibit": {
         "type": "interval_pairs",
         "unit": "change in log(1 + days) per extra family mention per 100 words",
@@ -459,9 +460,9 @@
       "notes": {
         "purpose": "Prevent over-reading the most striking regional result.",
         "script": "Family framing looks linked to faster funding in two regions. But each region is two countries. A t(1) screen, which is a heuristic and not a calibrated test, widens the intervals across zero.",
-        "reference": "docs/2_evidence_and_corrections.md regional table."
+        "reference": "Explanatory models, primary saved run 2026-08-31. docs/2_evidence_and_corrections.md regional table."
       },
-      "sublabel": "August primary run"
+      "sublabel": "Explanatory models"
     },
     {
       "n": 11,
@@ -469,7 +470,7 @@
       "section": "Evidence",
       "layout": "content+takeaways",
       "title": "Few narrative associations remain after programme controls",
-      "subtitle": "October extension: country-clustered, BH-adjusted within specification",
+      "subtitle": "Robustness checks: country-clustered, BH-adjusted within specification",
       "exhibit": {
         "type": "table",
         "columns": [
@@ -505,7 +506,8 @@
       ],
       "notes": {
         "purpose": "Show that not everything disappears.",
-        "script": "Few results remain under richer controls. Third-person framing keeps about the same size, but its adjusted p-value rises just above 0.05. Business framing is the one term that passes after programme controls, with a slightly lower same-day rate. Both are small and observational."
+        "script": "Few results remain under richer controls. Third-person framing keeps about the same size, but its adjusted p-value rises just above 0.05. Business framing is the one term that passes after programme controls, with a slightly lower same-day rate. Both are small and observational.",
+        "reference": "Robustness checks: reviewed expanded-feature sensitivity, reports/expanded_feature_sensitivity_reviewed. "
       },
       "key_figures": [
         {
@@ -517,7 +519,7 @@
           "label": "business framing, same-day rate, programme-adjusted"
         }
       ],
-      "sublabel": "October extension"
+      "sublabel": "Robustness checks"
     },
     {
       "n": 12,
@@ -525,7 +527,7 @@
       "section": "Evidence",
       "layout": "content+takeaways",
       "title": "Adding text lowered forecast error in 5 of 5 years",
-      "subtitle": "November benchmark: linear model, structure only versus structure plus text, identical evaluation rows",
+      "subtitle": "Forecast benchmark: linear model, structure only versus structure plus text, identical evaluation rows",
       "exhibit": {
         "type": "grouped_bar",
         "unit": "MAE, days (lower is better)",
@@ -593,9 +595,9 @@
       "notes": {
         "purpose": "Present the strongest new result.",
         "script": "We trained on earlier years and tested on each of 2021 to 2025, comparing the same model with and without text on the same loans. Text reduced error every year.",
-        "reference": "docs/6_matched_text_results.md; reports/text_benchmark_reviewed."
+        "reference": "Forecast benchmark, run 2026-11-02: docs/6_matched_text_results.md; reports/text_benchmark_reviewed."
       },
-      "sublabel": "November benchmark"
+      "sublabel": "Forecast benchmark"
     },
     {
       "n": 13,
@@ -603,7 +605,7 @@
       "section": "Evidence",
       "layout": "content+takeaways",
       "title": "The gain is modest and depends on the model",
-      "subtitle": "November benchmark: annual MAE gain with month-resampled 95% intervals",
+      "subtitle": "Forecast benchmark: annual MAE gain with month-resampled 95% intervals",
       "exhibit": {
         "type": "interval_dots",
         "unit": "MAE gain, days (positive is better)",
@@ -702,7 +704,7 @@
         "script": "The linear gains are consistent month to month, but country resampling is less kind, and the tree model gains little. [Point: Countries matter] Part of that country fragility comes from a few extreme forecasts: when we cap forecasts at the longest training wait, an exploratory check, the country interval excludes zero in 4 of 5 years. Different metrics also move in different directions.",
         "reference": "docs/6_matched_text_results.md; reports/loss_alignment_2025/README.md (all five years, capped diagnostic)."
       },
-      "sublabel": "November benchmark"
+      "sublabel": "Forecast benchmark"
     },
     {
       "n": 14,
@@ -789,7 +791,7 @@
       "section": "Appendix",
       "title": "The two-country screen in full",
       "content": "Regional slope table with clusters, loans, estimates, normal and t(1) intervals; explain why one- or two-country groups cannot estimate between-country uncertainty.",
-      "subtitle": "August primary run: within-region family-framing slopes in log(1 + days) per extra mention per 100 words",
+      "subtitle": "Explanatory models: within-region family-framing slopes in log(1 + days) per extra mention per 100 words",
       "exhibit": {
         "type": "table",
         "columns": [
@@ -837,7 +839,7 @@
         "script": "This is the detail behind the regional slide. With two countries per region, the usual interval is too narrow, and the t(1) screen shows how much it could widen.",
         "reference": "docs/2_evidence_and_corrections.md regional table."
       },
-      "sublabel": "August primary run"
+      "sublabel": "Explanatory models"
     },
     {
       "n": "A2",
@@ -845,7 +847,7 @@
       "section": "Appendix",
       "title": "As-of training audit",
       "content": "Cohort table from docs/6_matched_text_results.md (pre-cutoff postings completing later, eligible training, evaluation rows per year).",
-      "subtitle": "November benchmark: training records must have completed before each cutoff",
+      "subtitle": "Forecast benchmark: training records must have completed before each cutoff",
       "exhibit": {
         "type": "table",
         "columns": [
@@ -893,15 +895,15 @@
         "script": "A training record only counts if it had finished funding before the cutoff, so the model never learns from outcomes that were not yet known.",
         "reference": "docs/6_matched_text_results.md training availability table."
       },
-      "sublabel": "November benchmark"
+      "sublabel": "Forecast benchmark"
     },
     {
       "n": "A3",
       "id": "a_primary",
       "section": "Appendix",
-      "title": "Primary prediction metrics",
+      "title": "Chronological holdout metrics",
       "content": "HistGradientBoosting duration MAE 5.2031 days, R² 0.5420; classifier ROC AUC 0.8997, AP 0.8301, Brier 0.1156; 1,174,953 train, 278,887 holdout; completed loans only.",
-      "subtitle": "August primary run: chronological holdout, completed loans only",
+      "subtitle": "Explanatory models: chronological holdout, completed loans only",
       "key_figures": [
         {
           "value": "5.2031 days",
@@ -926,11 +928,11 @@
       ],
       "note": "Scope: 1,174,953 training and 278,887 holdout loans (2024–2025). Retrospective predictions on completed loans, not deployment estimates.",
       "notes": {
-        "purpose": "Record the primary benchmark.",
-        "script": "These are the August benchmark scores. They come from a different model and split from the November benchmark, so the two sets of numbers should not be compared directly.",
-        "reference": "association_summary.txt; analysis_summary.json."
+        "purpose": "Record the holdout scores of the explanatory run.",
+        "script": "These are the holdout scores from the explanatory analysis. They come from a different model and split from the forecast benchmark, so the two sets of numbers should not be compared directly.",
+        "reference": "Primary saved run 2026-08-31: association_summary.txt; analysis_summary.json."
       },
-      "sublabel": "August primary run"
+      "sublabel": "Explanatory models"
     },
     {
       "n": "A4",
