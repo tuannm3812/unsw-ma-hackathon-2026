@@ -249,3 +249,8 @@ docs/presentation/research_refresh/.build/
 !reports/equivalence_screen_reviewed/README.md
 !reports/equivalence_screen_reviewed/equivalence_screen.json
 !reports/equivalence_screen_reviewed/equivalence_screen.csv
+!reports/equivalence_screen_reviewed/feature_distribution.json
+
+# 2025 loss-alignment extension: README and summary aggregates only.
+!reports/loss_alignment_2025/README.md
+!reports/loss_alignment_2025/loss_alignment.json

@@ -56,11 +56,19 @@ while AUC falls from 0.8931 to 0.8883 and day-space R² remains negative.
 Improvement in one loss does not establish improvement in ranking or tail
 error. In plain terms: text makes the typical forecast a little closer and the
 probabilities a little better calibrated, but it slightly worsens how well the
-model orders loans from fastest to slowest. The linear model's negative day-space
-R² is probably driven by fitting log(1 + days) and exponentiating, which undershoots
-long waits; the tree model, on the same transform, reaches R² 0.46–0.48. A 2025
-loss-alignment check tests this explanation. Loss alignment and extreme predictions need further attention before
-any operational use.
+model orders loans from fastest to slowest.
+
+**2025 loss-alignment check (2026-11-08).** The negative day-space R² comes from the
+back-transform, through over-prediction rather than undershoot of long waits. The same
+linear fits score R² 0.330 and 0.433 in log space, and Ridge on raw days
+scores 0.165 and 0.296 in day space. After exponentiating,
+69%–75% of squared error is over-prediction, and predictions reach
+1,394 days against a 2025 maximum of 79.5. Capping at the training maximum
+lifts R² to -0.079 and -0.099; Duan smearing lowers it to -2.61 and -1.86.
+Text lowers MAE under every target, but the size depends on the estimator: 0.26 days on this
+estimator and 1.13 on raw days, which has a weaker baseline (MAE 8.14). With the cap, text
+slightly worsens RMSE. See the [check](../reports/loss_alignment_2025/README.md). Extreme
+predictions need attention before any operational use.
 
 Both duration families minimise squared error on log1p days and then exponentiate predictions, clipping negative days at zero. This is not generally a conditional mean-days estimate. MAE, RMSE, R² and tail errors answer different questions. No separate probability calibration model or capacity-based allocation policy was fitted.
 
