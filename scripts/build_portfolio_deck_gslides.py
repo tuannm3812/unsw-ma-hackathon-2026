@@ -35,6 +35,10 @@ DECK = ROOT / 'docs/presentation/portfolio_deck'
 TITLE = 'Cultural Blend — Beyond a good story (portfolio, Nov 2026)'
 PROTECTED = {'17rHwKFXiqN4GBo8TT5xnBWk33bN7niIodw9K9APNwDk'}
 PHOTO = ROOT / 'docs/presentation/poster/assets/kiva-tatiana-farmer.jpg'
+# Official UNSW logo (competition host mark), provenance in docs/presentation/poster/README.md.
+# Full colour on transparency with no reversed version, so it sits on a white tile, never recoloured.
+LOGO = ROOT / 'docs/presentation/poster/assets/unsw-official-logo.png'
+FOOTER = 'Cultural Blend   Kiva funding speed, 1.45 million loans, 2016–2025'
 
 NAVY, YELLOW, TEAL, PAPER = '#1C2333', '#FFDD04', '#31688E', '#FBFAF6'
 GREY, SLATE, RED, RULE, WHITE = '#59636E', '#46576C', '#C64040', '#999999', '#FFFFFF'
@@ -134,7 +138,13 @@ class Page:
                          'color': color, 'line_weight': weight})
 
     def chrome(self, slide):
-        self.text((slide['section'] or '').upper(), L, 29.5, 500, 14, size=10, color=TEAL, bold=True)
+        section = (slide['section'] or '').upper()
+        sub = (slide.get('sublabel') or '').upper()
+        label = f'{section}  |  {sub}' if sub else section
+        spans = [(len(section), len(section) + 5, {'color': RULE}),
+                 (len(section) + 5, len(label), {'color': GREY})] if sub else []
+        # Sublabel uses body grey, not the parent's #999999, so it meets WCAG AA (DESIGN.md).
+        self.text(label, L, 29.5, 600, 14, size=10, color=TEAL, bold=True, spans=spans)
         self.text(slide['title'], L, 48.4, FULL - L, 34, size=24, bold=True)
         if slide.get('subtitle'):
             self.text(slide['subtitle'], L, 90.9, FULL - L, 18, size=12, color=GREY)
@@ -196,17 +206,31 @@ def table(page, columns, rows, x, y, w, row_h=30, size=10):
 
 # --- slides ---------------------------------------------------------------------------------
 
+def bands(page, x, y):
+    """The cover's shape language: parallelogram bands bleeding off the right and bottom edges."""
+    page.rect(x, y, 1000 - x, 60, YELLOW, 'PARALLELOGRAM')
+    page.rect(x - 70, y + 70, 300, 40, TEAL, 'PARALLELOGRAM')
+    page.rect(x + 245, y + 70, 90, 40, PAPER, 'PARALLELOGRAM')
+    page.rect(x + 120, y + 120, 1000 - x - 120, 30, SLATE, 'PARALLELOGRAM')
+
+
 def cover(page, slide):
+    """Navy ground, full-bleed photo (inserted first), bands across its edge, host logo tile."""
     page.ops.append({'op': 'set-background', 'slide': page.id, 'color': NAVY})
-    page.rect(L, 150, 44, 5, YELLOW)
-    page.text(slide['title'], L, 170, 500, 54, size=40, color=WHITE, bold=True)
-    page.text(slide['subtitle'], L, 232, 470, 50, size=16, color=WHITE, spacing=110)
-    text = '\n'.join(slide['lines'])
-    page.text(text, L, 330, 480, 70, size=12, color=WHITE, spacing=120)
+    bands(page, 520, 396)
+    page.rect(L, 112, 44, 5, YELLOW)
+    page.text('PORTFOLIO EDITION  |  NOVEMBER 2026', L, 128, 420, 14, size=10, color=WHITE, bold=True,
+              spans=[(17, 22, {'color': RULE})])
+    page.text(slide['title'], L, 152, 500, 54, size=40, color=WHITE, bold=True)
+    page.text(slide['subtitle'], L, 212, 470, 50, size=16, color=WHITE, spacing=110)
+    page.text(slide['lines'][0], L, 290, 470, 18, size=12, color=WHITE, bold=True)
+    page.rect(L, 430, 122, 54, WHITE, 'ROUND_RECTANGLE')
+    page.text(slide['lines'][1], L + 136, 430, 300, 54, size=10, color=WHITE, spacing=115, middle=True)
 
 
 def close(page, slide):
     page.ops.append({'op': 'set-background', 'slide': page.id, 'color': NAVY})
+    bands(page, 640, 396)
     page.rect(L, 200, 44, 5, YELLOW)
     page.text(slide['title'], L, 220, 700, 54, size=40, color=WHITE, bold=True)
     first, second = slide['lines']
@@ -218,17 +242,21 @@ def close(page, slide):
 
 
 def summary(page, slide, pos):
+    """Three findings across the full width, then the decision; no takeaway column."""
     page.chrome(slide)
-    figures = ['64 of 120', '±5%', '0.26–0.39']
-    pair = [2, 3, 1]
-    h, gap = 108, 11
-    for i, (body, figure) in enumerate(zip(slide['body'], figures)):
-        y = TOP + i * (h + gap)
-        card(page, L, y, R - 16 - L, h, [TEAL, SLATE, NAVY][i])
-        page.text(figure, L + 12, y + 34, 170, 40, size=26, bold=True)
-        page.block(body['heading'], body['text'], L + 196, y + 16, 370, 80)
-        page.marker(pair[i], R - 16 - 20, y + 10)
-    page.takeaways(slide['takeaways'], pos)
+    width, gap, top, h = 279, 19, TOP, 232
+    for i, body in enumerate(slide['body']):
+        x = L + i * (width + gap)
+        card(page, x, top, width, h, [TEAL, SLATE, NAVY][i])
+        page.text(body['figure'], x + 16, top + 20, width - 32, 40, size=28, bold=True)
+        page.block(body['heading'], body['text'], x + 16, top + 76, width - 32, 110)
+        page.line(x + 16, top + h - 34, x + width - 16, top + h - 34, HAIR, .75)
+        page.text(body['layer'], x + 16, top + h - 26, width - 32, 14, size=10, color=GREY, bold=True)
+    page.rect(L, 388, FULL - L - .5, 48, NAVY)
+    page.rect(L, 388, 6, 48, YELLOW)
+    label = 'Next decision:'
+    page.text(slide['decision'], L + 22, 388, FULL - L - 40, 48, size=12, color=WHITE, middle=True,
+              spans=[(0, len(label), {'bold': True})])
 
 
 def agenda(page, slide, urls):
@@ -578,8 +606,8 @@ def add_notes(page, slide, notes_id):
 
 
 def cover_image(work: Path) -> Path:
-    """Crop the sourced photograph to the frame, rounding its top-left corner on navy."""
-    width, height, radius = 1200, 1500, 60
+    """Crop the sourced photograph to a full-height right frame, rounding its top-left corner."""
+    width, height, radius = 920, 1350, 60
     source = Image.open(PHOTO).convert('RGB')
     ratio = width / height
     w, h = source.size
@@ -595,6 +623,21 @@ def cover_image(work: Path) -> Path:
     target = work / 'cover-frame.jpg'
     canvas.save(target, quality=88)
     return target
+
+
+def ensure_footer(pres: str) -> None:
+    """Add the work-specific footer text and a short yellow accent to the content layout once."""
+    info = json.loads(run('readonly', 'info', pres, '--json'))
+    layout = next(l for l in info['layouts'] if l['layoutProperties'].get('displayName') == 'Content')
+    texts = [''.join(t.get('textRun', {}).get('content', '') for t in
+                     e.get('shape', {}).get('text', {}).get('textElements', []))
+             for e in layout.get('pageElements', [])]
+    if any(FOOTER.split()[0] in t for t in texts):
+        return
+    page = Page(layout['objectId'])
+    page.rect(0, 488.5, 43.5, 3.5, YELLOW)
+    page.text(FOOTER, L, 498, 600, 12, size=8, color=GREY, spans=[(0, len('Cultural Blend'), {'bold': True, 'color': NAVY})])
+    submit(pres, page.ops)
 
 
 def prepare_slides(pres: str, reuse: bool, count: int) -> list[dict]:
@@ -648,6 +691,11 @@ def main() -> None:
     else:
         pres = args.reuse
     slides = prepare_slides(pres, bool(args.reuse), len(story))
+    ensure_footer(pres)
+    with tempfile.TemporaryDirectory() as work:
+        # The photo goes in first so the cover's bands sit on top of its edge.
+        run('mutate', 'insert-image-from-file', pres, '--slide', slides[0]['objectId'],
+            '--file', str(cover_image(Path(work))), '--x', '592', '--y', '0', '--width', '368', '--height', '540')
     urls = {i + 1: f'https://docs.google.com/presentation/d/{pres}/edit#slide=id.{s["objectId"]}'
             for i, s in enumerate(slides)}
     builders = {'summary': summary, 'lever': lever, 'outcome': outcome, 'slowdown': slowdown,
@@ -671,9 +719,9 @@ def main() -> None:
         add_notes(page, slide, notes_id)
         submit(pres, page.ops)
         print(f"slide {slide['n']}: {len(page.ops)} ops", flush=True)
-    with tempfile.TemporaryDirectory() as work:
-        run('mutate', 'insert-image-from-file', pres, '--slide', slides[0]['objectId'],
-            '--file', str(cover_image(Path(work))), '--x', '560', '--y', '40', '--width', '400', '--height', '500')
+    # Logo last, above its white tile; 330 x 140 px source at its own proportions.
+    run('mutate', 'insert-image-from-file', pres, '--slide', slides[0]['objectId'],
+        '--file', str(LOGO), '--x', str(L + 9), '--y', '437.5', '--width', '103.7', '--height', '44')
     print(f'https://docs.google.com/presentation/d/{pres}/edit')
 
 

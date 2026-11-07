@@ -60,7 +60,7 @@ def main() -> int:
     for index, slide in enumerate(story, 1):
         found = lines(index)
         for line in found:
-            is_number = line['y0'] > 490 and line['x0'] > 800
+            is_number = line['y0'] > 490  # footer zone: page number and footer text
             if slide['layout' if 'layout' in slide else 'id'] in ('cover', 'close') or is_number:
                 continue
             if line['y1'] > 477:
