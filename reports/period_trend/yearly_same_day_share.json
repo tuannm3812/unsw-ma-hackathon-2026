@@ -1,0 +1,67 @@
+{
+  "schema_version": "yearly_same_day_share.v1",
+  "population": "eligible completed durations; descriptive",
+  "source": "reports/text_benchmark_private/features.pkl",
+  "years": [
+    {
+      "year": 2016,
+      "records": 129660,
+      "funded_within_24h": 56169,
+      "share_within_24h": 0.43320222119389173
+    },
+    {
+      "year": 2017,
+      "records": 162622,
+      "funded_within_24h": 79137,
+      "share_within_24h": 0.4866315750636445
+    },
+    {
+      "year": 2018,
+      "records": 153492,
+      "funded_within_24h": 74899,
+      "share_within_24h": 0.4879667995726162
+    },
+    {
+      "year": 2019,
+      "records": 144043,
+      "funded_within_24h": 61276,
+      "share_within_24h": 0.42540074838763425
+    },
+    {
+      "year": 2020,
+      "records": 135383,
+      "funded_within_24h": 43709,
+      "share_within_24h": 0.32285442042206186
+    },
+    {
+      "year": 2021,
+      "records": 163166,
+      "funded_within_24h": 46814,
+      "share_within_24h": 0.2869102631675717
+    },
+    {
+      "year": 2022,
+      "records": 143354,
+      "funded_within_24h": 42811,
+      "share_within_24h": 0.2986383358678516
+    },
+    {
+      "year": 2023,
+      "records": 143233,
+      "funded_within_24h": 39334,
+      "share_within_24h": 0.2746154866546117
+    },
+    {
+      "year": 2024,
+      "records": 141725,
+      "funded_within_24h": 38964,
+      "share_within_24h": 0.27492679484917976
+    },
+    {
+      "year": 2025,
+      "records": 137162,
+      "funded_within_24h": 48502,
+      "share_within_24h": 0.35361105845642377
+    }
+  ]
+}
