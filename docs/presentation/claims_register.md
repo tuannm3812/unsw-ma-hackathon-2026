@@ -26,6 +26,8 @@ benchmark. **Equivalence** = exploratory screen of October coefficients (2026-11
 | Loans by period | 589,823 pre-pandemic; 298,549 pandemic; 565,474 post-pandemic | same | August |
 | Same-day share by period | 46.0% → 30.3% → 30.0% | `notebooks/1_full_dataset_eda.py` §period trend | Descriptive |
 | Overall same-day share | 36.6% | `association_summary.txt` | August |
+| Illustrative listing values (slide 4) | median loan US$325; median term 12 months; median borrowers 1; most common sector Agriculture (461,563); most common country Philippines (521,586) | `reports/text_benchmark_private/features.pkl`, eligible records (2026-11-08) | Descriptive |
+| Framing families measured | 8 rates per 100 words | `src/features.py` `FRAMING_PATTERNS` | Descriptive |
 | Pre-disbursal share | 96.4% (median 24.2 days before listing) | `docs/1_data_dictionary.md` (`disbursalDate`) | Descriptive |
 | Country clusters | 48 | `reports/expanded_feature_sensitivity_reviewed/README.md` | October |
 

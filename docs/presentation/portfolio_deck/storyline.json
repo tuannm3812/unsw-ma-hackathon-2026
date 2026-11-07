@@ -25,7 +25,7 @@
         "reference": "Portfolio edition, November 2026. Official results: unsw.edu.au MA-hackathon page (reviewed 2026-10-24). Photo: Kiva farmer photograph, credit Kiva, hosted on kiva.org; provenance in docs/presentation/poster/README.md. It gives context and does not identify a record in the dataset. Unsplash photos: Muhammad-Taha Ibrahim (market) and David Geneugelijk (tailor), Unsplash Licence; see docs/presentation/portfolio_deck/assets/photos/PROVENANCE.md."
       },
       "names": "Mike Nguyen and Sophia Nguyen",
-      "team": "Cultural Blend, finalist team",
+      "team": "Team Cultural Blend",
       "label": "UNSW Marketing Analytics Hackathon 2026"
     },
     {
@@ -103,8 +103,7 @@
       "notes": {
         "purpose": "Orient the reader.",
         "script": "We start with the problem and what the outcome really measures, then our three layers of evidence, then what we found and what we recommend."
-      },
-      "sublabel": "Four parts"
+      }
     },
     {
       "n": 4,
@@ -112,36 +111,80 @@
       "section": "Problem",
       "layout": "content+takeaways",
       "title": "The description is one of the few listing fields still editable",
-      "subtitle": "Context: what is fixed and what is editable when a Kiva loan is listed",
+      "subtitle": "Illustrative listing: what is fixed and what is editable when a loan is listed",
       "exhibit": {
-        "type": "two_column_fields",
-        "fixed": [
-          "Loan amount and term",
-          "Sector and purpose",
-          "Country and partner",
-          "Borrower gender and group size"
+        "type": "listing_card",
+        "label": "ILLUSTRATIVE COMPOSITE, NOT A REAL BORROWER. VALUES ARE DATASET MEDIANS AND MOST COMMON CATEGORIES.",
+        "fixed_fields": [
+          [
+            "Amount, median",
+            "US$325"
+          ],
+          [
+            "Term, median",
+            "12 months"
+          ],
+          [
+            "Borrowers, median",
+            "1"
+          ],
+          [
+            "Sector, most common",
+            "Agriculture"
+          ],
+          [
+            "Country, most common",
+            "Philippines"
+          ],
+          [
+            "Partner",
+            "Field partner"
+          ]
         ],
-        "editable": [
-          "Description text",
-          "Loan use statement",
-          "Photo"
-        ]
+        "description": "She has a banana stall at the market to support her family. She wants to buy more stock quickly, before prices rise. She is thankful to every lender who helps her business grow.",
+        "highlights": {
+          "family": [
+            "family"
+          ],
+          "business": [
+            "market",
+            "buy",
+            "stock",
+            "business"
+          ],
+          "urgency": [
+            "quickly"
+          ],
+          "gratitude": [
+            "thankful"
+          ],
+          "third_person": [
+            "She",
+            "her"
+          ]
+        }
       },
       "takeaways": [
         {
           "marker": 1,
-          "heading": "Why the question matters",
-          "text": "Partners and Kiva staff coach descriptions; if framing mattered, coaching would be a cheap lever."
+          "heading": "Why it matters",
+          "text": "Most listing fields are fixed. The description can still be edited, so if framing mattered, guidance on wording would be a cheap lever."
         },
         {
           "marker": 2,
+          "heading": "What we measured",
+          "text": "Eight framing rates per 100 words, plus sentiment and text form, across 1,453,840 loans."
+        },
+        {
+          "marker": 3,
           "heading": "What we asked",
-          "text": "Which narrative choices are associated with faster funding, for whom and when?"
+          "text": "Which framings are linked to faster funding, for which loans and contexts, and in which periods?"
         }
       ],
       "notes": {
-        "purpose": "Explain why narrative is worth studying.",
-        "script": "Most of what describes a loan is fixed by the time it is listed. The text is the part someone can still edit, which is why platforms coach it. Our question is whether the way it is written is linked to faster funding."
+        "purpose": "Show what a writer can and cannot change.",
+        "script": "This card is an illustrative composite, not a real borrower. Most of a listing is fixed by the time it goes live: amount, term, sector, country and partner. The description is the part someone can still edit. [Point: What we measured] We counted framing words like these per 100 words, for family, business, urgency, gratitude and more, across every loan. [Point: What we asked] The question is which of these framings are linked to faster funding, for whom and when.",
+        "reference": "Composite values: median loan amount US$325, median term 12 months, median borrowers 1, most common sector Agriculture and country Philippines (eligible records, feature cache). Example text written for this slide; each highlighted word matches the src/features.py lexicons. Photo: Muhammad-Taha Ibrahim on Unsplash (Unsplash Licence)."
       },
       "sublabel": "The lever"
     },

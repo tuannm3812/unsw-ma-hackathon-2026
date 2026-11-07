@@ -140,7 +140,13 @@ class Page:
         return element
 
     def marker(self, n, x, y):
-        return self.badge(str(n), x, y, (12, 12), RED)
+        """Red 12 pt ellipse with a centred 8 pt white number in its own frame.
+
+        A number inside a 12 pt shape inherits the native 7.2 pt insets the CLI cannot remove,
+        so the circle stays empty and a text box, compensated for those insets, sits on top.
+        """
+        self.rect(x, y, 12, 12, RED, 'ELLIPSE')
+        return self.text(str(n), x, y, 12, 12, size=8, color=WHITE, bold=True, align='center', middle=True)
 
     def line(self, x1, y1, x2, y2, color=RULE, weight=.75):
         self.ops.append({'op': 'add-line', 'slide': self.id, 'id': self._new('l'), 'x': min(x1, x2),
@@ -233,7 +239,6 @@ def cover(page, slide):
     page.text(slide['subtitle'], L, 252, 430, 50, size=16, color=SLATE, spacing=115)
     page.text(slide['names'], L, 394, 420, 16, size=12, bold=True)
     page.text(slide['team'], L, 413, 420, 16, size=12, color=GREY)
-    page.text(CREDIT, L, 500, 440, 12, size=8, color=GREY)
 
 
 def close(page, slide):
@@ -338,22 +343,56 @@ def agenda(page, slide, urls):
                              'link': urls[number], 'color': ink, 'underline': False})
 
 
+HIGHLIGHT = {'family': '#FFF0A8', 'business': '#E2DCF0', 'urgency': '#D5DCE5'}
+
+
 def lever(page, slide, pos):
+    """An illustrative listing card: fixed fields above, the editable description highlighted by framing."""
     page.chrome(slide)
-    exhibit = slide['exhibit']
-    panels = [('Fixed by the time a loan is listed', exhibit['fixed'], L, 293, SLATE),
-              ('Still editable', exhibit['editable'], 356.5, 293.5, YELLOW)]
-    for heading, items, x, w, bar in panels:
-        card(page, x, TOP, w, 44 + 4 * 62, bar)
-        page.text(heading, x + 12, TOP + 14, w - 24, 18, size=12, bold=True)
-        pitch = 62
-        for i, item in enumerate(items):
-            y = TOP + 44 + i * pitch
-            page.line(x + 12, y, x + w - 12, y, HAIR, .75)
-            page.text(item, x + 12, y, w - 24, pitch, size=12 if bar == YELLOW and i == 0 else 10,
-                      bold=bar == YELLOW and i == 0, middle=True)
-    page.marker(1, 356.5 + 293.5 - 24, TOP + 14)
-    page.marker(2, 356.5 + 293.5 - 24, TOP + 44 + 25)
+    ex = slide['exhibit']
+    x, y, w, h = L, TOP, R - 16 - L, END - TOP
+    page.rect(x, y, w, h, PAPER)
+    page.rect(x, y, w, 2.5, YELLOW)
+    page.text(ex['label'], x + 16, y + 10, w - 32, 12, size=8, color=GREY, bold=True)
+    rx, rw = x + 202, w - 218
+    page.text('FIXED AT LISTING', rx + 26, y + 32, 240, 14, size=10, color=SLATE, bold=True)
+    cw = rw / 3
+    for i, (label, value) in enumerate(ex['fixed_fields']):
+        cx, cy = rx + (i % 3) * cw, y + 54 + (i // 3) * 36
+        page.text(label, cx, cy, cw - 8, 12, size=8, color=GREY)
+        page.text(value, cx, cy + 12, cw - 8, 14, size=10, bold=True)
+    page.line(rx, y + 132, rx + rw, y + 132, HAIR, .75)
+    page.text('EDITABLE DESCRIPTION', rx + 26, y + 142, 240, 14, size=10, color=VIOLET, bold=True)
+    page.rect(rx, y + 164, rw, 108, WHITE)
+    page.rect(rx, y + 164, 4, 108, YELLOW)
+    text = ex['description']
+    spans = []
+    for kind, words in ex['highlights'].items():
+        for word in words:
+            for m in re.finditer(r'\b' + re.escape(word) + r'\b', text):
+                if kind in HIGHLIGHT:
+                    spans.append((m.start(), m.end(), {'background_color': HIGHLIGHT[kind]}))
+                elif kind == 'gratitude':
+                    spans.append((m.start(), m.end(), {'underline': True, 'color': VIOLET, 'bold': True}))
+                else:
+                    spans.append((m.start(), m.end(), {'bold': True}))
+    page.text(text, rx + 16, y + 174, rw - 28, 92, size=12, color=NAVY, spacing=135, spans=spans)
+    page.text('Highlights mark framing terms counted per 100 words', rx, y + 284, rw, 12, size=8, color=GREY, bold=True)
+    chips = [('Family', 'family'), ('Business', 'business'), ('Urgency', 'urgency'), ('Gratitude', 'gratitude'), ('Third person', 'third')]
+    cx = rx
+    for label, kind in chips:
+        width = 8 + len(label) * 5.6
+        if kind in HIGHLIGHT:
+            page.rect(cx, y + 302, width, 18, HIGHLIGHT[kind])
+            page.text(label, cx, y + 302, width, 18, size=10, align='center', middle=True)
+        else:
+            style = {'underline': True, 'color': VIOLET, 'bold': True} if kind == 'gratitude' else {'bold': True}
+            page.text(label, cx, y + 302, width, 18, size=10, align='center', middle=True,
+                      spans=[(0, len(label), style)])
+        cx += width + 8
+    page.marker(3, rx + rw - 14, y + 33)
+    page.marker(1, rx + rw - 14, y + 143)
+    page.marker(2, rx + rw - 14, y + 285)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -685,6 +724,31 @@ def framed_photo(work: Path, source_path: Path, frame: tuple, name: str, all_cor
     return target
 
 
+def fix_markers(pres: str) -> None:
+    """Rebuild every red 12 pt marker in place: empty ellipse plus a centred overlay number."""
+    info = json.loads(run('readonly', 'info', pres, '--json'))
+    for slide in info['slides']:
+        page = Page(slide['objectId'])
+        for element in slide.get('pageElements', []):
+            shape = element.get('shape', {})
+            fill = shape.get('shapeProperties', {}).get('shapeBackgroundFill', {}).get('solidFill', {})
+            rgb = fill.get('color', {}).get('rgbColor', {})
+            text = ''.join(t.get('textRun', {}).get('content', '') for t in shape.get('text', {}).get('textElements', []))
+            if shape.get('shapeType') != 'ELLIPSE' or not text.strip().isdigit():
+                continue
+            if abs(rgb.get('red', 0) - 0.776) > .02 or abs(rgb.get('green', 0) - 0.251) > .02:
+                continue
+            t = element['transform']
+            page.ops.append({'op': 'delete-element', 'element': element['objectId']})
+            page.marker(int(text), t.get('translateX', 0) / EMU_PT, t.get('translateY', 0) / EMU_PT)
+        if page.ops:
+            submit(pres, page.ops)
+            print(f"fixed {sum(o['op'] == 'delete-element' for o in page.ops)} markers on {slide['objectId']}")
+
+
+EMU_PT = 12700
+
+
 def ensure_footer(pres: str) -> None:
     """Add the work-specific footer text and a short yellow accent to the content layout once."""
     info = json.loads(run('readonly', 'info', pres, '--json'))
@@ -700,7 +764,7 @@ def ensure_footer(pres: str) -> None:
     submit(pres, page.ops)
 
 
-def prepare_slides(pres: str, reuse: bool, count: int) -> list[dict]:
+def prepare_slides(pres: str, reuse: bool, count: int, only: set | None = None) -> list[dict]:
     """Return slide objects in deck order, duplicating base slides as needed."""
     slides = json.loads(run('readonly', 'list-slides', pres, '--json'))
     if len(slides) == 2:
@@ -716,7 +780,8 @@ def prepare_slides(pres: str, reuse: bool, count: int) -> list[dict]:
     if len(slides) != count:
         raise SystemExit(f'expected {count} slides, found {len(slides)}')
     if reuse:
-        ops = [{'op': 'delete-element', 'element': element['objectId']} for slide in slides
+        ops = [{'op': 'delete-element', 'element': element['objectId']}
+               for index, slide in enumerate(slides) if only is None or index in only
                for element in slide.get('pageElements', [])
                if 'placeholder' not in element.get('shape', {})]
         if ops:
@@ -740,6 +805,9 @@ def main() -> None:
     target = parser.add_mutually_exclusive_group(required=True)
     target.add_argument('--base', help='blank 960 x 540 base presentation to copy into a NEW deck')
     target.add_argument('--reuse', help='working deck to clear and refill during QA, never an owner-edited deck')
+    parser.add_argument('--only', help='with --reuse: comma-separated storyline slide numbers to refill (others untouched)')
+    parser.add_argument('--fix-markers', action='store_true',
+                        help='with --reuse: rebuild existing red markers in place as circle plus overlay number')
     args = parser.parse_args()
     if {args.base, args.reuse} & PROTECTED:
         raise SystemExit('refusing to touch the historical live deck')
@@ -750,7 +818,12 @@ def main() -> None:
         pres = re.search(r'\(ID: ([\w-]+)\)', run('mutate', 'copy', args.base, TITLE)).group(1)
     else:
         pres = args.reuse
-    slides = prepare_slides(pres, bool(args.reuse), len(story))
+    keys = [str(slide['n']) for slide in story]
+    only = {keys.index(k) for k in args.only.split(',')} if args.only else None
+    if args.fix_markers:
+        fix_markers(pres)
+        return
+    slides = prepare_slides(pres, bool(args.reuse), len(story), only)
     ensure_footer(pres)
     urls = {i + 1: f'https://docs.google.com/presentation/d/{pres}/edit#slide=id.{s["objectId"]}'
             for i, s in enumerate(slides)}
@@ -759,7 +832,9 @@ def main() -> None:
                 'forecast': forecast, 'gain_uncertainty': gains}
     plain = {'approach': approach, 'supports': supports, 'gates': gates, 'a_screen': a_table,
              'a_asof': a_table, 'a_primary': a_metrics, 'a_topics': a_topics, 'cover': cover, 'close': close}
-    for slide, item in zip(story, slides):
+    for index, (slide, item) in enumerate(zip(story, slides)):
+        if only is not None and index not in only:
+            continue
         page = Page(item['objectId'])
         for element in item.get('pageElements', []):
             if 'placeholder' in element.get('shape', {}):
@@ -783,11 +858,18 @@ def main() -> None:
                    for i, (path, frame) in enumerate(COVER_SMALL)]
         # Logo: UNSW host mark on white, 330 x 140 px source at its own proportions.
         images.append((0, LOGO, (L, 446, 84.9, 36)))
+        lever_card = (3, framed_photo(Path(work), MARKET, (L + 16, TOP + 28, 170, 302), 'lever.png', all_corners=True),
+                      (L + 16, TOP + 28, 170, 302))
+        images.append(lever_card)
+        images.append((3, ASSETS / 'icons/table_rows-slate.png', (L + 202, TOP + 30, 18, 18)))
+        images.append((3, ASSETS / 'icons/description-violet.png', (L + 202, TOP + 140, 18, 18)))
         for icon, (x, y, _, _) in zip(SUMMARY_ICONS, SUMMARY_CARDS):
             images.append((1, ASSETS / 'icons' / icon, (x + 16, y + 14, 22, 22)))
         for icon, x in zip(STEP_ICONS, STEP_X):
             images.append((1, ASSETS / 'icons' / icon, (x, BAND[1] + BAND[3] / 2 - 10, 20, 20)))
         for index, path, (x, y, w, h) in images:
+            if only is not None and index not in only:
+                continue
             run('mutate', 'insert-image-from-file', pres, '--slide', slides[index]['objectId'],
                 '--file', str(path), '--x', str(x), '--y', str(y), '--width', str(w), '--height', str(h))
     print(f'https://docs.google.com/presentation/d/{pres}/edit')
