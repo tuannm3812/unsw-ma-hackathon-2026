@@ -1877,12 +1877,12 @@
         {
           "marker": 1,
           "heading": "Small everywhere, not just on average",
-          "text": "Six framings stay within ±5% in **all 10 subgroups**; no family interaction with period or loan size survives clustering."
+          "text": "The five framings on the last slide plus gratitude stay within ±5% in **all 10 subgroups**; no family interaction with period or loan size survives clustering."
         },
         {
           "marker": 2,
-          "heading": "Rare words stay unresolved",
-          "text": "Urgency is small in only **1 of 10** subgroups and first person in **5 of 10**."
+          "heading": "Rare words stay open in most groups",
+          "text": "Urgency is small only before the pandemic (**1 of 10**); first person in **5 of 10**."
         },
         {
           "marker": 3,
@@ -1898,7 +1898,7 @@
       "solution_link": "→ Why one playbook serves every group",
       "notes": {
         "purpose": "Answer for whom and when.",
-        "script": "For whom and when: we refitted the programme-adjusted model separately in ten subgroups: three periods, three loan sizes, female and male borrowers, and Asia and Africa, and applied the same five percent equivalence test. Family, business, agency, third person, basic needs and gratitude stay small in all ten; sentiment in nine. So the small result is not an average hiding a large effect in one group, and no family-framing interaction with period or loan size survives country clustering. [Point: Rare words stay unresolved] Urgency is small in one subgroup, first person in five. [Point: Two patterns to test, not to act on] Among about 180 unadjusted tests, urgency in Asia and agency by gender stand out; they are hypotheses for the Test step, not findings. [Point: The count depends on the model] For same-day funding the pattern is weaker: business and third person are small in all ten, family and agency in nine. In the expanded model, family, business, agency and third person stay small in all ten. The bounds were set after the estimates, so this is exploratory. So the solution can use one playbook rather than group-specific story advice.",
+        "script": "For whom and when: we refitted the programme-adjusted model separately in ten subgroups: three periods, three loan sizes, female and male borrowers, and Asia and Africa, and applied the same five percent equivalence test. The five framings from the last slide stay small in all ten, and gratitude joins them in this model; sentiment is small in nine. So the small result is not an average hiding a large effect in one group, and no family-framing interaction with period or loan size survives country clustering. [Point: Rare words stay open in most groups] Urgency is small in one subgroup, first person in five. [Point: Two patterns to test, not to act on] Among about 180 unadjusted tests, urgency in Asia and agency by gender stand out; they are hypotheses for the Test step, not findings. [Point: The count depends on the model] For same-day funding the pattern is weaker: business and third person are small in all ten, family and agency in nine. In the expanded model, family, business, agency and third person stay small in all ten. The bounds were set after the estimates, so this is exploratory. So the solution can use one playbook rather than group-specific story advice.",
         "reference": "reports/evidence_sources/robustness_summary.json (src/robustness_summary.py, src/subgroup_inference.py); primary interactions: src/primary_interactions.py."
       },
       "figure": "Figure 8."
@@ -1914,7 +1914,7 @@
       "figure": "Figure 9.",
       "exhibit": {
         "title": "Where the forecast gain comes from",
-        "guide": "MAE gain in days from adding text to loan details; right of 0 means lower error.",
+        "guide": "MAE gain in days from adding text to loan details. Bars: linear model. Dots: larger boosted tree. Right of 0 means lower error.",
         "rows": [
           {
             "year": "2021",

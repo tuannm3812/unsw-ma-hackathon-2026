@@ -2929,3 +2929,10 @@ unseen exact template, which cannot exclude near-duplicates.
   - Text adds little on a stronger boosted tree, and about half the linear gain survives a shuffle within country × sector × month.
   - Loan-detail coefficients are saved from the programme-adjusted refit; no ranking or ratio to framing.
   - No independent review. Registered numbers remain with the deck thread; `claims_register.md` was not edited here. Not pushed.
+
+## 2026-11-08: slides 12 and 13 overlap check; slide 14 guide
+
+- Live deck re-read first: no owner edits to mirror.
+- Slide 12 answers how small the links are overall; slide 13 answers for whom. Two points needed fixing on slide 13: it now says its six are slide 12's five plus gratitude, and the rare-words point gives the subgroup detail instead of repeating slide 12. Slide 12 is unchanged.
+- Slide 14's guide now says bars are the linear model and dots the larger boosted tree.
+- Verified: pyflakes, deck QA, rendered slides, full offline pytest. Slides 13 and 14 only were rebuilt; nothing pushed.
