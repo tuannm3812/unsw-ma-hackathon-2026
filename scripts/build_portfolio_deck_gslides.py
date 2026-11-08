@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import importlib.util
 import math
 import os
 import re
@@ -640,22 +641,22 @@ def pipe_x(i):
     return L + i * (PIPE_W + 22) + (18 if i == 3 else 0)
 
 
-# Slide 8 panel (c): map frame matches scripts/build_country_map.py's 270:86 crop.
+# Slide 8 panel (c): map frame matches scripts/build_country_map.py's 270:86 crop, and the table's
+# share cells reuse that script's bins so one legend explains both.
 MAP_PANEL = (L, TOP + 166, R - 16 - L, 148)
-MAP_FRAME = (L + 10, TOP + 166 + 40, 264, 264 * 86 / 270)
+MAP_FRAME = (L + 10, TOP + 166 + 42, 286, 286 * 86 / 270)
 MAP_PNG = ASSETS / 'maps/country_share_map.png'
-MAP_LEGEND = [('#E2DCF0', 'under 1%'), ('#B4A9D2', '1–3%'), ('#8677B4', '3–10%'), ('#5B4B8A', '10%+'),
-              ('#E4E2DC', 'none')]
-# Same-day share against the overall 36.6% (claims register), in percentage points.
-OVERALL_SAME_DAY = 0.366
-SAME_DAY_STEPS = [(-0.15, '#E8E4F2', NAVY), (-0.05, '#C4BBDF', NAVY), (0.05, '#A093C8', NAVY), (9, VIOLET, WHITE)]
-SAME_DAY_LABELS = ['15+ pts below', '5–15 below', 'within 5', '5+ above']
+_MAP_SPEC = importlib.util.spec_from_file_location('build_country_map', ROOT / 'scripts/build_country_map.py')
+COUNTRY_MAP = importlib.util.module_from_spec(_MAP_SPEC)
+_MAP_SPEC.loader.exec_module(COUNTRY_MAP)
+NO_LOANS = COUNTRY_MAP.NO_LOANS
 
 
-def same_day_style(share: float) -> tuple[str, str]:
-    """Chip fill and text colour for a country's same-day share."""
-    gap = share - OVERALL_SAME_DAY
-    return next((fill, ink) for limit, fill, ink in SAME_DAY_STEPS if gap < limit)
+def share_style(share: float) -> tuple[str, str]:
+    """Share-cell fill (the map's bin) and its text colour: white on the two dark steps."""
+    fill = COUNTRY_MAP.share_colour(share)
+    dark = [colour for _, colour in COUNTRY_MAP.BINS][2:]
+    return fill, WHITE if fill in dark else NAVY
 
 
 def panel(page, x, y, w, h, title, guide):
@@ -713,43 +714,36 @@ def clustering(page, slide, pos):
     # (c) map on the left, top-10 table on the right
     cx, cy, cw, ch = MAP_PANEL
     panel(page, cx, cy, cw, ch, ex['panels'][2]['title'], ex['panels'][2]['guide'])
-    # Same-day legend on the title line: shading relative to the overall rate.
-    lx = cx + 196
-    page.text('Same-day vs 36.6% overall:', lx, cy + 9, 110, 12, size=8, color=GREY, bold=True)
-    lx += 110
-    for (_, fill, _), label in zip(SAME_DAY_STEPS, SAME_DAY_LABELS):
-        page.rect(lx, cy + 11, 8, 8, fill)
-        page.text(label, lx + 11, cy + 9, 4.3 * len(label), 12, size=8, color=GREY)
-        lx += 11 + 4.3 * len(label) + 6
-    # Map legend under the map (image inserted later at MAP_FRAME).
+    # Map (image inserted later at MAP_FRAME) with a compact vertical legend to its right.
     mx, my, mw, mh = MAP_FRAME
-    lx, ly = mx, my + mh + 3
-    page.text('Loan share', lx, ly, 46, 12, size=8, color=GREY, bold=True)
-    lx += 48
-    for fill, label in MAP_LEGEND:
-        page.rect(lx, ly + 2, 8, 8, fill)
-        page.text(label, lx + 11, ly, 4.3 * len(label) + 4, 12, size=8, color=GREY)
-        lx += 11 + 4.3 * len(label) + 8
-    page.text(ex['other_row'], mx, ly + 10, mw + 10, 12, size=8, color=GREY, bold=True)
-    # Table: one column of ten rows, a divider between ranks 5 and 6.
+    lx = mx + mw + 10
+    page.text('Loan share', lx, my, 56, 12, size=8, color=GREY, bold=True)
+    legend = [(colour, label) for (_, colour), label in zip(COUNTRY_MAP.BINS, COUNTRY_MAP.BIN_LABELS)]
+    for i, (fill, label) in enumerate(legend + [(NO_LOANS, 'no loans'), (None, 'top 10')]):
+        y = my + 12 * (i + 1)
+        if fill is None:  # navy outline swatch, as drawn on the map
+            page.rect(lx, y + 0.5, 8, 8, NAVY)
+            page.rect(lx + 1.2, y + 1.7, 5.6, 5.6, PAPER)
+        else:
+            page.rect(lx, y + 0.5, 8, 8, fill)  # centred on the label's cap height
+        page.text(label, lx + 12, y, 44, 12, size=8, color=GREY)
+    # Table: top 10 in one column; share cells use the map's colours, same-day is plain text.
     names = ex['country_names']
     rows = ex['country_shares'][:10]
-    tx = cx + 292
-    for label, off, w, align in [('Country', 14, 70, None), ('Loans', 88, 40, 'right'), ('Share', 136, 50, None),
-                                 ('Same-day', 238, 42, 'right')]:
-        page.text(label, tx + off, cy + 38, w, 12, size=8, color=GREY, bold=True, align=align)
+    tx = cx + 376
+    for label, off, w, align in [('Country', 12, 62, None), ('Loans', 74, 40, 'right'), ('Share', 122, 34, 'center'),
+                                 ('Same-day', 162, 42, 'right')]:
+        page.text(label, tx + off, my, w, 12, size=8, color=GREY, bold=True, align=align)
     for k, item in enumerate(rows):
-        y = cy + 49 + k * 9.2 + (4 if k >= 5 else 0)
-        page.text(str(k + 1), tx, y, 12, 12, size=8, color=GREY)
-        page.text(names[item['country']], tx + 14, y, 74, 12, size=8, bold=True)
-        page.text(f"{item['loans']:,}", tx + 88, y, 40, 12, size=8, align='right')
-        page.rect(tx + 136, y + 2, item['share'] * 100 * 1.4, 7, NAVY)
-        page.text(f"{item['share'] * 100:.1f}%", tx + 136 + item['share'] * 100 * 1.4 + 3, y, 34, 12, size=8)
-        fill, ink = same_day_style(item['same_day_share'])
-        page.rect(tx + 252, y + 1, 28, 8.8, fill)
-        page.text(f"{item['same_day_share'] * 100:.0f}%", tx + 252, y + 0.6, 28, 12, size=8, color=ink,
+        y = my + 12 + k * 9
+        page.text(str(k + 1), tx, y, 10, 12, size=8, color=GREY)
+        page.text(names[item['country']], tx + 12, y, 62, 12, size=8, bold=True)
+        page.text(f"{item['loans']:,}", tx + 74, y, 40, 12, size=8, align='right')
+        fill, ink = share_style(item['share'])
+        page.rect(tx + 122, y + 1.2, 34, 8, fill)
+        page.text(f"{item['share'] * 100:.1f}%", tx + 122, y + 0.4, 34, 12, size=8, color=ink,
                   bold=ink == WHITE, align='center')
-    page.line(tx, cy + 49 + 5 * 9.2 + 0.6, tx + 280, cy + 49 + 5 * 9.2 + 0.6, RULE, .5)
+        page.text(f"{item['same_day_share'] * 100:.0f}%", tx + 162, y, 42, 12, size=8, align='right')
     page.marker(1, ax + aw - 22, ay + 8)
     page.marker(2, ax + 210, ay + 46)
     page.marker(3, bx + bw - 22, by + 8)

@@ -829,7 +829,7 @@
           },
           {
             "title": "(c) Where the loans are",
-            "guide": "Ten of 48 countries hold 81% of loans (outlined on the map); same-day shading compares each with the 36.6% overall rate."
+            "guide": "Ten of 48 countries hold 81% of loans (outlined on the map); table share cells use the map's colour scale."
           }
         ],
         "country_names": {
@@ -843,8 +843,7 @@
           "NI": "Nicaragua",
           "LR": "Liberia",
           "TG": "Togo"
-        },
-        "other_row": "Other 38 countries: 275,785 loans, 19.0% of the total"
+        }
       }
     },
     {

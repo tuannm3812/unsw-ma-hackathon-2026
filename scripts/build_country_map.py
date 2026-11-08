@@ -25,7 +25,10 @@ OUTPUT = MAPS / 'country_share_map.png'
 # Deck palette (docs/presentation/DESIGN.md): violet sequential scale on a transparent ground.
 NAVY, NO_LOANS, BORDER = '#1C2333', '#E4E2DC', '#FFFFFF'
 # Loan-share bins as fractions of all loans, with their fill, from low to high.
-BINS = [(0.01, '#E2DCF0'), (0.03, '#B4A9D2'), (0.10, '#8677B4'), (1.01, '#5B4B8A')]
+# The slide 8 table reuses these fills for its share cells, so each step must carry 8 pt text at
+# 4.5:1 or better: navy text on the two light steps, white on the two dark ones.
+BINS = [(0.01, '#E2DCF0'), (0.03, '#B4A9D2'), (0.10, '#7262A3'), (1.01, '#43356F')]
+BIN_LABELS = ['under 1%', '1–3%', '3–10%', '10%+']
 # Crop to the lending countries (longitude -96 to 174, latitude -36 to 50).
 EXTENT = (-96.0, 174.0, -36.0, 50.0)
 TOP_N = 10
