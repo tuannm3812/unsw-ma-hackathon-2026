@@ -969,29 +969,61 @@
       "section": "Next steps",
       "layout": "three_steps",
       "title": "Three gates before any writing advice",
-      "subtitle": "Proposed next research for Kiva and participating partners",
+      "subtitle": "Proposed next research for Kiva and participating partners; each gate must pass before the next",
       "steps": [
         {
           "n": "01",
-          "name": "Validate",
-          "text": "Dual-code a sample of narratives for clarity, specificity, need and agency; freeze definitions."
+          "name": "Validate the measures",
+          "slide": 4,
+          "question": "Do our word counts capture clarity, need and agency?",
+          "do": "Build a small codebook; two people code the same narratives and resolve disagreements.",
+          "done": "Definitions are frozen before later periods are checked."
         },
         {
           "n": "02",
-          "name": "Close data gaps",
-          "text": "Partner identifiers, all listings including expired ones, original text versions."
+          "name": "Close the data gaps",
+          "slide": 5,
+          "question": "What did lenders see, and which listings never funded?",
+          "do": "Get original texts, partner identifiers, exposure data and expired listings.",
+          "done": "Unfunded listings and listing-time text are in the data."
         },
         {
           "n": "03",
-          "name": "Pilot",
-          "text": "One truthful clarity prompt versus control, with a practical threshold and power agreed in advance."
+          "name": "Pilot one prompt",
+          "slide": 14,
+          "question": "Does editing a description change funding speed?",
+          "do": "With partners, test one truthful clarity prompt against a control.",
+          "done": "Threshold, power and guardrails are agreed in advance."
         }
       ],
       "notes": {
         "purpose": "End on a decision path.",
-        "script": "Before anyone tells borrowers how to write, three things need to happen, in order."
+        "script": "Before anyone tells borrowers how to write, three things need to happen, in order. First, check that our word counts measure what we think. Second, get the data we are missing: what lenders saw and the listings that never funded. Third, test one truthful prompt with partners. [Point: Each gate unlocks a stronger claim] Each gate lets us say a little more, from associations today to a tested effect of editing. If a gate fails, we stop and report the uncertainty.",
+        "reference": "docs/6_matched_text_results.md, What to do next; docs/4_research_review.md."
       },
-      "sublabel": "Decision gates"
+      "sublabel": "Decision gates",
+      "ladder": {
+        "title": "Each gate unlocks a stronger claim",
+        "steps": [
+          [
+            "Today",
+            "Associations and forecast information"
+          ],
+          [
+            "After gate 1",
+            "Measures that mean what we say"
+          ],
+          [
+            "After gate 2",
+            "Results for every listing, not only funded ones"
+          ],
+          [
+            "After gate 3",
+            "A tested effect of editing"
+          ]
+        ],
+        "stop": "If a gate fails, stop there: report the uncertainty and give no writing advice."
+      }
     },
     {
       "n": 16,

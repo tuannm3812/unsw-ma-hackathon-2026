@@ -809,19 +809,46 @@ def supports(page, slide):
             page.text(item, x + 14, y, width - 28, pitch, size=12, middle=True)
 
 
-def gates(page, slide):
+GATE_X = [L + i * 306 for i in range(3)]
+GATE_ICONS = ['fact_check-navy.png', 'table_rows-navy.png', 'science-navy.png']
+
+
+def gates(page, slide, urls):
+    """Three gates as full cards, then the claim each gate would unlock and the stop rule."""
     page.chrome(slide)
-    width, gap = 262, 44
+    width, top, h = 262, 136, 226
     fills = [(NAVY, WHITE), (VIOLET, WHITE), (YELLOW, NAVY)]
-    for i, step in enumerate(slide['steps']):
-        x = L + i * (width + gap)
-        card(page, x, 160, width, 176, fills[i][0])
-        page.badge(step['n'], x + 14, 176, (36, 36), *fills[i], 12)
-        page.text(step['name'], x + 14, 224, width - 28, 18, size=12, bold=True)
-        page.text(step['text'], x + 14, 246, width - 28, 70, size=10, color=GREY, spacing=115)
+    for i, (step, x) in enumerate(zip(slide['steps'], GATE_X)):
+        card(page, x, top, width, h, fills[i][0])
+        page.badge(step['n'], x + 14, top + 14, (30, 30), *fills[i], 11)
+        label = f"→ {step['slide']}"
+        page.rect(x + width - 44, top + 20, 30, 16, WHITE, 'ROUND_RECTANGLE')
+        page.text(label, x + width - 44, top + 20, 30, 16, size=8, bold=True, align='center', middle=True,
+                  spans=[(0, len(label), {'link': urls[step['slide']], 'color': NAVY})])
+        page.text(step['name'], x + 14, top + 52, width - 28, 16, size=12, bold=True)
+        for j, (key, size, colour, bold) in enumerate([('question', 10, NAVY, True), ('do', 10, GREY, False),
+                                                       ('done', 10, GREY, False)]):
+            y = top + 76 + j * 50
+            page.text({'question': 'Question', 'do': 'Do', 'done': 'Done when'}[key], x + 14, y, 120, 12,
+                      size=8, color=GREY, bold=True)
+            page.text(step[key], x + 14, y + 12, width - 28, 36, size=size, color=colour, bold=bold, spacing=105)
         if i < 2:
-            page.line(x + width + 8, 248, x + width + 36, 248, SLATE, .75)
+            page.line(x + width + 8, top + h / 2, x + width + 36, top + h / 2, SLATE, .75)
             page.ops[-1]['end_arrow'] = 'FILL_ARROW'
+    ladder = slide['ladder']
+    y = 376
+    page.text(ladder['title'], L, y, 600, 14, size=10, bold=True, color=VIOLET)
+    chip_w, gap = (FULL - L - 3 * 24) / 4, 24
+    for i, (stage, claim) in enumerate(ladder['steps']):
+        x = L + i * (chip_w + gap)
+        page.rect(x, y + 20, chip_w, 40, PAPER)
+        page.rect(x, y + 20, 4, 40, [SLATE, NAVY, VIOLET, YELLOW][i])
+        page.text(f'{stage}\n{claim}', x + 12, y + 20, chip_w - 18, 40, size=10, middle=True, spacing=105,
+                  spans=[(0, len(stage), {'bold': True, 'color': GREY, 'font_size': 8})])
+        if i < 3:
+            page.line(x + chip_w + 3, y + 40, x + chip_w + gap - 3, y + 40, SLATE, .75)
+            page.ops[-1]['end_arrow'] = 'FILL_ARROW'
+    page.text(ladder['stop'], L, y + 68, FULL - L, 14, size=10, color=SLATE, bold=True)
 
 
 def a_table(page, slide):
@@ -1041,6 +1068,8 @@ def main() -> None:
             agenda(page, slide, urls)
         elif slide['id'] == 'approach':
             approach(page, slide, urls)
+        elif slide['id'] == 'gates':
+            gates(page, slide, urls)
         else:
             plain[slide['id']](page, slide)
         notes_id = next(e['objectId'] for e in item['slideProperties']['notesPage']['pageElements']
@@ -1067,6 +1096,8 @@ def main() -> None:
             images.append((4, ASSETS / 'icons' / icon, (x - 15, 171, 30, 30)))
         images.append((4, ASSETS / 'icons/check_circle-navy.png', (356 + 12, 284 + 31, 18, 18)))
         images.append((4, ASSETS / 'icons/block-slate.png', (356 + 12, 284 + 74, 18, 18)))
+        for x, icon in zip(GATE_X, GATE_ICONS):
+            images.append((14, ASSETS / 'icons' / icon, (x + 262 - 72, 136 + 18, 20, 20)))
         for icon, (x, y, _, _) in zip(SUMMARY_ICONS, SUMMARY_CARDS):
             images.append((1, ASSETS / 'icons' / icon, (x + 16, y + 14, 22, 22)))
         for icon, x in zip(STEP_ICONS, STEP_X):
