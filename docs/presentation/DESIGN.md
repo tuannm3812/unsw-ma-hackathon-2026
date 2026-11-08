@@ -38,7 +38,7 @@ it is preserved in git history (commit `d9a234f`).
 - **Ground.** White ground on every slide, including the cover and close.
 - **Header.** The section label sits at x43.5/y29.5, 10 pt bold uppercase: section in violet, a thin "|" separator in #999999, then the sublabel in #59636E. The parent's #999999 sublabel fails AA on white. A short yellow accent sits under the label. Mike removed the agenda's label in the live deck; `hide_label` in the storyline preserves that.
 - **Footer (Mike's decision).** An edge-reaching navy line at y492 with a short yellow accent at its left. Left text, 8 pt: "**Cultural Blend**   Kiva funding speed, 1.45 million loans, 2016–2025". It uses spacing and weight rather than a vertical bar. One inherited page number sits at the right.
-- **Sections.** Problem, Approach, Evidence, Next steps; the agenda uses these names.
+- **Sections (Mike's decision, solution-led).** Problem, Solution, Evidence, Next steps, then Appendix. There is no agenda slide; the summary carries the spine. Main figures are numbered 1, 2, …; appendix figures take their slide label (Figure A2 on slide A2).
 
 ## Evidence names (Mike's decision)
 

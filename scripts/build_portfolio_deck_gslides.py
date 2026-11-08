@@ -253,8 +253,8 @@ def cover(page, slide):
     page.rect(x + 8, y + 8, w, h, VIOLET, 'ROUND_RECTANGLE')
     page.rect(L, 156, 28, 3, YELLOW)
     page.text('UNSW MARKETING ANALYTICS HACKATHON 2026', L, 166, 440, 14, size=10, color=VIOLET, bold=True)
-    page.text(slide['title'], L, 186, 450, 56, size=44, bold=True)
-    page.text(slide['subtitle'], L, 252, 430, 50, size=16, color=SLATE, spacing=115)
+    page.text(slide['title'], L, 186, 450, 112, size=44, bold=True, spacing=95)
+    page.text(slide['subtitle'], L, 304, 430, 50, size=16, color=SLATE, spacing=115)
     page.text(slide['names'], L, 394, 420, 16, size=12, bold=True)
     page.text(slide['team'], L, 413, 420, 16, size=12, color=GREY)
 
@@ -272,8 +272,8 @@ def close(page, slide):
               spans=[(0, len(first), {'bold': True}), (start, len(text), {'link': slide['link'], 'color': VIOLET})])
 
 
-SUMMARY_ICONS = ['query_stats-violet.png', 'target-violet.png', 'trending_up-violet.png']
-STEP_ICONS = ['fact_check-white.png', 'table_rows-white.png', 'science-white.png']
+SUMMARY_ICONS = ['account_balance-violet.png', 'target-violet.png', 'description-violet.png']
+STEP_ICONS = ['query_stats-white.png', 'trending_up-white.png', 'science-white.png']
 SUMMARY_CARDS = [(L + i * 298, TOP, 279, 244) for i in range(3)]
 BAND = (L, 390, FULL - L - .5, 66)
 STEP_X = [548, 670, 792]
@@ -282,8 +282,9 @@ STEP_X = [548, 670, 792]
 def summary(page, slide, pos):
     """Three mini-exhibits, each with an icon, key figure and a native chart, then the decision."""
     page.chrome(slide)
-    exhibits = [waffle_mini, bound_mini, gain_mini]
-    for (x, y, w, h), body, draw, colour in zip(SUMMARY_CARDS, slide['body'], exhibits, [VIOLET, SLATE, NAVY]):
+    minis = {'periods': period_mini, 'lift': lift_mini, 'bound': bound_mini, 'waffle': waffle_mini, 'gain': gain_mini}
+    for (x, y, w, h), body, colour in zip(SUMMARY_CARDS, slide['body'], [SLATE, NAVY, VIOLET]):
+        draw = minis[body.get('mini', 'gain')]
         card(page, x, y, w, h, colour)
         page.text(body['layer'].upper(), x + 46, y + 18, w - 62, 14, size=10, color=GREY, bold=True)
         page.text(body['figure'], x + 16, y + 42, w - 32, 40, size=32, bold=True)
@@ -297,6 +298,36 @@ def summary(page, slide, pos):
               spans=[(0, len(label), {'bold': True})])
     for x, step in zip(STEP_X, slide['steps']):
         page.text(step, x + 26, by, 96, bh, size=10, color=WHITE, middle=True, spacing=110)
+    if slide.get('pending'):
+        page.text(slide['pending'], L, by + bh + 8, FULL - L, 12, size=8, color=GREY)
+
+
+def period_mini(page, x, y, w, slide):
+    """Same-day share by period, bars from zero with direct labels."""
+    periods = slide_by_id('problem')['exhibit']['periods']
+    bar, step, base, per = 56, 82, y + 72, 1.3
+    for i, (name, value) in enumerate(periods):
+        bx = x + 4 + i * step
+        page.rect(bx, base - value * per, bar, value * per, SLATE if i == 0 else NAVY)
+        page.text(f'{value:.1f}%', bx - 8, base - value * per - 14, bar + 16, 12, size=8, color=NAVY, bold=True,
+                  align='center')
+        page.text(name, bx - 14, base + 2, bar + 28, 12, size=8, color=GREY, align='center')
+    page.line(x, base, x + w, base, NAVY, .75)
+
+
+def lift_mini(page, x, y, w, slide):
+    """Triage lift by test year against random (1x)."""
+    lift = slide_by_id('triage')['exhibit']['lift']
+    bar, step, base, per = 30, 50, y + 72, 15
+    page.line(x, base - per, x + w, base - per, RULE, .75)
+    page.ops[-1]['dash_style'] = 'DASH'
+    for i, (year, value) in enumerate(lift):
+        bx = x + 4 + i * step
+        page.rect(bx, base - value * per, bar, value * per, NAVY)
+        page.text(f'{value:.2f}', bx - 8, base - value * per - 14, bar + 16, 12, size=8, color=NAVY, bold=True,
+                  align='center')
+        page.text(str(year), bx - 8, base + 2, bar + 16, 12, size=8, color=GREY, align='center')
+    page.line(x, base, x + w, base, NAVY, .75)
 
 
 def waffle_mini(page, x, y, w, slide):
@@ -767,7 +798,7 @@ def clustering(page, slide, pos):
     page.marker(2, ax + 210, ay + 46)
     page.marker(3, bx + bw - 22, by + 8)
     page.marker(4, cx + cw - 22, cy + 8)
-    page.caption('Figure 4.', ex['caption'], cy + ch + 8, w=cw)
+    page.caption(slide['figure'], ex['caption'], cy + ch + 8, w=cw)
     page.caption('¹', ex['note'], cy + ch + 22, w=cw)
     page.takeaways(slide['takeaways'], pos)
 
@@ -835,7 +866,7 @@ def forest(page, slide, pos):
     page.marker(1, *header['bounded'])
     page.marker(3, *header['unresolved'])
     page.marker(4, rx + 3.3 * len(ex['t4_tag']) + 8, header['bounded'][1] + 0.5)
-    page.caption('Figure 6.', ex['caption'], ly + 16)
+    page.caption(slide['figure'], ex['caption'], ly + 16)
     page.caption('¹', ex['note_sup'], ly + 29)
     page.takeaways(slide['takeaways'], pos)
 
@@ -914,7 +945,7 @@ def persist(page, slide, pos):
     page.chrome(slide)
     exhibit = slide['exhibit']
     table(page, exhibit['columns'], exhibit['rows'], L, TOP, R - L - 6, 40)
-    page.caption('Figure 5.', exhibit['note'], TOP + 120 + 8)
+    page.caption(slide['figure'], exhibit['note'], TOP + 120 + 8)
     first, second = slide['key_figures']
     key_card(page, first, L, 286, 296, 110, VIOLET, 24)
     key_card(page, second, 353.5, 286, 296.5, 110, NAVY, 24)
@@ -973,7 +1004,7 @@ def forecast(page, slide, pos):
     page.marker(1, 498 + 152 - 22, TOP + 10)
     page.marker(2, 290, legend_y + 1)
     page.marker(3, 498 + 152 - 22, 246 + 10)  # gain stays positive every year
-    page.caption('Figure 7.', exhibit['caption'], ly + 16)
+    page.caption(slide['figure'], exhibit['caption'], ly + 16)
     page.caption('¹', exhibit['note_sup'], ly + 29)
     page.takeaways(slide['takeaways'], pos)
 
@@ -1036,16 +1067,18 @@ def gains(page, slide, pos):
         rng(px, *c['country'], c['gain'], ry + 6, SLATE, 2, 5)
     axis(px, y + 42 + 5 * 18, [0, .25, .5])
     page.text('days of MAE gain', px(.9) - 80, y + 42 + 5 * 18 + 3, 80, 11, size=8, color=GREY, align='right')
-    page.caption('Figure 8.', ex['caption'], TOP + top_h + gap + bottom_h + 8)
+    page.caption(slide['figure'], ex['caption'], TOP + top_h + gap + bottom_h + 8)
     page.caption('¹', ex['note_sup'], TOP + top_h + gap + bottom_h + 21)
     page.takeaways(slide['takeaways'], pos)
 
 
+VERDICT_FILLS = {'yes': NAVY, 'unclear': SLATE, 'not_yet': VIOLET}
+
+
 def supports(page, slide, urls):
-    """2x2 answer board: one block per part of the research question, then a strip into the gates."""
+    """2x2 board: per block a question, verdict tag, key figure, evidence and a 'so what' line; then a strip."""
     page.chrome(slide)
-    positions = {str(s['n']): k + 1 for k, s in enumerate(slide_data().values())}
-    gap, bw, bh = 16, (FULL - L - 16) / 2, 136
+    gap, bw, bh = 16, (FULL - L - 16) / 2, 142
     for k, block in enumerate(slide['blocks']):
         x, y = L + (k % 2) * (bw + gap), TOP + (k // 2) * (bh + gap)
         fill = VERDICT_FILLS[block['tone']]
@@ -1053,32 +1086,37 @@ def supports(page, slide, urls):
         page.rect(x, y, bw, 3, fill)
         tag_w = 6.2 * len(block['verdict']) + 20
         page.text(block['question'], x + 18, y + 16, bw - 54 - tag_w, 16, size=11, color=GREY, bold=True)
-        tag = page.badge(block['verdict'], x + bw - 18 - tag_w, y + 14, (tag_w, 20), fill, WHITE, 9, 'ROUND_RECTANGLE')
-        page.text(block['figure'], x + 18, y + 40, bw - 36, 44, size=32, bold=True)
-        page.text(block['evidence'], x + 18, y + 90, bw - 90, 34, size=11, color=GREY, spacing=110)
+        page.badge(block['verdict'], x + bw - 18 - tag_w, y + 14, (tag_w, 20), fill, WHITE, 9, 'ROUND_RECTANGLE')
+        page.text(block['figure'], x + 18, y + 38, bw - 36, 36, size=28, bold=True)
+        page.text(block['evidence'], x + 18, y + 78, bw - 36, 30, size=10, color=GREY, spacing=110)
+        if block.get('so_what'):
+            page.text(block['so_what'], x + 18, y + bh - 26, bw - 120, 16, size=10, bold=True, color=fill)
         cx = x + bw - 18
         for label in reversed(block['slides']):
-            cx -= 30
-            chip = page.badge(f'→{label}', cx, y + bh - 28, (26, 16), fill, WHITE, 8, 'ROUND_RECTANGLE')
-            page.ops.append({'op': 'style-text', 'element': chip, 'start': 0, 'end': len(label) + 1,
-                             'link': urls[positions[label]], 'color': WHITE, 'underline': False})
-    sy = TOP + 2 * bh + gap + 14
-    page.rect(L, sy, 2 * bw + gap, 30, PAPER)
-    page.rect(L, sy, 4, 30, YELLOW)
+            cx -= 32
+            chip_link(page, label, cx, y + bh - 28, fill, urls)
+    sy = TOP + 2 * bh + gap + 12
+    page.rect(L, sy, 2 * bw + gap, 28, PAPER)
+    page.rect(L, sy, 4, 28, YELLOW)
     nxt = slide['next']
     label = f"{nxt['text']}  →{nxt['slide']}"
-    page.text(label, L + 16, sy, 2 * bw + gap - 32, 30, size=11, bold=True, middle=True,
-              spans=[(len(nxt['text']) + 2, len(label), {'link': urls[positions[nxt['slide']]], 'color': VIOLET})])
+    page.text(label, L + 16, sy, 2 * bw + gap - 32, 28, size=11, bold=True, middle=True,
+              spans=[(len(nxt['text']) + 2, len(label), {'link': urls[nxt['slide']], 'color': VIOLET})])
 
 
 GATE_X = [L + i * 306 for i in range(3)]
+
+
 GATE_ICONS = ['fact_check-navy.png', 'table_rows-navy.png', 'science-navy.png']
+SOLUTION_ICONS = ['target-navy.png', 'groups-navy.png', 'science-navy.png']
 
 
 def gates(page, slide, urls):
-    """Three gates as full cards, then the claim each gate would unlock and the stop rule."""
+    """Three steps as full cards with labelled rows; then either a ladder of claims or a stop line."""
     page.chrome(slide)
-    width, top, h = 262, 136, 226
+    ladder = slide.get('ladder')
+    width, top = 262, 136
+    h = 226 if ladder else 270
     fills = [(NAVY, WHITE), (VIOLET, WHITE), (YELLOW, NAVY)]
     for i, (step, x) in enumerate(zip(slide['steps'], GATE_X)):
         card(page, x, top, width, h, fills[i][0])
@@ -1088,16 +1126,19 @@ def gates(page, slide, urls):
         page.text(label, x + width - 44, top + 20, 30, 16, size=8, bold=True, align='center', middle=True,
                   spans=[(0, len(label), {'link': urls[step['slide']], 'color': NAVY})])
         page.text(step['name'], x + 14, top + 52, width - 28, 16, size=12, bold=True)
-        for j, (key, size, colour, bold) in enumerate([('question', 10, NAVY, True), ('do', 10, GREY, False),
-                                                       ('done', 10, GREY, False)]):
-            y = top + 76 + j * 50
-            page.text({'question': 'Question', 'do': 'Do', 'done': 'Done when'}[key], x + 14, y, 120, 12,
-                      size=8, color=GREY, bold=True)
-            page.text(step[key], x + 14, y + 12, width - 28, 36, size=size, color=colour, bold=bold, spacing=105)
+        rows = step.get('rows') or [['Question', step['question']], ['Do', step['do']], ['Done when', step['done']]]
+        pitch = 50 if ladder else 62
+        for j, (name, value) in enumerate(rows):
+            y = top + 76 + j * pitch
+            page.text(name, x + 14, y, 120, 12, size=8, color=GREY, bold=True)
+            page.text(value, x + 14, y + 12, width - 28, pitch - 14, size=10, color=NAVY if j == 0 else GREY,
+                      bold=j == 0, spacing=105)
         if i < 2:
             page.line(x + width + 8, top + h / 2, x + width + 36, top + h / 2, SLATE, .75)
             page.ops[-1]['end_arrow'] = 'FILL_ARROW'
-    ladder = slide['ladder']
+    if not ladder:
+        page.text(slide['stop'], L, top + h + 18, FULL - L, 14, size=11, color=SLATE, bold=True)
+        return
     y = 376
     page.text(ladder['title'], L, y, 600, 14, size=10, bold=True, color=VIOLET)
     chip_w, gap = (FULL - L - 3 * 24) / 4, 24
@@ -1111,6 +1152,187 @@ def gates(page, slide, urls):
             page.line(x + chip_w + 3, y + 40, x + chip_w + gap - 3, y + 40, SLATE, .75)
             page.ops[-1]['end_arrow'] = 'FILL_ARROW'
     page.text(ladder['stop'], L, y + 68, FULL - L, 14, size=10, color=SLATE, bold=True)
+
+
+def chip_link(page, label, x, y, fill, urls, ink=WHITE):
+    """Small rounded "→N" chip linking to slide N (a number or an appendix label)."""
+    text = f'→{label}'
+    chip = page.badge(text, x, y, (28, 16), fill, ink, 8, 'ROUND_RECTANGLE')
+    page.ops.append({'op': 'style-text', 'element': chip, 'start': 0, 'end': len(text),
+                     'link': urls[label], 'color': ink, 'underline': False})
+
+
+def problem(page, slide, pos):
+    """Two key waits, then same-day share by period as bars from zero."""
+    page.chrome(slide)
+    ex = slide['exhibit']
+    for i, (figure, bar) in enumerate(zip(ex['cards'], [NAVY, VIOLET])):
+        key_card(page, figure, L + i * 306, TOP, 294, 92, bar, 26)
+        page.marker(i + 1, L + i * 306 + 294 - 22, TOP + 10)
+    ty = TOP + 108
+    page.text(ex['period_title'], L, ty, 400, 13, size=9, bold=True)
+    base, per, bar, step = ty + 196, 3.6, 120, 196
+    for i, (name, value) in enumerate(ex['periods']):
+        bx = L + 20 + i * step
+        page.rect(bx, base - value * per, bar, value * per, SLATE if i == 0 else NAVY)
+        page.text(f'{value:.1f}%', bx, base - value * per - 18, bar, 14, size=11, bold=True, align='center')
+        page.text(name, bx - 10, base + 4, bar + 20, 13, size=9, color=GREY, align='center')
+        if i == 1:
+            page.marker(3, bx + bar + 6, base - value * per - 6)
+    page.line(L, base, L + 20 + 2 * step + bar + 20, base, NAVY, 1)
+    page.caption(slide['figure'], ex['caption'], base + 24)
+    page.takeaways(slide['takeaways'], pos)
+
+
+INSIGHT_CARDS = [(L + i * 298, TOP, 279, 236) for i in range(3)]
+
+
+def insight(page, slide, urls):
+    """Three insight cards (icon, heading, key figure, one line, link), then the 'so' band."""
+    page.chrome(slide)
+    for (x, y, w, h), item, bar in zip(INSIGHT_CARDS, slide['cards'], [NAVY, SLATE, VIOLET]):
+        card(page, x, y, w, h, bar)
+        page.text(item['heading'], x + 46, y + 18, w - 62, 16, size=12, bold=True)
+        page.text(item['figure'], x + 16, y + 54, w - 32, 44, size=36, bold=True)
+        page.text(item['text'], x + 16, y + 112, w - 32, 80, size=11, color=GREY, spacing=115)
+        chip_link(page, item['slide'], x + w - 44, y + h - 28, bar, urls)
+    bx, by, bw, bh = L, 384, FULL - L - .5, 56
+    page.rect(bx, by, bw, bh, NAVY)
+    page.rect(bx, by, 6, bh, YELLOW)
+    page.text(slide['band'], bx + 22, by, bw - 40, bh, size=14, color=WHITE, bold=True, middle=True)
+    if slide.get('pending'):
+        page.text(slide['pending'], L, by + bh + 8, FULL - L, 12, size=8, color=GREY)
+
+
+def triage(page, slide):
+    """Concept card for an early-warning flag beside the retrospective lift by year."""
+    page.chrome(slide)
+    ex = slide['exhibit']
+    x, y, w, h = L, TOP, 400, 296
+    card(page, x, y, w, h, VIOLET)
+    tag_w = 6.2 * len(ex['tag']) + 20
+    page.badge(ex['tag'], x + w - 14 - tag_w, y + 12, (tag_w, 20), YELLOW, NAVY, 9, 'ROUND_RECTANGLE')
+    page.text('Listing at posting time', x + 16, y + 14, 200, 12, size=8, color=GREY, bold=True)
+    page.text(ex['listing'], x + 16, y + 32, w - 32, 16, size=12, bold=True)
+    page.text(ex['listing_note'], x + 16, y + 50, w - 32, 12, size=8, color=GREY)
+    page.text('Predicted risk of slow funding', x + 16, y + 74, 220, 12, size=8, color=GREY, bold=True)
+    seg, gap = 34, 2.4
+    for k in range(10):
+        page.rect(x + 16 + k * (seg + gap), y + 90, seg, 12, VIOLET if k == 9 else '#E2DCF0')
+    page.text('top 10%', x + 16 + 9 * (seg + gap) - 8, y + 104, seg + 16, 12, size=8, color=VIOLET, bold=True,
+              align='center')
+    page.text(ex['flag'], x + 16, y + 118, w - 32, 16, size=12, color=VIOLET, bold=True)
+    page.text(ex['same_day'], x + 16, y + 136, w - 32, 14, size=10, color=GREY)
+    page.text(ex['support_title'], x + 16, y + 164, 200, 14, size=10, bold=True)
+    for k, item in enumerate(ex['support']):
+        page.text(item, x + 42, y + 184 + 24 * k, w - 60, 14, size=10)
+    rx, rw = 470, FULL - 470
+    page.text(ex['headline'], rx, TOP - 2, rw, 44, size=36, bold=True)
+    page.text(ex['headline_label'], rx, TOP + 44, rw, 32, size=11, color=GREY, spacing=110)
+    base, per, bar, step = TOP + 236, 30, 46, 86
+    page.text('Lift by test year; dashed line = random (1×)', rx, TOP + 90, rw, 12, size=8, color=GREY, bold=True)
+    page.line(rx, base - per, rx + 5 * step - 20, base - per, SLATE, .75)
+    page.ops[-1]['dash_style'] = 'DASH'
+    for k, (year, value) in enumerate(ex['lift']):
+        bx = rx + 8 + k * step
+        page.rect(bx, base - value * per, bar, value * per, NAVY)
+        page.text(f'{value:.2f}×', bx - 10, base - value * per - 15, bar + 20, 13, size=9, bold=True, align='center')
+        page.text(str(year), bx - 10, base + 3, bar + 20, 12, size=8, color=GREY, align='center')
+    page.line(rx, base, rx + 5 * step - 20, base, NAVY, 1)
+    for k, key in enumerate(['text_line', 'country_line', 'auc_line']):
+        page.text(ex[key], rx, base + 22 + 13 * k, rw, 12, size=8, color=NAVY if k < 2 else GREY, bold=k < 2)
+    page.caption(slide['figure'], ex['caption'], 440, w=FULL - L)
+    page.text(ex['scope'], L, 453, FULL - L, 22, size=8, color=GREY, spacing=105,
+              spans=[(0, len('Scope:'), {'bold': True})])
+
+
+LEVER_BOXES = [(L + (k % 2) * 292, TOP + (k // 2) * 130, 282, 120) for k in range(4)]
+
+
+def prioritise(page, slide, urls):
+    """Four lender-side levers to pilot, and one card on where not to spend effort."""
+    page.chrome(slide)
+    for (x, y, w, h), lever in zip(LEVER_BOXES, slide['levers']):
+        card(page, x, y, w, h, NAVY)
+        page.text(lever['name'], x + 44, y + 16, w - 60, 18, size=14, bold=True)
+        page.text(lever['text'], x + 16, y + 50, w - 32, 50, size=11, color=GREY, spacing=115)
+    dx, dy, dw, dh = L + 600, TOP, FULL - L - 600, 250
+    dont = slide['dont']
+    card(page, dx, dy, dw, dh, VIOLET)
+    page.text(dont['heading'], dx + 16, dy + 16, dw - 32, 18, size=13, color=VIOLET, bold=True)
+    page.text(dont['figure'], dx + 16, dy + 46, dw - 32, 44, size=36, bold=True)
+    page.text(dont['text'], dx + 16, dy + 104, dw - 32, 100, size=11, color=GREY, spacing=115)
+    chip_link(page, dont['slide'], dx + dw - 44, dy + dh - 28, VIOLET, urls)
+    page.text(slide['note'], L, TOP + 268, FULL - L, 14, size=10, color=SLATE, bold=True,
+              spans=[(0, len('Scope:'), {'bold': True})])
+
+
+def text_adds(page, slide, pos):
+    """(a) gain by text feature group per year; (b) month versus country ranges per year."""
+    page.chrome(slide)
+    ex = slide['exhibit']
+    pw = R - L - 6
+    ah, bh, gap = 150, 150, 8
+    panel(page, L, TOP, pw, ah, ex['panels'][0]['title'], ex['panels'][0]['guide'])
+    panel(page, L, TOP + ah + gap, pw, bh, ex['panels'][1]['title'], ex['panels'][1]['guide'])
+    page.marker(1, L + pw - 22, TOP + 8)
+    page.marker(3, L + pw - 22, TOP + ah + gap + 8)
+    scale, bx0 = 900, L + 50
+    for k, row in enumerate(ex['breakdown']):
+        y = TOP + 42 + 15 * k
+        page.text(str(row['year']), L + 10, y, 34, 12, size=8, color=GREY)
+        left = bx0
+        for value, fill in zip(row['stages'], STAGE_FILLS):
+            page.rect(left, y + 1.5, value * scale, 9, fill)
+            left += value * scale
+        page.text(f"{row['total']:.3f}", left + 4, y, 40, 12, size=8, color=NAVY, bold=True)
+    ly, lx = TOP + 42 + 15 * 5 + 4, bx0
+    for label, fill in zip(ex['stage_labels'], STAGE_FILLS):
+        page.rect(lx, ly + 1.6, 9, 7, fill)
+        page.text(label, lx + 13, ly, 4.2 * len(label) + 6, 12, size=8, color=GREY)
+        lx += 13 + 4.2 * len(label) + 16
+    page.marker(2, lx - 10, ly + 0.5)
+    y0 = TOP + ah + gap
+    lo, hi = -.2, .9
+    px = lambda v: L + 50 + (v - lo) * (pw - 80) / (hi - lo)
+    page.line(px(0), y0 + 40, px(0), y0 + 40 + 5 * 18, NAVY, .75)
+    for k, year in enumerate(sorted(ex['linear'])):
+        ry = y0 + 46 + 18 * k
+        page.text(year, L + 10, ry - 3, 34, 12, size=8, color=GREY)
+        v = ex['linear'][year]
+        for off, key, colour in [(0, 'month', NAVY), (6, 'country', VIOLET)]:
+            low, high = v[key]
+            page.line(px(low), ry + off, px(high), ry + off, colour, 2)
+            page.rect(px(v['gain']) - 2.5, ry + off - 2.5, 5, 5, colour, 'ELLIPSE')
+    for value in (0, .25, .5):
+        page.line(px(value), y0 + 40 + 5 * 18, px(value), y0 + 43 + 5 * 18, RULE, .75)
+        page.text(f'{value:.2f}'.rstrip('0').rstrip('.') if value else '0', px(value) - 16, y0 + 43 + 5 * 18, 32,
+                  11, size=8, color=GREY, align='center')
+    page.text('days of MAE gain', px(.9) - 80, y0 + 43 + 5 * 18, 80, 11, size=8, color=GREY, align='right')
+    page.caption(slide['figure'], ex['caption'], TOP + ah + gap + bh + 8)
+    page.caption('¹', ex['note_sup'], TOP + ah + gap + bh + 21)
+    page.takeaways(slide['takeaways'], pos)
+
+
+def roadmap(page, slide):
+    """Now, next and later as three columns joined by thin arrows, then the stop rule."""
+    page.chrome(slide)
+    fills = {'navy': (NAVY, WHITE), 'violet': (VIOLET, WHITE), 'yellow': (YELLOW, NAVY)}
+    width, top, h = 262, TOP + 6, 250
+    for i, (column, x) in enumerate(zip(slide['columns'], GATE_X)):
+        fill, ink = fills[column['colour']]
+        page.rect(x, top, width, h, PAPER)
+        page.badge(column['stage'], x, top, (width, 34), fill, ink, 13, 'RECTANGLE')
+        for j, item in enumerate(column['items']):
+            y = top + 50 + j * 64
+            if j:
+                page.line(x + 14, y - 8, x + width - 14, y - 8, HAIR, .75)
+            page.badge(str(j + 1), x + 14, y + 2, (18, 18), fill, ink, 8)
+            page.text(item, x + 42, y, width - 56, 52, size=11, spacing=115)
+        if i < 2:
+            page.line(x + width + 8, top + h / 2, x + width + 36, top + h / 2, SLATE, .75)
+            page.ops[-1]['end_arrow'] = 'FILL_ARROW'
+    page.text(slide['stop'], L, top + h + 18, FULL - L, 14, size=11, color=SLATE, bold=True)
 
 
 def a_table(page, slide):
@@ -1312,10 +1534,14 @@ def main() -> None:
     ensure_footer(pres)
     urls = {i + 1: f'https://docs.google.com/presentation/d/{pres}/edit#slide=id.{s["objectId"]}'
             for i, s in enumerate(slides)}
-    builders = {'summary': summary, 'lever': lever, 'outcome': outcome, 'slowdown': slowdown,
-                'clustering': clustering, 'equivalence': forest, 'regions': regions, 'a_screen': regions, 'persist': persist,
-                'forecast': forecast, 'gain_uncertainty': gains}
-    plain = {'approach': approach, 'gates': gates,
+    # Link targets accept a storyline number as int or text, including appendix labels such as 'A2'.
+    urls.update({str(slide['n']): urls[i + 1] for i, slide in enumerate(story)})
+    builders = {'summary': summary, 'problem': problem, 'text_adds': text_adds,
+                'clustering': clustering, 'equivalence': forest, 'regions': regions, 'a_screen': regions,
+                'persist': persist, 'forecast': forecast, 'gain_uncertainty': gains}
+    linked = {'approach': approach, 'gates': gates, 'solution': gates, 'supports': supports,
+              'insight': insight, 'prioritise': prioritise}
+    plain = {'triage': triage, 'roadmap': roadmap,
              'a_asof': a_table, 'a_primary': a_metrics, 'a_topics': a_topics, 'cover': cover, 'close': close}
     for index, (slide, item) in enumerate(zip(story, slides)):
         if only is not None and index not in only:
@@ -1326,14 +1552,8 @@ def main() -> None:
                 page.ops.append({'op': 'update-shape', 'element': element['objectId'], 'content_alignment': 'TOP'})
         if slide['id'] in builders:
             builders[slide['id']](page, slide, marker_positions(slide, layout))
-        elif slide['id'] == 'agenda':
-            agenda(page, slide, urls)
-        elif slide['id'] == 'approach':
-            approach(page, slide, urls)
-        elif slide['id'] == 'supports':
-            supports(page, slide, urls)
-        elif slide['id'] == 'gates':
-            gates(page, slide, urls)
+        elif slide['id'] in linked:
+            linked[slide['id']](page, slide, urls)
         else:
             plain[slide['id']](page, slide)
         notes_id = next(e['objectId'] for e in item['slideProperties']['notesPage']['pageElements']
@@ -1343,30 +1563,31 @@ def main() -> None:
         print(f"slide {slide['n']}: {len(page.ops)} ops", flush=True)
     # Images last so they sit above the accent blocks.
     with tempfile.TemporaryDirectory() as work:
-        images = [(0, framed_photo(Path(work), PHOTO, COVER_FRAME, 'cover.png'), COVER_FRAME),
-                  (14, framed_photo(Path(work), MARKET, CLOSE_FRAME, 'close.png'), CLOSE_FRAME)]
-        images += [(0, framed_photo(Path(work), path, frame, f'small-{i}.png', all_corners=True), frame)
+        at = {slide['id']: k for k, slide in enumerate(story)}
+        images = [(at['cover'], framed_photo(Path(work), PHOTO, COVER_FRAME, 'cover.png'), COVER_FRAME),
+                  (at['close'], framed_photo(Path(work), MARKET, CLOSE_FRAME, 'close.png'), CLOSE_FRAME)]
+        images += [(at['cover'], framed_photo(Path(work), path, frame, f'small-{i}.png', all_corners=True), frame)
                    for i, (path, frame) in enumerate(COVER_SMALL)]
         # Logo: UNSW host mark on white, 330 x 140 px source at its own proportions.
-        images.append((0, LOGO, (L, 446, 84.9, 36)))
-        images.append((3, framed_photo(Path(work), MARKET, LEVER_PHOTO, 'lever.png', all_corners=True), LEVER_PHOTO))
-        images.append((3, ASSETS / 'icons/table_rows-slate.png', (L + 202, TOP + 14, 18, 18)))
-        images.append((3, ASSETS / 'icons/description-violet.png', (L + 202, TOP + 124, 18, 18)))
+        images.append((at['cover'], LOGO, (L, 446, 84.9, 36)))
         for i, step in enumerate(slide_by_id('approach')['exhibit']['steps']):
-            x = pipe_x(i)
-            images.append((6, ASSETS / 'icons' / step['icon'], (x + 8, 172 + 5, 20, 20)))
-        images.append((6, ASSETS / 'icons/table_rows-navy.png', (L + 14, TOP + 5, 18, 18)))
-        images.append((7, MAP_PNG, MAP_FRAME))
-        for x, icon in zip(JOURNEY_X, JOURNEY_ICONS):
-            images.append((4, ASSETS / 'icons' / icon, (x - 15, 171, 30, 30)))
-        images.append((4, ASSETS / 'icons/check_circle-navy.png', (356 + 12, 284 + 31, 18, 18)))
-        images.append((4, ASSETS / 'icons/block-slate.png', (356 + 12, 284 + 74, 18, 18)))
+            images.append((at['approach'], ASSETS / 'icons' / step['icon'], (pipe_x(i) + 8, 172 + 5, 20, 20)))
+        images.append((at['approach'], ASSETS / 'icons/table_rows-navy.png', (L + 14, TOP + 5, 18, 18)))
+        images.append((at['clustering'], MAP_PNG, MAP_FRAME))
         for x, icon in zip(GATE_X, GATE_ICONS):
-            images.append((13, ASSETS / 'icons' / icon, (x + 262 - 72, 136 + 18, 20, 20)))
+            images.append((at['gates'], ASSETS / 'icons' / icon, (x + 262 - 72, 136 + 18, 20, 20)))
+        for x, icon in zip(GATE_X, SOLUTION_ICONS):
+            images.append((at['solution'], ASSETS / 'icons' / icon, (x + 262 - 72, 136 + 18, 20, 20)))
         for icon, (x, y, _, _) in zip(SUMMARY_ICONS, SUMMARY_CARDS):
-            images.append((1, ASSETS / 'icons' / icon, (x + 16, y + 14, 22, 22)))
+            images.append((at['summary'], ASSETS / 'icons' / icon, (x + 16, y + 14, 22, 22)))
         for icon, x in zip(STEP_ICONS, STEP_X):
-            images.append((1, ASSETS / 'icons' / icon, (x, BAND[1] + BAND[3] / 2 - 10, 20, 20)))
+            images.append((at['summary'], ASSETS / 'icons' / icon, (x, BAND[1] + BAND[3] / 2 - 10, 20, 20)))
+        for item, (x, y, _, _) in zip(slide_by_id('insight')['cards'], INSIGHT_CARDS):
+            images.append((at['insight'], ASSETS / 'icons' / item['icon'], (x + 16, y + 14, 22, 22)))
+        for lever, (x, y, _, _) in zip(slide_by_id('prioritise')['levers'], LEVER_BOXES):
+            images.append((at['prioritise'], ASSETS / 'icons' / lever['icon'], (x + 16, y + 15, 20, 20)))
+        for k in range(len(slide_by_id('triage')['exhibit']['support'])):
+            images.append((at['triage'], ASSETS / 'icons/check_circle-navy.png', (L + 16, TOP + 182 + 24 * k, 16, 16)))
         for index, path, (x, y, w, h) in images:
             if only is not None and index not in only:
                 continue

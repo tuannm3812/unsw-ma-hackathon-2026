@@ -2696,3 +2696,32 @@ unseen exact template, which cannot exclude near-duplicates.
     - (c) "Across countries it is fragile": country versus capped-country ranges, full width.
   - The takeaways follow the same order. The AUC note, the resample count and the cap definition sit in the speaker notes and the ¹ note.
   - QA reports no automated problems; previews, PDF and preview page refreshed; not pushed.
+- **2026-11-08, solution-led restructure (Mike: "yes, restructure the live deck"):**
+  - **Before the change:** no new owner edits. A backup copy was made first: `1w0g9cZsPe7PBNzv2ZB47NjGEd08fgp4S5IVTIdtGeo0`, recorded in the deck README.
+  - **New main order (13 slides):**
+    1. Cover: "Getting slow loans funded faster".
+    2. Summary: problem, solution, proof and the ask.
+    3. The problem: 2.85-day median wait; a quarter wait over 15.95 days; same-day share 46.0% → 30.3% → 30.0%.
+    4. Key insight: a lender-side delay that loan details predict, not wording.
+    5. Solution: Predict → Prioritise → Test.
+    6. Predict: the early-warning concept; 2.6–4.0× lift, country spread 0.18–0.90, scope lines.
+    7. Prioritise: four lender-side levers to pilot, plus "don't chase framing tweaks".
+    8. Test: the three gates.
+    9. Why not rewrite stories? (equivalence).
+    10. What text adds: gain by feature group and month versus country ranges; text adds little to the flag.
+    11. Four guardrails.
+    12. Roadmap: now, next, later.
+    13. Close.
+  - **Appendix A1–A9:** approach, clustering, programme controls, forecast benchmark, fragility panels, the regional check, as-of audit, holdout metrics, story themes.
+  - **Removed (kept in the backup):** the agenda and the old slides 4–6, merged into the new slide 3.
+  - **How the live deck was changed:** three slides were duplicated, all 22 were reordered so each reused slide keeps its object, and every slide except the close was rebuilt.
+  - **Builder changes:**
+    - Links accept appendix labels.
+    - Images are placed by slide id, not position.
+    - Figure labels come from the storyline; appendix figures take their slide label.
+    - `gates()` takes labelled rows and an optional ladder.
+    - New builders: problem, insight, triage, prioritise, text_adds and roadmap.
+    - The "for whom and when" placeholder is on slides 2, 4 and 11.
+    - Fixed along the way: a constant deleted by an earlier function-range replacement (found by pyflakes and an offline dry run of every builder), the cover title overlap, slide 10's unpaired marker, and A2's two-line caption.
+  - **Wording:** triage claims say boosted tree, structure only, completed loans only, retrospective, uneven across countries.
+  - QA reports no automated problems; full suite 211 passed; previews, PDF and preview page refreshed; not pushed.
