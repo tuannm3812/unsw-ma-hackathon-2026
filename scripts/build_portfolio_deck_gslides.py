@@ -1265,11 +1265,11 @@ def gains(page, slide, pos):
     """One chart: per year, the linear model and the larger tree, each with month (thick) and country (thin) ranges."""
     page.chrome(slide)
     ex = slide['exhibit']
-    years, pw, h, aw = sorted(ex['linear']), R - L, 306, 396
+    years, pw, h, aw = sorted(ex['linear']), R - L, 296, 396
     panel(page, L, TOP, aw, h, ex['title'], ex['guide'])
     x0, x1, lo, hi = L + 46, L + aw - 48, -.22, 1.0
     px = lambda value: x0 + (value - lo) / (hi - lo) * (x1 - x0)
-    first, pitch, tier = TOP + 56, 50, 16
+    first, pitch, tier = TOP + 56, 48, 16
     axis = first + pitch * 5 - 12
     page.line(px(0), TOP + 44, px(0), axis, NAVY, .75)
     page.line(x0, axis, x1, axis, SLATE, .75)
@@ -1318,6 +1318,8 @@ def gains(page, slide, pos):
         page.ops[-1]['end_arrow'] = 'FILL_ARROW'
     page.legend([(card['reading'][0], SLATE, 'ELLIPSE'), (card['reading'][1], SLATE, 'HOLLOW')], TOP + h - 17, cx + 12, gap=10)
     page.caption(slide['figure'], ex['caption'], TOP + h + 24, w=pw)
+    page.caption('¹', ex['note_sup'], TOP + h + 37, w=pw)
+    page.marker(4, L + label_width(ex['note_sup']) - 8, TOP + h + 36)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -1358,7 +1360,7 @@ SOLUTION_W, SOLUTION_GAP = 187, 22.75
 def solution(page, slide, pos):
     """Predict, Prioritise and Test as three linked cards, each with what, how and its evidence."""
     page.chrome(slide)
-    top, h, pitch = TOP, 316, 80
+    top, h, pitch = TOP, 316, 48
     fills = [(NAVY, WHITE), (VIOLET, WHITE), (YELLOW, NAVY)]
     for i, step in enumerate(slide['steps']):
         x = L + i * (SOLUTION_W + SOLUTION_GAP)
@@ -1366,11 +1368,16 @@ def solution(page, slide, pos):
         page.badge(step['n'], x + 12, top + 14, (26, 26), *fills[i], 10)
         page.text(step['name'], x + 12, top + 48, SOLUTION_W - 44, 16, size=12, bold=True)
         page.marker(i + 1, x + SOLUTION_W - 22, top + 50)
-        for j, (name, value) in enumerate(step['rows']):
-            y = top + 74 + j * pitch
-            page.text(name, x + 12, y, 120, 12, size=8, color=GREY, bold=True)
-            page.text(value, x + 12, y + 12, SOLUTION_W - 24, pitch - 16, size=10, color=NAVY if j == 0 else GREY,
-                      bold=j == 0, spacing=105)
+        page.text('What', x + 12, top + 72, 120, 12, size=8, color=GREY, bold=True)
+        page.text(step['action'], x + 12, top + 84, SOLUTION_W - 24, 44, size=10, bold=True, spacing=105)
+        for k, (label, value, colour) in enumerate((('Who', step['who'], GREY), ('When', step['when'], GREY), ('Status', step['status'], VIOLET))):
+            y = top + 134 + k * pitch
+            page.text(label, x + 12, y, 120, 12, size=8, color=GREY, bold=True)
+            page.text(value, x + 12, y + 12, SOLUTION_W - 24, 28, size=10, color=colour, bold=label == 'Status', spacing=105)
+        page.line(x + 12, top + h - 30, x + SOLUTION_W - 12, top + h - 30, HAIR, .75)
+        page.text(f"Evidence: {step['evidence']}", x + 12, top + h - 25, SOLUTION_W - 24, 12, size=8, color=GREY)
+        if i == 0:
+            page.marker(4, x + SOLUTION_W - 22, top + 134 + 2 * pitch - 1)
         if i < 2:
             page.line(x + SOLUTION_W + 3, top + h / 2, x + SOLUTION_W + SOLUTION_GAP - 3, top + h / 2, SLATE, .75)
             page.ops[-1]['end_arrow'] = 'FILL_ARROW'

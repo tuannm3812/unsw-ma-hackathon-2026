@@ -2970,3 +2970,8 @@ unseen exact template, which cannot exclude near-duplicates.
 - Live deck re-read first: no owner edits to mirror. Slide 15 measured at 400 dpi: digits and dots level within 0.2 pt, columns on the same left edges, header icons level with labels, box and chart edges equal. No change needed.
 - Slide 16 now has a takeaway column and a violet line; cards narrowed to the content width, and each step's evidence names its slide. The claim is tightened to five framings, so urgency and first person are not overstated.
 - Verified: pyflakes, deck QA, rendered slide 16, full offline pytest. Slide 16 only was rebuilt; nothing pushed.
+
+## 2026-11-08: slides 15 and 16 fourth takeaways; slide 16 cards
+
+- Live deck re-read first: no owner edits to mirror. Big proof numbers were rejected as duplicates of slides 12, 17 and 20. Slide 16's cards now show what, who, when, status and evidence slide, on one grid, with a fourth takeaway that nothing is deployed yet. Slide 15 gains a fourth takeaway on the capped-forecast diagnostic, using the registered ranges, with a footnote.
+- Verified: pyflakes, deck QA, word-box overlap check, rendered slides, full offline pytest. Slides 15 and 16 only were rebuilt; nothing pushed.
