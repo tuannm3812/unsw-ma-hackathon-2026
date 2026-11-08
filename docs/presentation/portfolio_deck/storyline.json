@@ -998,49 +998,43 @@
           },
           {
             "status": "mixed",
-            "label": "Small in one model only²"
+            "label": "Small in one model only"
           },
           {
             "status": "unresolved",
-            "label": "Can't tell yet: too few descriptions use these words"
+            "label": "Can't tell yet: rarely used words"
           }
         ],
         "t4_tag": "All five hold under the stricter t(4)",
         "rarity_header": "Records with no mention",
-        "caption": "Change in funding time per extra mention per 100 words, 90% ranges, expanded model, 1,453,840 loans.",
-        "note_sup": "±5% of funding time is ±0.05 on log(1 + days), BH-adjusted; axis shows log points × 100. Sentiment is per +0.5 score.",
-        "note": "² Groups combine the expanded and programme-adjusted models; gratitude and sentiment are small only in the programme-adjusted one.",
-        "key": {
-          "interval": "estimate and 90% range",
-          "band": "too small to matter: within ±5% of funding time¹",
-          "rule": "A range fully inside the band means the link is small."
-        }
+        "caption": "Change in funding time per extra mention per 100 words, expanded model, 1,453,840 loans.",
+        "note_sup": "±0.05 on log(1 + days), BH-adjusted; bound set after the estimates."
       },
       "takeaways": [
         {
           "marker": 1,
           "heading": "Five framings have small links",
-          "text": "Family, business, basic needs, agency and third person stay **within ±5% of funding time** in both models."
+          "text": "Family, business, basic needs, agency and third person stay **within ±5%** in both models."
         },
         {
           "marker": 2,
           "heading": "Small means under five hours",
-          "text": "On a typical loan, ±5% is about **4.5–4.7 hours** of a 2.85-day wait to be funded."
+          "text": "±5% is about **4.5–4.7 hours** on a typical 2.85-day loan."
         },
         {
           "marker": 3,
           "heading": "Urgency is too rare to judge",
-          "text": "Urgency and first person appear in **under 2% of descriptions**, so their ranges still allow **6–14% faster or slower funding**."
+          "text": "Under **2% of descriptions** use urgency or first person; their ranges still allow **6–14%** either way."
         },
         {
           "marker": 4,
           "heading": "The verdicts hold under stricter tests",
-          "text": "All five pass a **stricter t(4) test**; family, agency and third person stay small even within **±2%**. The bound came after the data, so this is exploratory."
+          "text": "All five pass a **stricter t(4) test**; three stay small even within **±2%**."
         }
       ],
       "notes": {
         "purpose": "Separate 'small' from 'unknown'.",
-        "script": "The answer first: five of the nine framings have small links to funding time. [Point: Five framings have small links] Each dot is an estimate and each line its 90 percent range; when the whole line sits inside the yellow band, the link is smaller than five percent of funding time. [Point: Small means under five hours] On a typical loan that is about four and a half hours. [Point: Urgency is too rare to judge] Urgency and first person are different: fewer than two in a hundred descriptions use these words, so their ranges stay wide. That is not evidence of an effect or of no effect. [Point: The verdicts hold under stricter tests] The five verdicts survive a stricter test, and three hold even at two percent. We set the band after seeing the data, so treat this as exploratory.",
+        "script": "Answer first: five of the nine framings have small links to funding time; urgency and first person remain unknown. How to read the chart: each dot is the estimated change in funding time per extra mention per 100 words, and its line is the 90 percent range. Left of the centre line means faster funding, right means slower. The darker yellow area is within plus or minus five percent of funding time, which we treat as too small to matter; the lighter area runs from five to ten percent. A line that sits wholly inside the darker area means the link is small. [Point: Five framings have small links] Family, business, basic needs, agency and third person sit inside it in both model versions: the expanded model shown here and the programme-adjusted model. Gratitude and sentiment are small only in the programme-adjusted model. [Point: Small means under five hours] Five percent sounds abstract: on a typical loan, which takes 2.85 days to fund, it is about four and a half to four point seven hours. [Point: Urgency is too rare to judge] Urgency and first person appear in under two percent of descriptions, as the right-hand bars show, so their ranges stay wide: up to six to fourteen percent faster or slower. That is not evidence of an effect, or of none. [Point: The verdicts hold under stricter tests] Technically, the band is plus or minus 0.05 on log of one plus days, tested with two one-sided tests, BH-adjusted across nine terms, using a t reference with 47 degrees of freedom. With a stricter t(4) reference all five verdicts hold, and family, agency and third person stay small even at plus or minus two percent. We set the band after seeing the estimates, so this is exploratory.",
         "reference": "Equivalence test run 2026-11-08. reports/equivalence_screen_reviewed/README.md; src/equivalence.py. Bands, hours and no-mention shares: src/bound_ladder.py (reports/evidence_sources/bound_ladder.json), from equivalence_screen.csv and feature_distribution.json."
       },
       "sublabel": "Equivalence test"

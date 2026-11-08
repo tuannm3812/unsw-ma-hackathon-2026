@@ -2619,3 +2619,12 @@ unseen exact template, which cannot exclude near-duplicates.
   - **Slide 8:** the table has a Region column from Kiva's own `region` field. `src/country_shares.py` now reports region per country and region shares, and rejects a country with more than one region (tested). The map narrowed to 250 pt to make room. The takeaway adds that Asia and Africa hold 92.8% of loans.
   - New register rows: region shares, top-10 regions, and the share of descriptions that mention urgency (1.3%) and first person (1.0%).
   - QA reports no automated problems; previews, PDF and preview page refreshed; not pushed.
+- **2026-11-08, slide 9 legend and reading aids (Mike's follow-up):** no new owner edits; slide 9 was rebuilt alone.
+  - The "How to read" sentence is gone. In its place:
+    - two yellow areas: within ±5% (#FFF0A8) and 5–10% (#FFF8D6), with edges on the ±5% and ±10% ticks;
+    - a "No difference" title on the zero line;
+    - thin slate direction arrows under the axis: "← Faster funding" and "Slower funding →". A positive coefficient on log(1 + days) is a longer wait (`src/data_loader.py`). The left arrow uses the CLI's `start_arrow`, which renders correctly;
+    - a one-row legend under the plot, aligned with its left edge and drawn with the chart's own symbols: estimate and 90% range, within ±5%¹, 5–10%.
+  - The caption and the single note are concise; the group labels are shorter.
+  - Takeaway bodies are trimmed. The full explanation is now in the speaker notes: how to read the chart, the hours, ±0.05 log(1 + days), TOST with BH across nine terms, t(47), t(4), ±2%, and the two model versions.
+  - QA reports no automated problems; previews, PDF and preview page refreshed; not pushed.

@@ -56,6 +56,7 @@ NAVY, YELLOW, VIOLET, PAPER = '#1C2333', '#FFDD04', '#5B4B8A', '#FBFAF6'
 GREY, SLATE, RED, RULE, WHITE = '#59636E', '#46576C', '#C64040', '#999999', '#FFFFFF'
 TINT, HAIR = '#FFF6B8', '#D9D7CE'
 TINT_BAND = '#FFF0A8'  # DESIGN.md yellow tint: the slide 9 "too small to matter" band
+BAND_OUTER = '#FFF8D6'  # lighter yellow: slide 9's 5-10% area
 FONT = 'Google Sans'
 INSET = 7.2  # native text box inset; the API cannot change it, so frames compensate
 L, R, FULL, TOP, END = 43.5, 650, 919, 130, 476
@@ -770,40 +771,32 @@ STATUS_COLOURS = {'bounded': NAVY, 'mixed': SLATE, 'unresolved': VIOLET}
 
 
 def forest(page, slide, pos):
-    """One yellow band (within ±5% of funding time), verdict groups, and how rare each framing is."""
+    """Two yellow areas (within ±5%, 5-10%), verdict groups, direction arrows and a legend under the plot."""
     page.chrome(slide)
     ex = slide['exhibit']
     x0, x1, lo, hi = L + 66, 420, -.15, .11
     scale = (x1 - x0) / (hi - lo)
     px = lambda value: x0 + (value - lo) * scale
     rx, track = 440, 150
-    # Reading key: glyphs drawn like the chart, then the rule in words.
-    ky = TOP + 2
-    page.text('How to read', L, ky, 60, 12, size=8, color=NAVY, bold=True)
-    page.line(L + 62, ky + 6.5, L + 84, ky + 6.5, NAVY, 2)
-    page.rect(L + 69.5, ky + 3, 7, 7, NAVY, 'ELLIPSE')
-    page.text(ex['key']['interval'], L + 88, ky, 100, 12, size=8, color=GREY)
-    page.rect(L + 182, ky + 2, 16, 9, TINT_BAND)
-    page.sup(ex['key']['band'], L + 202, ky, 200, 12, size=8, color=GREY)
-    page.marker(2, L + 374, ky + 0.5)
-    page.text(ex['key']['rule'], L, ky + 13, 360, 12, size=8, color=NAVY)
-    page.text('Records with no mention', rx, TOP + 18, track + 40, 12, size=8, color=GREY, bold=True)
-    y = TOP + 36
+    page.text('No difference', px(0) - 40, TOP + 2, 80, 12, size=8, color=NAVY, bold=True, align='center')
+    page.text('Records with no mention', rx, TOP + 2, track + 40, 12, size=8, color=GREY, bold=True)
+    y = TOP + 20
     header = {}
     for group in ex['groups']:
         rows = [row for row in ex['rows'] if row['status_both_specs'] == group['status']]
         colour = STATUS_COLOURS[group['status']]
         page.line(L, y - 3, R - 6, y - 3, HAIR, .5)
-        page.sup(group['label'], L, y, 330, 13, size=9, color=colour, bold=True)
+        page.text(group['label'], L, y, 330, 13, size=9, color=colour, bold=True)
         header[group['status']] = (L + 4.2 * len(group['label']) + 8, y)
         if group['status'] == 'bounded':
             page.text(ex['t4_tag'], rx, y + 1, track + 40, 12, size=8, color=SLATE)
         top = y + 16
-        bottom = top + 21 * len(rows)
+        bottom = top + 20 * len(rows)
+        page.rect(px(-.10), top - 2, px(.10) - px(-.10), bottom - top + 2, BAND_OUTER)
         page.rect(px(-.05), top - 2, px(.05) - px(-.05), bottom - top + 2, TINT_BAND)
         page.line(px(0), top - 2, px(0), bottom, NAVY, .75)
         for k, row in enumerate(rows):
-            ry = top + 21 * k
+            ry = top + 20 * k
             centre = ry + 7.5
             name = 'Sentiment' if row['term'].startswith('sentiment') else row['term'].capitalize()
             page.text(name, L, ry + 1, 96, 14, size=9)
@@ -820,13 +813,31 @@ def forest(page, slide, pos):
         page.text(name, px(value) - 20, end + 4, 40, 12, size=8, color=GREY, align='center')
     for value, name in [(0, '0%'), (1, '100%')]:
         page.text(name, rx + value * track - 15, end + 4, 30, 12, size=8, color=GREY, align='center')
+    # Direction: a positive coefficient on log(1 + days) means a longer wait (src/data_loader.py).
+    ay = end + 18
+    page.text('Faster funding', px(0) - 66, ay, 60, 12, size=8, color=SLATE, bold=True, align='right')
+    page.line(px(0) - 98, ay + 6.5, px(0) - 70, ay + 6.5, SLATE, .75)
+    page.ops[-1]['start_arrow'] = 'FILL_ARROW'
+    page.text('Slower funding', px(0) + 6, ay, 60, 12, size=8, color=SLATE, bold=True)
+    page.line(px(0) + 70, ay + 6.5, px(0) + 98, ay + 6.5, SLATE, .75)
+    page.ops[-1]['end_arrow'] = 'FILL_ARROW'
+    # Legend under the plot, aligned with its left edge, drawn with the chart's own symbols.
+    ly, lx = ay + 15, x0
+    page.line(lx, ly + 6.5, lx + 20, ly + 6.5, NAVY, 2)
+    page.rect(lx + 6.5, ly + 3, 7, 7, NAVY, 'ELLIPSE')
+    page.text('Estimate, 90% range', lx + 24, ly, 80, 12, size=8, color=GREY)
+    lx += 108
+    page.rect(lx, ly + 2, 14, 9, TINT_BAND)
+    page.sup('Within ±5%¹', lx + 18, ly, 52, 12, size=8, color=GREY)
+    page.marker(2, lx + 70, ly + 0.5)
+    lx += 90
+    page.rect(lx, ly + 2, 14, 9, BAND_OUTER)
+    page.text('5–10%', lx + 18, ly, 30, 12, size=8, color=GREY)
     page.marker(1, *header['bounded'])
-    page.marker(3, header['unresolved'][0], header['unresolved'][1])
+    page.marker(3, *header['unresolved'])
     page.marker(4, rx + 3.3 * len(ex['t4_tag']) + 8, header['bounded'][1] + 0.5)
-    page.caption('Figure 5.', ex['caption'], end + 18)
-    page.caption('¹', ex['note_sup'], end + 31)
-    page.text(ex['note'], L, end + 44, R - L, 12, size=8, color=GREY,
-              spans=[(0, 1, {'color': SLATE, 'bold': True})])
+    page.caption('Figure 5.', ex['caption'], ly + 16)
+    page.caption('¹', ex['note_sup'], ly + 29)
     page.takeaways(slide['takeaways'], pos)
 
 
