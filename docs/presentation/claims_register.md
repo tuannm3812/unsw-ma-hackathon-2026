@@ -68,6 +68,12 @@ benchmark. **Equivalence** = exploratory screen of October coefficients (2026-11
 | Share of records with no mention | urgency 98.7%; first person 99.0%; "over 98%" covers each | same | Descriptive |
 | Median words, records with a description | 92 | same | Descriptive |
 | Urgency per 1 SD, expanded duration, 90% interval | [−0.0128, 0.0030] log points; SD scale only, not a feasible edit | same | Equivalence |
+| Primary bound in hours (slide 9) | ±0.05 on log(1 + days) at the 2.85-day median: 4.51 hours shorter to 4.74 hours longer ("4.5–4.7 hours") | `reports/evidence_sources/bound_ladder.json` (`src/bound_ladder.py`) | Equivalence, exploratory |
+| Bands as share of (1 + days) | ±0.02 ≈ ±2% (2.02); ±0.05 ≈ ±5% (5.13); ±0.10 ≈ ±10% (10.52) | same | Equivalence, exploratory |
+| Tightest bound held, expanded duration (slide 9) | ±0.02: family, agency, third person; ±0.05: basic needs, business; ±0.10: sentiment; none: gratitude, urgency, first person. Counts 3 / 5 / 6 of 9 | same; ±0.05 BH-adjusted, ±0.02 and ±0.10 unadjusted flags | Equivalence, exploratory |
+| Tightest bound held, programme-adjusted duration | ±0.02: family, basic needs, business, agency, third person; ±0.05: gratitude, sentiment; ±0.10: urgency, first person. Counts 5 / 7 / 9 of 9 | same | Equivalence, exploratory |
+| Share of records with no mention, all nine terms (slide 9) | third person 2.7%; sentiment 3.4% (score exactly zero); family 11.3%; business 15.0%; agency 45.9%; basic needs 76.7%; gratitude 80.4%; urgency 98.7%; first person 99.0% | same, from `feature_distribution.json` | Descriptive |
+| Equivalence reference distribution | t with 47 df on the clustered standard error; stricter heuristic t(4) | `reports/equivalence_screen_reviewed/README.md` | Equivalence |
 
 ## Prediction
 

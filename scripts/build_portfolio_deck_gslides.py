@@ -764,34 +764,67 @@ def clustering(page, slide, pos):
     page.takeaways(slide['takeaways'], pos)
 
 
+# Slide 9 bands, widest first so the tighter tints sit on top.
+BAND_FILLS = {0.10: '#FFFAE0', 0.05: '#FFF0A8', 0.02: '#FFE36B'}
+STATUS_COLOURS = {'bounded': NAVY, 'mixed': SLATE, 'unresolved': VIOLET}
+
+
 def forest(page, slide, pos):
+    """Nested goalposts: verdict groups, three bound bands, and how rare each framing is."""
     page.chrome(slide)
-    rows = slide['exhibit']['rows']
-    x0, x1, lo, hi, top, pitch = 160, 548, -.15, .15, 148, 31
+    ex = slide['exhibit']
+    x0, x1, lo, hi = L + 66, 420, -.15, .11
     scale = (x1 - x0) / (hi - lo)
     px = lambda value: x0 + (value - lo) * scale
-    bottom = top + pitch * len(rows)
-    page.rect(px(-.05), top - 6, px(.05) - px(-.05), bottom - top + 6, TINT)
-    page.text('±0.05 bound', px(-.05), top - 20, px(.05) - px(-.05), 13, size=8, color=NAVY, bold=True, align='center')
-    page.line(px(0), top - 6, px(0), bottom, NAVY, .75)
-    status = {'bounded': ('Bounded', NAVY), 'mixed': ('Mixed', SLATE), 'unresolved': ('Unresolved', VIOLET)}
-    for i, row in enumerate(rows):
-        y = top + i * pitch + pitch / 2 - 3
-        label, colour = status[row['status_both_specs']]
-        name = 'Sentiment¹' if row['term'].startswith('sentiment') else row['term'].capitalize()
-        page.sup(name, L, y - 7, 112, 14, size=10)
-        page.line(px(row['ci90_low']), y, px(row['ci90_high']), y, colour, 2)
-        page.rect(px(row['estimate']) - 4, y - 4, 8, 8, colour, 'ELLIPSE')
-        page.text(label, 572, y - 7, 72, 14, size=10, color=colour, bold=True)
+    rx, track = 440, 150
+    page.text(ex['plain'], L, TOP + 2, R - L - 10, 12, size=9, color=GREY)
+    for band in ex['bands']:
+        b, primary = band['bound'], band['bound'] == .05
+        page.text(band['label'], px(b) - 22, TOP + 18, 44, 12, size=8, color=NAVY if primary else GREY,
+                  bold=primary, align='center')
+    page.marker(3, 602, TOP + 2.5)  # measured: the plain-language line ends near x594
+    page.text(ex['rarity_header'], rx, TOP + 18, track + 40, 12, size=8, color=GREY, bold=True)
+    y = TOP + 36
+    header_x = {}
+    for group in ex['groups']:
+        rows = [row for row in ex['rows'] if row['status_both_specs'] == group['status']]
+        colour = STATUS_COLOURS[group['status']]
+        page.line(L, y - 3, R - 6, y - 3, HAIR, .5)
+        page.text(group['label'], L, y, 200, 13, size=9, color=colour, bold=True)
+        header_x[group['status']] = (L + 4.2 * len(group['label']) + 8, y)
+        if group['status'] == 'bounded':
+            page.text(ex['t4_tag'], rx, y + 1, track + 40, 12, size=8, color=SLATE)
+        top = y + 16
+        bottom = top + 21 * len(rows)
+        for band in ex['bands']:
+            b = band['bound']
+            page.rect(px(-b), top - 2, px(b) - px(-b), bottom - top + 2, BAND_FILLS[b])
+        page.line(px(0), top - 2, px(0), bottom, NAVY, .75)
+        for k, row in enumerate(rows):
+            ry = top + 21 * k
+            centre = ry + 7.5
+            name = 'Sentiment¹' if row['term'].startswith('sentiment') else row['term'].capitalize()
+            page.sup(name, L, ry + 1, 96, 14, size=9)
+            page.line(px(row['ci90_low']), centre, px(row['ci90_high']), centre, colour, 2)
+            page.rect(px(row['estimate']) - 3.5, centre - 3.5, 7, 7, colour, 'ELLIPSE')
+            page.rect(rx, centre - 3.5, track, 7, '#ECEAE4')
+            page.rect(rx, centre - 3.5, track * row['no_mention'], 7, colour)
+            page.text(f"{row['no_mention'] * 100:.1f}%", rx + track + 5, ry + 2, 36, 12, size=8,
+                      color=colour, bold=group['status'] == 'unresolved')
+        y = bottom + 8
+    end = y - 8
     for value, name in [(-.1, '−0.10'), (-.05, '−0.05'), (0, '0'), (.05, '+0.05'), (.1, '+0.10')]:
-        page.text(name, px(value) - 20, bottom + 2, 40, 12, size=8, color=GREY, align='center')
-    page.marker(1, 552, top + 1 * pitch + 6)
-    page.marker(2, 552, top + 8 * pitch + 6)
-    page.marker(3, px(.05) + 4, top - 21)
-    page.marker(4, 552, top + 4 * pitch + 6)
-    page.caption('Figure 5.', 'Change in log(1 + days) per extra mention per 100 words, 90% intervals, expanded '
-                              'specification; status covers both specifications.', bottom + 18)
-    page.caption('¹', 'Per +0.5 change in the sentiment score.', bottom + 32)
+        page.text(name, px(value) - 20, end + 3, 40, 12, size=8, color=GREY, align='center')
+    for value, name in [(0, '0%'), (1, '100%')]:
+        page.text(name, rx + value * track - 15, end + 3, 30, 12, size=8, color=GREY, align='center')
+    mx, my = header_x['bounded']
+    page.marker(1, mx, my + 0.5)
+    mx, my = header_x['unresolved']
+    page.marker(2, mx, my + 0.5)
+    page.marker(4, rx + 3.3 * len(ex['t4_tag']) + 8, header_x['bounded'][1] + 0.5)
+    page.caption('Figure 5.', ex['caption'], end + 18)
+    page.caption('¹', ex['note_sup'], end + 31)
+    page.caption('Note:', ex['note'], end + 44)
     page.takeaways(slide['takeaways'], pos)
 
 

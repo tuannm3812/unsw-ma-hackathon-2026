@@ -1,0 +1,61 @@
+{
+  "population": "eligible completed durations; duration outcome; aggregates only",
+  "rule": "\u00b10.05 is the BH-adjusted primary decision; \u00b10.02 and \u00b10.10 are unadjusted sensitivity flags",
+  "median_days": 2.85,
+  "primary_bound_hours": {
+    "shorter": 4.51,
+    "longer": 4.74
+  },
+  "bound_percent_of_one_plus_days": {
+    "0.02": 2.02,
+    "0.05": 5.13,
+    "0.1": 10.52
+  },
+  "tightest_bound": {
+    "expanded": {
+      "family": 0.02,
+      "basic_needs": 0.05,
+      "business": 0.05,
+      "agency": 0.02,
+      "gratitude": null,
+      "urgency": null,
+      "first_person": null,
+      "third_person": 0.02,
+      "sentiment": 0.1
+    },
+    "programme_adjusted": {
+      "family": 0.02,
+      "basic_needs": 0.02,
+      "business": 0.02,
+      "agency": 0.02,
+      "gratitude": 0.05,
+      "urgency": 0.1,
+      "first_person": 0.1,
+      "third_person": 0.02,
+      "sentiment": 0.05
+    }
+  },
+  "terms_equivalent_by_bound": {
+    "expanded": {
+      "0.02": 3,
+      "0.05": 5,
+      "0.1": 6
+    },
+    "programme_adjusted": {
+      "0.02": 5,
+      "0.05": 7,
+      "0.1": 9
+    }
+  },
+  "share_no_mention": {
+    "family": 0.1127,
+    "basic_needs": 0.767,
+    "business": 0.1497,
+    "agency": 0.4587,
+    "gratitude": 0.8042,
+    "urgency": 0.987,
+    "first_person": 0.9898,
+    "third_person": 0.0272,
+    "sentiment": 0.0336
+  }
+}

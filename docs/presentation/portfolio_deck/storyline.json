@@ -866,92 +866,144 @@
             "estimate": 0.0042,
             "ci90_low": -0.0028,
             "ci90_high": 0.0112,
-            "status_both_specs": "bounded"
+            "status_both_specs": "bounded",
+            "no_mention": 0.4587,
+            "tightest_bound": 0.02
           },
           {
             "term": "basic needs",
             "estimate": 0.0021,
             "ci90_low": -0.019,
             "ci90_high": 0.0233,
-            "status_both_specs": "bounded"
+            "status_both_specs": "bounded",
+            "no_mention": 0.767,
+            "tightest_bound": 0.05
           },
           {
             "term": "business",
             "estimate": 0.009,
             "ci90_low": -0.0027,
             "ci90_high": 0.0207,
-            "status_both_specs": "bounded"
+            "status_both_specs": "bounded",
+            "no_mention": 0.1497,
+            "tightest_bound": 0.05
           },
           {
             "term": "family",
             "estimate": 0.0096,
             "ci90_low": -0.0005,
             "ci90_high": 0.0197,
-            "status_both_specs": "bounded"
+            "status_both_specs": "bounded",
+            "no_mention": 0.1127,
+            "tightest_bound": 0.02
           },
           {
             "term": "third person",
             "estimate": -0.009,
             "ci90_low": -0.013,
             "ci90_high": -0.005,
-            "status_both_specs": "bounded"
+            "status_both_specs": "bounded",
+            "no_mention": 0.0272,
+            "tightest_bound": 0.02
           },
           {
             "term": "gratitude",
             "estimate": 0.0163,
             "ci90_low": -0.0701,
             "ci90_high": 0.1027,
-            "status_both_specs": "mixed"
+            "status_both_specs": "mixed",
+            "no_mention": 0.8042,
+            "tightest_bound": null
           },
           {
             "term": "sentiment (+0.5 score)",
             "estimate": 0.0272,
             "ci90_low": 0.0026,
             "ci90_high": 0.0519,
-            "status_both_specs": "mixed"
+            "status_both_specs": "mixed",
+            "no_mention": 0.0336,
+            "tightest_bound": 0.1
           },
           {
             "term": "first person",
             "estimate": -0.0723,
             "ci90_low": -0.1431,
             "ci90_high": -0.0016,
-            "status_both_specs": "unresolved"
+            "status_both_specs": "unresolved",
+            "no_mention": 0.9898,
+            "tightest_bound": null
           },
           {
             "term": "urgency",
             "estimate": -0.0482,
             "ci90_low": -0.1259,
             "ci90_high": 0.0295,
-            "status_both_specs": "unresolved"
+            "status_both_specs": "unresolved",
+            "no_mention": 0.987,
+            "tightest_bound": null
           }
-        ]
+        ],
+        "groups": [
+          {
+            "status": "bounded",
+            "label": "Small in both specifications"
+          },
+          {
+            "status": "mixed",
+            "label": "Small in one specification"
+          },
+          {
+            "status": "unresolved",
+            "label": "Can't tell yet"
+          }
+        ],
+        "bands": [
+          {
+            "bound": 0.1,
+            "label": "loose"
+          },
+          {
+            "bound": 0.05,
+            "label": "primary"
+          },
+          {
+            "bound": 0.02,
+            "label": "tight"
+          }
+        ],
+        "plain": "Shaded bands are three sizes of “too small to matter”; the primary ±0.05 is about ±5% of funding time, or 4.5–4.7 hours for a median loan.",
+        "t4_tag": "All five hold under the stricter t(4)",
+        "rarity_header": "Records with no mention",
+        "caption": "Change in log(1 + days) per extra mention per 100 words, 90% intervals, expanded specification; groups use both specifications.",
+        "note_sup": "Per +0.5 change in the sentiment score; no mention means a score of exactly zero.",
+        "note": "±0.05 is the BH-adjusted primary bound; ±0.02 and ±0.10 are unadjusted sensitivity bounds."
       },
       "takeaways": [
         {
           "marker": 1,
           "heading": "Five framings are small",
-          "text": "Five framings stay **inside ±5% of funding time** in both specifications."
+          "text": "Five framings stay **inside ±5% of funding time** in both specifications, about **4.5–4.7 hours** for a median loan."
         },
         {
           "marker": 2,
           "heading": "Urgency and first person are unknown",
-          "text": "Urgency and first-person framing could still be linked to **6–14% faster or slower funding** per mention. Each is absent from over 98% of records."
+          "text": "Their intervals still reach **6–14% faster or slower funding** per mention. Each is absent from **over 98% of records**, so the data say little about them."
         },
         {
           "marker": 3,
           "heading": "The bound came after the data",
-          "text": "The bound was chosen **after seeing the estimates**; a confirmatory test needs one agreed in advance."
+          "text": "It was chosen **after seeing the estimates**, so three bands are shown: family, agency and third person hold even at **±2%**."
         },
         {
           "marker": 4,
           "heading": "The verdicts survive a stricter test",
-          "text": "With a stricter t(4) reference, **all five duration verdicts still hold**."
+          "text": "Swapping the t(47) reference for a stricter **t(4)** keeps **all five duration verdicts**."
         }
       ],
       "notes": {
         "purpose": "Separate 'small' from 'unknown'.",
-        "script": "The shaded band is a practical bound, about five percent of funding time per extra mention. When a whole interval sits inside the band, we can say the association is small. Most framings do. Urgency and first person do not: their intervals are wide enough to allow sizeable links either way. [Point: The bound came after the data] We chose the bound after seeing the results, so treat this as exploratory. Edit size matters too: one mention in a typical description is a realistic edit, but almost no descriptions contain these words, so the data say little about them.",
-        "reference": "Equivalence test run 2026-11-08. reports/equivalence_screen_reviewed/README.md; src/equivalence.py. Edit-size context: reports/equivalence_screen_reviewed/feature_distribution.json."
+        "script": "The shaded bands are three choices of how small counts as small. The primary band, ±0.05, is about five percent of funding time, roughly four and a half hours for a median loan. When a whole interval sits inside a band, the association is small at that size. [Point: Five framings are small] Five framings sit inside the primary band in both specifications. [Point: Urgency and first person are unknown] Urgency and first person do not: their intervals are wide, and the right-hand bars show why. Almost no descriptions use these words, so the data carry little information. [Point: The bound came after the data] We chose the bound after seeing the results, so the slide shows a tighter and a looser band too; three framings hold even at two percent. [Point: The verdicts survive a stricter test] With a stricter reference distribution, all five verdicts still hold. Treat all of this as exploratory.",
+        "reference": "Equivalence test run 2026-11-08. reports/equivalence_screen_reviewed/README.md; src/equivalence.py. Bands, hours and no-mention shares: src/bound_ladder.py (reports/evidence_sources/bound_ladder.json), from equivalence_screen.csv and feature_distribution.json."
       },
       "sublabel": "Equivalence test"
     },
