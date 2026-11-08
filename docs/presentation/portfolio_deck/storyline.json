@@ -388,39 +388,49 @@
             "name": "Explanatory models",
             "icon": "query_stats-white.png",
             "question": "Which features are linked to funding speed, and how sure are we?",
-            "method": "Regression models of funding time and same-day funding, with errors clustered by country.",
+            "method": "Regressions of funding time and same-day funding; errors clustered by country.",
             "data": "1,453,840 loans in 48 countries",
-            "headline": "64 of 120 significant terms lost significance"
+            "headline": "64 of 120 significant terms lost significance",
+            "slide": 8
           },
           {
             "name": "Robustness checks",
             "icon": "verified_user-white.png",
             "question": "Do the links survive richer controls?",
-            "method": "The same models with more text measures and a programme-text proxy, adjusted for multiple tests.",
+            "method": "The same models with more text measures and a programme proxy; multiple-test adjusted.",
             "data": "1,453,840 loans; 642 programme categories",
-            "headline": "Only small associations remain"
+            "headline": "Only small associations remain",
+            "slide": 11
           },
           {
             "name": "Equivalence test",
             "icon": "target-navy.png",
             "question": "Which links are small enough to rule out a large effect?",
-            "method": "Checks whether each 90% interval sits inside ±5% of funding time.",
+            "method": "Is each 90% interval inside ±5% of funding time?",
             "data": "Robustness-check estimates for 9 terms",
-            "headline": "Five framings small; urgency unresolved"
+            "headline": "Five framings small; urgency unresolved",
+            "slide": 9
           },
           {
             "name": "Forecast benchmark",
             "icon": "trending_up-white.png",
             "question": "Does text improve a forecast built on loan structure?",
-            "method": "Train on earlier years, then test each year with and without text on the same loans.",
+            "method": "Train on earlier years, then test each year with and without text.",
             "data": "728,640 evaluation records over five years",
-            "headline": "Error fell in 5 of 5 years, by 0.26–0.39 days"
+            "headline": "Error fell in 5 of 5 years, by 0.26–0.39 days",
+            "slide": 12
           }
-        ]
+        ],
+        "timeline": {
+          "title": "Years each analysis uses",
+          "all_label": "Explanatory, robustness, equivalence",
+          "holdout_label": "Chronological holdout",
+          "benchmark_label": "Forecast benchmark: train only on loans completed before each test year"
+        }
       },
       "notes": {
         "purpose": "Explain how the evidence fits together.",
-        "script": "All four analyses use the same loans. The explanatory models ask which features are linked to speed, and how sure we can be. The robustness checks rerun them with richer controls, and the equivalence test then asks which of those links are small enough to bound. [Point: Forecast benchmark] The forecast benchmark asks a different question: does text help predict funding time? Its numbers are not comparable with the others.",
+        "script": "All four analyses use the same loans. The explanatory models ask which features are linked to speed, and how sure we can be. The robustness checks rerun them with richer controls, and the equivalence test then asks which of those links are small enough to bound. [Point: Forecast benchmark] The forecast benchmark asks a different question: does text help predict funding time? Its numbers are not comparable with the others. [Point: Years each analysis uses] The strip at the bottom shows the years: the explanatory work uses all loans, the holdout tests on 2024 and 2025, and the benchmark retrains five times, each time only on loans completed before the test year.",
         "reference": "Run provenance: explanatory models, primary saved run 2026-08-31; robustness checks, reviewed expanded-feature sensitivity; equivalence test 2026-11-08; forecast benchmark 2026-11-02. 642 programme categories from docs/2_evidence_and_corrections.md."
       },
       "sublabel": "Four analyses"
