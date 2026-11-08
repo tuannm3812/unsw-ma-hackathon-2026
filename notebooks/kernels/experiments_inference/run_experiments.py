@@ -9,6 +9,8 @@ script and differ only in that line.
   inference  gap C/G (wild cluster bootstrap, both October specifications)
              and gap B (subgroup refits, programme-adjusted then expanded),
              from a fresh October inference frame.
+  loan_details  experiment I: refit the October programme-adjusted model and
+             save the loan-detail coefficients, from a fresh inference frame.
 
 Private caches hold loan text and are deleted before the kernel ends; only
 aggregate JSON reports and logs stay in /kaggle/working. Same mounting and
@@ -109,6 +111,14 @@ def main():
                 subgroup_inference.main(["--frame", str(frame), "--spec", spec,
                                          "--output", str(OUT / "subgroup_inference")])
                 stamp(f"subgroups {spec} done", t0)
+        elif JOB == "loan_details":
+            from src import inference_cache, loan_detail_coefficients
+            frame = PRIVATE / "review_frame.pkl"
+            inference_cache.main(["--data", str(data), "--output", str(frame)])
+            stamp("inference frame built", t0)
+            loan_detail_coefficients.main(["--frame", str(frame),
+                                           "--output", str(OUT / "loan_detail_coefficients")])
+            stamp("loan-detail fits done", t0)
         else:
             raise ValueError(JOB)
     finally:
