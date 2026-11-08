@@ -160,7 +160,8 @@ class Page:
         spans = [(len(section), len(section) + 5, {'color': RULE}),
                  (len(section) + 5, len(label), {'color': GREY})] if sub else []
         # Sublabel uses body grey, not the parent's #999999, so it meets WCAG AA (DESIGN.md).
-        self.text(label, L, 29.5, 600, 14, size=10, color=VIOLET, bold=True, spans=spans)
+        if not slide.get('hide_label'):  # Mike removed the agenda's label in the live deck
+            self.text(label, L, 29.5, 600, 14, size=10, color=VIOLET, bold=True, spans=spans)
         self.text(slide['title'], L, 48.4, FULL - L, 34, size=24, bold=True)
         if slide.get('subtitle'):
             self.text(slide['subtitle'], L, 90.9, FULL - L, 18, size=12, color=GREY)
@@ -176,7 +177,7 @@ class Page:
                 if j % 2:  # **phrase** marks an evidence-bearing phrase
                     emphasis.append((len(body), len(body) + len(part)))
                 body += part
-            spans.append((cursor, cursor + len(heading), {'bold': True, 'color': NAVY}))
+            spans.append((cursor, cursor + len(heading), {'bold': True, 'color': VIOLET}))
             start = cursor + len(heading) + 1
             spans += [(start + a, start + b, {'bold': True, 'color': NAVY}) for a, b in emphasis]
             above = {'space_above': 14} if i else {}
@@ -189,6 +190,12 @@ class Page:
                   paragraphs=paragraphs, spans=spans)
         for i, item in enumerate(items):
             self.marker(item['marker'], 668, positions[i])
+
+    def sup(self, text, x, y, w, h=14, size=10, color=NAVY, bold=False, align=None):
+        """Text ending in a superscript note mark (¹, ²) that is drawn in slate."""
+        mark = len(text.rstrip('¹²³'))
+        spans = [(mark, len(text), {'color': SLATE, 'bold': True})] if mark < len(text) else []
+        return self.text(text, x, y, w, h, size=size, color=color, bold=bold, align=align, spans=spans)
 
     def caption(self, label, text, y, x=L, w=R - L):
         full = f'{label} {text}'
@@ -331,7 +338,7 @@ def agenda(page, slide, urls):
     page.chrome(slide)
     colours = [(NAVY, WHITE), (VIOLET, WHITE), (SLATE, WHITE), (YELLOW, NAVY)]
     contents = [[('Editable fields', 4), ('The outcome', 5), ('A slower market', 6)],
-                [('Three evidence layers', 7)],
+                [('Four analyses', 7)],
                 [('Country uncertainty', 8), ('Small or unknown', 9), ('Regional patterns', 10),
                  ('Programme controls', 11), ('Forecast gain', 12), ('Limits of the gain', 13)],
                 [('What is supported', 14), ('Three gates', 15)]]
@@ -464,13 +471,13 @@ def slowdown(page, slide, pos):
         # Labels sit inside the bar top so the dashed averages, drawn first, never cross them.
         page.text(f"{value:.1f}", x - 24, y + 4, 48, 14, size=10, bold=True, align='center',
                   color=NAVY if light else WHITE)
-        page.text(str(row['year']), x - 22, base + 4, 44, 14, size=10, align='center')
+        page.sup(f"{row['year']}¹" if light else str(row['year']), x - 22, base + 4, 44, 14, size=10, align='center')
     page.line(x0 - step / 2, base, x1 + step / 2, base, NAVY, 1)
     page.marker(1, px(7) - 6, py(30) - 24)
     page.marker(2, px(3) + step / 2 - 20, top + 6)
     page.marker(3, px(5) + step / 2 - 20, top + 6)
     page.caption('Figure 3.', ex['caption'], base + 26)
-    page.caption('Note:', ex['note'], base + 40)
+    page.caption('¹', ex['note'], base + 40)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -479,20 +486,40 @@ def band_fill(shade):
 
 
 def approach(page, slide):
+    """Four analyses fed by one dataset; the first three form a chain, the benchmark stands apart."""
     page.chrome(slide)
-    fills = [NAVY, VIOLET, SLATE]
-    width, gap = 277, 22
-    for i, layer in enumerate(slide['exhibit']['layers']):
-        x = L + i * (width + gap)
-        page.rect(x, TOP, width, 270, PAPER)
-        page.badge(layer['name'], x, TOP, (width, 36), fills[i], WHITE, 12, 'RECTANGLE')
-        page.text('Question', x + 12, TOP + 50, width - 24, 14, size=10, color=GREY, bold=True)
-        page.text(layer['question'], x + 12, TOP + 66, width - 24, 56, size=12, bold=True, spacing=110)
-        page.text('Method', x + 12, TOP + 146, width - 24, 14, size=10, color=GREY, bold=True)
-        page.text(layer['method'], x + 12, TOP + 162, width - 24, 90, size=10, color=GREY, spacing=115)
-    page.rect(L, 414, FULL - L - .5, 42, PAPER)
-    page.rect(L, 414, 6, 42, YELLOW)
-    page.text(slide['exhibit']['footer'], L + 18, 427, 800, 16, size=10, bold=True)
+    ex = slide['exhibit']
+    page.rect(L, TOP, FULL - L - .5, 34, PAPER)
+    page.rect(L, TOP, 6, 34, YELLOW)
+    page.text(ex['source'], L + 44, TOP, 760, 34, size=12, bold=True, middle=True)
+    width, top, h = PIPE_W, 188, 288
+    fills = [(NAVY, WHITE), (VIOLET, WHITE), (YELLOW, NAVY), (SLATE, WHITE)]
+    for i, step in enumerate(ex['steps']):
+        x = pipe_x(i)
+        fill, ink = fills[i]
+        page.rect(x + width / 2 - 1, TOP + 34, 2, top - TOP - 34, HAIR)
+        page.rect(x, top, width, h, PAPER)
+        page.rect(x, top, width, 40, fill)
+        page.text(step['name'], x + 40, top, width - 48, 40, size=12, color=ink, bold=True, middle=True)
+        page.text('Question', x + 12, top + 52, width - 24, 12, size=8, color=GREY, bold=True)
+        page.text(step['question'], x + 12, top + 66, width - 24, 46, size=10, bold=True, spacing=110)
+        page.text('Method', x + 12, top + 118, width - 24, 12, size=8, color=GREY, bold=True)
+        page.text(step['method'], x + 12, top + 132, width - 24, 56, size=10, color=GREY, spacing=110)
+        page.text('Data', x + 12, top + 192, width - 24, 12, size=8, color=GREY, bold=True)
+        page.text(step['data'], x + 12, top + 206, width - 24, 28, size=10, color=GREY, spacing=110)
+        page.line(x + 12, top + 238, x + width - 12, top + 238, HAIR, .75)
+        page.text(step['headline'], x + 12, top + 244, width - 24, 40, size=10, bold=True, spacing=110)
+        if i < 2:
+            page.rect(x + width + 3, top + 12, 16, 16, SLATE, 'RIGHT_ARROW')
+    page.line(pipe_x(3) - 20, top, pipe_x(3) - 20, top + h, RULE, .75)
+
+
+PIPE_W = 196
+
+
+def pipe_x(i):
+    """Card x: three chained cards 22 pt apart, then the separate benchmark after a 40 pt gap."""
+    return L + i * (PIPE_W + 22) + (18 if i == 3 else 0)
 
 
 def clustering(page, slide, pos):
@@ -512,7 +539,7 @@ def clustering(page, slide, pos):
     page.rect(320, legend + 2, 11, 11, NAVY)
     page.text('Kept significance', 337, legend, 200, 14, size=10)
     page.marker(3, L + 296 - 22, TOP + 10)
-    page.caption('Figure 4.', 'Each square is one term significant under HC3, across both explanatory models.', legend + 22)
+    page.caption('Figure 4.', 'Terms significant under HC3 in the two explanatory models; each square is one term.', legend + 22)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -530,7 +557,8 @@ def forest(page, slide, pos):
     for i, row in enumerate(rows):
         y = top + i * pitch + pitch / 2 - 3
         label, colour = status[row['status_both_specs']]
-        page.text(row['term'].capitalize(), L, y - 7, 112, 14, size=10)
+        name = 'Sentiment¹' if row['term'].startswith('sentiment') else row['term'].capitalize()
+        page.sup(name, L, y - 7, 112, 14, size=10)
         page.line(px(row['ci90_low']), y, px(row['ci90_high']), y, colour, 2)
         page.rect(px(row['estimate']) - 4, y - 4, 8, 8, colour, 'ELLIPSE')
         page.text(label, 572, y - 7, 72, 14, size=10, color=colour, bold=True)
@@ -540,8 +568,9 @@ def forest(page, slide, pos):
     page.marker(2, 552, top + 8 * pitch + 6)
     page.marker(3, px(.05) + 4, top - 21)
     page.marker(4, 552, top + 4 * pitch + 6)
-    page.caption('Figure 5.', 'Change in log(1 + days) per extra mention per 100 words (sentiment per +0.5 score), '
-                              '90% interval, expanded specification. Status covers both specifications.', bottom + 18)
+    page.caption('Figure 5.', 'Change in log(1 + days) per extra mention per 100 words, 90% intervals, expanded '
+                              'specification; status covers both specifications.', bottom + 18)
+    page.caption('¹', 'Per +0.5 change in the sentiment score.', bottom + 32)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -569,7 +598,7 @@ def regions(page, slide, pos):
     page.marker(1, px(.1043) + 6, y + 70)
     page.marker(2, L + 90, y + 8)
     page.marker(3, L + 104, top + 14 + 136 + 8)
-    page.caption('Figure 6.', 'Change in log(1 + days) per extra family mention per 100 words. Dots are the slope estimates.', 442)
+    page.caption('Figure 6.', 'Within-region family-framing slopes, log(1 + days) per extra mention per 100 words.', 442)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -613,7 +642,7 @@ def forecast(page, slide, pos):
     page.marker(1, 498 + 152 - 22, TOP + 10)
     page.marker(2, 290, legend_y + 1)
     page.marker(3, 452, 215)
-    page.caption('Figure 8.', 'MAE in days, lower is better. Linear model on identical evaluation rows. Bars start at zero.', 450)
+    page.caption('Figure 8.', 'Linear-model MAE in days on identical evaluation rows; lower is better.', 450)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -626,7 +655,7 @@ def gains(page, slide, pos):
         plot = px0 + 40
         px = lambda value: plot + (value - lo) * width / (hi - lo)
         colour = [NAVY, VIOLET][p]
-        page.text(panel['name'], px0, TOP + 2, 290, 16, size=10, bold=True, color=colour)
+        page.sup(panel['name'] + '¹', px0, TOP + 2, 290, 16, size=10, bold=True, color=colour)
         page.line(px(0), top - 12, px(0), top + 5 * pitch - 12, GREY, .75)
         for i, (year, gain, low, high) in enumerate(panel['rows']):
             y = top + i * pitch
@@ -640,9 +669,9 @@ def gains(page, slide, pos):
     page.marker(1, L + 310 + 270, TOP + 3)
     page.marker(3, L + 31, top + 4 * pitch + 7)
     axis = top + 5 * pitch - 10 + 12
-    page.caption('Figure 9.', 'MAE gain in days with month-resampled 95% intervals; positive is better. Both panels share one scale.', axis + 8)
+    page.caption('Figure 9.', 'Annual MAE gain in days with month-resampled 95% intervals; positive is better.', axis + 8)
     page.marker(2, L, axis + 22)
-    page.caption('Note:', 'Country resampling, not shown: intervals include zero in 4 of 5 linear and 3 of 5 tree years.',
+    page.caption('¹', 'Country resampling, not shown: intervals include zero in 4 of 5 linear and 3 of 5 tree years.',
                  axis + 22, x=L + 18)
     page.takeaways(slide['takeaways'], pos)
 
@@ -685,7 +714,7 @@ def a_table(page, slide):
     y = TOP + row * (len(exhibit['rows']) + 1) + 8
     page.caption(exhibit['figure'], exhibit['caption'], y, w=FULL - L)
     if slide.get('note'):
-        page.caption('Note:', slide['note'].removeprefix('Note: '), y + 14, w=FULL - L)
+        page.caption('¹', slide['note'], y + 14, w=FULL - L)
     for i, body in enumerate(slide.get('body', [])):
         page.block(body['heading'], body['text'], L + i * 450, y + 40, 425, 90)
 
@@ -910,6 +939,10 @@ def main() -> None:
         images.append((3, framed_photo(Path(work), MARKET, LEVER_PHOTO, 'lever.png', all_corners=True), LEVER_PHOTO))
         images.append((3, ASSETS / 'icons/table_rows-slate.png', (L + 202, TOP + 14, 18, 18)))
         images.append((3, ASSETS / 'icons/description-violet.png', (L + 202, TOP + 124, 18, 18)))
+        for i, step in enumerate(slide_data()['7']['exhibit']['steps']):
+            x = pipe_x(i)
+            images.append((6, ASSETS / 'icons' / step['icon'], (x + 12, 188 + 9, 22, 22)))
+        images.append((6, ASSETS / 'icons/table_rows-navy.png', (L + 16, TOP + 7, 20, 20)))
         for icon, (x, y, _, _) in zip(SUMMARY_ICONS, SUMMARY_CARDS):
             images.append((1, ASSETS / 'icons' / icon, (x + 16, y + 14, 22, 22)))
         for icon, x in zip(STEP_ICONS, STEP_X):

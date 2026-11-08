@@ -103,7 +103,8 @@
       "notes": {
         "purpose": "Orient the reader.",
         "script": "We start with the problem and what the outcome really measures, then our three layers of evidence, then what we found and what we recommend."
-      }
+      },
+      "hide_label": true
     },
     {
       "n": 4,
@@ -158,33 +159,33 @@
             "thankful"
           ]
         },
-        "caption": "Illustrative composite listing, not a real borrower. Values are dataset medians and most common categories; highlighted words match the framing word lists."
+        "caption": "Illustrative composite listing, not a real borrower; values are dataset medians and most common categories."
       },
       "takeaways": [
         {
           "marker": 1,
-          "heading": "Why it matters",
+          "heading": "The description is the editable part",
           "text": "Most fields are fixed. The **description can still be edited**, so if framing mattered, wording guidance would be a cheap lever."
         },
         {
           "marker": 2,
-          "heading": "What we measured",
+          "heading": "Eight framing rates, every loan",
           "text": "**Eight framing rates per 100 words**, plus sentiment and text form, across 1,453,840 loans."
         },
         {
           "marker": 3,
-          "heading": "What we asked",
+          "heading": "The test is for whom and when",
           "text": "Which framings are linked to **faster funding**, for which loans, and when?"
         },
         {
           "marker": 4,
-          "heading": "Who writes it",
+          "heading": "Pronouns reflect who writes",
           "text": "Descriptions are mostly **written about the borrower, not by them**, so pronouns may reflect partner conventions."
         }
       ],
       "notes": {
         "purpose": "Show what a writer can and cannot change.",
-        "script": "This card is an illustrative composite, not a real borrower. Most of a listing is fixed by the time it goes live: amount, term, sector, country and partner. The description is the part someone can still edit. [Point: What we measured] We counted framing words like these per 100 words, for family, business, urgency, gratitude and more, across every loan. [Point: Who writes it] These texts are usually written about the borrower by partner staff, so pronouns tell us more about who writes than about the borrower. [Point: What we asked] The question is which of these framings are linked to faster funding, for whom and when.",
+        "script": "This card is an illustrative composite, not a real borrower. Most of a listing is fixed by the time it goes live: amount, term, sector, country and partner. The description is the part someone can still edit. [Point: Eight framing rates, every loan] We counted framing words like these per 100 words, for family, business, urgency, gratitude and more, across every loan. [Point: Pronouns reflect who writes] These texts are usually written about the borrower by partner staff, so pronouns tell us more about who writes than about the borrower. [Point: The test is for whom and when] The question is which of these framings are linked to faster funding, for whom and when.",
         "reference": "Composite values: median loan amount US$325, median term 12 months, median borrowers 1, most common sector Agriculture and country Philippines (eligible records, feature cache). Example text written for this slide; each highlighted word matches the src/features.py lexicons. Photo: Muhammad-Taha Ibrahim on Unsplash (Unsplash Licence)."
       },
       "sublabel": "The lever"
@@ -214,17 +215,17 @@
       "takeaways": [
         {
           "marker": 1,
-          "heading": "Who waits",
+          "heading": "Partners wait, not borrowers",
           "text": "For most loans the **partner has already paid the borrower**. Platform time plausibly reflects replenishing partner capital; it is not measured directly."
         },
         {
           "marker": 2,
-          "heading": "Who is missing",
+          "heading": "Unfunded loans are missing",
           "text": "Only loans that **eventually funded** are in the data, so we cannot study whether a loan funds at all."
         },
         {
           "marker": 3,
-          "heading": "What every result inherits",
+          "heading": "Results describe completed loans",
           "text": "Findings describe **completed loans and platform timing**, not funding success or borrower welfare."
         }
       ],
@@ -234,7 +235,7 @@
         "reference": "association_summary.txt audit trail; docs/1_data_dictionary.md disbursalDate."
       },
       "sublabel": "Outcome",
-      "figure_caption": "Typical timing for a loan disbursed before listing; the median comes from the full-data audit of disbursal dates."
+      "figure_caption": "Timing for a loan disbursed before listing."
     },
     {
       "n": 6,
@@ -321,23 +322,23 @@
             "shade": "paper"
           }
         ],
-        "caption": "Share (%) of completed loans funded within 24 hours, by posting year; dashed lines show period averages. Bars start at zero.",
-        "note": "2025 (lighter bar) may be incomplete: loans still unfunded at extraction are missing, which would raise its share."
+        "caption": "Share of completed loans funded within 24 hours, by posting year, with period averages.",
+        "note": "2025 may be incomplete: loans still unfunded at extraction are missing."
       },
       "takeaways": [
         {
           "marker": 1,
-          "heading": "A slower market",
+          "heading": "The market stayed slower",
           "text": "From 2021 to 2024 the share stayed **between 27.5% and 29.9%**, well below the pre-pandemic average."
         },
         {
           "marker": 2,
-          "heading": "Why it matters here",
+          "heading": "Every model controls for period",
           "text": "Period is a control in every model; **narrative effects are judged within periods**."
         },
         {
           "marker": 3,
-          "heading": "Context, not framing",
+          "heading": "This is context, not framing",
           "text": "A platform-wide shift like this is **context to control for**, not evidence about how descriptions are written."
         }
       ],
@@ -352,36 +353,53 @@
       "n": 7,
       "id": "approach",
       "section": "Approach",
-      "layout": "full_width_diagram",
-      "title": "Three layers of evidence, each answering a different question",
-      "subtitle": "Explanatory models, robustness checks and a forecast benchmark",
+      "layout": "pipeline",
+      "title": "Four analyses, each answering a different question",
+      "subtitle": "One dataset; the equivalence test builds on the robustness checks, and the forecast benchmark asks a separate question",
       "exhibit": {
-        "type": "three_layer_diagram",
-        "layers": [
+        "type": "pipeline",
+        "source": "Kiva loans, 2016–2025: 1,453,840 valid completed durations in 48 countries",
+        "steps": [
           {
             "name": "Explanatory models",
-            "question": "Which features are associated with speed, and how sure are we?",
-            "method": "OLS and GLM; HC3 versus country-clustered errors; 2024–2025 chronological holdout"
+            "icon": "query_stats-white.png",
+            "question": "Which features are linked to funding speed, and how sure are we?",
+            "method": "Regression models of funding time and same-day funding, with errors clustered by country.",
+            "data": "1,453,840 loans in 48 countries",
+            "headline": "64 of 120 significant terms lost significance"
           },
           {
             "name": "Robustness checks",
-            "question": "Do associations survive richer controls?",
-            "method": "Country-clustered OLS and LPM with and without a programme-text proxy; BH adjustment"
+            "icon": "verified_user-white.png",
+            "question": "Do the links survive richer controls?",
+            "method": "The same models with more text measures and a programme-text proxy, adjusted for multiple tests.",
+            "data": "1,453,840 loans; 642 programme categories",
+            "headline": "Only small associations remain"
+          },
+          {
+            "name": "Equivalence test",
+            "icon": "target-navy.png",
+            "question": "Which links are small enough to rule out a large effect?",
+            "method": "Checks whether each 90% interval sits inside ±5% of funding time.",
+            "data": "Robustness-check estimates for 9 terms",
+            "headline": "Five framings small; urgency unresolved"
           },
           {
             "name": "Forecast benchmark",
-            "question": "How much does text add to a structure-only forecast?",
-            "method": "Matched feature blocks on identical rows; as-of training; five annual windows 2021–2025"
+            "icon": "trending_up-white.png",
+            "question": "Does text improve a forecast built on loan structure?",
+            "method": "Train on earlier years, then test each year with and without text on the same loans.",
+            "data": "728,640 evaluation records over five years",
+            "headline": "Error fell in 5 of 5 years, by 0.26–0.39 days"
           }
-        ],
-        "footer": "Equivalence test: are the robustness-check associations small enough to bound?"
+        ]
       },
       "notes": {
         "purpose": "Explain how the evidence fits together.",
-        "script": "Each layer answers a different question, so we keep their numbers separate. The explanatory models ask about associations and their uncertainty. The robustness checks add controls. The forecast benchmark asks a prediction question: does text improve a forecast built on loan structure alone? An equivalence test then asks which associations are small enough to bound.",
-        "reference": "Run provenance: explanatory models, primary saved run 2026-08-31 (reports/generated_full_dataset); robustness checks, reviewed sensitivity (reports/expanded_feature_sensitivity_reviewed); forecast benchmark, 2026-11-02 (reports/text_benchmark_reviewed); equivalence test, 2026-11-08 (reports/equivalence_screen_reviewed)."
+        "script": "All four analyses use the same loans. The explanatory models ask which features are linked to speed, and how sure we can be. The robustness checks rerun them with richer controls, and the equivalence test then asks which of those links are small enough to bound. [Point: Forecast benchmark] The forecast benchmark asks a different question: does text help predict funding time? Its numbers are not comparable with the others.",
+        "reference": "Run provenance: explanatory models, primary saved run 2026-08-31; robustness checks, reviewed expanded-feature sensitivity; equivalence test 2026-11-08; forecast benchmark 2026-11-02. 642 programme categories from docs/2_evidence_and_corrections.md."
       },
-      "sublabel": "Three layers"
+      "sublabel": "Four analyses"
     },
     {
       "n": 8,
@@ -403,23 +421,23 @@
       "takeaways": [
         {
           "marker": 1,
-          "heading": "Why it happens",
+          "heading": "Countries share context",
           "text": "Loans in one country share context, so 1.45 million rows behave like **far fewer independent observations**."
         },
         {
           "marker": 2,
-          "heading": "What it does not mean",
+          "heading": "Weak evidence is not no effect",
           "text": "**Losing significance is not evidence of no effect**; the next slide tests that directly."
         },
         {
           "marker": 3,
-          "heading": "How few, in practice",
+          "heading": "48 countries act like 5.7",
           "text": "Ten countries hold 80% of records, so the 48 countries weigh like about **5.7 equal-sized ones** (an exploratory index)."
         }
       ],
       "notes": {
         "purpose": "Show why we distrust headline significance.",
-        "script": "With 1.45 million rows almost everything looks significant. When we let errors correlate within each of 48 countries, 64 of the 120 significant terms fell away, including urgency. [Point: What it does not mean] That tells us the evidence is weak, not that the effect is zero.",
+        "script": "With 1.45 million rows almost everything looks significant. When we let errors correlate within each of 48 countries, 64 of the 120 significant terms fell away, including urgency. [Point: Weak evidence is not no effect] That tells us the evidence is weak, not that the effect is zero.",
         "reference": "Explanatory models, primary saved run 2026-08-31. association_summary.txt sensitivity blocks; recount recorded in claims_register.md."
       },
       "sublabel": "Explanatory models"
@@ -507,28 +525,28 @@
       "takeaways": [
         {
           "marker": 1,
-          "heading": "Small, not just non-significant",
+          "heading": "Five framings are small",
           "text": "Five framings stay **inside ±5% of funding time** in both specifications."
         },
         {
           "marker": 2,
-          "heading": "Too noisy to judge",
+          "heading": "Urgency and first person are unknown",
           "text": "Urgency and first-person framing could still be linked to **6–14% faster or slower funding** per mention. Each is absent from over 98% of records."
         },
         {
           "marker": 3,
-          "heading": "Caveat",
+          "heading": "The bound came after the data",
           "text": "The bound was chosen **after seeing the estimates**; a confirmatory test needs one agreed in advance."
         },
         {
           "marker": 4,
-          "heading": "Stress test",
+          "heading": "The verdicts survive a stricter test",
           "text": "With a stricter t(4) reference, **all five duration verdicts still hold**."
         }
       ],
       "notes": {
         "purpose": "Separate 'small' from 'unknown'.",
-        "script": "The shaded band is a practical bound, about five percent of funding time per extra mention. When a whole interval sits inside the band, we can say the association is small. Most framings do. Urgency and first person do not: their intervals are wide enough to allow sizeable links either way. [Point: Caveat] We chose the bound after seeing the results, so treat this as exploratory. Edit size matters too: one mention in a typical description is a realistic edit, but almost no descriptions contain these words, so the data say little about them.",
+        "script": "The shaded band is a practical bound, about five percent of funding time per extra mention. When a whole interval sits inside the band, we can say the association is small. Most framings do. Urgency and first person do not: their intervals are wide enough to allow sizeable links either way. [Point: The bound came after the data] We chose the bound after seeing the results, so treat this as exploratory. Edit size matters too: one mention in a typical description is a realistic edit, but almost no descriptions contain these words, so the data say little about them.",
         "reference": "Equivalence test run 2026-11-08. reports/equivalence_screen_reviewed/README.md; src/equivalence.py. Edit-size context: reports/equivalence_screen_reviewed/feature_distribution.json."
       },
       "sublabel": "Equivalence test"
@@ -577,17 +595,17 @@
       "takeaways": [
         {
           "marker": 1,
-          "heading": "Two countries is not a pattern",
+          "heading": "Two countries cannot make a pattern",
           "text": "With two clusters, between-country uncertainty **cannot be estimated well**; the heuristic intervals cross zero."
         },
         {
           "marker": 2,
-          "heading": "No regional advice",
+          "heading": "No regional writing rules",
           "text": "These are descriptive patterns, **not grounds for country or regional writing rules**."
         },
         {
           "marker": 3,
-          "heading": "What would settle it",
+          "heading": "More countries would settle it",
           "text": "A regional test needs **more countries per region**, or partner-level data."
         }
       ],
@@ -629,23 +647,23 @@
       "takeaways": [
         {
           "marker": 1,
-          "heading": "Small and mixed",
+          "heading": "Only small associations remain",
           "text": "Third-person framing keeps its size but rises to **BH p 0.061**; business framing is **the one term below BH 0.05**."
         },
         {
           "marker": 2,
-          "heading": "Still associations",
+          "heading": "These are still associations",
           "text": "Programme text is an **unvalidated proxy**; neither result shows what editing would do."
         },
         {
           "marker": 3,
-          "heading": "Who writes matters",
+          "heading": "Pronouns may reflect the writer",
           "text": "Descriptions are usually written by partners, so the **third-person link may reflect who writes**, not a borrower's choice."
         }
       ],
       "notes": {
         "purpose": "Show that not everything disappears.",
-        "script": "Few results remain under richer controls. Third-person framing keeps about the same size, but its adjusted p-value rises just above 0.05. Business framing is the one term that passes after programme controls, with a slightly lower same-day rate. Both are small and observational. [Point: Who writes matters] Descriptions are usually written by partner staff, so the third-person link may say more about who writes than about the borrower.",
+        "script": "Few results remain under richer controls. Third-person framing keeps about the same size, but its adjusted p-value rises just above 0.05. Business framing is the one term that passes after programme controls, with a slightly lower same-day rate. Both are small and observational. [Point: Pronouns may reflect the writer] Descriptions are usually written by partner staff, so the third-person link may say more about who writes than about the borrower.",
         "reference": "Robustness checks: reviewed expanded-feature sensitivity, reports/expanded_feature_sensitivity_reviewed. "
       },
       "key_figures": [
@@ -722,17 +740,17 @@
       "takeaways": [
         {
           "marker": 1,
-          "heading": "Text is informative",
+          "heading": "Text carries forecast information",
           "text": "Gains of **0.26–0.39 days** on 728,640 evaluation records."
         },
         {
           "marker": 2,
-          "heading": "Not an editing effect",
+          "heading": "Forecasting is not persuasion",
           "text": "Text may encode **purpose, place or programme templates**, not only persuasion."
         },
         {
           "marker": 3,
-          "heading": "Not one country",
+          "heading": "No single country drives it",
           "text": "Removing any single country **leaves the gain positive** in every year (exploratory check)."
         }
       ],
@@ -829,23 +847,23 @@
       "takeaways": [
         {
           "marker": 1,
-          "heading": "Model matters",
+          "heading": "The tree model gains little",
           "text": "The tree model, without TF-IDF, gains **at most 0.04 days**."
         },
         {
           "marker": 2,
-          "heading": "Countries matter",
+          "heading": "Country intervals are wide",
           "text": "Country resampling **includes zero in 4 of 5** linear years. Capping extreme forecasts, an exploratory check, leaves zero in 1 of 5."
         },
         {
           "marker": 3,
-          "heading": "Metrics disagree",
+          "heading": "Metrics move in different directions",
           "text": "In 2025 text improved error and calibration but **AUC fell** from 0.893 to 0.888."
         }
       ],
       "notes": {
         "purpose": "Keep the gain in proportion.",
-        "script": "The linear gains are consistent month to month, but country resampling is less kind, and the tree model gains little. [Point: Countries matter] Part of that country fragility comes from a few extreme forecasts: when we cap forecasts at the longest training wait, an exploratory check, the country interval excludes zero in 4 of 5 years. Different metrics also move in different directions.",
+        "script": "The linear gains are consistent month to month, but country resampling is less kind, and the tree model gains little. [Point: Country intervals are wide] Part of that country fragility comes from a few extreme forecasts: when we cap forecasts at the longest training wait, an exploratory check, the country interval excludes zero in 4 of 5 years. Different metrics also move in different directions.",
         "reference": "docs/6_matched_text_results.md; reports/loss_alignment_2025/README.md (all five years, capped diagnostic)."
       },
       "sublabel": "Forecast benchmark"
@@ -969,7 +987,7 @@
           ]
         ],
         "figure": "Figure A1.",
-        "caption": "Within-region family-framing slopes, log(1 + days) per extra mention per 100 words; two countries per region."
+        "caption": "Within-region family-framing slopes, log(1 + days) per extra mention per 100 words."
       },
       "body": [
         {
@@ -1024,7 +1042,7 @@
           ],
           [
             "2024",
-            "5,691",
+            "5,691¹",
             "1,169,262",
             "141,725"
           ],
@@ -1036,9 +1054,9 @@
           ]
         ],
         "figure": "Figure A2.",
-        "caption": "Training availability and evaluation rows for each annual window."
+        "caption": "Training availability and evaluation rows by year."
       },
-      "note": "Note: The 2024 replay excludes 5,691 training records that a posting-only split would keep. Evaluation windows still select eventual completions.",
+      "note": "A posting-only split would keep these 5,691 training records; evaluation windows still select eventual completions.",
       "notes": {
         "purpose": "Show how training stayed honest about time.",
         "script": "A training record only counts if it had finished funding before the cutoff, so the model never learns from outcomes that were not yet known.",
