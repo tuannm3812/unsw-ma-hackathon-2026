@@ -1391,43 +1391,44 @@ def solution(page, slide, pos):
     page.takeaways(slide['takeaways'], pos)
 
 
-def gates(page, slide):
-    """Three steps as full cards with labelled rows; then either a ladder of claims or a stop line."""
+def gates(page, slide, pos):
+    """Three gates as linked cards, then the claim each one unlocks and the stop rule."""
     page.chrome(slide)
-    ladder = slide.get('ladder')
-    width, top = 262, 136
-    h = 226 if ladder else 270
+    ladder = slide['ladder']
+    top, h = TOP, 212
     fills = [(NAVY, WHITE), (VIOLET, WHITE), (YELLOW, NAVY)]
-    for i, (step, x) in enumerate(zip(slide['steps'], GATE_X)):
-        card(page, x, top, width, h, fills[i][0])
-        page.badge(step['n'], x + 14, top + 14, (30, 30), *fills[i], 11)
-        page.text(step['name'], x + 14, top + 52, width - 28, 16, size=12, bold=True)
-        rows = step.get('rows') or [['Question', step['question']], ['Do', step['do']], ['Done when', step['done']]]
-        pitch = 50 if ladder else 62
-        for j, (name, value) in enumerate(rows):
-            y = top + 76 + j * pitch
-            page.text(name, x + 14, y, 120, 12, size=8, color=GREY, bold=True)
-            page.text(value, x + 14, y + 12, width - 28, pitch - 14, size=10, color=NAVY if j == 0 else GREY,
-                      bold=j == 0, spacing=105)
+    for i, step in enumerate(slide['steps']):
+        x = L + i * (SOLUTION_W + SOLUTION_GAP)
+        card(page, x, top, SOLUTION_W, h, fills[i][0])
+        page.badge(step['n'], x + 12, top + 12, (26, 26), *fills[i], 10)
+        page.text(step['name'], x + 12, top + 44, SOLUTION_W - 40, 15, size=11, bold=True)
+        page.marker(i + 1, x + SOLUTION_W - 22, top + 45)
+        rows = [('Question', step['question'], 66, True), ('Do', step['do'], 106, False), ('Done when', step['done'], 162, False)]
+        for name, value, offset, bold in rows:
+            page.text(name, x + 12, top + offset, 120, 12, size=8, color=GREY, bold=True)
+            page.text(value, x + 12, top + offset + 11, SOLUTION_W - 24, 40, size=9, color=NAVY if bold else GREY, bold=bold, spacing=105)
         if i < 2:
-            page.line(x + width + 8, top + h / 2, x + width + 36, top + h / 2, SLATE, .75)
+            page.line(x + SOLUTION_W + 3, top + h / 2, x + SOLUTION_W + SOLUTION_GAP - 3, top + h / 2, SLATE, .75)
             page.ops[-1]['end_arrow'] = 'FILL_ARROW'
-    if not ladder:
-        page.text(slide['stop'], L, top + h + 18, FULL - L, 14, size=11, color=SLATE, bold=True)
-        return
-    y = 376
-    page.text(ladder['title'], L, y, 600, 14, size=10, bold=True, color=VIOLET)
-    chip_w, gap = (FULL - L - 3 * 24) / 4, 24
+    y = top + h + 10
+    page.text(ladder['title'], L, y, 400, 12, size=9, bold=True, color=VIOLET)
+    gap = 12
+    chip_w = (R - L - 3 * gap) / 4
     for i, (stage, claim) in enumerate(ladder['steps']):
         x = L + i * (chip_w + gap)
-        page.rect(x, y + 20, chip_w, 40, PAPER)
-        page.rect(x, y + 20, 4, 40, [SLATE, NAVY, VIOLET, YELLOW][i])
-        page.text(f'{stage}\n{claim}', x + 12, y + 20, chip_w - 18, 40, size=10, middle=True, spacing=105,
+        page.rect(x, y + 16, chip_w, 44, PAPER)
+        page.rect(x, y + 16, 3, 44, [SLATE, NAVY, VIOLET, YELLOW][i])
+        page.text(f'{stage}\n{claim}', x + 10, y + 16, chip_w - 14, 44, size=9, middle=True, spacing=100,
                   spans=[(0, len(stage), {'bold': True, 'color': GREY, 'font_size': 8})])
         if i < 3:
-            page.line(x + chip_w + 3, y + 40, x + chip_w + gap - 3, y + 40, SLATE, .75)
+            page.line(x + chip_w + 2, y + 38, x + chip_w + gap - 2, y + 38, SLATE, .75)
             page.ops[-1]['end_arrow'] = 'FILL_ARROW'
-    page.text(ladder['stop'], L, y + 68, FULL - L, 14, size=10, color=SLATE, bold=True)
+    sy = y + 68
+    page.rect(L, sy, R - L, 24, PAPER)
+    page.rect(L, sy, 4, 24, YELLOW)
+    page.text(ladder['stop'], L + 14, sy, R - L - 50, 24, size=10, bold=True, middle=True)
+    page.marker(4, R - 22, sy + 6)
+    page.takeaways(slide['takeaways'], pos)
 
 
 def chip_link(page, label, x, y, fill, urls, ink=WHITE):
@@ -1923,9 +1924,9 @@ def main() -> None:
     builders = {'summary': summary, 'problem': problem, 'text_adds': text_adds, 'where': where, 'subgroups': subgroups,
                 'lever': lever, 'outcome': outcome,
                 'clustering': clustering, 'equivalence': forest, 'regions': regions, 'a_screen': regions,
-                'persist': persist, 'forecast': forecast, 'gain_uncertainty': gains, 'approach': approach, 'solution': solution, 'triage': triage, 'prioritise': prioritise}
+                'persist': persist, 'forecast': forecast, 'gain_uncertainty': gains, 'approach': approach, 'solution': solution, 'triage': triage, 'prioritise': prioritise, 'gates': gates}
     linked = {'agenda': agenda}
-    plain = {'gates': gates, 'supports': supports, 'roadmap': roadmap,
+    plain = {'supports': supports, 'roadmap': roadmap,
              'a_asof': a_table, 'a_text_methods': a_table, 'a_primary': a_metrics, 'a_topics': a_topics, 'cover': cover, 'close': close}
     for index, (slide, item) in enumerate(zip(story, slides)):
         if only is not None and index not in only:
@@ -1981,8 +1982,8 @@ def main() -> None:
         for i, step in enumerate(slide_by_id('approach')['exhibit']['steps']):
             images.append((at['approach'], ASSETS / 'icons' / step['icon'], (pipe_x(i) + 6, 166 + 5, 16, 16)))
         images.append((at['approach'], ASSETS / 'icons/table_rows-navy.png', (L + 11, TOP + 4, 16, 16)))
-        for x, icon in zip(GATE_X, GATE_ICONS):
-            images.append((at['gates'], ASSETS / 'icons' / icon, (x + 262 - 72, 136 + 18, 20, 20)))
+        for i, icon in enumerate(GATE_ICONS):
+            images.append((at['gates'], ASSETS / 'icons' / icon, (L + i * (SOLUTION_W + SOLUTION_GAP) + SOLUTION_W - 32, TOP + 15, 20, 20)))
         for i, icon in enumerate(SOLUTION_ICONS):
             images.append((at['solution'], ASSETS / 'icons' / icon, (L + i * (SOLUTION_W + SOLUTION_GAP) + SOLUTION_W - 32, TOP + 17, 20, 20)))
         for icon, x in zip(slide_by_id('agenda').get('icons', []), [43.5, 267.5, 491.5, 715.5]):

@@ -2992,3 +2992,9 @@ unseen exact template, which cannot exclude near-duplicates.
 - Slide 16's When rows have one icon per step. The Kiva logo is not yet added: Kiva's guide at kiva.org/design is written for partners, and downloading the file needs Mike's approval.
 - Slide 18 now has a takeaway column; each lever shows who acts and what to watch; the repeated ±5% figure is gone. The who and watch-for lines are proposals, not findings.
 - Verified: pyflakes, deck QA, rendered slides, full offline pytest. Slides 16 and 18 only were rebuilt; nothing pushed.
+
+## 2026-11-09: slide 19 rework
+
+- Live deck re-read first: no owner edits to mirror. Slide 19 now states its conclusion in the title, uses slide 16's card grid, keeps the ladder and stop rule, and has four takeaways. No numbers repeated from slides 16–18.
+- The Kiva logo is still not added: its download waits for Mike's own confirmation in the thread.
+- Verified: pyflakes, deck QA, rendered slide 19, full offline pytest. Slide 19 only was rebuilt; nothing pushed.

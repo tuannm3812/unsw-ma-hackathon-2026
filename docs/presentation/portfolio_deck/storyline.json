@@ -2579,8 +2579,8 @@
       "n": 19,
       "id": "gates",
       "section": "Solution",
-      "layout": "three_steps",
-      "title": "Test before advising: three gates before any writing advice",
+      "layout": "content+takeaways",
+      "title": "Writing advice has to pass three gates first",
       "subtitle": "Proposed next research for Kiva and participating partners; each gate must pass before the next",
       "steps": [
         {
@@ -2607,7 +2607,7 @@
       ],
       "notes": {
         "purpose": "End on a decision path.",
-        "script": "Before anyone tells borrowers how to write, three things need to happen, in order. First, check that our word counts measure what we think. Second, get the data we are missing: what lenders saw and the listings that never funded. Third, test one truthful prompt with partners. [Point: Each gate unlocks a stronger claim] Each gate lets us say a little more, from associations today to a tested effect of editing. If a gate fails, we stop and report the uncertainty.",
+        "script": "Before anyone tells borrowers how to write, three things need to happen, in order. [Point: Check the measures first] First, check that our word counts measure what we think. [Point: Then fill what we cannot see] Second, get the data we are missing: what lenders saw and the listings that never funded. [Point: Only a pilot can test an edit] Third, test one truthful prompt with partners. Each gate lets us say a little more, from associations today to a tested effect of editing. [Point: A failed gate stops the work] If a gate fails, we stop and report the uncertainty.",
         "reference": "docs/6_matched_text_results.md, What to do next; docs/4_research_review.md."
       },
       "sublabel": "Step 3: Test",
@@ -2632,7 +2632,30 @@
           ]
         ],
         "stop": "If a gate fails, stop there: report the uncertainty and give no writing advice."
-      }
+      },
+      "takeaways": [
+        {
+          "marker": 1,
+          "heading": "Check the measures first",
+          "text": "Word counts may not capture clarity, need or agency until **people have coded them**."
+        },
+        {
+          "marker": 2,
+          "heading": "Then fill what we cannot see",
+          "text": "We lack **what lenders saw** and the listings that never funded."
+        },
+        {
+          "marker": 3,
+          "heading": "Only a pilot can test an edit",
+          "text": "One truthful prompt against a control, with **the pass mark set in advance**."
+        },
+        {
+          "marker": 4,
+          "heading": "A failed gate stops the work",
+          "text": "The claim stays where it is, and **no writing advice goes out**."
+        }
+      ],
+      "solution_link": "→ Why the limits stay on the page"
     },
     {
       "n": 20,
