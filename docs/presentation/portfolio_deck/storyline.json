@@ -423,14 +423,43 @@
         ],
         "timeline": {
           "title": "Years each analysis uses",
-          "all_label": "Explanatory, robustness, equivalence",
-          "holdout_label": "Chronological holdout",
-          "benchmark_label": "Forecast benchmark: train only on loans completed before each test year"
-        }
+          "rows": [
+            {
+              "label": "Explanatory, robustness, equivalence",
+              "note": "Associations and their uncertainty, all years at once"
+            },
+            {
+              "label": "Chronological holdout",
+              "note": "Primary forecast check on later loans"
+            },
+            {
+              "label": "Forecast benchmark, five test years",
+              "note": "728,640 evaluation records; each model trains only on loans completed before its test year"
+            }
+          ]
+        },
+        "claims": [
+          [
+            "Explanatory",
+            "association"
+          ],
+          [
+            "Robustness",
+            "survives controls"
+          ],
+          [
+            "Equivalence",
+            "bounded as small"
+          ],
+          [
+            "Benchmark",
+            "out-of-time prediction"
+          ]
+        ]
       },
       "notes": {
         "purpose": "Explain how the evidence fits together.",
-        "script": "All four analyses use the same loans. The explanatory models ask which features are linked to speed, and how sure we can be. The robustness checks rerun them with richer controls, and the equivalence test then asks which of those links are small enough to bound. [Point: Forecast benchmark] The forecast benchmark asks a different question: does text help predict funding time? Its numbers are not comparable with the others. [Point: Years each analysis uses] The strip at the bottom shows the years: the explanatory work uses all loans, the holdout tests on 2024 and 2025, and the benchmark retrains five times, each time only on loans completed before the test year.",
+        "script": "All four analyses use the same loans. The explanatory models ask which features are linked to speed, and how sure we can be. The robustness checks rerun them with richer controls, and the equivalence test then asks which of those links are small enough to bound. [Point: Forecast benchmark] The forecast benchmark asks a different question: does text help predict funding time? Its numbers are not comparable with the others. [Point: Years each analysis uses] The strip at the bottom shows the years: the explanatory work uses all loans, the holdout tests on 2024 and 2025, and the benchmark retrains five times, each time only on loans completed before the test year. [Point: What each can claim] Each analysis supports a different kind of claim, and none of them is causal.",
         "reference": "Run provenance: explanatory models, primary saved run 2026-08-31; robustness checks, reviewed expanded-feature sensitivity; equivalence test 2026-11-08; forecast benchmark 2026-11-02. 642 programme categories from docs/2_evidence_and_corrections.md."
       },
       "sublabel": "Four analyses"

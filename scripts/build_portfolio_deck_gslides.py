@@ -514,13 +514,14 @@ def approach(page, slide, urls):
     page.rect(L, TOP, FULL - L - .5, 28, PAPER)
     page.rect(L, TOP, 6, 28, YELLOW)
     page.text(ex['source'], L + 40, TOP, 760, 28, size=12, bold=True, middle=True)
-    width, top, h = PIPE_W, 172, 182
+    width, top, h = PIPE_W, 172, 174
     fills = [(NAVY, WHITE), (VIOLET, WHITE), (YELLOW, NAVY), (SLATE, WHITE)]
     previews = [preview_waffle, preview_table, preview_bound, preview_bars]
     for i, step in enumerate(ex['steps']):
         x = pipe_x(i)
         fill, ink = fills[i]
-        page.rect(x + width / 2 - 1, TOP + 28, 2, top - TOP - 28, HAIR)
+        page.line(x + width / 2, TOP + 28, x + width / 2, top - 1, SLATE, .75)
+        page.ops[-1]['end_arrow'] = 'FILL_ARROW'
         page.rect(x, top, width, h, PAPER)
         page.rect(x, top, width, 30, fill)
         page.text(step['name'], x + 34, top, width - 76, 30, size=11, color=ink, bold=True, middle=True)
@@ -530,28 +531,48 @@ def approach(page, slide, urls):
                   spans=[(0, len(label), {'link': urls[step['slide']], 'color': NAVY})])
         page.text(step['question'], x + 10, top + 36, width - 20, 28, size=10, bold=True, spacing=105)
         page.text(step['method'], x + 10, top + 66, width - 20, 22, size=8, color=GREY, spacing=105)
-        previews[i](page, x + 10, top + 94, width - 20, 40, slide)
-        page.text(step['headline'], x + 10, top + 140, width - 20, 28, size=10, bold=True, spacing=105)
+        previews[i](page, x + 10, top + 90, width - 20, 46, slide)
+        page.text(step['headline'], x + 10, top + 142, width - 20, 28, size=10, bold=True, spacing=105)
         if i < 2:
-            page.rect(x + width + 3, top + 7, 16, 16, SLATE, 'RIGHT_ARROW')
+            page.line(x + width + 2, top + 15, x + width + 20, top + 15, SLATE, .75)
+            page.ops[-1]['end_arrow'] = 'FILL_ARROW'
     page.line(pipe_x(3) - 20, top, pipe_x(3) - 20, top + h, RULE, .75)
     timeline(page, ex['timeline'])
+    claims(page, ex['claims'])
+
+
+def claims(page, chips):
+    """What each analysis can claim, ending with the causal caveat."""
+    y = 454
+    page.text('What each can claim', L, y, 150, 14, size=8, bold=True, middle=True)
+    fills = [NAVY, VIOLET, YELLOW, SLATE]
+    x = 236
+    for (name, claim), fill in zip(chips, fills):
+        label = f'{name}: {claim}'
+        width = 12 + len(label) * 4.25
+        page.rect(x, y, width, 14, PAPER)
+        page.rect(x, y, 3, 14, fill)
+        page.text(label, x + 6, y, width - 6, 14, size=8, middle=True, spans=[(0, len(name) + 1, {'bold': True})])
+        x += width + 6
+    page.text('None of these is a causal claim.', x + 4, y, FULL - x - 4, 14, size=8, color=SLATE, bold=True, middle=True)
 
 
 def preview_waffle(page, x, y, w, h, slide):
     """Mini of the 120-term waffle: 64 terms lost significance."""
-    cell, gap = 4.6, 1.2
+    cell, gap = 5.6, 1.5
     for i in range(120):
         row, col = divmod(i, 20)
-        page.rect(x + col * (cell + gap), y + 4 + row * (cell + gap), cell, cell, YELLOW if i < 64 else HAIR)
+        page.rect(x + col * (cell + gap), y + 2 + row * (cell + gap), cell, cell, YELLOW if i < 64 else HAIR)
 
 
 def preview_table(page, x, y, w, h, slide):
     """Mini of the robustness table: a header row and two term rows."""
     for r in range(3):
-        page.rect(x, y + 4 + r * 11, w * .72, 9, NAVY if r == 0 else WHITE)
+        page.rect(x, y + 2 + r * 14, w * .8, 12, NAVY if r == 0 else WHITE)
         if r:
-            page.line(x, y + 4 + r * 11 + 9, x + w * .72, y + 4 + r * 11 + 9, HAIR, .5)
+            page.line(x, y + 2 + r * 14 + 12, x + w * .8, y + 2 + r * 14 + 12, HAIR, .5)
+    for c in (1, 2):
+        page.line(x + w * .8 * c / 3, y + 14, x + w * .8 * c / 3, y + 44, HAIR, .5)
 
 
 def preview_bound(page, x, y, w, h, slide):
@@ -559,9 +580,10 @@ def preview_bound(page, x, y, w, h, slide):
     rows = {r['term']: r for r in slide_data()['9']['exhibit']['rows']}
     lo, hi = -.15, .15
     px = lambda v: x + (v - lo) * w * .8 / (hi - lo)
-    page.rect(px(-.05), y, px(.05) - px(-.05), 40, '#FFF0A8')
+    page.rect(px(-.05), y, px(.05) - px(-.05), 46, '#FFF0A8')
+    page.line(px(0), y, px(0), y + 46, NAVY, .5)
     for i, term in enumerate(['family', 'basic needs', 'business', 'agency', 'third person', 'urgency']):
-        r, cy = rows[term], y + 5 + i * 6
+        r, cy = rows[term], y + 5 + i * 7.4
         page.line(px(r['ci90_low']), cy, px(r['ci90_high']), cy, VIOLET if term == 'urgency' else NAVY, 1.25)
 
 
@@ -569,37 +591,44 @@ def preview_bars(page, x, y, w, h, slide):
     """Mini of the five annual linear gains, bars from zero."""
     gains = [row[1] for row in slide_data()['13']['exhibit']['series'][0]['rows']]
     for i, gain in enumerate(gains):
-        height = gain * 90
-        page.rect(x + i * 20, y + 40 - height, 14, height, NAVY)
-    page.line(x, y + 40, x + 96, y + 40, NAVY, .75)
+        height = gain * 110
+        page.rect(x + i * 26, y + 46 - height, 18, height, NAVY)
+    page.line(x, y + 46, x + 126, y + 46, NAVY, .75)
 
 
 def timeline(page, tl):
-    """Years each analysis uses: one bar for all loans, the holdout split, five expanding windows."""
-    x0, per, top = 236, 41.3, 364
+    """Years each analysis uses: all loans, the holdout split, five expanding windows; notes at right."""
+    x0, per, top = 236, 41.3, 356
+    note_x = x0 + 10 * per + 14
     page.text(tl['title'], L, top, 190, 12, size=10, bold=True)
     for i, year in enumerate(range(2016, 2026)):
         page.text(str(year), x0 + i * per - 6, top, per + 12, 12, size=8, color=GREY, align='center')
+    page.rect(note_x, top + 2, 8, 8, SLATE)
+    page.text('train', note_x + 11, top, 30, 12, size=8, color=GREY)
+    page.rect(note_x + 44, top + 2, 8, 8, YELLOW)
+    page.text('test', note_x + 55, top, 30, 12, size=8, color=GREY)
     def span(first, last, y, h, fill):
         page.rect(x0 + (first - 2016) * per + 1, y, (last - first + 1) * per - 2, h, fill)
+    rows = tl['rows']
     y = top + 16
-    page.text(tl['all_label'], L, y - 1, 190, 12, size=8)
-    span(2016, 2025, y, 9, NAVY)
-    page.text('all 1,453,840 loans', x0 + 4, y - 1, 200, 11, size=8, color=WHITE, bold=True)
-    y += 15
-    page.text(tl['holdout_label'], L, y - 1, 190, 12, size=8)
-    span(2016, 2023, y, 9, SLATE)
-    span(2024, 2025, y, 9, YELLOW)
-    y += 15
-    page.text(tl['benchmark_label'], L, y + 6, 190, 24, size=8, spacing=105)
+    page.text(rows[0]['label'], L, y, 190, 13, size=8, bold=True, middle=True)
+    span(2016, 2025, y, 13, NAVY)
+    page.text('all 1,453,840 loans', x0 + 6, y, 200, 13, size=8, color=WHITE, bold=True, middle=True)
+    page.text(rows[0]['note'], note_x, y, FULL - note_x, 13, size=8, color=GREY, middle=True)
+    y += 17
+    page.text(rows[1]['label'], L, y, 190, 13, size=8, bold=True, middle=True)
+    span(2016, 2023, y, 13, SLATE)
+    span(2024, 2025, y, 13, YELLOW)
+    page.text('train: 1,174,953 loans', x0 + 6, y, 220, 13, size=8, color=WHITE, bold=True, middle=True)
+    page.text('test: 278,887', x0 + 8 * per + 4, y, 2 * per - 6, 13, size=8, bold=True, middle=True)
+    page.text(rows[1]['note'], note_x, y, FULL - note_x, 13, size=8, color=GREY, middle=True)
+    y += 17
+    page.text(rows[2]['label'], L, y + 6, 190, 30, size=8, bold=True, spacing=105)
+    page.text(rows[2]['note'], note_x, y + 6, FULL - note_x, 30, size=8, color=GREY, spacing=105)
     for test in range(2021, 2026):
-        span(2016, test - 1, y, 4.5, SLATE)
-        span(test, test, y, 4.5, YELLOW)
-        y += 6.5
-    page.rect(x0 + 10 * per + 8, top + 2, 9, 9, YELLOW)
-    page.text('test', x0 + 10 * per + 20, top, 40, 12, size=8, color=GREY)
-    page.rect(x0 + 10 * per + 8, top + 18, 9, 9, SLATE)
-    page.text('train', x0 + 10 * per + 20, top + 16, 40, 12, size=8, color=GREY)
+        span(2016, test - 1, y, 6.5, SLATE)
+        span(test, test, y, 6.5, YELLOW)
+        y += 8.5
 
 
 PIPE_W = 196
