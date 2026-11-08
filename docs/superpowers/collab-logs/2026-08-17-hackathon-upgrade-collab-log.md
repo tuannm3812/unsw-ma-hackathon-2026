@@ -2762,3 +2762,18 @@ unseen exact template, which cannot exclude near-duplicates.
     - Photos are placed by slide id.
     - Fixed along the way: swallowed constants were restored (pyflakes clean), and slide 8's caption and line overlap.
   - QA reports no automated problems; previews, PDF and preview page refreshed; not pushed.
+- **2026-11-08, experiments B, C and G folded into the deck:** no new owner edits; one slide was added (now 20 main + 5 appendix) and nothing was deleted.
+  - **Source:** `src/robustness_summary.py` (tested in `tests/test_robustness_summary.py`) reads the Kaggle outputs into `reports/evidence_sources/robustness_summary.json`, and register rows are generated from it.
+  - **Bootstrap (C, G):** a wild cluster bootstrap with Webb weights, 9,999 draws and 48 countries keeps 35 of 36 equivalence verdicts; 22 of 23 bounded results survive, and the one loss is basic needs, programme-adjusted, 24-hour. The lowest BH-adjusted bootstrap p for any nonzero term is 0.136.
+  - **Slide 9 (programme controls):**
+    - New title: "The only remaining signals are tiny and fail a stricter test".
+    - The table shows the bootstrap p-values.
+    - "Third person BH 0.012 → 0.061" and "business, the one term below BH 0.05 (BH p 0.006)" are added to the register's Retired list, and no slide or note still quotes them.
+  - **Slide 10 (equivalence):** the stricter-tests takeaway and tag now cite the bootstrap.
+  - **New slide 11 (subgroups, B):** "Six framings stay small in every period, loan size, gender and region". It is a framing × 10-subgroup heat grid for the programme-adjusted model, with funding time on the slide; 24-hour and the expanded model are in the notes. Counts and hypothesis markers:
+    - six framings small in 10 of 10, sentiment 9, first person 5, urgency 1;
+    - urgency in Asia and agency by gender are marked as unadjusted hypotheses among 180 tests;
+    - experiment A (no period or loan-size interaction under clustering) is cited.
+  - **Placeholders:** the "for whom and when" placeholders on the summary, key insight and guardrails are replaced with the real line. The Test slide names urgency in Asia as a candidate pilot hypothesis.
+  - **Renumbering:** agenda (Evidence 6–13, Solution 14–17, Next steps 18–19), all link chips and figures 6–9.
+  - QA reports no automated problems; previews, PDF and preview page refreshed; not pushed.

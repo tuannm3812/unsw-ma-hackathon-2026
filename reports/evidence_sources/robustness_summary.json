@@ -1,0 +1,997 @@
+{
+  "bootstrap": {
+    "verdicts": 36,
+    "unchanged": 35,
+    "bounded_in_screen": 23,
+    "bounded_survive": 22,
+    "changed": [
+      {
+        "specification": "programme_adjusted",
+        "outcome": "funded_within_24h",
+        "term": "basic_needs",
+        "screen": true,
+        "bootstrap": false
+      }
+    ],
+    "min_p_zero_bh": 0.13591359135913592,
+    "draws": 9999,
+    "clusters": 48,
+    "weights": "Webb six-point"
+  },
+  "subgroups": {
+    "programme_adjusted": {
+      "log_funding_speed": {
+        "subgroups": [
+          "pre_pandemic",
+          "pandemic_disruption",
+          "post_pandemic",
+          "small",
+          "medium",
+          "large",
+          "female",
+          "male",
+          "Asia",
+          "Africa"
+        ],
+        "grid": {
+          "family": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "basic_needs": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "business": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "agency": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "gratitude": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "urgency": [
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "first_person": [
+            false,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false,
+            true
+          ],
+          "third_person": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "sentiment": [
+            true,
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        "bounded_count": {
+          "family": 10,
+          "basic_needs": 10,
+          "business": 10,
+          "agency": 10,
+          "gratitude": 10,
+          "urgency": 1,
+          "first_person": 5,
+          "third_person": 10,
+          "sentiment": 9
+        },
+        "hypotheses_unadjusted": [
+          {
+            "group": "analysis_period",
+            "level": "pandemic_disruption",
+            "term": "third_person",
+            "estimate": -0.011513999639732295,
+            "p_zero_unadjusted": 0.000968056161009656
+          },
+          {
+            "group": "analysis_period",
+            "level": "post_pandemic",
+            "term": "urgency",
+            "estimate": -0.0668875684170964,
+            "p_zero_unadjusted": 0.010186866461094802
+          },
+          {
+            "group": "loan_size_band",
+            "level": "small",
+            "term": "third_person",
+            "estimate": -0.004949508787347792,
+            "p_zero_unadjusted": 0.022164805776945035
+          },
+          {
+            "group": "loan_size_band",
+            "level": "medium",
+            "term": "family",
+            "estimate": 0.01348756525300483,
+            "p_zero_unadjusted": 0.004731963503654816
+          },
+          {
+            "group": "loan_size_band",
+            "level": "medium",
+            "term": "business",
+            "estimate": 0.009912950809691795,
+            "p_zero_unadjusted": 0.009905160824388052
+          },
+          {
+            "group": "loan_size_band",
+            "level": "large",
+            "term": "basic_needs",
+            "estimate": -0.027363215875969352,
+            "p_zero_unadjusted": 0.01650387286488656
+          },
+          {
+            "group": "gender_classification",
+            "level": "female",
+            "term": "family",
+            "estimate": 0.012963461934096063,
+            "p_zero_unadjusted": 0.019305396375047114
+          },
+          {
+            "group": "gender_classification",
+            "level": "female",
+            "term": "agency",
+            "estimate": 0.010817391728739911,
+            "p_zero_unadjusted": 0.0027494607022077303
+          },
+          {
+            "group": "gender_classification",
+            "level": "female",
+            "term": "third_person",
+            "estimate": -0.00826817652802629,
+            "p_zero_unadjusted": 3.478666775211407e-05
+          },
+          {
+            "group": "gender_classification",
+            "level": "male",
+            "term": "business",
+            "estimate": 0.01034497245595389,
+            "p_zero_unadjusted": 0.019343327085825774
+          },
+          {
+            "group": "gender_classification",
+            "level": "male",
+            "term": "agency",
+            "estimate": -0.019035154856742408,
+            "p_zero_unadjusted": 0.0006562118188330287
+          },
+          {
+            "group": "region",
+            "level": "Asia",
+            "term": "urgency",
+            "estimate": -0.0855607531310063,
+            "p_zero_unadjusted": 0.0020158213423069433
+          },
+          {
+            "group": "region",
+            "level": "Asia",
+            "term": "third_person",
+            "estimate": -0.005805038188113742,
+            "p_zero_unadjusted": 0.02524086667434614
+          },
+          {
+            "group": "region",
+            "level": "Africa",
+            "term": "business",
+            "estimate": 0.010610752341433253,
+            "p_zero_unadjusted": 0.016181701196047504
+          }
+        ]
+      },
+      "funded_within_24h": {
+        "subgroups": [
+          "pre_pandemic",
+          "pandemic_disruption",
+          "post_pandemic",
+          "small",
+          "medium",
+          "large",
+          "female",
+          "male",
+          "Asia",
+          "Africa"
+        ],
+        "grid": {
+          "family": [
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "basic_needs": [
+            true,
+            true,
+            true,
+            false,
+            false,
+            true,
+            true,
+            false,
+            false,
+            true
+          ],
+          "business": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "agency": [
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "gratitude": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true,
+            false
+          ],
+          "urgency": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "first_person": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "third_person": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "sentiment": [
+            false,
+            false,
+            false,
+            false,
+            true,
+            false,
+            false,
+            true,
+            false,
+            false
+          ]
+        },
+        "bounded_count": {
+          "family": 9,
+          "basic_needs": 6,
+          "business": 10,
+          "agency": 9,
+          "gratitude": 1,
+          "urgency": 0,
+          "first_person": 0,
+          "third_person": 10,
+          "sentiment": 2
+        },
+        "hypotheses_unadjusted": [
+          {
+            "group": "analysis_period",
+            "level": "pandemic_disruption",
+            "term": "business",
+            "estimate": -0.002750900565122712,
+            "p_zero_unadjusted": 0.0009478567588280391
+          },
+          {
+            "group": "analysis_period",
+            "level": "pandemic_disruption",
+            "term": "third_person",
+            "estimate": 0.0035221189758261585,
+            "p_zero_unadjusted": 0.005535074355283507
+          },
+          {
+            "group": "analysis_period",
+            "level": "post_pandemic",
+            "term": "urgency",
+            "estimate": 0.023159603354848984,
+            "p_zero_unadjusted": 0.03508266483685293
+          },
+          {
+            "group": "loan_size_band",
+            "level": "medium",
+            "term": "family",
+            "estimate": -0.004778097266759449,
+            "p_zero_unadjusted": 0.0073833925284823776
+          },
+          {
+            "group": "loan_size_band",
+            "level": "medium",
+            "term": "business",
+            "estimate": -0.0038479891366544196,
+            "p_zero_unadjusted": 0.001224168239381577
+          },
+          {
+            "group": "loan_size_band",
+            "level": "large",
+            "term": "basic_needs",
+            "estimate": 0.006596852592395085,
+            "p_zero_unadjusted": 0.00019490088914961388
+          },
+          {
+            "group": "gender_classification",
+            "level": "female",
+            "term": "business",
+            "estimate": -0.002547235185475337,
+            "p_zero_unadjusted": 0.00024054941175429687
+          },
+          {
+            "group": "gender_classification",
+            "level": "female",
+            "term": "third_person",
+            "estimate": 0.0016927269808315465,
+            "p_zero_unadjusted": 0.024929256017141986
+          },
+          {
+            "group": "gender_classification",
+            "level": "male",
+            "term": "basic_needs",
+            "estimate": 0.0055808396912490855,
+            "p_zero_unadjusted": 0.03119888262687361
+          },
+          {
+            "group": "gender_classification",
+            "level": "male",
+            "term": "agency",
+            "estimate": 0.005242193480666312,
+            "p_zero_unadjusted": 0.0018742334185421058
+          },
+          {
+            "group": "region",
+            "level": "Asia",
+            "term": "urgency",
+            "estimate": 0.024386917038270107,
+            "p_zero_unadjusted": 0.0003465697361749471
+          },
+          {
+            "group": "region",
+            "level": "Africa",
+            "term": "gratitude",
+            "estimate": -0.007968363137377992,
+            "p_zero_unadjusted": 0.0020206518522839865
+          }
+        ]
+      },
+      "tests": 180
+    },
+    "expanded": {
+      "log_funding_speed": {
+        "subgroups": [
+          "pre_pandemic",
+          "pandemic_disruption",
+          "post_pandemic",
+          "small",
+          "medium",
+          "large",
+          "female",
+          "male",
+          "Asia",
+          "Africa"
+        ],
+        "grid": {
+          "family": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "basic_needs": [
+            false,
+            false,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false,
+            true,
+            false
+          ],
+          "business": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "agency": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "gratitude": [
+            false,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "urgency": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "first_person": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "third_person": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "sentiment": [
+            true,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        "bounded_count": {
+          "family": 10,
+          "basic_needs": 5,
+          "business": 10,
+          "agency": 10,
+          "gratitude": 1,
+          "urgency": 0,
+          "first_person": 0,
+          "third_person": 10,
+          "sentiment": 2
+        },
+        "hypotheses_unadjusted": [
+          {
+            "group": "analysis_period",
+            "level": "pre_pandemic",
+            "term": "basic_needs",
+            "estimate": 0.0317151893160844,
+            "p_zero_unadjusted": 0.029461241028187386
+          },
+          {
+            "group": "analysis_period",
+            "level": "pandemic_disruption",
+            "term": "first_person",
+            "estimate": -0.059876057236165535,
+            "p_zero_unadjusted": 0.04368460835405065
+          },
+          {
+            "group": "analysis_period",
+            "level": "pandemic_disruption",
+            "term": "third_person",
+            "estimate": -0.010672435404821616,
+            "p_zero_unadjusted": 0.001630185081886177
+          },
+          {
+            "group": "analysis_period",
+            "level": "post_pandemic",
+            "term": "agency",
+            "estimate": 0.014110280126557465,
+            "p_zero_unadjusted": 0.017609797827835984
+          },
+          {
+            "group": "analysis_period",
+            "level": "post_pandemic",
+            "term": "first_person",
+            "estimate": -0.11084008567097091,
+            "p_zero_unadjusted": 0.011771022435769352
+          },
+          {
+            "group": "loan_size_band",
+            "level": "small",
+            "term": "basic_needs",
+            "estimate": -0.02997228428279859,
+            "p_zero_unadjusted": 0.0015564737346322663
+          },
+          {
+            "group": "loan_size_band",
+            "level": "medium",
+            "term": "basic_needs",
+            "estimate": -0.028059052228972505,
+            "p_zero_unadjusted": 0.016099735664150818
+          },
+          {
+            "group": "loan_size_band",
+            "level": "medium",
+            "term": "third_person",
+            "estimate": -0.007611338571740099,
+            "p_zero_unadjusted": 0.018970896884108843
+          },
+          {
+            "group": "loan_size_band",
+            "level": "large",
+            "term": "agency",
+            "estimate": 0.022089006956585996,
+            "p_zero_unadjusted": 0.0027564285544614806
+          },
+          {
+            "group": "loan_size_band",
+            "level": "large",
+            "term": "gratitude",
+            "estimate": 0.06401980341859369,
+            "p_zero_unadjusted": 0.0029310478511168745
+          },
+          {
+            "group": "gender_classification",
+            "level": "female",
+            "term": "third_person",
+            "estimate": -0.010517997574517244,
+            "p_zero_unadjusted": 0.0008150450302865759
+          },
+          {
+            "group": "gender_classification",
+            "level": "female",
+            "term": "sentiment",
+            "estimate": 0.04099262320362922,
+            "p_zero_unadjusted": 0.0036509338460234443
+          },
+          {
+            "group": "gender_classification",
+            "level": "male",
+            "term": "business",
+            "estimate": 0.018948912301585248,
+            "p_zero_unadjusted": 0.014950245966243022
+          },
+          {
+            "group": "gender_classification",
+            "level": "male",
+            "term": "agency",
+            "estimate": -0.01422808864128767,
+            "p_zero_unadjusted": 0.03223986672520699
+          },
+          {
+            "group": "region",
+            "level": "Asia",
+            "term": "urgency",
+            "estimate": -0.09377320117897733,
+            "p_zero_unadjusted": 0.013537224311497328
+          },
+          {
+            "group": "region",
+            "level": "Africa",
+            "term": "basic_needs",
+            "estimate": -0.04738528440786614,
+            "p_zero_unadjusted": 0.005597576290949156
+          },
+          {
+            "group": "region",
+            "level": "Africa",
+            "term": "business",
+            "estimate": 0.012487601334870433,
+            "p_zero_unadjusted": 0.01955415078304854
+          },
+          {
+            "group": "region",
+            "level": "Africa",
+            "term": "agency",
+            "estimate": 0.01048920766574599,
+            "p_zero_unadjusted": 0.04476088004956016
+          },
+          {
+            "group": "region",
+            "level": "Africa",
+            "term": "first_person",
+            "estimate": -0.07452832073856754,
+            "p_zero_unadjusted": 0.012678201680817042
+          }
+        ]
+      },
+      "funded_within_24h": {
+        "subgroups": [
+          "pre_pandemic",
+          "pandemic_disruption",
+          "post_pandemic",
+          "small",
+          "medium",
+          "large",
+          "female",
+          "male",
+          "Asia",
+          "Africa"
+        ],
+        "grid": {
+          "family": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "basic_needs": [
+            false,
+            false,
+            false,
+            false,
+            true,
+            true,
+            false,
+            false,
+            true,
+            false
+          ],
+          "business": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "agency": [
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "gratitude": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "urgency": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "first_person": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "third_person": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "sentiment": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true,
+            false,
+            false
+          ]
+        },
+        "bounded_count": {
+          "family": 10,
+          "basic_needs": 3,
+          "business": 10,
+          "agency": 9,
+          "gratitude": 0,
+          "urgency": 0,
+          "first_person": 0,
+          "third_person": 10,
+          "sentiment": 1
+        },
+        "hypotheses_unadjusted": [
+          {
+            "group": "analysis_period",
+            "level": "pre_pandemic",
+            "term": "basic_needs",
+            "estimate": -0.012946539975766872,
+            "p_zero_unadjusted": 0.008067431387679722
+          },
+          {
+            "group": "analysis_period",
+            "level": "pandemic_disruption",
+            "term": "business",
+            "estimate": -0.005257849145210969,
+            "p_zero_unadjusted": 0.0001975271393979499
+          },
+          {
+            "group": "analysis_period",
+            "level": "pandemic_disruption",
+            "term": "first_person",
+            "estimate": 0.021427812196367406,
+            "p_zero_unadjusted": 0.045846266521501776
+          },
+          {
+            "group": "analysis_period",
+            "level": "pandemic_disruption",
+            "term": "third_person",
+            "estimate": 0.002840962412490995,
+            "p_zero_unadjusted": 0.014561785531185876
+          },
+          {
+            "group": "analysis_period",
+            "level": "post_pandemic",
+            "term": "basic_needs",
+            "estimate": 0.007216817894752575,
+            "p_zero_unadjusted": 0.0461044673567357
+          },
+          {
+            "group": "analysis_period",
+            "level": "post_pandemic",
+            "term": "first_person",
+            "estimate": 0.02751184732253762,
+            "p_zero_unadjusted": 0.008019559877746973
+          },
+          {
+            "group": "loan_size_band",
+            "level": "small",
+            "term": "basic_needs",
+            "estimate": 0.01031997384498316,
+            "p_zero_unadjusted": 0.0004973457176821303
+          },
+          {
+            "group": "loan_size_band",
+            "level": "small",
+            "term": "business",
+            "estimate": -0.003726671159975481,
+            "p_zero_unadjusted": 0.024491030707662054
+          },
+          {
+            "group": "loan_size_band",
+            "level": "large",
+            "term": "gratitude",
+            "estimate": -0.011312832942965517,
+            "p_zero_unadjusted": 0.024139074151109854
+          },
+          {
+            "group": "gender_classification",
+            "level": "female",
+            "term": "third_person",
+            "estimate": 0.002029154400652307,
+            "p_zero_unadjusted": 0.01026054647955668
+          },
+          {
+            "group": "gender_classification",
+            "level": "female",
+            "term": "sentiment",
+            "estimate": -0.012923736296743198,
+            "p_zero_unadjusted": 0.004832204824804243
+          },
+          {
+            "group": "gender_classification",
+            "level": "male",
+            "term": "basic_needs",
+            "estimate": 0.008607243641688116,
+            "p_zero_unadjusted": 0.007384984205363292
+          },
+          {
+            "group": "gender_classification",
+            "level": "male",
+            "term": "agency",
+            "estimate": 0.005126644844707437,
+            "p_zero_unadjusted": 0.005387067368993674
+          },
+          {
+            "group": "region",
+            "level": "Africa",
+            "term": "basic_needs",
+            "estimate": 0.00898115750506149,
+            "p_zero_unadjusted": 0.0007742266046663883
+          },
+          {
+            "group": "region",
+            "level": "Africa",
+            "term": "first_person",
+            "estimate": 0.022336552788145683,
+            "p_zero_unadjusted": 0.01160061443220196
+          }
+        ]
+      },
+      "tests": 180
+    }
+  }
+}

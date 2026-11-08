@@ -386,8 +386,9 @@ def agenda(page, slide, urls):
         page.text(part['name'], x, 176, 200, 24, size=16, bold=True)
         page.text(part['question'], x, 204, 196, 36, size=12, color=GREY, spacing=110)
         page.line(x, 252, x + 200, 252, RULE, .75)
+        pitch = min(28, 200 / len(part['items']))
         for j, (label, number) in enumerate(part['items']):
-            y = 262 + j * 28
+            y = 262 + j * pitch
             page.text(label, x, y + 1, 168, 16, size=10)
             chip = page.badge(str(number), x + 176, y, (24, 18), fill, ink, 8, 'ROUND_RECTANGLE')
             page.ops.append({'op': 'style-text', 'element': chip, 'start': 0, 'end': len(str(number)),
@@ -815,6 +816,54 @@ def country_panel(page, ex, cx, cy, cw, ch, title, guide):
                   bold=ink == WHITE, align='center')
         page.rect(tx + 206, y + 1.2, 32, 8, same_day_fill(item['same_day_share']))
         page.text(f"{item['same_day_share'] * 100:.0f}%", tx + 206, y + 0.4, 32, 12, size=8, align='center')
+
+
+TERM_LABELS = {'third_person': 'Third person', 'basic_needs': 'Basic needs', 'first_person': 'First person'}
+
+
+def subgroups(page, slide, pos):
+    """Heat grid: framing x subgroup equivalence verdicts, with counts and flagged hypotheses."""
+    page.chrome(slide)
+    ex = slide['exhibit']
+    x0, cw, ch, gap, top = L + 92, 40, 20, 10, TOP + 34
+    xs, k = [], 0
+    for g, (group, levels) in enumerate(ex['groups']):
+        gx = x0 + k * cw + g * gap
+        page.text(group, gx, TOP + 2, cw * len(levels), 12, size=8, color=GREY, bold=True, align='center')
+        page.line(gx + 2, TOP + 15, gx + cw * len(levels) - 4, TOP + 15, HAIR, .75)
+        for level in levels:
+            page.text(level, x0 + k * cw + g * gap - 4, TOP + 18, cw + 8, 12, size=8, color=GREY, align='center')
+            xs.append(x0 + k * cw + g * gap)
+            k += 1
+    count_x = xs[-1] + cw + 14
+    page.text('Small in', count_x - 4, TOP + 6, 56, 12, size=8, color=GREY, bold=True)
+    page.text('10 groups', count_x - 4, TOP + 18, 56, 12, size=8, color=GREY, bold=True)
+    page.marker(1, count_x + 46, TOP + 6)
+    hyp = {(t, c) for t, c in ex['hypotheses']}
+    for r, row in enumerate(ex['rows']):
+        y = top + r * (ch + 6)
+        page.text(TERM_LABELS.get(row['term'], row['term'].capitalize()), L, y + 3, 90, 14, size=9)
+        for c, (cx, ok) in enumerate(zip(xs, row['cells'])):
+            page.rect(cx + 1, y, cw - 2, ch, NAVY if ok else '#E2DCF0')
+            if (row['term'], c) in hyp:
+                page.rect(cx + cw / 2 - 4, y + ch / 2 - 4, 8, 8, YELLOW, 'ELLIPSE')
+        full = row['count'] == len(xs)
+        page.text(f"{row['count']} of 10", count_x, y + 3, 50, 14, size=9, bold=full, color=NAVY if full else VIOLET)
+        if row['term'] == 'urgency':
+            page.marker(2, L + 50, y + 4)
+    ly = top + len(ex['rows']) * (ch + 6) + 6
+    lx = x0
+    for (label, fill, shape) in zip(ex['legend'], [NAVY, '#E2DCF0', YELLOW], ['RECTANGLE', 'RECTANGLE', 'ELLIPSE']):
+        if shape == 'ELLIPSE':
+            page.rect(lx + 2, ly + 2.5, 8, 8, fill, shape)
+        else:
+            page.rect(lx, ly + 1.5, 14, 10, fill)
+        page.sup(label, lx + 18, ly, 4.4 * len(label) + 10, 12, size=8, color=GREY)
+        lx += 18 + 4.4 * len(label) + 22
+    page.marker(3, lx - 14, ly + 0.5)
+    page.caption(slide['figure'], ex['caption'], ly + 18)
+    page.caption('¹', ex['note_sup'], ly + 31)
+    page.takeaways(slide['takeaways'], pos)
 
 
 def where(page, slide, pos):
@@ -1562,7 +1611,7 @@ def main() -> None:
             for i, s in enumerate(slides)}
     # Link targets accept a storyline number as int or text, including appendix labels such as 'A2'.
     urls.update({str(slide['n']): urls[i + 1] for i, slide in enumerate(story)})
-    builders = {'summary': summary, 'problem': problem, 'text_adds': text_adds, 'where': where,
+    builders = {'summary': summary, 'problem': problem, 'text_adds': text_adds, 'where': where, 'subgroups': subgroups,
                 'clustering': clustering, 'equivalence': forest, 'regions': regions, 'a_screen': regions,
                 'persist': persist, 'forecast': forecast, 'gain_uncertainty': gains}
     linked = {'approach': approach, 'gates': gates, 'solution': gates, 'supports': supports,

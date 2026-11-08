@@ -80,6 +80,13 @@ benchmark. **Equivalence** = exploratory screen of October coefficients (2026-11
 | Share of records with no mention, all nine terms (slide 10) | third person 2.7%; sentiment 3.4% (score exactly zero); family 11.3%; business 15.0%; agency 45.9%; basic needs 76.7%; gratitude 80.4%; urgency 98.7%; first person 99.0% | same, from `feature_distribution.json` | Descriptive |
 | Share of records that mention urgency or first person | urgency 1.3%; first person 1.0%; "under 2%" covers each | complement of the row above | Descriptive |
 | Equivalence reference distribution | t with 47 df on the clustered standard error; stricter heuristic t(4) | `reports/equivalence_screen_reviewed/README.md` | Equivalence |
+| Wild cluster bootstrap of the equivalence screen (Webb weights, 9,999 draws, 48 countries) | 35 of 36 verdicts unchanged; 22 of 23 bounded results survive; the one loss is basic needs, programme-adjusted, 24-hour | `reports/evidence_sources/robustness_summary.json` (`src/robustness_summary.py`, from `reports/kaggle_experiments/inference/reports/`) | Equivalence, exploratory |
+| Lowest BH-adjusted bootstrap p for a nonzero association, any term (slide 9) | 0.136 (third person, expanded, duration); business 24-hour programme-adjusted 0.275 | same | Equivalence, exploratory |
+| Bootstrap BH p and estimate, third person and business (slide 9) | third person duration: expanded −0.0090, p 0.136; programme-adjusted −0.0081, p 0.261. Business 24-hour: expanded −0.357 pp, p 0.337; programme-adjusted −0.258 pp, p 0.275 | same, from `wild_cluster.json` | Equivalence, exploratory |
+| Subgroups bounded within ±5% (funding time), programme-adjusted model, of 10 (slide 11) | family 10; basic needs 10; business 10; agency 10; gratitude 10; urgency 1; first person 5; third person 10; sentiment 9 | same | Exploratory |
+| Subgroups bounded within ±1 pp (24-hour), programme-adjusted model, of 10 | family 9; basic needs 6; business 10; agency 9; gratitude 1; urgency 0; first person 0; third person 10; sentiment 2 | same | Exploratory |
+| Subgroups bounded (funding time), expanded model, of 10 | family 10; basic needs 5; business 10; agency 10; gratitude 1; urgency 0; first person 0; third person 10; sentiment 2 | same | Exploratory |
+| Subgroup tests and unadjusted hypotheses, programme-adjusted, funding time | 180 tests across both outcomes; agency in female +0.0108 (p 0.0027); agency in male -0.0190 (p 0.0007); urgency in Asia -0.0856 (p 0.0020); unadjusted, exploratory | same | Exploratory |
 
 ## Prediction
 
@@ -161,6 +168,8 @@ Chosen after results were known. `reports/evidence_sources/README.md`; `reports/
 ## Retired — do not quote
 
 "The story barely registers", "robust null", "won't move the needle", "myth busted",
+"third person BH p 0.012 → 0.061" and "business framing is the one term below BH 0.05 (BH p 0.006)" (retired 2026-11-08:
+no term survives the wild cluster bootstrap after BH; lowest p 0.136),
 "structure beats story ~10×", LightGBM, "SHAP top 10/15 has no narrative feature",
 "sign reversal" for third-person framing, country-level A/B advice from two-country
 regions, and the 20,000-loan topic results as full-data evidence.
