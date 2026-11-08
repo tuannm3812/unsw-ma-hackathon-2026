@@ -21,6 +21,8 @@
       "same_day_share": 0.4795450798142588,
       "median_days": 1.129525462962963,
       "records_over_14_days": 89412,
+      "records_within_24h": 250124,
+      "records_1_to_14_days": 182050,
       "share_over_14_days": 0.17142331274228986,
       "share_of_all_long_waits": 0.22702216850705983
     },
@@ -32,6 +34,8 @@
       "same_day_share": 0.29156819051477706,
       "median_days": 5.8046875,
       "records_over_14_days": 96997,
+      "records_within_24h": 77721,
+      "records_1_to_14_days": 91844,
       "share_over_14_days": 0.36388157351760564,
       "share_of_all_long_waits": 0.2462809161933441
     },
@@ -43,6 +47,8 @@
       "same_day_share": 0.31080673644312357,
       "median_days": 4.6817824074074075,
       "records_over_14_days": 24372,
+      "records_within_24h": 21648,
+      "records_1_to_14_days": 23631,
       "share_over_14_days": 0.34991600982039023,
       "share_of_all_long_waits": 0.06188189830060912
     },
@@ -54,6 +60,8 @@
       "same_day_share": 0.1813983881507297,
       "median_days": 14.001342592592593,
       "records_over_14_days": 34434,
+      "records_within_24h": 12492,
+      "records_1_to_14_days": 21939,
       "share_over_14_days": 0.5000217817468962,
       "share_of_all_long_waits": 0.08742989028734509
     },
@@ -65,6 +73,8 @@
       "same_day_share": 0.48534628232944177,
       "median_days": 1.1099074074074076,
       "records_over_14_days": 11382,
+      "records_within_24h": 28186,
+      "records_1_to_14_days": 18506,
       "share_over_14_days": 0.1959913214175018,
       "share_of_all_long_waits": 0.02889954728612888
     },
@@ -76,6 +86,8 @@
       "same_day_share": 0.6700197592958506,
       "median_days": 0.40328703703703705,
       "records_over_14_days": 2174,
+      "records_within_24h": 37300,
+      "records_1_to_14_days": 16196,
       "share_over_14_days": 0.0390515537991737,
       "share_of_all_long_waits": 0.005519910015818325
     },
@@ -87,6 +99,8 @@
       "same_day_share": 0.14976500572871607,
       "median_days": 8.317256944444445,
       "records_over_14_days": 16474,
+      "records_within_24h": 6405,
+      "records_1_to_14_days": 19888,
       "share_over_14_days": 0.38520354478920665,
       "share_of_all_long_waits": 0.04182842575924153
     },
@@ -98,6 +112,8 @@
       "same_day_share": 0.15210280373831775,
       "median_days": 11.401550925925926,
       "records_over_14_days": 17580,
+      "records_within_24h": 5859,
+      "records_1_to_14_days": 15081,
       "share_over_14_days": 0.45638629283489096,
       "share_of_all_long_waits": 0.04463662285100559
     },
@@ -109,6 +125,8 @@
       "same_day_share": 0.283495684126599,
       "median_days": 2.8590856481481484,
       "records_over_14_days": 3474,
+      "records_within_24h": 8178,
+      "records_1_to_14_days": 17195,
       "share_over_14_days": 0.120428467431622,
       "share_of_all_long_waits": 0.008820684174311344
     },
@@ -120,6 +138,8 @@
       "same_day_share": 0.37829389743030567,
       "median_days": 2.7220370370370373,
       "records_over_14_days": 7070,
+      "records_within_24h": 10408,
+      "records_1_to_14_days": 10035,
       "share_over_14_days": 0.25696943263184674,
       "share_of_all_long_waits": 0.017951133308112033
     },
@@ -131,6 +151,8 @@
       "same_day_share": 0.07156862745098039,
       "median_days": 22.474629629629632,
       "records_over_14_days": 13224,
+      "records_within_24h": 1533,
+      "records_1_to_14_days": 6663,
       "share_over_14_days": 0.6173669467787115,
       "share_of_all_long_waits": 0.033576490363008984
     },
@@ -142,6 +164,8 @@
       "same_day_share": 0.17306310191174357,
       "median_days": 11.963344907407407,
       "records_over_14_days": 9820,
+      "records_within_24h": 3612,
+      "records_1_to_14_days": 7439,
       "share_over_14_days": 0.47050931915097505,
       "share_of_all_long_waits": 0.024933540181847267
     },
@@ -153,6 +177,8 @@
       "same_day_share": 0.1262542620555285,
       "median_days": 19.364953703703705,
       "records_over_14_days": 11629,
+      "records_within_24h": 2592,
+      "records_1_to_14_days": 6309,
       "share_over_14_days": 0.5664393570384803,
       "share_of_all_long_waits": 0.02952669437624255
     },
@@ -164,6 +190,8 @@
       "same_day_share": 0.4413884394763936,
       "median_days": 1.3163657407407408,
       "records_over_14_days": 1475,
+      "records_within_24h": 9003,
+      "records_1_to_14_days": 9919,
       "share_over_14_days": 0.07231455606216601,
       "share_of_all_long_waits": 0.003745109141367079
     },
@@ -175,6 +203,8 @@
       "same_day_share": 0.343621187139324,
       "median_days": 2.340011574074074,
       "records_over_14_days": 3336,
+      "records_within_24h": 6669,
+      "records_1_to_14_days": 9403,
       "share_over_14_days": 0.1718878812860676,
       "share_of_all_long_waits": 0.008470294302102086
     },
@@ -186,6 +216,8 @@
       "same_day_share": 0.18592008698015766,
       "median_days": 9.50611111111111,
       "records_over_14_days": 7532,
+      "records_within_24h": 3420,
+      "records_1_to_14_days": 7443,
       "share_over_14_days": 0.4094590921446045,
       "share_of_all_long_waits": 0.019124177662899554
     },
@@ -197,6 +229,8 @@
       "same_day_share": 0.1693103448275862,
       "median_days": 5.736585648148148,
       "records_over_14_days": 4409,
+      "records_within_24h": 2455,
+      "records_1_to_14_days": 7636,
       "share_over_14_days": 0.3040689655172414,
       "share_of_all_long_waits": 0.011194702511381324
     },
@@ -208,6 +242,8 @@
       "same_day_share": 0.33589385474860334,
       "median_days": 4.379861111111111,
       "records_over_14_days": 5054,
+      "records_within_24h": 4810,
+      "records_1_to_14_days": 4456,
       "share_over_14_days": 0.35293296089385473,
       "share_of_all_long_waits": 0.01283239430540286
     },
@@ -219,6 +255,8 @@
       "same_day_share": 0.35404777002747834,
       "median_days": 2.439837962962963,
       "records_over_14_days": 2428,
+      "records_within_24h": 5025,
+      "records_1_to_14_days": 6740,
       "share_over_14_days": 0.17107024589586417,
       "share_of_all_long_waits": 0.006164830505246961
     },
@@ -230,6 +268,8 @@
       "same_day_share": 0.2060801721818671,
       "median_days": 5.6622916666666665,
       "records_over_14_days": 3312,
+      "records_within_24h": 2298,
+      "records_1_to_14_days": 5541,
       "share_over_14_days": 0.2970137207425343,
       "share_of_all_long_waits": 0.008409356933022215
     },
@@ -241,6 +281,8 @@
       "same_day_share": 0.2726078799249531,
       "median_days": 4.51775462962963,
       "records_over_14_days": 3239,
+      "records_within_24h": 2906,
+      "records_1_to_14_days": 4515,
       "share_over_14_days": 0.3038461538461538,
       "share_of_all_long_waits": 0.008224005768737606
     },
@@ -252,6 +294,8 @@
       "same_day_share": 0.32802937576499386,
       "median_days": 3.278159722222222,
       "records_over_14_days": 2782,
+      "records_within_24h": 3484,
+      "records_1_to_14_days": 4355,
       "share_over_14_days": 0.26193390452876375,
       "share_of_all_long_waits": 0.0070636566991750605
     },
@@ -263,6 +307,8 @@
       "same_day_share": 0.15152389193346794,
       "median_days": 10.520891203703703,
       "records_over_14_days": 4600,
+      "records_within_24h": 1576,
+      "records_1_to_14_days": 4225,
       "share_over_14_days": 0.44226516681088357,
       "share_of_all_long_waits": 0.011679662406975298
     },
@@ -274,6 +320,8 @@
       "same_day_share": 0.1493925117778329,
       "median_days": 10.032725694444444,
       "records_over_14_days": 3409,
+      "records_within_24h": 1205,
+      "records_1_to_14_days": 3452,
       "share_over_14_days": 0.42263823456484007,
       "share_of_all_long_waits": 0.008655645466386693
     },
@@ -285,6 +333,8 @@
       "same_day_share": 0.11143361938414942,
       "median_days": 13.544832175925926,
       "records_over_14_days": 3849,
+      "records_within_24h": 883,
+      "records_1_to_14_days": 3192,
       "share_over_14_days": 0.4857395254921757,
       "share_of_all_long_waits": 0.00977283056618433
     },
@@ -296,6 +346,8 @@
       "same_day_share": 0.47016801164175154,
       "median_days": 1.1650462962962962,
       "records_over_14_days": 521,
+      "records_within_24h": 3554,
+      "records_1_to_14_days": 3484,
       "share_over_14_days": 0.06892446090752745,
       "share_of_all_long_waits": 0.0013228487204422022
     },
@@ -307,6 +359,8 @@
       "same_day_share": 0.16937010002703434,
       "median_days": 7.495891203703704,
       "records_over_14_days": 2484,
+      "records_within_24h": 1253,
+      "records_1_to_14_days": 3661,
       "share_over_14_days": 0.3357664233576642,
       "share_of_all_long_waits": 0.00630701769976666
     },
@@ -318,6 +372,8 @@
       "same_day_share": 0.30438871473354234,
       "median_days": 2.9606655092592593,
       "records_over_14_days": 1123,
+      "records_within_24h": 1942,
+      "records_1_to_14_days": 3315,
       "share_over_14_days": 0.17601880877742948,
       "share_of_all_long_waits": 0.002851361061528969
     },
@@ -329,6 +385,8 @@
       "same_day_share": 0.9221995926680244,
       "median_days": 0.13729166666666667,
       "records_over_14_days": 18,
+      "records_within_24h": 4528,
+      "records_1_to_14_days": 364,
       "share_over_14_days": 0.0036659877800407333,
       "share_of_all_long_waits": 4.5703026809903336e-05
     },
@@ -340,6 +398,8 @@
       "same_day_share": 0.19715019855174024,
       "median_days": 13.237615740740742,
       "records_over_14_days": 2092,
+      "records_within_24h": 844,
+      "records_1_to_14_days": 1345,
       "share_over_14_days": 0.48867087129175424,
       "share_of_all_long_waits": 0.005311707338128766
     },
@@ -351,6 +411,8 @@
       "same_day_share": 0.20930811348929815,
       "median_days": 7.904137731481482,
       "records_over_14_days": 1435,
+      "records_within_24h": 841,
+      "records_1_to_14_days": 1742,
       "share_over_14_days": 0.35714285714285715,
       "share_of_all_long_waits": 0.0036435468595672938
     },
@@ -362,6 +424,8 @@
       "same_day_share": 0.29318801089918256,
       "median_days": 3.447800925925926,
       "records_over_14_days": 824,
+      "records_within_24h": 1076,
+      "records_1_to_14_days": 1770,
       "share_over_14_days": 0.2245231607629428,
       "share_of_all_long_waits": 0.002092183005075575
     },
@@ -373,6 +437,8 @@
       "same_day_share": 0.5965391621129326,
       "median_days": 0.6503125000000001,
       "records_over_14_days": 114,
+      "records_within_24h": 1965,
+      "records_1_to_14_days": 1215,
       "share_over_14_days": 0.03460837887067395,
       "share_of_all_long_waits": 0.0002894525031293878
     },
@@ -384,6 +450,8 @@
       "same_day_share": 0.6484003801076972,
       "median_days": 0.45180555555555557,
       "records_over_14_days": 207,
+      "records_within_24h": 2047,
+      "records_1_to_14_days": 903,
       "share_over_14_days": 0.06556857776369972,
       "share_of_all_long_waits": 0.0005255848083138884
     },
@@ -395,6 +463,8 @@
       "same_day_share": 0.11443102352193261,
       "median_days": 9.895179398148148,
       "records_over_14_days": 1324,
+      "records_within_24h": 360,
+      "records_1_to_14_days": 1462,
       "share_over_14_days": 0.42085187539732993,
       "share_of_all_long_waits": 0.00336171152757289
     },
@@ -406,6 +476,8 @@
       "same_day_share": 0.9882445141065831,
       "median_days": 0.13858217592592592,
       "records_over_14_days": 0,
+      "records_within_24h": 1261,
+      "records_1_to_14_days": 15,
       "share_over_14_days": 0.0,
       "share_of_all_long_waits": 0.0
     },
@@ -417,6 +489,8 @@
       "same_day_share": 0.6645851917930419,
       "median_days": 0.49005787037037035,
       "records_over_14_days": 2,
+      "records_within_24h": 745,
+      "records_1_to_14_days": 374,
       "share_over_14_days": 0.001784121320249777,
       "share_of_all_long_waits": 5.078114089989259e-06
     },
@@ -428,6 +502,8 @@
       "same_day_share": 0.8925143953934741,
       "median_days": 0.19455439814814815,
       "records_over_14_days": 0,
+      "records_within_24h": 930,
+      "records_1_to_14_days": 112,
       "share_over_14_days": 0.0,
       "share_of_all_long_waits": 0.0
     },
@@ -439,6 +515,8 @@
       "same_day_share": 0.10084033613445378,
       "median_days": 7.568935185185185,
       "records_over_14_days": 104,
+      "records_within_24h": 60,
+      "records_1_to_14_days": 431,
       "share_over_14_days": 0.17478991596638654,
       "share_of_all_long_waits": 0.0002640619326794415
     },
@@ -450,6 +528,8 @@
       "same_day_share": 0.6345291479820628,
       "median_days": 0.7002893518518518,
       "records_over_14_days": 1,
+      "records_within_24h": 283,
+      "records_1_to_14_days": 162,
       "share_over_14_days": 0.002242152466367713,
       "share_of_all_long_waits": 2.5390570449946297e-06
     },
@@ -461,6 +541,8 @@
       "same_day_share": 0.23136246786632392,
       "median_days": 2.9891087962962963,
       "records_over_14_days": 59,
+      "records_within_24h": 90,
+      "records_1_to_14_days": 240,
       "share_over_14_days": 0.15167095115681234,
       "share_of_all_long_waits": 0.00014980436565468317
     },
@@ -472,6 +554,8 @@
       "same_day_share": 0.07894736842105263,
       "median_days": 8.729097222222222,
       "records_over_14_days": 69,
+      "records_within_24h": 15,
+      "records_1_to_14_days": 106,
       "share_over_14_days": 0.3631578947368421,
       "share_of_all_long_waits": 0.00017519493610462946
     },
@@ -483,6 +567,8 @@
       "same_day_share": 0.6666666666666666,
       "median_days": 0.38592592592592595,
       "records_over_14_days": 2,
+      "records_within_24h": 26,
+      "records_1_to_14_days": 11,
       "share_over_14_days": 0.05128205128205128,
       "share_of_all_long_waits": 5.078114089989259e-06
     },
@@ -494,6 +580,8 @@
       "same_day_share": 0.2,
       "median_days": 2.883796296296296,
       "records_over_14_days": 0,
+      "records_within_24h": 2,
+      "records_1_to_14_days": 8,
       "share_over_14_days": 0.0,
       "share_of_all_long_waits": 0.0
     },
@@ -505,6 +593,8 @@
       "same_day_share": 0.0,
       "median_days": 13.967071759259259,
       "records_over_14_days": 1,
+      "records_within_24h": 0,
+      "records_1_to_14_days": 2,
       "share_over_14_days": 0.3333333333333333,
       "share_of_all_long_waits": 2.5390570449946297e-06
     },
@@ -516,6 +606,8 @@
       "same_day_share": 0.0,
       "median_days": 2.6185127314814816,
       "records_over_14_days": 0,
+      "records_within_24h": 0,
+      "records_1_to_14_days": 2,
       "share_over_14_days": 0.0,
       "share_of_all_long_waits": 0.0
     },
@@ -527,6 +619,8 @@
       "same_day_share": 1.0,
       "median_days": 0.4066550925925926,
       "records_over_14_days": 0,
+      "records_within_24h": 1,
+      "records_1_to_14_days": 0,
       "share_over_14_days": 0.0,
       "share_of_all_long_waits": 0.0
     },
@@ -538,6 +632,8 @@
       "same_day_share": 0.0,
       "median_days": 3.751377314814815,
       "records_over_14_days": 0,
+      "records_within_24h": 0,
+      "records_1_to_14_days": 1,
       "share_over_14_days": 0.0,
       "share_of_all_long_waits": 0.0
     }

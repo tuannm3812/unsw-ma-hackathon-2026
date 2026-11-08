@@ -741,44 +741,67 @@
         "caption": "Share of all loans by country (a, map and table) and loans waiting over two weeks (b); same-day: funded within 24 hours.",
         "long": {
           "title": "(b) Where the long waits are",
-          "guide": "Loans waiting over two weeks, by country; the label gives that share of each country's own loans.",
+          "guide": "Each bar is all of a country's loans, split by how long they took to fund.",
           "rows": [
             {
               "country": "Kenya",
               "count": 96997,
               "own_share": 0.364,
-              "top3": true
+              "top3": true,
+              "loans": 266562,
+              "within_24h": 77721,
+              "one_to_14": 91844
             },
             {
               "country": "Philippines",
               "count": 89412,
               "own_share": 0.171,
-              "top3": true
+              "top3": true,
+              "loans": 521586,
+              "within_24h": 250124,
+              "one_to_14": 182050
             },
             {
               "country": "Tajikistan",
               "count": 34434,
               "own_share": 0.5,
-              "top3": true
+              "top3": true,
+              "loans": 68865,
+              "within_24h": 12492,
+              "one_to_14": 21939
             },
             {
               "country": "Uganda",
               "count": 24372,
               "own_share": 0.35,
-              "top3": false
+              "top3": false,
+              "loans": 69651,
+              "within_24h": 21648,
+              "one_to_14": 23631
             },
             {
               "country": "Nicaragua",
               "count": 17580,
               "own_share": 0.456,
-              "top3": false
+              "top3": false,
+              "loans": 38520,
+              "within_24h": 5859,
+              "one_to_14": 15081
             },
             {
               "country": "Pakistan",
               "count": 16474,
               "own_share": 0.385,
-              "top3": false
+              "top3": false,
+              "loans": 42767,
+              "within_24h": 6405,
+              "one_to_14": 19888
             }
+          ],
+          "legend": [
+            "Within 24 hours",
+            "1 day to 2 weeks",
+            "Over 2 weeks"
           ]
         }
       },

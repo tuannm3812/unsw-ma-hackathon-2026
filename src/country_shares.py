@@ -35,10 +35,13 @@ def country_shares(frame: pd.DataFrame) -> dict:
         # Long waits: more than two weeks from listing to full funding.
         days = eligible.groupby('country_iso')['funding_speed_days']
         long_counts = days.apply(lambda d: int((d > LONG_WAIT_DAYS).sum()))
+        same_counts = eligible.groupby('country_iso')['funded_within_24h'].sum()
         total_long = int(long_counts.sum())
         for row in result['shares']:
             k = row['country']
             row.update({'median_days': float(days.median()[k]), 'records_over_14_days': int(long_counts[k]),
+                        'records_within_24h': int(same_counts[k]),
+                        'records_1_to_14_days': int(counts[k] - same_counts[k] - long_counts[k]),
                         'share_over_14_days': float(long_counts[k] / counts[k]),
                         'share_of_all_long_waits': float(long_counts[k] / total_long)})
         result['records_over_14_days'] = total_long

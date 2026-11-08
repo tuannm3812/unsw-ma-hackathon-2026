@@ -918,17 +918,27 @@ def where(page, slide, pos):
     by, bh = cy + ch + 8, 142
     panel(page, cx, by, cw, bh, lw['title'], lw['guide'])
     page.marker(3, cx + cw - 22, by + 8)
-    top = max(r['count'] for r in lw['rows'])
+    # Stacked bars on one loan scale: within 24 hours, 1 day to 2 weeks, over 2 weeks (top three in navy).
+    bands = ['#E2DCF0', '#B4A9D2']
+    top = max(r['loans'] for r in lw['rows'])
     scale = 300 / top
     for k, row in enumerate(lw['rows']):
-        y = by + 46 + 15 * k
+        y = by + 42 + 14 * k
         page.text(row['country'], cx + 10, y, 80, 12, size=9, bold=row['top3'])
-        page.rect(cx + 92, y + 1.5, row['count'] * scale, 10, NAVY if row['top3'] else '#A093C8')
-        label = f"{row['count']:,} · {row['own_share'] * 100:.1f}% of its loans"
-        page.text(label, cx + 96 + row['count'] * scale, y, 170, 12, size=8, color=NAVY if row['top3'] else GREY,
-                  bold=row['top3'])
+        left = cx + 92
+        for value, fill in [(row['within_24h'], bands[0]), (row['one_to_14'], bands[1]),
+                            (row['count'], NAVY if row['top3'] else SLATE)]:
+            page.rect(left, y + 1.5, value * scale, 10, fill)
+            left += value * scale
+        label = f"{row['count']:,} over 2 weeks · {row['own_share'] * 100:.1f}%"
+        page.text(label, left + 4, y, 200, 12, size=8, color=NAVY if row['top3'] else GREY, bold=row['top3'])
         if row['country'] == 'Tajikistan':
-            page.marker(4, cx + 96 + row['count'] * scale + 4.3 * len(label) + 8, y)
+            page.marker(4, left + 4 + 4.3 * len(label) + 8, y)
+    lx, ly = cx + 92, by + 42 + 14 * 6 + 2
+    for fill, name in zip(bands + [NAVY], lw['legend']):
+        page.rect(lx, ly + 1.6, 12, 8, fill)
+        page.text(name, lx + 16, ly, 4.3 * len(name) + 6, 12, size=8, color=GREY)
+        lx += 16 + 4.3 * len(name) + 18
     page.caption(slide['figure'], ex['caption'], by + bh + 8, w=cw)
     page.takeaways(slide['takeaways'], pos)
 
