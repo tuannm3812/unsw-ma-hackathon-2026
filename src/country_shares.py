@@ -15,11 +15,13 @@ def country_shares(frame: pd.DataFrame) -> dict:
     eligible = frame.loc[frame['valid_completed_outcome'].fillna(False).astype(bool)]
     counts = eligible['country_iso'].value_counts()
     shares = counts / counts.sum()
+    same_day = eligible.groupby('country_iso')['funded_within_24h'].mean()
     return {'countries': int(len(counts)), 'records': int(counts.sum()),
             'top10_share': float(shares.head(10).sum()),
             'countries_for_80pct': clusters_for_share(counts),
             'effective_countries': effective_clusters(counts),
-            'shares': [{'country': str(k), 'share': float(v)} for k, v in shares.items()]}
+            'shares': [{'country': str(k), 'loans': int(counts[k]), 'share': float(v),
+                        'same_day_share': float(same_day[k])} for k, v in shares.items()]}
 
 
 def main(argv=None) -> int:
