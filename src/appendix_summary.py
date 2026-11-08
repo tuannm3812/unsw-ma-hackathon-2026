@@ -23,6 +23,9 @@ OUTPUT = ROOT / 'reports/evidence_sources/appendix_summary.json'
 MODELS = (('Median only', 'baseline', 'B0'), ('Historical lookup', 'baseline', 'B1'),
           ('Linear, loan details', 'linear', 'S'), ('Linear, with text', 'linear', 'S+M+L+R'),
           ('Boosted tree, loan details', 'histogram_boosting', 'S'))
+EXTRA_MODELS = (('Linear, text only', 'linear', 'T'), ('Linear, programme text', 'linear', 'S+P'),
+                ('Linear, programme and text', 'linear', 'S+P+M+L+R'), ('Boosted tree, programme text', 'histogram_boosting', 'S+P'),
+                ('Tree, programme and text', 'histogram_boosting', 'S+P+M+L'))
 SANITATION = 'Toilets & Sanitation Systems'
 
 
@@ -31,15 +34,18 @@ def _row(name: str, windows: list[dict]) -> dict:
     return {'name': name, 'mae': {str(w['year']): w['mae'] for w in windows}, 'auc_range': [min(aucs), max(aucs)]}
 
 
-def model_rows(benchmark: dict, large: dict, models=MODELS) -> list[dict]:
-    """One row per model, in display order, ending with the larger boosted tree on loan details."""
-    rows = []
-    for name, family, arm in models:
-        windows = [{'year': m['year'], 'mae': m['metrics']['mae_days'], 'auc': m['metrics']['roc_auc']}
-                   for m in benchmark['models'] if (m['family'], m['arm']) == (family, arm)]
-        rows.append(_row(name, windows))
+def model_rows(benchmark: dict, large: dict, models=MODELS, extras=()) -> list[dict]:
+    """One row per model in display order: the named models, the larger boosted tree, then any extras."""
+    def rows_for(entries) -> list[dict]:
+        out = []
+        for name, family, arm in entries:
+            windows = [{'year': m['year'], 'mae': m['metrics']['mae_days'], 'auc': m['metrics']['roc_auc']}
+                       for m in benchmark['models'] if (m['family'], m['arm']) == (family, arm)]
+            out.append(_row(name, windows))
+        return out
+
     windows = [{'year': w['year'], 'mae': w['mae_days'], 'auc': w['roc_auc']} for w in large['windows'] if w['arm'] == 'S']
-    return rows + [_row('Larger boosted tree', windows)]
+    return rows_for(models) + [_row('Larger boosted tree', windows)] + rows_for(extras)
 
 
 def purpose_contrasts(outcome: dict, keep: int = 5, min_records: int = 1000) -> dict:
@@ -66,7 +72,7 @@ def sector_same_day(outcome: dict, sector: str) -> dict:
 def build() -> dict:
     read = lambda path: json.loads(Path(path).read_text())
     details = read(DETAILS)['outcomes']
-    return {'models': model_rows(read(BENCHMARK), read(LARGE)), 'purpose': purpose_contrasts(details['log_funding_speed']),
+    return {'models': model_rows(read(BENCHMARK), read(LARGE), MODELS, EXTRA_MODELS), 'purpose': purpose_contrasts(details['log_funding_speed']),
             'sanitation_same_day': sector_same_day(details['funded_within_24h'], 'Sanitation & Hygiene')}
 
 

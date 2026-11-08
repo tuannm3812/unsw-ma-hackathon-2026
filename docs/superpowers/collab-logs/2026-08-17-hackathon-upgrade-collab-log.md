@@ -3061,3 +3061,7 @@ unseen exact template, which cannot exclude near-duplicates.
 - A3 compares every forecaster by test year with settings, use and a metric glossary. A4 shows 19 sectors, the fastest and slowest activities, and the sanitation check: fast in raw means, modestly faster by sector, and not distinct from farming as an activity. A5's cards explain what each number means. A6 has an edge-colour legend. New A7 shows the whole modelling flow and notes that loan photos were not analysed.
 - No model was tuned, which A3 states. Time-split tuning, theme-level n and ranges, and photo analysis remain open.
 - Verified: pyflakes, deck QA, word-box overlap check, rendered slides, full offline pytest. Slides 21, A3–A7 rebuilt; nothing pushed.
+
+## 2026-11-09: A3 text-only and programme-text rows
+
+- Live deck re-read first: no owner edits to mirror. A3 now also lists the text-only and programme-text models from the November benchmark; register row added. Slide 11's speaker notes carry one association line on sanitation. Kaggle runs are with the experiments thread. Verified: pyflakes, deck QA, word-box overlap check, full offline pytest. Slides 11 and A3 only were rebuilt; nothing pushed.

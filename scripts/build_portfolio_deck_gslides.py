@@ -1881,33 +1881,34 @@ def a_metrics(page, slide, pos):
     page.chrome(slide)
     ex, pw = slide['exhibit'], R - L
     models, years = ex['models'], sorted(ex['models'][0]['mae'])
-    panel(page, L, TOP, pw, 130, ex['chart_title'], '')
+    panel(page, L, TOP, pw, 106, ex['chart_title'], '')
     page.marker(1, R - 22, TOP + 8)
     x0, x1 = L + 50, R - 18
     px = lambda days: x0 + (days - 4.5) / 6.5 * (x1 - x0)
-    axis = TOP + 114
+    axis = TOP + 90
     page.line(x0, axis, x1, axis, SLATE, .75)
     for value in (5, 7, 9, 11):
         page.line(px(value), axis, px(value), axis + 3, SLATE, .75)
         page.text(str(value), px(value) - 14, axis + 3, 28, 11, size=8, color=GREY, align='center')
     for k, year in enumerate(years):
-        y = TOP + 34 + k * 17
+        y = TOP + 28 + k * 13
         page.text(year, L + 10, y - 6, 36, 12, size=8, color=GREY)
         page.line(x0, y, x1, y, HAIR, .5)
         for row, colour in zip(models, MODEL_COLOURS):
             page.rect(px(row['mae'][year]) - 3.5, y - 3.5, 7, 7, colour, 'ELLIPSE')
     columns = {'name': L + 18, 'auc': L + 350, 'tuning': L + 422, 'used': L + 512}
     year_x = [L + 150 + i * 38 for i in range(5)]
-    head = TOP + 136
+    head = TOP + 112
     for x, label in ((L + 18, 'Model'), (columns['auc'], 'ROC AUC'), (columns['tuning'], 'Settings, not tuned'), (columns['used'], 'Used on')):
         page.text(label, x, head, 96, 11, size=8, color=GREY, bold=True)
     for x, year in zip(year_x, years):
         page.text(year, x, head, 36, 11, size=8, color=GREY, bold=True, align='right')
     page.marker(3, columns['tuning'] + 76, head - .5)
-    for r, (row, colour) in enumerate(zip(models, MODEL_COLOURS)):
-        y = head + 14 + r * 15.5
-        page.line(L, y - 1.5, R, y - 1.5, HAIR, .5)
-        page.rect(L + 5, y + 2, 8, 8, colour, 'ELLIPSE')
+    for r, row in enumerate(models):
+        y = head + 14 + r * 13.4
+        page.line(L, y - 1, R, y - 1, HAIR, .5)
+        if r < len(MODEL_COLOURS):
+            page.rect(L + 5, y + 2, 8, 8, MODEL_COLOURS[r], 'ELLIPSE')
         page.text(row['name'], columns['name'], y, 130, 12, size=8.5, bold=True)
         for x, year in zip(year_x, years):
             page.text(f"{row['mae'][year]:.2f}", x, y, 36, 12, size=8.5, color=GREY, align='right')
@@ -1918,8 +1919,8 @@ def a_metrics(page, slide, pos):
         page.text(row['used'], columns['used'], y, 96, 12, size=8.5, color=GREY)
         if row['name'].startswith('Larger'):
             page.marker(2, columns['name'] + 108, y)
-    august, y = ex['august'], head + 14 + len(models) * 15.5
-    page.line(L, y - 1.5, R, y - 1.5, HAIR, .5)
+    august, y = ex['august'], head + 14 + len(models) * 13.4
+    page.line(L, y - 1, R, y - 1, HAIR, .5)
     page.text(august['name'], columns['name'], y, 130, 12, size=8.5, bold=True)
     page.text(august['text'], year_x[0] - 2, y, 200, 12, size=8.5, color=GREY)
     page.text(august['auc'], columns['auc'], y, 68, 12, size=8.5, color=GREY)

@@ -1577,7 +1577,7 @@
       ],
       "notes": {
         "purpose": "Show that one tiny framing link passes the strictest test in one model only.",
-        "script": "We tested nine framing measures on two outcomes in two models, so 36 tests. Five pass the usual country-clustered test. With 48 countries that test can be too generous, so we re-ran every term with a wild cluster bootstrap, 9,999 draws with Webb weights: four pass. After adjusting for testing nine measures, one passes: third person for funding time in the expanded model, minus 0.9 percent per extra mention, bootstrap p 0.0009 and adjusted p 0.008. With programme controls it does not pass: p 0.128 and adjusted p 0.426. The lowest adjusted p among the others is 0.156. [Point: The one that passes is tiny] In real units, one extra third-person mention per 100 words goes with about 45 to 50 minutes shorter funding time on a typical 2.85-day loan, and one extra business mention with 0.26 to 0.36 points lower same-day funding. These are associations, not effects of an edit. [Point: Loan details are on another scale] On one scale, in the programme-adjusted model, a doubled loan amount, from the 325 dollar median and within its size band, goes with 44.6 percent more on one plus days, a further month of term 8.6 percent, and male rather than female borrowers 61 percent; the framings stay within about 1.5 percent per extra mention. These are associations among completed loans, not levers, and the scale is change in one plus days, not days. That is why Predict starts with loan details. This loan-detail comparison is exploratory and has had one independent code review. [Point: Pronouns may reflect the writer] Third person appears in 97.3 percent of loans and business in 85 percent, so neither is an obvious writing lever. Adding programme controls moves third person only 10 percent towards zero and business 28 percent. Descriptions are usually written by partner staff, so the third-person link may say more about who writes than about the borrower. The next slide asks how small the remaining links really are.",
+        "script": "We tested nine framing measures on two outcomes in two models, so 36 tests. Five pass the usual country-clustered test. With 48 countries that test can be too generous, so we re-ran every term with a wild cluster bootstrap, 9,999 draws with Webb weights: four pass. After adjusting for testing nine measures, one passes: third person for funding time in the expanded model, minus 0.9 percent per extra mention, bootstrap p 0.0009 and adjusted p 0.008. With programme controls it does not pass: p 0.128 and adjusted p 0.426. The lowest adjusted p among the others is 0.156. [Point: The one that passes is tiny] In real units, one extra third-person mention per 100 words goes with about 45 to 50 minutes shorter funding time on a typical 2.85-day loan, and one extra business mention with 0.26 to 0.36 points lower same-day funding. These are associations, not effects of an edit. [Point: Loan details are on another scale] On one scale, in the programme-adjusted model, a doubled loan amount, from the 325 dollar median and within its size band, goes with 44.6 percent more on one plus days, a further month of term 8.6 percent, and male rather than female borrowers 61 percent; the framings stay within about 1.5 percent per extra mention. These are associations among completed loans, not levers, and the scale is change in one plus days, not days. That is why Predict starts with loan details. This loan-detail comparison is exploratory and has had one independent code review. [Point: Pronouns may reflect the writer] Third person appears in 97.3 percent of loans and business in 85 percent, so neither is an obvious writing lever. Adding programme controls moves third person only 10 percent towards zero and business 28 percent. Descriptions are usually written by partner staff, so the third-person link may say more about who writes than about the borrower. The next slide asks how small the remaining links really are. One related association on loan content: the sanitation and hygiene sector is modestly faster than the average loan, but the toilets and sanitation activity is not distinguishable from farming once country, time and programme are controlled; the detail is on A4.",
         "reference": "Robustness checks: reports/expanded_feature_sensitivity_reviewed; bootstrap: reports/evidence_sources/robustness_summary.json (src/robustness_summary.py, src/wild_cluster.py). Loan details: reports/evidence_sources/loan_detail_summary.json (src/loan_detail_summary.py)."
       },
       "sublabel": "Robustness checks",
@@ -3137,7 +3137,7 @@
       "title": "Boosted trees forecast best, and no model was tuned",
       "content": "Boosted tree duration MAE 5.2031 days, R² 0.5420; classifier ROC AUC 0.8997, AP 0.8301, Brier 0.1156; 1,174,953 train, 278,887 holdout; completed loans only.",
       "subtitle": "Every forecaster on the same loans and test years; the August models are a separate holdout",
-      "note": "Median, lookup, linear and benchmark tree: November benchmark. Larger tree: Experiment F. August: 1,174,953 training and 278,887 holdout loans.",
+      "note": "November benchmark, except larger tree (Experiment F). August: 1,174,953 training and 278,887 holdout loans. Programme text: an unvalidated proxy.",
       "notes": {
         "purpose": "Compare every model in one place and state what each score means.",
         "script": "This slide puts every forecaster on one scale. Lower is better. The median and lookup models are simple baselines. A linear model on loan details beats the lookup in every year, and a boosted tree beats the linear model. The larger tree is better in four of five years but worse in 2021. None of these was tuned: the settings were fixed in advance, which keeps the text comparison matched, and a tuned model could score better. The August models are a separate chronological holdout with library defaults, so do not compare those numbers with the benchmark.",
@@ -3261,6 +3261,86 @@
             ],
             "tuning": "Fixed in advance",
             "used": "Slides 14–15"
+          },
+          {
+            "name": "Linear, text only",
+            "mae": {
+              "2021": 9.096341032657213,
+              "2022": 9.121276529559514,
+              "2023": 9.044285584148696,
+              "2024": 8.547212327349653,
+              "2025": 6.552487938139887
+            },
+            "auc_range": [
+              0.7247633997866907,
+              0.7756235112445097
+            ],
+            "tuning": "Fixed, α 10",
+            "used": "Slide 14"
+          },
+          {
+            "name": "Linear, programme text",
+            "mae": {
+              "2021": 8.22517024268847,
+              "2022": 8.737502617775604,
+              "2023": 8.47410788258023,
+              "2024": 7.5100448100490365,
+              "2025": 6.444841950217136
+            },
+            "auc_range": [
+              0.8382405760942598,
+              0.8940726212364163
+            ],
+            "tuning": "Fixed, α 10",
+            "used": "A3"
+          },
+          {
+            "name": "Linear, programme and text",
+            "mae": {
+              "2021": 8.050476278073674,
+              "2022": 8.394412855621574,
+              "2023": 8.119372234468704,
+              "2024": 7.233624648320976,
+              "2025": 6.168374571626751
+            },
+            "auc_range": [
+              0.8473307642783653,
+              0.8892718774632358
+            ],
+            "tuning": "Fixed, α 10",
+            "used": "A3"
+          },
+          {
+            "name": "Boosted tree, programme text",
+            "mae": {
+              "2021": 7.360476464595152,
+              "2022": 6.744354377239736,
+              "2023": 6.6316405381185515,
+              "2024": 5.512779147664971,
+              "2025": 4.680543243703102
+            },
+            "auc_range": [
+              0.8721178526772804,
+              0.9116382170765529
+            ],
+            "tuning": "Fixed in advance",
+            "used": "A3"
+          },
+          {
+            "name": "Tree, programme and text",
+            "mae": {
+              "2021": 7.336942059382832,
+              "2022": 6.761536014068167,
+              "2023": 6.612644350450969,
+              "2024": 5.525357696544498,
+              "2025": 4.654714798814876
+            },
+            "auc_range": [
+              0.8726095195452804,
+              0.9121747606799603
+            ],
+            "tuning": "Fixed in advance",
+            "used": "A3"
           }
         ],
         "august": {

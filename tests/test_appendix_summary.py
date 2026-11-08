@@ -37,3 +37,10 @@ def test_sector_outcome_reads_same_day_points():
     outcome = {'sector_contrasts': [{'sector': 'Sanitation & Hygiene', 'records': 9, 'estimate': 0.088, 'ci95': [0.063, 0.112]}]}
     out = sector_same_day(outcome, 'Sanitation & Hygiene')
     assert out['pp'] == pytest.approx(8.8) and out['ci95_pp'] == pytest.approx([6.3, 11.2]) and out['records'] == 9
+
+
+def test_model_rows_appends_extra_models_after_the_larger_tree():
+    bench = {'models': [_m(2021, 'baseline', 'B0', 10, .5), _m(2021, 'linear', 'T', 9, .7)]}
+    large = {'windows': [{'year': 2021, 'arm': 'S', 'mae_days': 7.0, 'roc_auc': .8}]}
+    rows = model_rows(bench, large, (('Median', 'baseline', 'B0'),), (('Text only', 'linear', 'T'),))
+    assert [r['name'] for r in rows] == ['Median', 'Larger boosted tree', 'Text only']
