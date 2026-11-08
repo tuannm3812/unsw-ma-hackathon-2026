@@ -114,7 +114,6 @@
       "subtitle": "Illustrative listing: what is fixed and what is editable when a loan is listed",
       "exhibit": {
         "type": "listing_card",
-        "label": "ILLUSTRATIVE COMPOSITE, NOT A REAL BORROWER. VALUES ARE DATASET MEDIANS AND MOST COMMON CATEGORIES.",
         "fixed_fields": [
           [
             "Amount, median",
@@ -157,33 +156,35 @@
           ],
           "gratitude": [
             "thankful"
-          ],
-          "third_person": [
-            "She",
-            "her"
           ]
-        }
+        },
+        "caption": "Illustrative composite listing, not a real borrower. Values are dataset medians and most common categories; highlighted words match the framing word lists."
       },
       "takeaways": [
         {
           "marker": 1,
           "heading": "Why it matters",
-          "text": "Most listing fields are fixed. The description can still be edited, so if framing mattered, guidance on wording would be a cheap lever."
+          "text": "Most fields are fixed. The **description can still be edited**, so if framing mattered, wording guidance would be a cheap lever."
         },
         {
           "marker": 2,
           "heading": "What we measured",
-          "text": "Eight framing rates per 100 words, plus sentiment and text form, across 1,453,840 loans."
+          "text": "**Eight framing rates per 100 words**, plus sentiment and text form, across 1,453,840 loans."
         },
         {
           "marker": 3,
           "heading": "What we asked",
-          "text": "Which framings are linked to faster funding, for which loans and contexts, and in which periods?"
+          "text": "Which framings are linked to **faster funding**, for which loans, and when?"
+        },
+        {
+          "marker": 4,
+          "heading": "Who writes it",
+          "text": "Descriptions are mostly **written about the borrower, not by them**, so pronouns may reflect partner conventions."
         }
       ],
       "notes": {
         "purpose": "Show what a writer can and cannot change.",
-        "script": "This card is an illustrative composite, not a real borrower. Most of a listing is fixed by the time it goes live: amount, term, sector, country and partner. The description is the part someone can still edit. [Point: What we measured] We counted framing words like these per 100 words, for family, business, urgency, gratitude and more, across every loan. [Point: What we asked] The question is which of these framings are linked to faster funding, for whom and when.",
+        "script": "This card is an illustrative composite, not a real borrower. Most of a listing is fixed by the time it goes live: amount, term, sector, country and partner. The description is the part someone can still edit. [Point: What we measured] We counted framing words like these per 100 words, for family, business, urgency, gratitude and more, across every loan. [Point: Who writes it] These texts are usually written about the borrower by partner staff, so pronouns tell us more about who writes than about the borrower. [Point: What we asked] The question is which of these framings are linked to faster funding, for whom and when.",
         "reference": "Composite values: median loan amount US$325, median term 12 months, median borrowers 1, most common sector Agriculture and country Philippines (eligible records, feature cache). Example text written for this slide; each highlighted word matches the src/features.py lexicons. Photo: Muhammad-Taha Ibrahim on Unsplash (Unsplash Licence)."
       },
       "sublabel": "The lever"
@@ -214,12 +215,17 @@
         {
           "marker": 1,
           "heading": "Who waits",
-          "text": "For most loans the partner has already paid the borrower. Platform time plausibly reflects replenishing partner capital; it is not measured directly."
+          "text": "For most loans the **partner has already paid the borrower**. Platform time plausibly reflects replenishing partner capital; it is not measured directly."
         },
         {
           "marker": 2,
           "heading": "Who is missing",
-          "text": "Only loans that eventually funded are in the data, so we cannot study whether a loan funds at all."
+          "text": "Only loans that **eventually funded** are in the data, so we cannot study whether a loan funds at all."
+        },
+        {
+          "marker": 3,
+          "heading": "What every result inherits",
+          "text": "Findings describe **completed loans and platform timing**, not funding success or borrower welfare."
         }
       ],
       "notes": {
@@ -227,7 +233,8 @@
         "script": "Our outcome is the time from listing to full funding. Two facts shape it. Almost all loans were paid out before they were listed, so a faster platform fill plausibly helps the partner replenish capital rather than a waiting borrower. We do not measure that directly. And the data only contain loans that funded.",
         "reference": "association_summary.txt audit trail; docs/1_data_dictionary.md disbursalDate."
       },
-      "sublabel": "Outcome"
+      "sublabel": "Outcome",
+      "figure_caption": "Typical timing for a loan disbursed before listing; the median comes from the full-data audit of disbursal dates."
     },
     {
       "n": 6,
@@ -262,12 +269,17 @@
         {
           "marker": 1,
           "heading": "A slower market",
-          "text": "The drop persisted for four years after the disruption."
+          "text": "The drop **persisted for four years** after the disruption."
         },
         {
           "marker": 2,
           "heading": "Why it matters here",
-          "text": "Period is a control in every model; narrative effects are judged within periods."
+          "text": "Period is a control in every model; **narrative effects are judged within periods**."
+        },
+        {
+          "marker": 3,
+          "heading": "Context, not framing",
+          "text": "A platform-wide shift like this is **context to control for**, not evidence about how descriptions are written."
         }
       ],
       "notes": {
@@ -333,12 +345,17 @@
         {
           "marker": 1,
           "heading": "Why it happens",
-          "text": "Loans in one country share context, so 1.45 million rows behave like far fewer independent observations."
+          "text": "Loans in one country share context, so 1.45 million rows behave like **far fewer independent observations**."
         },
         {
           "marker": 2,
           "heading": "What it does not mean",
-          "text": "Losing significance is not evidence of no effect; the next slide tests that directly."
+          "text": "**Losing significance is not evidence of no effect**; the next slide tests that directly."
+        },
+        {
+          "marker": 3,
+          "heading": "How few, in practice",
+          "text": "Ten countries hold 80% of records, so the 48 countries weigh like about **5.7 equal-sized ones** (an exploratory index)."
         }
       ],
       "notes": {
@@ -432,17 +449,22 @@
         {
           "marker": 1,
           "heading": "Small, not just non-significant",
-          "text": "Five framings stay inside ±5% of funding time in both specifications."
+          "text": "Five framings stay **inside ±5% of funding time** in both specifications."
         },
         {
           "marker": 2,
           "heading": "Too noisy to judge",
-          "text": "Urgency and first-person framing could still be linked to 6–14% faster or slower funding per mention. Each is absent from over 98% of records."
+          "text": "Urgency and first-person framing could still be linked to **6–14% faster or slower funding** per mention. Each is absent from over 98% of records."
         },
         {
           "marker": 3,
           "heading": "Caveat",
-          "text": "The bound was chosen after seeing the estimates; a confirmatory test needs one agreed in advance."
+          "text": "The bound was chosen **after seeing the estimates**; a confirmatory test needs one agreed in advance."
+        },
+        {
+          "marker": 4,
+          "heading": "Stress test",
+          "text": "With a stricter t(4) reference, **all five duration verdicts still hold**."
         }
       ],
       "notes": {
@@ -497,12 +519,17 @@
         {
           "marker": 1,
           "heading": "Two countries is not a pattern",
-          "text": "With two clusters, between-country uncertainty cannot be estimated well; the heuristic intervals cross zero."
+          "text": "With two clusters, between-country uncertainty **cannot be estimated well**; the heuristic intervals cross zero."
         },
         {
           "marker": 2,
           "heading": "No regional advice",
-          "text": "These are descriptive patterns, not grounds for country or regional writing rules."
+          "text": "These are descriptive patterns, **not grounds for country or regional writing rules**."
+        },
+        {
+          "marker": 3,
+          "heading": "What would settle it",
+          "text": "A regional test needs **more countries per region**, or partner-level data."
         }
       ],
       "notes": {
@@ -538,23 +565,28 @@
             "−0.258 pp, BH p 0.006"
           ]
         ],
-        "note": "Per extra mention per 100 words. BH-adjusted within each specification."
+        "note": "Per extra mention per 100 words; BH-adjusted within each specification."
       },
       "takeaways": [
         {
           "marker": 1,
           "heading": "Small and mixed",
-          "text": "Third-person framing keeps its size but rises to BH p 0.061; business framing is the one term below BH 0.05."
+          "text": "Third-person framing keeps its size but rises to **BH p 0.061**; business framing is **the one term below BH 0.05**."
         },
         {
           "marker": 2,
           "heading": "Still associations",
-          "text": "Programme text is an unvalidated proxy; neither result shows what editing would do."
+          "text": "Programme text is an **unvalidated proxy**; neither result shows what editing would do."
+        },
+        {
+          "marker": 3,
+          "heading": "Who writes matters",
+          "text": "Descriptions are usually written by partners, so the **third-person link may reflect who writes**, not a borrower's choice."
         }
       ],
       "notes": {
         "purpose": "Show that not everything disappears.",
-        "script": "Few results remain under richer controls. Third-person framing keeps about the same size, but its adjusted p-value rises just above 0.05. Business framing is the one term that passes after programme controls, with a slightly lower same-day rate. Both are small and observational.",
+        "script": "Few results remain under richer controls. Third-person framing keeps about the same size, but its adjusted p-value rises just above 0.05. Business framing is the one term that passes after programme controls, with a slightly lower same-day rate. Both are small and observational. [Point: Who writes matters] Descriptions are usually written by partner staff, so the third-person link may say more about who writes than about the borrower.",
         "reference": "Robustness checks: reviewed expanded-feature sensitivity, reports/expanded_feature_sensitivity_reviewed. "
       },
       "key_figures": [
@@ -632,12 +664,17 @@
         {
           "marker": 1,
           "heading": "Text is informative",
-          "text": "Gains of 0.26–0.39 days on 728,640 evaluation records."
+          "text": "Gains of **0.26–0.39 days** on 728,640 evaluation records."
         },
         {
           "marker": 2,
           "heading": "Not an editing effect",
-          "text": "Text may encode purpose, place or programme templates, not only persuasion."
+          "text": "Text may encode **purpose, place or programme templates**, not only persuasion."
+        },
+        {
+          "marker": 3,
+          "heading": "Not one country",
+          "text": "Removing any single country **leaves the gain positive** in every year (exploratory check)."
         }
       ],
       "notes": {
@@ -734,17 +771,17 @@
         {
           "marker": 1,
           "heading": "Model matters",
-          "text": "The tree model, without TF-IDF, gains at most 0.04 days."
+          "text": "The tree model, without TF-IDF, gains **at most 0.04 days**."
         },
         {
           "marker": 2,
           "heading": "Countries matter",
-          "text": "Country resampling includes zero in 4 of 5 linear years. Capping extreme forecasts, an exploratory check, leaves zero in 1 of 5."
+          "text": "Country resampling **includes zero in 4 of 5** linear years. Capping extreme forecasts, an exploratory check, leaves zero in 1 of 5."
         },
         {
           "marker": 3,
           "heading": "Metrics disagree",
-          "text": "In 2025 text improved error and calibration but AUC fell from 0.893 to 0.888."
+          "text": "In 2025 text improved error and calibration but **AUC fell** from 0.893 to 0.888."
         }
       ],
       "notes": {
@@ -871,7 +908,9 @@
             "[−0.1629, 0.0145]",
             "0.0597"
           ]
-        ]
+        ],
+        "figure": "Figure A1.",
+        "caption": "Within-region family-framing slopes, log(1 + days) per extra mention per 100 words; two countries per region."
       },
       "body": [
         {
@@ -936,7 +975,9 @@
             "1,312,417",
             "137,162"
           ]
-        ]
+        ],
+        "figure": "Figure A2.",
+        "caption": "Training availability and evaluation rows for each annual window."
       },
       "note": "Note: The 2024 replay excludes 5,691 training records that a posting-only split would keep. Evaluation windows still select eventual completions.",
       "notes": {

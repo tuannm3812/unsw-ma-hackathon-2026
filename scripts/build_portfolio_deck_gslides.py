@@ -170,8 +170,15 @@ class Page:
         self.line(658, TOP, 658, END, RULE, .75)
         text, paragraphs, spans, cursor = '', [], [], 0
         for i, item in enumerate(items):
-            heading, body = item['heading'], item['text']
+            heading, raw = item['heading'], item['text']
+            body, emphasis = '', []
+            for j, part in enumerate(raw.split('**')):
+                if j % 2:  # **phrase** marks an evidence-bearing phrase
+                    emphasis.append((len(body), len(body) + len(part)))
+                body += part
             spans.append((cursor, cursor + len(heading), {'bold': True, 'color': NAVY}))
+            start = cursor + len(heading) + 1
+            spans += [(start + a, start + b, {'bold': True, 'color': NAVY}) for a, b in emphasis]
             above = {'space_above': 14} if i else {}
             paragraphs.append((cursor, cursor + len(heading), {'space_below': 6, **above}))
             paragraphs.append((cursor + len(heading) + 1, cursor + len(heading) + 1 + len(body),
@@ -343,6 +350,8 @@ def agenda(page, slide, urls):
                              'link': urls[number], 'color': ink, 'underline': False})
 
 
+# Slide 4 photo frame inside the 316 pt card (x, y, width, height); icons sit beside the two headings.
+LEVER_PHOTO = (L + 16, TOP + 14, 170, 288)
 HIGHLIGHT = {'family': '#FFF0A8', 'business': '#E2DCF0', 'urgency': '#D5DCE5'}
 
 
@@ -350,10 +359,11 @@ def lever(page, slide, pos):
     """An illustrative listing card: fixed fields above, the editable description highlighted by framing."""
     page.chrome(slide)
     ex = slide['exhibit']
-    x, y, w, h = L, TOP, R - 16 - L, END - TOP
+    x, y, w, h = L, TOP, R - 16 - L, 316
     page.rect(x, y, w, h, PAPER)
     page.rect(x, y, w, 2.5, YELLOW)
-    page.text(ex['label'], x + 16, y + 10, w - 32, 12, size=8, color=GREY, bold=True)
+    page.caption('Figure 1.', ex['caption'], y + h + 8, w=w)
+    y -= 16  # card content starts higher now that the label sits in the caption
     rx, rw = x + 202, w - 218
     page.text('FIXED AT LISTING', rx + 26, y + 32, 240, 14, size=10, color=SLATE, bold=True)
     cw = rw / 3
@@ -363,8 +373,8 @@ def lever(page, slide, pos):
         page.text(value, cx, cy + 12, cw - 8, 14, size=10, bold=True)
     page.line(rx, y + 132, rx + rw, y + 132, HAIR, .75)
     page.text('EDITABLE DESCRIPTION', rx + 26, y + 142, 240, 14, size=10, color=VIOLET, bold=True)
-    page.rect(rx, y + 164, rw, 108, WHITE)
-    page.rect(rx, y + 164, 4, 108, YELLOW)
+    page.rect(rx, y + 164, rw, 100, WHITE)
+    page.rect(rx, y + 164, 4, 100, YELLOW)
     text = ex['description']
     spans = []
     for kind, words in ex['highlights'].items():
@@ -374,25 +384,24 @@ def lever(page, slide, pos):
                     spans.append((m.start(), m.end(), {'background_color': HIGHLIGHT[kind]}))
                 elif kind == 'gratitude':
                     spans.append((m.start(), m.end(), {'underline': True, 'color': VIOLET, 'bold': True}))
-                else:
-                    spans.append((m.start(), m.end(), {'bold': True}))
     page.text(text, rx + 16, y + 174, rw - 28, 92, size=12, color=NAVY, spacing=135, spans=spans)
-    page.text('Highlights mark framing terms counted per 100 words', rx, y + 284, rw, 12, size=8, color=GREY, bold=True)
-    chips = [('Family', 'family'), ('Business', 'business'), ('Urgency', 'urgency'), ('Gratitude', 'gratitude'), ('Third person', 'third')]
+    page.text('Highlights mark framing terms counted per 100 words', rx, y + 276, rw, 12, size=8, color=GREY, bold=True)
+    chips = [('Family', 'family'), ('Business', 'business'), ('Urgency', 'urgency'), ('Gratitude', 'gratitude')]
     cx = rx
     for label, kind in chips:
         width = 8 + len(label) * 5.6
         if kind in HIGHLIGHT:
-            page.rect(cx, y + 302, width, 18, HIGHLIGHT[kind])
-            page.text(label, cx, y + 302, width, 18, size=10, align='center', middle=True)
+            page.rect(cx, y + 294, width, 18, HIGHLIGHT[kind])
+            page.text(label, cx, y + 294, width, 18, size=10, align='center', middle=True)
         else:
             style = {'underline': True, 'color': VIOLET, 'bold': True} if kind == 'gratitude' else {'bold': True}
-            page.text(label, cx, y + 302, width, 18, size=10, align='center', middle=True,
+            page.text(label, cx, y + 294, width, 18, size=10, align='center', middle=True,
                       spans=[(0, len(label), style)])
         cx += width + 8
     page.marker(3, rx + rw - 14, y + 33)
     page.marker(1, rx + rw - 14, y + 143)
-    page.marker(2, rx + rw - 14, y + 285)
+    page.marker(4, rx + rw - 14, y + 170)
+    page.marker(2, rx + rw - 14, y + 277)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -415,7 +424,9 @@ def outcome(page, slide, pos):
     page.text('median 24.2 days', (x1 + x2) / 2 - 60, y - 26, 120, 16, size=10, color=GREY, align='center')
     page.text('our outcome: funding time', (x2 + x3) / 2 - 80, y - 26, 160, 16, size=10, bold=True, align='center')
     page.marker(1, x1 - 6, y - 26)
-    page.caption('Scope:', slide['body'][0]['text'], 452)
+    page.marker(3, (x2 + x3) / 2 + 84, y - 26)
+    page.caption('Figure 2.', slide['figure_caption'], y + 52)
+    page.caption('Scope:', slide['body'][0]['text'], y + 66)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -433,7 +444,8 @@ def slowdown(page, slide, pos):
     page.line(L, base, R - 10, base, NAVY, 1)
     page.marker(1, 540 + 70, base - bars[2]['value'] * per - 18)
     page.marker(2, 150 + 70, base - bars[0]['value'] * per - 18)
-    page.caption('Figure 1.', 'Share of completed loans funded within 24 hours. Bars start at zero.', 460)
+    page.marker(3, 345 + 70, base + 8)
+    page.caption('Figure 3.', 'Share of completed loans funded within 24 hours. Bars start at zero.', 464)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -470,7 +482,8 @@ def clustering(page, slide, pos):
     page.text('Lost significance under country clustering', L + 17, legend, 260, 14, size=10)
     page.rect(320, legend + 2, 11, 11, NAVY)
     page.text('Kept significance', 337, legend, 200, 14, size=10)
-    page.caption('Figure 2.', 'Each square is one term significant under HC3, across both explanatory models.', legend + 22)
+    page.marker(3, L + 296 - 22, TOP + 10)
+    page.caption('Figure 4.', 'Each square is one term significant under HC3, across both explanatory models.', legend + 22)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -497,7 +510,8 @@ def forest(page, slide, pos):
     page.marker(1, 552, top + 1 * pitch + 6)
     page.marker(2, 552, top + 8 * pitch + 6)
     page.marker(3, px(.05) + 4, top - 21)
-    page.caption('Figure 3.', 'Change in log(1 + days) per extra mention per 100 words (sentiment per +0.5 score), '
+    page.marker(4, 552, top + 4 * pitch + 6)
+    page.caption('Figure 5.', 'Change in log(1 + days) per extra mention per 100 words (sentiment per +0.5 score), '
                               '90% interval, expanded specification. Status covers both specifications.', bottom + 18)
     page.takeaways(slide['takeaways'], pos)
 
@@ -525,7 +539,8 @@ def regions(page, slide, pos):
     y = top + 14
     page.marker(1, px(.1043) + 6, y + 70)
     page.marker(2, L + 90, y + 8)
-    page.caption('Figure 4.', 'Change in log(1 + days) per extra family mention per 100 words. Dots are the slope estimates.', 442)
+    page.marker(3, L + 104, top + 14 + 136 + 8)
+    page.caption('Figure 6.', 'Change in log(1 + days) per extra family mention per 100 words. Dots are the slope estimates.', 442)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -533,12 +548,13 @@ def persist(page, slide, pos):
     page.chrome(slide)
     exhibit = slide['exhibit']
     table(page, exhibit['columns'], exhibit['rows'], L, TOP, R - L - 6, 40)
+    page.caption('Figure 7.', exhibit['note'], TOP + 120 + 8)
     first, second = slide['key_figures']
-    key_card(page, first, L, 268, 296, 110, VIOLET, 24)
-    key_card(page, second, 353.5, 268, 296.5, 110, NAVY, 24)
-    page.marker(1, L + 296 - 22, 278)
-    page.marker(2, 353.5 + 296.5 - 22, 278)
-    page.caption('Note:', exhibit['note'], 392)
+    key_card(page, first, L, 286, 296, 110, VIOLET, 24)
+    key_card(page, second, 353.5, 286, 296.5, 110, NAVY, 24)
+    page.marker(1, L + 296 - 22, 296)
+    page.marker(3, L + 296 - 40, 296)
+    page.marker(2, 353.5 + 296.5 - 22, 296)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -567,7 +583,8 @@ def forecast(page, slide, pos):
     key_card(page, {'value': '728,640', 'label': 'evaluation records'}, 498, 350, 152, 92, SLATE, 24)
     page.marker(1, 498 + 152 - 22, TOP + 10)
     page.marker(2, 290, legend_y + 1)
-    page.caption('Figure 5.', 'MAE in days, lower is better. Linear model on identical evaluation rows. Bars start at zero.', 450)
+    page.marker(3, 452, 215)
+    page.caption('Figure 8.', 'MAE in days, lower is better. Linear model on identical evaluation rows. Bars start at zero.', 450)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -593,10 +610,11 @@ def gains(page, slide, pos):
             page.text(name, px(value) - 20, top + 5 * pitch - 10, 40, 12, size=8, color=GREY, align='center')
     page.marker(1, L + 310 + 270, TOP + 3)
     page.marker(3, L + 31, top + 4 * pitch + 7)
-    page.marker(2, L, 449)
-    page.text('Country resampling, not shown: intervals include zero in 4 of 5 linear and 3 of 5 tree years.',
-              L + 18, 448, 570, 14, size=10)
-    page.caption('Figure 6.', 'MAE gain in days with month-resampled 95% intervals; positive is better. Both panels share one scale.', 464)
+    axis = top + 5 * pitch - 10 + 12
+    page.caption('Figure 9.', 'MAE gain in days with month-resampled 95% intervals; positive is better. Both panels share one scale.', axis + 8)
+    page.marker(2, L, axis + 22)
+    page.caption('Note:', 'Country resampling, not shown: intervals include zero in 4 of 5 linear and 3 of 5 tree years.',
+                 axis + 22, x=L + 18)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -633,12 +651,14 @@ def gates(page, slide):
 def a_table(page, slide):
     page.chrome(slide)
     exhibit = slide['exhibit']
-    table(page, exhibit['columns'], exhibit['rows'], L, TOP, FULL - L, 40 if len(exhibit['rows']) < 3 else 42)
-    y = TOP + (40 if len(exhibit['rows']) < 3 else 42) * (len(exhibit['rows']) + 1) + 34
-    for i, body in enumerate(slide.get('body', [])):
-        page.block(body['heading'], body['text'], L + i * 450, y, 425, 90)
+    row = 40 if len(exhibit['rows']) < 3 else 42
+    table(page, exhibit['columns'], exhibit['rows'], L, TOP, FULL - L, row)
+    y = TOP + row * (len(exhibit['rows']) + 1) + 8
+    page.caption(exhibit['figure'], exhibit['caption'], y, w=FULL - L)
     if slide.get('note'):
-        page.caption('Note:', slide['note'].removeprefix('Note: '), y, w=FULL - L)
+        page.caption('Note:', slide['note'].removeprefix('Note: '), y + 14, w=FULL - L)
+    for i, body in enumerate(slide.get('body', [])):
+        page.block(body['heading'], body['text'], L + i * 450, y + 40, 425, 90)
 
 
 def a_metrics(page, slide):
@@ -649,7 +669,7 @@ def a_metrics(page, slide):
         key_card(page, figure, L + i * (width + 25), TOP, width, 104, NAVY)
     for i, figure in enumerate(figures[2:]):
         key_card(page, figure, L + i * (width + 25), 250, width, 104, VIOLET)
-    page.caption('Scope:', slide['note'].removeprefix('Scope: '), 372, w=FULL - L)
+    page.caption('Scope:', slide['note'].removeprefix('Scope: '), 362, w=FULL - L)
 
 
 def a_topics(page, slide):
@@ -858,11 +878,9 @@ def main() -> None:
                    for i, (path, frame) in enumerate(COVER_SMALL)]
         # Logo: UNSW host mark on white, 330 x 140 px source at its own proportions.
         images.append((0, LOGO, (L, 446, 84.9, 36)))
-        lever_card = (3, framed_photo(Path(work), MARKET, (L + 16, TOP + 28, 170, 302), 'lever.png', all_corners=True),
-                      (L + 16, TOP + 28, 170, 302))
-        images.append(lever_card)
-        images.append((3, ASSETS / 'icons/table_rows-slate.png', (L + 202, TOP + 30, 18, 18)))
-        images.append((3, ASSETS / 'icons/description-violet.png', (L + 202, TOP + 140, 18, 18)))
+        images.append((3, framed_photo(Path(work), MARKET, LEVER_PHOTO, 'lever.png', all_corners=True), LEVER_PHOTO))
+        images.append((3, ASSETS / 'icons/table_rows-slate.png', (L + 202, TOP + 14, 18, 18)))
+        images.append((3, ASSETS / 'icons/description-violet.png', (L + 202, TOP + 124, 18, 18)))
         for icon, (x, y, _, _) in zip(SUMMARY_ICONS, SUMMARY_CARDS):
             images.append((1, ASSETS / 'icons' / icon, (x + 16, y + 14, 22, 22)))
         for icon, x in zip(STEP_ICONS, STEP_X):
