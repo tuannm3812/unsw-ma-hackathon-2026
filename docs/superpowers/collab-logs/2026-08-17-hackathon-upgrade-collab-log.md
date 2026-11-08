@@ -2669,3 +2669,8 @@ unseen exact template, which cannot exclude near-duplicates.
   - Takeaways in story order: (1) text helps in every year (month ranges above zero in 5 of 5, about 7 hours); (2) across countries it is fragile (4 of 5 include zero; 1 of 5 when capped); (3) the gain needs word patterns (tree without TF-IDF gains at most 0.04 days). The AUC point moved to the speaker notes.
   - New interval numbers come from `src/gain_intervals.py` (tested in `tests/test_gain_intervals.py`), which reads the committed `benchmark.json` and loss-alignment JSONs and reproduces the README table exactly, into `reports/evidence_sources/gain_intervals.json`; the numbers are added to the register.
   - QA reports no automated problems; previews, PDF and preview page refreshed; not pushed.
+- **2026-11-08, summary tweak and slide 13 redesign:** no new owner edits; slides 2 and 13 were rebuilt.
+  - **Summary:** the forecast card now ends "but the gain is fragile across countries", so it no longer oversells the gain.
+  - **Slide 13** has a new conclusion title: "Text helps forecasts and framings look small; no writing rule is proven". Each item is now a claim, a one-line evidence reason, a check or block icon, and "→N" link chips to the slide that shows it (A1 for the regional rule).
+  - **A mid-build failure:** the summary's mini-chart still read slide 12's old `series` data, so the first rebuild failed after clearing slides 2 and 13, which were blank for about a minute. The preview helpers now read the new per-year `linear` gains, and both slides were rebuilt and checked.
+  - QA reports no automated problems; previews, PDF and preview page refreshed; not pushed.

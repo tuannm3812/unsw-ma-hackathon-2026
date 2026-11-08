@@ -51,7 +51,7 @@
         {
           "figure": "5 of 5 years",
           "heading": "Text adds forecast information",
-          "text": "Text lowered linear forecast error every year, by 0.26–0.39 days; the median is about 7 hours.",
+          "text": "Text lowered linear forecast error every year, by 0.26–0.39 days, but the gain is fragile across countries.",
           "layer": "Forecast benchmark"
         }
       ],
@@ -1446,30 +1446,73 @@
       "id": "supports",
       "section": "Next steps",
       "layout": "two_column",
-      "title": "What the evidence supports, and what it does not",
+      "title": "Text helps forecasts and framings look small; no writing rule is proven",
       "subtitle": "Synthesis across all layers",
       "columns": [
         {
           "heading": "Supported",
           "items": [
-            "Text adds forecast information in a linear model",
-            "Most framing associations are small",
-            "Platform funding time is not borrower waiting time for most loans"
+            {
+              "claim": "Text adds forecast information",
+              "evidence": "Error fell 0.26–0.39 days in 5 of 5 years, but the gain is fragile across countries",
+              "slides": [
+                "11",
+                "12"
+              ]
+            },
+            {
+              "claim": "Most framing links are small",
+              "evidence": "Five framings stay within ±5% of funding time in both models",
+              "slides": [
+                "10"
+              ]
+            },
+            {
+              "claim": "Funding time is a platform measure",
+              "evidence": "96.4% of loans reach the borrower before listing",
+              "slides": [
+                "5"
+              ]
+            }
           ]
         },
         {
           "heading": "Not established",
           "items": [
-            "That editing a description speeds funding",
-            "Any country or regional writing rule: regional patterns rest on two countries each",
-            "Effects of urgency or first-person framing",
-            "Performance on loans that never funded"
+            {
+              "claim": "That editing a description speeds funding",
+              "evidence": "Every result is an observational association",
+              "slides": [
+                "9"
+              ]
+            },
+            {
+              "claim": "Any country or regional writing rule",
+              "evidence": "Regional patterns rest on two countries each",
+              "slides": [
+                "A1"
+              ]
+            },
+            {
+              "claim": "Effects of urgency or first person",
+              "evidence": "Under 2% of descriptions use them, so ranges stay wide",
+              "slides": [
+                "10"
+              ]
+            },
+            {
+              "claim": "Performance on loans that never funded",
+              "evidence": "Unfunded listings are not in the data",
+              "slides": [
+                "5"
+              ]
+            }
           ]
         }
       ],
       "notes": {
         "purpose": "Draw the line clearly.",
-        "script": "On the left, what we can stand behind. On the right, what we cannot claim, however tempting."
+        "script": "The answer first: text helps forecasting and most framings are small, but no writing rule is proven. On the left, what we can stand behind, each with the slide that shows it: text adds forecast information, though the gain is fragile across countries; most framing links are small; and funding time is a platform measure, because almost all loans reach the borrower before listing. On the right, what we cannot claim, however tempting: that editing a description speeds funding, any country or regional writing rule, effects of urgency or first person, and anything about loans that never funded."
       },
       "sublabel": "Synthesis"
     },

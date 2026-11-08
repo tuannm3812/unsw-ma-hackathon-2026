@@ -324,7 +324,7 @@ def bound_mini(page, x, y, w, slide):
 
 def gain_mini(page, x, y, w, slide):
     """Linear MAE gain by year, bars from zero with direct labels."""
-    years = [row[:2] for row in slide_by_id('gain_uncertainty')['exhibit']['series'][0]['rows']]
+    years = [(int(y), v['gain']) for y, v in sorted(slide_by_id('gain_uncertainty')['exhibit']['linear'].items())]
     bar, step, base, per = 30, 54, y + 62, 120
     for i, (year, gain) in enumerate(years):
         bx = x + 2 + i * step
@@ -598,7 +598,7 @@ def preview_bound(page, x, y, w, h, slide):
 
 def preview_bars(page, x, y, w, h, slide):
     """Mini of the five annual linear gains, bars from zero."""
-    gains = [row[1] for row in slide_by_id('gain_uncertainty')['exhibit']['series'][0]['rows']]
+    gains = [v['gain'] for _, v in sorted(slide_by_id('gain_uncertainty')['exhibit']['linear'].items())]
     for i, gain in enumerate(gains):
         height = gain * 110
         page.rect(x + i * 26, y + 46 - height, 18, height, NAVY)
@@ -1038,20 +1038,32 @@ def gains(page, slide, pos):
     page.takeaways(slide['takeaways'], pos)
 
 
-def supports(page, slide):
+SUPPORT_ICONS = ['check_circle-navy.png', 'block-slate.png']
+
+
+def supports(page, slide, urls):
+    """Two columns of claims, each with its evidence line and a link chip to the slide that shows it."""
     page.chrome(slide)
     width = 426
+    positions = {str(s['n']): k + 1 for k, s in enumerate(slide_data().values())}
     for i, column in enumerate(slide['columns']):
         x = L + i * (width + 22.5)
         fill = [NAVY, VIOLET][i]
-        page.rect(x, TOP, width, 320, PAPER)
+        page.rect(x, TOP, width, 330, PAPER)
         page.badge(column['heading'], x, TOP, (width, 36), fill, WHITE, 12, 'RECTANGLE')
-        pitch = 280 / len(column['items'])
+        pitch = 294 / len(column['items'])
         for j, item in enumerate(column['items']):
             y = TOP + 36 + j * pitch
             if j:
                 page.line(x + 14, y, x + width - 14, y, HAIR, .75)
-            page.text(item, x + 14, y, width - 28, pitch, size=12, middle=True)
+            top = y + pitch / 2 - 17
+            page.block(item['claim'], item['evidence'], x + 44, top, width - 120, 40, body_size=10, head_size=12)
+            cx = x + width - 14
+            for label in reversed(item['slides']):
+                cx -= 30
+                chip = page.badge(f'→{label}', cx, top + 2, (26, 16), fill, WHITE, 8, 'ROUND_RECTANGLE')
+                page.ops.append({'op': 'style-text', 'element': chip, 'start': 0, 'end': len(label) + 1,
+                                 'link': urls[positions[label]], 'color': WHITE, 'underline': False})
 
 
 GATE_X = [L + i * 306 for i in range(3)]
@@ -1298,7 +1310,7 @@ def main() -> None:
     builders = {'summary': summary, 'lever': lever, 'outcome': outcome, 'slowdown': slowdown,
                 'clustering': clustering, 'equivalence': forest, 'regions': regions, 'a_screen': regions, 'persist': persist,
                 'forecast': forecast, 'gain_uncertainty': gains}
-    plain = {'approach': approach, 'supports': supports, 'gates': gates,
+    plain = {'approach': approach, 'gates': gates,
              'a_asof': a_table, 'a_primary': a_metrics, 'a_topics': a_topics, 'cover': cover, 'close': close}
     for index, (slide, item) in enumerate(zip(story, slides)):
         if only is not None and index not in only:
@@ -1313,6 +1325,8 @@ def main() -> None:
             agenda(page, slide, urls)
         elif slide['id'] == 'approach':
             approach(page, slide, urls)
+        elif slide['id'] == 'supports':
+            supports(page, slide, urls)
         elif slide['id'] == 'gates':
             gates(page, slide, urls)
         else:
@@ -1344,6 +1358,12 @@ def main() -> None:
         images.append((4, ASSETS / 'icons/block-slate.png', (356 + 12, 284 + 74, 18, 18)))
         for x, icon in zip(GATE_X, GATE_ICONS):
             images.append((13, ASSETS / 'icons' / icon, (x + 262 - 72, 136 + 18, 20, 20)))
+        support = slide_by_id('supports')
+        for i, column in enumerate(support['columns']):
+            pitch = 294 / len(column['items'])
+            for j, _ in enumerate(column['items']):
+                top = TOP + 36 + j * pitch + pitch / 2 - 17
+                images.append((12, ASSETS / 'icons' / SUPPORT_ICONS[i], (L + i * 448.5 + 14, top + 1, 20, 20)))
         for icon, (x, y, _, _) in zip(SUMMARY_ICONS, SUMMARY_CARDS):
             images.append((1, ASSETS / 'icons' / icon, (x + 16, y + 14, 22, 22)))
         for icon, x in zip(STEP_ICONS, STEP_X):
