@@ -310,16 +310,28 @@ def cover(page, slide):
 
 
 def close(page, slide):
+    """Closing slide: thanks, the one message, the three steps, the team and the repository link."""
     page.ops.append({'op': 'set-background', 'slide': page.id, 'color': WHITE})
     photo_accent(page, *CLOSE_FRAME[:2], 104)
-    page.rect(L, 196, 28, 3, YELLOW)
-    page.text(slide['title'], L, 210, 520, 56, size=44, bold=True)
-    first, second = slide['lines']
+    page.rect(L, 134, 28, 3, YELLOW)
+    page.text(slide['title'], L, 146, 300, 22, size=16, bold=True, color=VIOLET)
+    page.text(slide['message'], L, 174, 500, 100, size=36, bold=True, spacing=105)
+    x, y = L, 292
+    for k, (name, icon) in enumerate(slide['steps']):
+        EXTRA_IMAGES.append(('close', ASSETS / 'icons' / icon, (x, y, 18, 18)))
+        width = label_width(name, 12) + 6
+        page.text(name, x + 23, y, width + 8, 18, size=12, bold=True, middle=True)
+        x += 23 + width + 6
+        if k < 2:
+            page.line(x + 2, y + 9, x + 26, y + 9, SLATE, .75)
+            page.ops[-1]['end_arrow'] = 'FILL_ARROW'
+            x += 34
+    names, team, repo = slide['lines']
     prefix = 'Code and evidence: '
-    start = len(first) + 1 + len(prefix)
-    text = f'{first}\n{second}'
-    page.text(text, L, 284, 560, 50, size=12, color=NAVY, spacing=120,
-              spans=[(0, len(first), {'bold': True}), (start, len(text), {'link': slide['link'], 'color': VIOLET})])
+    start = len(names) + len(team) + 2 + len(prefix)
+    text = f'{names}\n{team}\n{repo}'
+    page.text(text, L, 338, 560, 62, size=12, color=NAVY, spacing=120,
+              spans=[(0, len(names), {'bold': True}), (start, len(text), {'link': slide['link'], 'color': VIOLET})])
 
 
 SUMMARY_ICONS = [None, 'target-violet.png', 'description-violet.png']  # Mike removed the first icon in the live deck
@@ -1772,7 +1784,7 @@ def roadmap(page, slide, pos):
     """Now, next and later on the solution card grid; each item names its step and, where it has one, its gate."""
     page.chrome(slide)
     fills = {'navy': (NAVY, WHITE), 'violet': (VIOLET, WHITE), 'yellow': (YELLOW, NAVY)}
-    top, h, head, pitch = TOP, 316, 28, 94
+    top, h, head, pitch = TOP, 262, 28, 76
     markers = {(1, 0): 2, (1, 2): 3, (2, 2): 4}
     for i, column in enumerate(slide['columns']):
         x = L + i * (SOLUTION_W + SOLUTION_GAP)

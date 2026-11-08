@@ -3037,3 +3037,8 @@ unseen exact template, which cannot exclude near-duplicates.
 - Live deck re-read first: no owner edits to mirror. Slide 20's rows have bold-navy key terms. Slide 21 now uses the solution card grid, tags each item with its step and gate, and has takeaways.
 - Slide 21 had an ordering conflict with slide 19: it piloted the prompt before the data partnership. The data partnership (gate 2) now comes Next and the prompt pilot (gate 3) Later.
 - Verified: pyflakes, deck QA, rendered slides, full offline pytest. Slides 20 and 21 only were rebuilt; nothing pushed.
+
+## 2026-11-09: slide 21 compact cards; closing slide
+
+- Live deck re-read first: no owner edits to mirror. Slide 21's cards are content-tight. Spacing on slides 16, 19 and 20 checked; no change needed. The closing slide now states the message, shows the three steps and uses the cover's team line; photo and credit unchanged, no finalist claim, no numbers.
+- Verified: pyflakes, deck QA, rendered slides, full offline pytest. Slides 21 and 22 only were rebuilt; nothing pushed.

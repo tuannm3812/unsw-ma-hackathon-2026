@@ -2897,16 +2897,32 @@
       "layout": "close",
       "title": "Thank you",
       "lines": [
-        "Mike Nguyen and Sophia Nguyen, Cultural Blend",
+        "Mike Nguyen and Sophia Nguyen",
+        "Team Cultural Blend - University of Technology Sydney",
         "Code and evidence: github.com/tuannm3812/unsw-ma-hackathon-2026"
       ],
       "notes": {
         "purpose": "Close.",
-        "script": "Thank you. The code, saved results and every number on these slides are in our repository.",
+        "script": "Thank you. Our message is simple: flag slow loans first, support them on the lender side, and earn any writing advice last, through a tested pilot. The code, saved results and every number on these slides are in our repository.",
         "reference": "Photo: Ali Mkumbwa on Unsplash (Unsplash Licence)."
       },
       "link": "https://github.com/tuannm3812/unsw-ma-hackathon-2026",
-      "visual": "White ground; Unsplash market photo in a rounded frame with the yellow corner block"
+      "visual": "White ground; Unsplash market photo in a rounded frame with the yellow corner block",
+      "message": "Flag slow loans first.\nEarn writing advice last.",
+      "steps": [
+        [
+          "Predict",
+          "target-navy.png"
+        ],
+        [
+          "Prioritise",
+          "groups-navy.png"
+        ],
+        [
+          "Test",
+          "science-navy.png"
+        ]
+      ]
     },
     {
       "n": "A1",
