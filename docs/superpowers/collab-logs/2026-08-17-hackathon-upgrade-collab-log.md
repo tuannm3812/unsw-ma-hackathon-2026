@@ -3004,3 +3004,8 @@ unseen exact template, which cannot exclude near-duplicates.
 - Mike confirmed the logo download in his own words. Primary logo saved unaltered with its source and terms in PROVENANCE.md; used on slide 16's two Who lines with an independence footer. Live deck re-read first: no owner edits to mirror.
 - Slide 19's lower half is now a staircase of the claim unlocked after each gate, with a dashed stop branch at every gate. Heights are illustrative, and the speaker notes say so.
 - Verified: pyflakes, deck QA, word-box overlap check, rendered slides, full offline pytest. Slides 16 and 19 only were rebuilt; nothing pushed.
+
+## 2026-11-09: step badges and slide 19 row icons
+
+- Live deck re-read first: no owner edits to mirror. Step badges on slides 16 and 19 now show one digit at one size. Slide 19's Question, Do and Done when rows have deck-style icons, with key terms in bold navy.
+- Verified: pyflakes, deck QA, zoomed render, full offline pytest. Slides 16 and 19 only were rebuilt; nothing pushed.

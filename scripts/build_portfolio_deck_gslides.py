@@ -1354,7 +1354,8 @@ GATE_ICONS = ['fact_check-navy.png', 'table_rows-navy.png', 'science-navy.png']
 SOLUTION_ICONS = ['target-navy.png', 'groups-navy.png', 'science-navy.png']
 
 
-SOLUTION_W, SOLUTION_GAP = 187, 22.75
+SOLUTION_W, SOLUTION_GAP, STEP_BADGE = 187, 22.75, 20
+GATE_ROW_ICONS = {'Question': 'help-navy.png', 'Do': 'build-navy.png', 'Done when': 'task_alt-navy.png'}
 SOLUTION_WHEN = ['post_add-navy.png', 'hourglass_top-navy.png', 'science-navy.png']
 SOLUTION_WHO = ['desktop_windows-navy.png', 'handshake-navy.png', 'manage_search-navy.png']
 
@@ -1367,7 +1368,7 @@ def solution(page, slide, pos):
     for i, step in enumerate(slide['steps']):
         x = L + i * (SOLUTION_W + SOLUTION_GAP)
         card(page, x, top, SOLUTION_W, h, fills[i][0])
-        page.badge(step['n'], x + 12, top + 14, (26, 26), *fills[i], 10)
+        page.badge(step['n'], x + 12, top + 14, (STEP_BADGE, STEP_BADGE), *fills[i], 9)
         page.text(step['name'], x + 12, top + 48, SOLUTION_W - 44, 16, size=12, bold=True)
         page.marker(i + 1, x + SOLUTION_W - 22, top + 50)
         page.text('What', x + 12, top + 72, 120, 12, size=8, color=GREY, bold=True)
@@ -1408,13 +1409,18 @@ def gates(page, slide, pos):
     for i, step in enumerate(slide['steps']):
         x = L + i * (SOLUTION_W + SOLUTION_GAP)
         card(page, x, top, SOLUTION_W, h, fills[i][0])
-        page.badge(step['n'], x + 10, top + 9, (22, 22), *fills[i], 9)
+        page.badge(step['n'], x + 11, top + 10, (STEP_BADGE, STEP_BADGE), *fills[i], 9)
         page.text(step['name'], x + 38, top + 9, SOLUTION_W - 66, 22, size=10.5, bold=True, middle=True)
         page.marker(i + 1, x + SOLUTION_W - 22, top + 36)
         rows = [('Question', step['question'], 38, True), ('Do', step['do'], 80, False), ('Done when', step['done'], 134, False)]
         for name, value, offset, bold in rows:
-            page.text(name, x + 12, top + offset, 120, 11, size=8, color=GREY, bold=True)
-            page.text(value, x + 12, top + offset + 11, SOLUTION_W - 24, 40, size=9, color=NAVY if bold else GREY, bold=bold, spacing=100)
+            EXTRA_IMAGES.append(('gates', ASSETS / 'icons' / GATE_ROW_ICONS[name], (x + 12, top + offset + LEGEND_MID - 5.5, 11, 11)))
+            page.text(name, x + 26, top + offset, 120, 11, size=8, color=GREY, bold=True)
+            plain, spans = re.sub(r'\*\*', '', value), []
+            for m in re.finditer(r'\*\*(.+?)\*\*', value):
+                start = len(re.sub(r'\*\*', '', value[:m.start()]))
+                spans.append((start, start + len(m.group(1)), {'bold': True, 'color': NAVY}))
+            page.text(plain, x + 12, top + offset + 11, SOLUTION_W - 24, 40, size=9, color=NAVY if bold else GREY, bold=bold, spacing=100, spans=spans)
         if i < 2:
             page.line(x + SOLUTION_W + 3, top + h / 2, x + SOLUTION_W + SOLUTION_GAP - 3, top + h / 2, SLATE, .75)
             page.ops[-1]['end_arrow'] = 'FILL_ARROW'
@@ -1433,11 +1439,9 @@ def gates(page, slide, pos):
                   spans=[(0, len(stage), {'bold': True, 'font_size': 8})])
         if i < 3:
             cx, cy = x + step_w + gap / 2, base - heights[i + 1] + 11
-            page.line(cx, cy + 8, cx, stop_y, SLATE, .75)
+            page.line(cx, cy + STEP_BADGE / 2, cx, stop_y, SLATE, .75)
             page.ops[-1]['dash_style'] = 'DASH'
-            page.line(cx + 8, cy, x + step_w + gap, cy, SLATE, .75)
-            page.ops[-1]['end_arrow'] = 'FILL_ARROW'
-            page.badge(str(i + 1), cx - 8, cy - 8, (16, 16), *fills[i], 8)
+            page.badge(str(i + 1), cx - STEP_BADGE / 2, cy - STEP_BADGE / 2, (STEP_BADGE, STEP_BADGE), *fills[i], 9)
     first, last = L + step_w + gap / 2, L + 3 * step_w + 2.5 * gap
     page.line(first, stop_y, last, stop_y, SLATE, .75)
     page.ops[-1]['dash_style'] = 'DASH'

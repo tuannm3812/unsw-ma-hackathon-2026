@@ -2322,7 +2322,7 @@
       "subtitle": "A three-step framework for Kiva and partners, built only on what the evidence supports",
       "steps": [
         {
-          "n": "01",
+          "n": "1",
           "name": "Predict",
           "action": "Score each listing’s risk of slow funding when it is posted.",
           "method": "A boosted tree on loan structure; text adds little to this score.",
@@ -2333,7 +2333,7 @@
           "who_after": "platform"
         },
         {
-          "n": "02",
+          "n": "2",
           "name": "Prioritise",
           "action": "Send lender-side support to flagged loans.",
           "method": "Featuring, matching funds, lender alerts and partner follow-up.",
@@ -2344,7 +2344,7 @@
           "who_after": "and partners"
         },
         {
-          "n": "03",
+          "n": "3",
           "name": "Test",
           "action": "Earn the right to give writing advice.",
           "method": "Pass three gates before any advice.",
@@ -2587,25 +2587,25 @@
       "subtitle": "Proposed next research for Kiva and participating partners; each gate must pass before the next",
       "steps": [
         {
-          "n": "01",
+          "n": "1",
           "name": "Validate the measures",
           "question": "Do our word counts capture clarity, need and agency?",
-          "do": "Build a small codebook; two people code the same narratives and resolve disagreements.",
-          "done": "Definitions are frozen before later periods are checked."
+          "do": "Build a **small codebook**; **two people** code the same narratives and resolve disagreements.",
+          "done": "Definitions are **frozen** before later periods are checked."
         },
         {
-          "n": "02",
+          "n": "2",
           "name": "Close the data gaps",
           "question": "What did lenders see, and which listings never funded?",
-          "do": "Get original texts, partner identifiers, exposure data and expired listings.",
-          "done": "Unfunded listings and listing-time text are in the data."
+          "do": "Get **original texts**, partner identifiers, exposure data and **expired listings**.",
+          "done": "**Unfunded listings** and **listing-time text** are in the data."
         },
         {
-          "n": "03",
+          "n": "3",
           "name": "Pilot one prompt",
           "question": "Does editing a description change funding speed?",
-          "do": "With partners, test one truthful clarity prompt against a control; urgency in Asia is a candidate.",
-          "done": "Threshold, power and guardrails are agreed in advance."
+          "do": "With partners, test **one truthful clarity prompt** against a **control**; urgency in Asia is a candidate.",
+          "done": "Threshold, power and guardrails are **agreed in advance**."
         }
       ],
       "notes": {
