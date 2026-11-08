@@ -39,6 +39,7 @@ it is preserved in git history (commit `d9a234f`).
 - **Header.** The section label sits at x43.5/y29.5, 10 pt bold uppercase: section in violet, a thin "|" separator in #999999, then the sublabel in #59636E. The parent's #999999 sublabel fails AA on white. A short yellow accent sits under the label. Mike removed the agenda's label in the live deck; `hide_label` in the storyline preserves that.
 - **Footer (Mike's decision).** An edge-reaching navy line at y492 with a short yellow accent at its left. Left text, 8 pt: "**Cultural Blend**   Kiva funding speed, 1.45 million loans, 2016–2025". It uses spacing and weight rather than a vertical bar. One inherited page number sits at the right.
 - **Sections (Mike's decision, detailed solution-led).** The problem, What drives the wait (evidence), Our solution, Safe next steps, then Appendix. The agenda lists the four sections with page chips. Evidence slides end their takeaway column with a violet "→ Why …" line tying the finding to a step of the solution. Main figures are numbered 1, 2, … in order; appendix figures take their slide label (Figure A2 on slide A2). No photo repeats anywhere in the deck.
+- **Slide links (Mike's decision).** Link chips appear only on the agenda and the key insight slide, where they act as navigation. No other slide carries "→ slide" chips, linked tags or lists of cross-references; put those in the speaker notes. The violet "→ Why…" conclusion lines stay, because they are text.
 
 ## Evidence names (Mike's decision)
 

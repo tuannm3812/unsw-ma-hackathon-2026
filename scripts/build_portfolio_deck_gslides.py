@@ -599,8 +599,8 @@ def band_fill(shade):
     return {'paper': PAPER, 'violet': '#EEEBF5'}[shade]
 
 
-def approach(page, slide, urls, pos):
-    """Four analyses fed by one dataset, each with a result preview, its claim and the step it feeds."""
+def approach(page, slide, pos):
+    """Four analyses fed by one dataset, each with a result preview and the solution step it feeds."""
     page.chrome(slide)
     ex = slide['exhibit']
     pw = R - L
@@ -608,7 +608,7 @@ def approach(page, slide, urls, pos):
     page.rect(L, TOP, 5, 24, YELLOW)
     page.text(ex['source'], L + 32, TOP, pw - 60, 24, size=10, bold=True, middle=True)
     page.marker(1, L + pw - 20, TOP + 6)
-    width, top, h = PIPE_W, 166, 190
+    width, top, h = PIPE_W, 166, 178
     fills = [(NAVY, WHITE), (VIOLET, WHITE), (YELLOW, NAVY), (SLATE, WHITE)]
     previews = [preview_waffle, preview_table, preview_bound, preview_bars]
     card_markers = {0: 2, 1: 3, 3: 4}
@@ -619,35 +619,17 @@ def approach(page, slide, urls, pos):
         page.ops[-1]['end_arrow'] = 'FILL_ARROW'
         page.rect(x, top, width, h, PAPER)
         page.rect(x, top, width, 26, fill)
-        page.text(step['name'], x + 24, top, width - 54, 26, size=9, color=ink, bold=True, middle=True)
-        label = f"→{step['slide']}"
-        page.rect(x + width - 26, top + 6, 22, 14, WHITE, 'ROUND_RECTANGLE')
-        page.text(label, x + width - 26, top + 6, 22, 14, size=8, bold=True, align='center', middle=True,
-                  spans=[(0, len(label), {'link': urls[step['slide']], 'color': NAVY, 'underline': False})])
+        page.text(step['name'], x + 24, top, width - 30, 26, size=9, color=ink, bold=True, middle=True)
         page.text(step['question'], x + 8, top + 31, width - 16, 36, size=9, bold=True, spacing=100)
-        previews[i](page, x + 8, top + 70, width - 16, 46, slide)
-        page.text(step['headline'], x + 8, top + 121, width - 16, 26, size=9, bold=True, spacing=100)
-        page.text(step['claim'], x + 8, top + 150, width - 16, 12, size=8, color=GREY)
-        feeds = step['feeds']
-        tag_fill, tag_ink = STEP_FILLS[feeds['colour']]
-        page.rect(x + 8, top + 166, width - 16, 17, tag_fill, 'ROUND_RECTANGLE')
-        page.text(feeds['label'], x + 8, top + 166, width - 16, 17, size=8, bold=True, align='center', middle=True,
-                  color=tag_ink, spans=[(0, len(feeds['label']), {'link': urls[feeds['slide']], 'color': tag_ink, 'underline': False})])
+        previews[i](page, x + 8, top + 72, width - 16, 46, slide)
+        page.text(step['headline'], x + 8, top + 124, width - 16, 26, size=9, bold=True, spacing=100)
+        page.text(f"Feeds {step['feeds']}", x + 8, top + 157, width - 34, 13, size=9, color=SLATE, bold=True, middle=True)
         if i in card_markers:
-            page.marker(card_markers[i], x + width - 20, top + 149)
+            page.marker(card_markers[i], x + width - 20, top + 157)
         if i < 2:
             page.line(x + width + 1, top + 13, x + width + 10.5, top + 13, SLATE, .75)
             page.ops[-1]['end_arrow'] = 'FILL_ARROW'
-    timeline(page, ex['timeline'], top + h + 8)
-    addon_y = top + h + 8 + 96
-    label = 'Add-on checks: '
-    text = label + '  ·  '.join(f'{name} →{n}' for name, n in ex['addons'])
-    spans, cursor = [(0, len(label), {'bold': True})], len(label)
-    for name, n in ex['addons']:
-        piece = f'{name} →{n}'
-        spans.append((cursor, cursor + len(piece), {'link': urls[n], 'color': VIOLET}))
-        cursor += len(piece) + 5
-    page.text(text, L, addon_y, pw, 12, size=8, color=GREY, spans=spans)
+    timeline(page, ex['timeline'], top + h + 22)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -1252,7 +1234,7 @@ def gains(page, slide, pos):
 VERDICT_FILLS = {'yes': NAVY, 'unclear': SLATE, 'not_yet': VIOLET}
 
 
-def supports(page, slide, urls):
+def supports(page, slide):
     """2x2 board: per block a question, verdict tag, key figure, evidence and a 'so what' line; then a strip."""
     page.chrome(slide)
     gap, bw, bh = 16, (FULL - L - 16) / 2, 142
@@ -1267,18 +1249,11 @@ def supports(page, slide, urls):
         page.text(block['figure'], x + 18, y + 38, bw - 36, 36, size=28, bold=True)
         page.text(block['evidence'], x + 18, y + 78, bw - 36, 30, size=10, color=GREY, spacing=110)
         if block.get('so_what'):
-            page.text(block['so_what'], x + 18, y + bh - 26, bw - 120, 16, size=10, bold=True, color=fill)
-        cx = x + bw - 18
-        for label in reversed(block['slides']):
-            cx -= 32
-            chip_link(page, label, cx, y + bh - 28, fill, urls)
+            page.text(block['so_what'], x + 18, y + bh - 26, bw - 36, 16, size=10, bold=True, color=fill)
     sy = TOP + 2 * bh + gap + 12
     page.rect(L, sy, 2 * bw + gap, 28, PAPER)
     page.rect(L, sy, 4, 28, YELLOW)
-    nxt = slide['next']
-    label = f"{nxt['text']}  →{nxt['slide']}"
-    page.text(label, L + 16, sy, 2 * bw + gap - 32, 28, size=11, bold=True, middle=True,
-              spans=[(len(nxt['text']) + 2, len(label), {'link': urls[nxt['slide']], 'color': VIOLET})])
+    page.text(slide['next']['text'], L + 16, sy, 2 * bw + gap - 32, 28, size=11, bold=True, middle=True)
 
 
 GATE_X = [L + i * 306 for i in range(3)]
@@ -1288,7 +1263,7 @@ GATE_ICONS = ['fact_check-navy.png', 'table_rows-navy.png', 'science-navy.png']
 SOLUTION_ICONS = ['target-navy.png', 'groups-navy.png', 'science-navy.png']
 
 
-def gates(page, slide, urls):
+def gates(page, slide):
     """Three steps as full cards with labelled rows; then either a ladder of claims or a stop line."""
     page.chrome(slide)
     ladder = slide.get('ladder')
@@ -1298,10 +1273,6 @@ def gates(page, slide, urls):
     for i, (step, x) in enumerate(zip(slide['steps'], GATE_X)):
         card(page, x, top, width, h, fills[i][0])
         page.badge(step['n'], x + 14, top + 14, (30, 30), *fills[i], 11)
-        label = f"→ {step['slide']}"
-        page.rect(x + width - 44, top + 20, 30, 16, WHITE, 'ROUND_RECTANGLE')
-        page.text(label, x + width - 44, top + 20, 30, 16, size=8, bold=True, align='center', middle=True,
-                  spans=[(0, len(label), {'link': urls[step['slide']], 'color': NAVY, 'underline': False})])
         page.text(step['name'], x + 14, top + 52, width - 28, 16, size=12, bold=True)
         rows = step.get('rows') or [['Question', step['question']], ['Do', step['do']], ['Done when', step['done']]]
         pitch = 50 if ladder else 62
@@ -1518,7 +1489,7 @@ def triage(page, slide):
 LEVER_BOXES = [(L + (k % 2) * 292, TOP + (k // 2) * 130, 282, 120) for k in range(4)]
 
 
-def prioritise(page, slide, urls):
+def prioritise(page, slide):
     """Four lender-side levers to pilot, and one card on where not to spend effort."""
     page.chrome(slide)
     for (x, y, w, h), lever in zip(LEVER_BOXES, slide['levers']):
@@ -1531,7 +1502,6 @@ def prioritise(page, slide, urls):
     page.text(dont['heading'], dx + 16, dy + 16, dw - 32, 18, size=13, color=VIOLET, bold=True)
     page.text(dont['figure'], dx + 16, dy + 46, dw - 32, 44, size=36, bold=True)
     page.text(dont['text'], dx + 16, dy + 92, dw - 60, 56, size=10, color=GREY, spacing=110)
-    chip_link(page, dont['slide'], dx + dw - 44, dy + dh - 28, VIOLET, urls)
     page.text(slide['note'], L, TOP + 268, FULL - L, 14, size=10, color=SLATE, bold=True,
               spans=[(0, len('Scope:'), {'bold': True})])
 
@@ -1800,10 +1770,9 @@ def main() -> None:
     builders = {'summary': summary, 'problem': problem, 'text_adds': text_adds, 'where': where, 'subgroups': subgroups,
                 'lever': lever, 'outcome': outcome,
                 'clustering': clustering, 'equivalence': forest, 'regions': regions, 'a_screen': regions,
-                'persist': persist, 'forecast': forecast, 'gain_uncertainty': gains}
-    linked = {'gates': gates, 'solution': gates, 'supports': supports,
-              'prioritise': prioritise, 'agenda': agenda}
-    plain = {'triage': triage, 'roadmap': roadmap,
+                'persist': persist, 'forecast': forecast, 'gain_uncertainty': gains, 'approach': approach}
+    linked = {'agenda': agenda}
+    plain = {'gates': gates, 'solution': gates, 'supports': supports, 'prioritise': prioritise, 'triage': triage, 'roadmap': roadmap,
              'a_asof': a_table, 'a_primary': a_metrics, 'a_topics': a_topics, 'cover': cover, 'close': close}
     for index, (slide, item) in enumerate(zip(story, slides)):
         if only is not None and index not in only:
@@ -1816,8 +1785,6 @@ def main() -> None:
             builders[slide['id']](page, slide, marker_positions(slide, layout))
         elif slide['id'] == 'insight':
             insight(page, slide, urls, marker_positions(slide, layout))
-        elif slide['id'] == 'approach':
-            approach(page, slide, urls, marker_positions(slide, layout))
         elif slide['id'] in linked:
             linked[slide['id']](page, slide, urls)
         else:

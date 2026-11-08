@@ -2857,3 +2857,10 @@ unseen exact template, which cannot exclude near-duplicates.
 - Slide 9 now fits the content column with a takeaway column. Each analysis card ends in a "Feeds" tag to Test, Prioritise or Predict, and the add-on checks (wild cluster bootstrap, subgroup refits, gain by feature group, early-warning check) link to their slides.
 - The stale robustness headline is replaced by "No signal survives a stricter test", shown with the lowest adjusted bootstrap p (0.136) against the 0.05 threshold; the register row now states that threshold. README count corrected to 22 core slides.
 - Verified: pyflakes, deck QA, rendered slide 9, full offline pytest. Slide 9 only was rebuilt; nothing pushed.
+
+## 2026-11-08: fewer links on the slides (Mike's decision)
+
+- Re-read the live deck first: no owner edits to mirror.
+- Link chips now appear only on the agenda and the key insight slide; rule added to DESIGN.md. Removed the chips and the linked "next" reference on slides 9, 16, 18, 19 and 20. Slides 5 and 13 had no chips to remove.
+- Slide 9: add-on checks moved to the speaker notes, the claim line dropped, and each card ends in a plain "Feeds" line.
+- Verified: pyflakes, deck QA, rendered slides, full offline pytest. Those five slides only were rebuilt; nothing pushed.
