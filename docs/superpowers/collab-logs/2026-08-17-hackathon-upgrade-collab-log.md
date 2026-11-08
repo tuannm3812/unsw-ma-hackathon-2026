@@ -3073,3 +3073,8 @@ unseen exact template, which cannot exclude near-duplicates.
 - A3 adds the larger tree with text and four tuned rows, labelled exploratory; the title no longer says nothing was tuned. A4 adds the theme chart with n, raw days and adjusted ranges, and shows three fastest and three slowest activities to make room.
 - Slide 14: "at most about 0.15 days" still holds for the fixed larger tree, but tuned trees reach 0.16–0.22 in 2021, so the takeaway now says so. Slide 17: lift and precision unchanged; adds that the gap's 95% range is above zero in every year. For the larger and tuned trees the 2021 country-block range includes zero (notes and register).
 - Verified: pyflakes, deck QA, word-box overlap check, rendered slides, full offline pytest (248 passed). Slides 14, 17, A3, A4 rebuilt; nothing pushed.
+
+## 2026-11-09: fixed and tuned text gains worded consistently
+
+- Live deck re-read first: no owner edits to mirror. "At most about 0.15 days" read as a ceiling that tuned trees exceed, so slides 14, 15, A5 notes and the register now say fixed trees gain up to about 0.15 days and tuned trees reach 0.16–0.22 in 2021. No other document or poster file quotes it.
+- Verified: deck QA, rendered slides, full offline pytest. Slides 14, 15, A5 rebuilt; nothing pushed.
