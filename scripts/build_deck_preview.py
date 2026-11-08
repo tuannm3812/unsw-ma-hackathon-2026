@@ -77,7 +77,7 @@ def main() -> None:
 <header>
   <div class="eyebrow">Portfolio deck · November 2026</div>
   <h1>Beyond a good story</h1>
-  <p class="meta">Cultural Blend's portfolio deck on Kiva funding speed: 16 core slides and 4 appendix slides, rendered by Google Slides. The live deck is the editable source.</p>
+  <p class="meta">Cultural Blend's portfolio deck on Kiva funding speed: 22 core slides and 8 appendix slides, rendered by Google Slides. The live deck is the editable source.</p>
   <a class="open" href="https://docs.google.com/presentation/d/{DECK_ID}/edit">Open in Google Slides</a>
 </header>
 <nav aria-label="Slides">{nav}</nav>

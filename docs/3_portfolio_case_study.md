@@ -1,23 +1,23 @@
 # Cultural Blend — Kiva funding-speed research
 
-Updated 2026-11-08. One story across the competition work and the October and
+Updated 2026-11-09. One story across the competition work and the October and
 November research extensions. Every number here is traced in the
 [claims register](presentation/claims_register.md).
 
-**Finalist, UNSW Marketing Analytics Hackathon Challenge 2026.** Cultural
-Blend (Sophia and Tuan) was one of eight finalist teams selected from 44
-registered teams involving 133 students at 19 universities across eight
-countries. The final took place on 4 September 2026.
-[Official UNSW results](https://www.unsw.edu.au/business/our-schools/marketing/news-events/student-events/MA-hackathon).
+Cultural Blend (Sophia and Tuan) carried out this work for the UNSW Marketing
+Analytics Hackathon Challenge 2026.
 
 ## Bottom line
 
-Loan descriptions carry measurable information about how fast a Kiva loan
-funds: adding text to a structure-only forecast lowered error in every one of
-five test years. Most individual framing associations are also small enough to
-bound. What the data cannot show is that rewriting a description makes a loan
-fund faster, so the next step is measurement and a small truthful pilot, not
-platform-wide writing advice.
+Kiva loans that will fund slowly can largely be spotted from loan details at
+posting, so the useful response has three steps: **predict** slow loans,
+**prioritise** lender-side support for them, and **test** before giving any
+writing advice. In a retrospective check, a boosted tree on loan details flags
+slow loans 2.63–4.04 times better than chance and beats a simple historical
+lookup in every test year. Most individual framing associations are small
+enough to bound, and text adds only a small, inconsistent forecast gain. What
+the data cannot show is that rewriting a description makes a loan fund faster,
+so writing advice waits for a small truthful pilot.
 
 ## Problem and data
 
@@ -43,9 +43,10 @@ loans that eventually funded, so they cannot say whether a loan funds at all.
 | October extension | Do the associations survive richer controls, including programme text? | Country-clustered OLS/LPM with and without an unvalidated programme-text proxy, BH-adjusted |
 | November benchmark | How much does text add to a forecast built on loan structure alone? | Matched feature blocks on identical rows, as-of training cohorts, five annual windows 2021–2025, paired month and country resampling |
 
-A fourth, exploratory check (8 November) asks which associations are small
-enough to rule out a practically large effect, using equivalence tests on the
-October coefficients.
+A fourth, exploratory set of checks (8–9 November) asks which associations are
+small enough to rule out a practically large effect, using equivalence tests on
+the October coefficients, a corrected wild cluster bootstrap, subgroup refits, a
+historical lookup baseline and tuned forecasters.
 
 ## Findings
 
@@ -62,34 +63,68 @@ business, agency and third-person framing are bounded in both October
 specifications. Urgency and first-person framing are not: their intervals
 still allow associations of roughly 6–14%. "Not significant" for urgency meant
 "too uncertain", not "no effect". The bound was set after seeing the
-estimates, so this is exploratory.
+estimates, so this is exploratory. In the programme-adjusted model, the five
+bounded framings plus gratitude stay within ±5% of funding time in all 10
+subgroups of period, loan size, gender and region.
 
-**3. Some associations persist under richer controls.** Third-person framing
-stays associated with faster funding with programme controls (−0.0081
-log points per mention per 100 words; BH p moves from 0.012 to 0.061), and
-business framing is linked to a 0.26 percentage-point lower same-day rate
-per extra mention per 100 words (programme-adjusted, BH p = 0.006).
-These are associations, not effects of writing.
+**3. Almost nothing passes the strictest test.** Nine measures, two outcomes and
+two models make 36 tests: 5 pass the country-clustered test, 4 a wild cluster
+bootstrap, and 1 after adjusting for multiple testing. That one is third-person
+framing for funding time in the expanded model (−0.9% in 1 + days per extra
+mention per 100 words; bootstrap p 0.0009, BH p 0.008), or 49.7 minutes on a
+typical 2.85-day loan. With programme controls it does not pass (bootstrap
+p 0.128, BH p 0.426). Loan details sit on another scale: a doubled loan amount
+goes with +44.6% and a month of term with +8.6% in 1 + days. These are
+associations, not effects of writing.
 
-**4. Text adds forecast information.** On 728,640 evaluation records, adding
-description form, lexical measures and TF-IDF lowered the linear model's error
-in 5 of 5 years, by 0.26–0.39 days (median 0.29). A compact tree model gained
-only 0.001–0.042 days, and country resampling included zero in 4 of 5 linear
-comparisons. In 2025, text improved error and probability scores but slightly
-lowered ranking (AUC 0.893 to 0.888). Richer text may encode purpose,
-location or programme templates as well as framing.
+**4. Text adds a small, inconsistent forecast gain.** On 728,640 evaluation
+records, adding description form, lexical measures and TF-IDF lowered the linear
+model's error in 5 of 5 years, by 0.26–0.39 days (median 0.29), and shuffled text
+keeps 42–61% of that gain, so about half is context. A compact tree model gained
+only 0.001–0.042 days. Fixed trees gain up to about 0.15 days from text; in an
+exploratory run, tuned trees reach 0.16–0.22 in 2021. Country resampling included
+zero in 4 of 5 linear comparisons. In 2025, text improved error and probability
+scores but slightly lowered ranking (AUC 0.893 to 0.888). Richer text may encode
+purpose, location or programme templates as well as framing.
 
-**5. Structure still predicts most of the variation.** The primary
-HistGradientBoosting benchmark reached MAE 5.20 days and R² 0.542 on 278,887
-holdout loans; the 24-hour classifier reached ROC AUC 0.900. These are
+**5. Loan details predict most of the variation, and the flag beats a lookup.**
+The primary boosted tree reached MAE 5.20 days and R² 0.542 on 278,887 holdout
+loans; the 24-hour classifier reached ROC AUC 0.900. Flagging the top 10% of
+predicted-slow loans gives 2.63–4.04× lift on each year's slowest 20%, against
+1.97–2.74× for a training-only lookup by country, sector and month. The 95%
+range of that gap is above zero in every year, with a lowest bound of +0.08 in
+2021 when resampling by country. Median within-country precision is 0.49–0.56,
+against 0.22–0.29 for the lookup. An exploratory run tuned a boosted tree and
+XGBoost on the year before each test year. Tuned trees were lowest in 3 of 5
+years, by at most 0.06 days, and fixed settings won 2021 and 2022, so tuning did
+not clearly help; XGBoost beat the tuned boosted tree in 2 of 5 years. These are
 retrospective predictions on completed loans, not deployment estimates.
+
+**6. Loan purpose tracks funding speed, but purpose is not a lever.** Against the
+average loan, Education runs −68.7% and Clothing +30.2% in 1 + days. In an
+exploratory 20,000-description sample, sanitary and water themes average 1.5 and
+1.8 days; they fund fast, but that speed largely reflects which countries and
+loan types they are, and their adjusted ranges include zero. On all completed
+loans, the Sanitation & Hygiene sector is modestly faster (−13.4%) and the toilets
+activity is not distinct from farming (−5.7%, range −19.7% to +10.7%). These are
+associations among completed loans.
 
 ## What this means
 
-For Kiva and its partners, the evidence supports two things: treat
-description text as useful context in research and forecasting, and stop
-treating any single framing tip as proven. It does not support country-level
-writing rules or a claim that editing speeds funding. The three next steps are:
+For Kiva and its partners, the evidence supports a three-step approach. It does
+not support country-level writing rules or a claim that editing speeds funding.
+
+**Predict.** Score each listing's risk of slow funding at posting, from loan
+details. The flag has only been checked on past loans, so it must be recalibrated
+and validated by country before use.
+
+**Prioritise.** Send lender-side support to flagged loans: feature them, offer
+matching funds, alert lenders who follow the sector, and ask the partner to check
+the listing. 96.4% of loans reach the borrower before listing, so the wait ties up
+partner capital. What these levers do to funding speed is unmeasured, so each needs
+a controlled pilot.
+
+**Test.** Writing advice has to pass three gates, in order:
 
 1. **Validate the measures.** Dual-code a sample of narratives for clarity,
    specificity, need and agency, then freeze definitions.
@@ -103,7 +138,8 @@ writing rules or a claim that editing speeds funding. The three next steps are:
 Observational associations; 48 country clusters with sparse regions; a
 programme proxy that does not identify partners; completed-funding records only;
 snapshot rather than listing-time field values; retrospective prediction windows.
-Historical slide claims such as "the story barely registers" are superseded; see
+Loan photos were not analysed, because fetching them at scale needs Kiva's
+permission. Historical slide claims are superseded; see
 [evidence and corrections](2_evidence_and_corrections.md). The submitted proposal
 and competition deck are preserved as historical records.
 

@@ -3078,3 +3078,11 @@ unseen exact template, which cannot exclude near-duplicates.
 
 - Live deck re-read first: no owner edits to mirror. "At most about 0.15 days" read as a ceiling that tuned trees exceed, so slides 14, 15, A5 notes and the register now say fixed trees gain up to about 0.15 days and tuned trees reach 0.16–0.22 in 2021. No other document or poster file quotes it.
 - Verified: deck QA, rendered slides, full offline pytest. Slides 14, 15, A5 rebuilt; nothing pushed.
+
+## 2026-11-09: themes split, report sync and summary of the day
+
+- Live deck re-read first: no owner edits to mirror. The eight themes now have their own slide, A5, and A4 is back to all ten activities and the sanitation check. Later appendix slides moved up one (forecast A6, text methods A7, pipeline A8), and every pointer followed. The deck has 30 slides.
+- `docs/3_portfolio_case_study.md` now follows the deck: Predict, Prioritise, Test; corrected bootstrap (36 → 5 → 4 → 1, third person in the expanded model only, not with programme controls); loan amount +44.6%; lookup baseline and its ranges; tuning and XGBoost; fixed trees up to about 0.15 days and tuned trees 0.16–0.22; themes and sanitation as associations; no photos analysed. Two retired bootstrap figures and a retired phrase are gone. Its header no longer says finalist. The LinkedIn achievement entry is left as written, because it is a separate profile text and needs Mike's decision.
+- Final pass: QA clean, retired-claims scan clean on deck and report apart from that entry, photos and logos credited in PROVENANCE (UNSW logo added). The only overlap flags are the cover title's tight line spacing, inspected on the render.
+- Today's experiment results: corrected wild cluster bootstrap; lookup baseline for the flag; Kaggle appendix run with tuned boosted tree and XGBoost, flag margin ranges, eight-theme adjusted contrasts. All exploratory. Not done: the optional slide 13 subgroup bootstrap.
+- Verified: deck QA, word-box overlap check, rendered slides, retired-claims scan, full offline pytest. Nothing pushed.

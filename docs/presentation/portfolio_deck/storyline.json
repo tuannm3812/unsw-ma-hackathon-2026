@@ -21,7 +21,7 @@
    "visual": "White ground; three photos (Kiva farmer, Unsplash market seller and tailor) in rounded frames; one yellow block and one violet offset",
    "notes": {
     "purpose": "Introduce the question and who we are.",
-    "script": "We are Cultural Blend, one of eight finalist teams in the UNSW Marketing Analytics Hackathon. We analysed 1.45 million Kiva loans to ask whether the way a borrower's story is written is linked to how fast the loan funds.",
+    "script": "We are Cultural Blend, from the UNSW Marketing Analytics Hackathon. We analysed 1.45 million Kiva loans to ask whether the way a borrower's story is written is linked to how fast the loan funds.",
     "reference": "Photos (Unsplash Licence): cover, Richard Nyoni (woman harvesting greens); Muhammad-Taha Ibrahim (banana seller); David Geneugelijk (tailor)."
    },
    "names": "Mike Nguyen and Sophia Nguyen",
@@ -1003,7 +1003,7 @@
       "thankful"
      ]
     },
-    "caption": "Illustrative composite listing, not a real borrower; dataset medians and most common categories. Word lists not yet validated (gate 1; methods A6).",
+    "caption": "Illustrative composite listing, not a real borrower; dataset medians and most common categories. Word lists not yet validated (gate 1; methods A7).",
     "key": [
      {
       "id": "family",
@@ -1265,7 +1265,7 @@
       }
      ]
     },
-    "pointer": "Details: forecast cutoffs A2; primary model scores A3; text methods A6."
+    "pointer": "Details: forecast cutoffs A2; primary model scores A3; text methods A7."
    },
    "notes": {
     "purpose": "Explain how the evidence fits together.",
@@ -2043,7 +2043,7 @@
      "Larger boosted tree, full text"
     ],
     "strip": "Text alone is 0.146–1.032 days worse than loan details alone",
-    "caption": "Annual MAE gain in days, identical rows; bars from the placebo refit, within 0.003 days of the benchmark. Text methods: A6. Stage split: A5."
+    "caption": "Annual MAE gain in days, identical rows; bars from the placebo refit, within 0.003 days of the benchmark. Text methods: A7. Stage split: A6."
    },
    "takeaways": [
     {
@@ -2141,7 +2141,7 @@
       ]
      }
     },
-    "caption": "Annual MAE gain in days from adding text, identical rows. Text = form, word-list counts, VADER sentiment and TF-IDF word patterns. Details: A5, A6.",
+    "caption": "Annual MAE gain in days from adding text, identical rows. Text = form, word-list counts, VADER sentiment and TF-IDF word patterns. Details: A6, A7.",
     "large_tree": {
      "2021": {
       "gain": 0.15408871457897744,
@@ -2684,7 +2684,7 @@
    "notes": {
     "purpose": "Limits, each with an action.",
     "script": "Four guardrails. [Point: Claims stay at association level] One: every result is an association; nothing has been tested by editing a description or applying a lever, so each needs a controlled pilot. [Point: Reach stays an open question] Two: only funded loans are in the data, so we cannot say whether a lever helps loans that would otherwise expire. [Point: The flag is validated by country] Three: the flag is uneven across countries, with precision from 0.18 to 0.90 within the ten largest, and its probabilities drift in 2025, so it must be recalibrated and validated by country. [Point: One passing signal is not a rule] Four: for whom and when: framings stay small across periods, loan sizes, genders and regions, regional patterns rest on two countries each, and the one framing link that passes the strictest test does so in one model only, so no writing rule follows. The strip under the rows shows where each limit gets addressed: country validation comes with the flag rollout, the data gap at gate 2, and the causal and writing questions at the gate 3 pilot. Funding time is also a platform measure: 96.4 percent of loans reach the borrower before listing.",
-    "reference": "claims register; reports/evidence_sources/triage_summary.json; reports/evidence_sources/robustness_summary.json; appendix A6."
+    "reference": "claims register; reports/evidence_sources/triage_summary.json; reports/evidence_sources/robustness_summary.json; appendix A7."
    },
    "sublabel": "Guardrails",
    "blocks": [
@@ -3437,11 +3437,11 @@
    "section": "Appendix",
    "title": "Loan purpose tracks funding speed; sanitation’s edge is mostly context",
    "content": "NMF themes from the 20,000-loan exploratory sample, labelled as such; not full-data evidence.",
-   "subtitle": "Programme-adjusted model on all completed loans, with an exploratory 20,000-loan theme sample; associations only",
+   "subtitle": "Programme-adjusted model on all completed loans; associations, not effects of changing a loan",
    "notes": {
     "purpose": "Show what loan content relates to funding speed, in detail.",
-    "script": "This uses the full programme-adjusted model rather than the 20,000-loan topic sample. Education, health and manufacturing loans fund much faster than the average loan, while food, retail and clothing fund slower. Toilets and sanitation look very fast in raw means, 0.9 days, and in the sample topic model. But once country, time and programme are controlled, the activity is not distinguishable from farming, and the sanitation sector is only modestly faster than average. So much of that speed is context. These are associations among completed loans, not levers. The eight themes come from an exploratory 20,000-description sample. Sanitary and water themes have raw means of 1.5 and 1.8 days, but with loan details, country and time held fixed their ranges include zero, minus 17.5 percent from minus 39.4 to plus 12.3, and minus 12.6 percent from minus 42.2 to plus 32.2. Adding activity moves them to plus 4.9 and plus 3.4 percent. So they fund fast, but that speed largely reflects which countries and loan types they are. Raw mean for the toilets activity is 0.9 days; against farming it is minus 5.7 percent, range minus 19.7 to plus 10.7. Sanitation sector same-day funding is plus 8.8 points. The fourth and fifth fastest and slowest activities are in the claims register.",
-    "reference": "notebooks/1_full_dataset_eda.py topic section; docs/4_research_review.md P2. Themes: reports/evidence_sources/appendix_summary.json."
+    "script": "This uses the full programme-adjusted model rather than the 20,000-loan topic sample. Education, health and manufacturing loans fund much faster than the average loan, while food, retail and clothing fund slower. Toilets and sanitation look very fast in raw means, 0.9 days, and in the sample themes on A5. But once country, time and programme are controlled, the activity is not distinguishable from farming, and the sanitation sector is only modestly faster than average. So much of that speed is context. These are associations among completed loans, not levers.",
+    "reference": "notebooks/1_full_dataset_eda.py topic section; docs/4_research_review.md P2."
    },
    "sublabel": "Loan content",
    "figure": "Figure A4.",
@@ -3454,16 +3454,11 @@
     },
     {
      "marker": 2,
-     "heading": "Sanitary and water themes look fast",
-     "text": "They **fund fast, but that speed largely reflects which countries and loan types they are**."
+     "heading": "Sanitation is fast mostly through context",
+     "text": "Fast in raw means; with controls the sector is **modestly faster** and the activity is **not distinct from farming**."
     },
     {
      "marker": 3,
-     "heading": "Full data agrees on sanitation",
-     "text": "The sector is **modestly faster** (−13.4%); the toilets activity is **not distinct from farming**."
-    },
-    {
-     "marker": 4,
      "heading": "These are not levers",
      "text": "Associations among completed loans; a loan’s **purpose is not something to change**."
     }
@@ -3747,135 +3742,250 @@
      }
     ],
     "sanitation": [
-     "Sanitary and water themes **fund fast, but that speed largely reflects which countries and loan types they are**: adjusted ranges include zero."
+     "Raw mean **0.9 days** among activities with 1,000+ loans.",
+     "Activity against farming: **−5.7%** [−19.7%, +10.7%], n 6,715; range includes zero.",
+     "Sector against the average loan: **−13.4%** [−23.6%, −1.8%]; same-day **+8.8 pp** [+6.3, +11.2], n 6,905.",
+     "Sample themes: 1.5 to 13.5 days raw; adjusted on A5."
     ],
-    "caption": "Change in (1 + days), country-clustered 95% ranges. Sector: against the average loan. Activity: against Farming, 1,000+ loans. Themes: NMF on a 20,000-description sample, 43 countries; days are raw means; adjusted for loan details, country and time, against the average theme. Sample only.",
-    "themes": [
-     {
-      "label": "Sanitary and toilets",
-      "n": 1029,
-      "mean_days": 1.4559012368174782,
-      "pct": -17.49171257074995,
-      "ci95": [
-       -39.38069508524558,
-       12.301147366848198
-      ],
-      "pct_activity": 4.914003396218258,
-      "ci95_activity": [
-       -18.578408410672232,
-       35.184634613116785
-      ]
-     },
-     {
-      "label": "Water and filters",
-      "n": 673,
-      "mean_days": 1.8143731082494083,
-      "pct": -12.564219835133795,
-      "ci95": [
-       -42.1908401369049,
-       32.24574913636356
-      ],
-      "pct_activity": 3.4372522259500826,
-      "ci95_activity": [
-       -18.12955555267638,
-       30.685318985153963
-      ]
-     },
-     {
-      "label": "Pig raising",
-      "n": 1590,
-      "mean_days": 7.258375524109015,
-      "pct": 8.585835453614,
-      "ci95": [
-       2.6297169180903524,
-       14.887617497471428
-      ],
-      "pct_activity": 8.526347085046716,
-      "ci95_activity": [
-       2.3535159253768256,
-       15.07145509501624
-      ]
-     },
-     {
-      "label": "Philippines business",
-      "n": 2361,
-      "mean_days": 7.797224295849217,
-      "pct": 6.08479791843195,
-      "ci95": [
-       1.2670455199988329,
-       11.131753588802384
-      ],
-      "pct_activity": -0.7058246456440487,
-      "ci95_activity": [
-       -5.302123518739088,
-       4.113562264013204
-      ]
-     },
-     {
-      "label": "General store",
-      "n": 1839,
-      "mean_days": 8.971703824542324,
-      "pct": 17.752361928475935,
-      "ci95": [
-       13.674451398833787,
-       21.97656174373268
-      ],
-      "pct_activity": -5.091675670617102,
-      "ci95_activity": [
-       -13.253320587712459,
-       3.8378654726398898
-      ]
-     },
-     {
-      "label": "Business and family",
-      "n": 8883,
-      "mean_days": 10.700802681516087,
-      "pct": -0.3990769404332073,
-      "ci95": [
-       -6.398064937954484,
-       5.984388760145709
-      ],
-      "pct_activity": -1.438026641393364,
-      "ci95_activity": [
-       -6.659334493799307,
-       4.075351720064013
-      ]
-     },
-     {
-      "label": "Farm inputs",
-      "n": 2739,
-      "mean_days": 12.513396397035956,
-      "pct": -6.075226253707644,
-      "ci95": [
-       -13.666206570201167,
-       2.183198175643586
-      ],
-      "pct_activity": -1.8553972254183981,
-      "ci95_activity": [
-       -11.776459674825968,
-       9.181325282090015
-      ]
-     },
-     {
-      "label": "Group solar and farms",
-      "n": 886,
-      "mean_days": 13.492798705166791,
-      "pct": -8.17359588049964,
-      "ci95": [
-       -31.05635577329162,
-       22.304072958348932
-      ],
-      "pct_activity": 10.765251041836965,
-      "ci95_activity": [
-       -8.463176607615885,
-       34.03284474673989
-      ]
-     }
-    ]
+    "caption": "Change in (1 + days), country-clustered 95% ranges. Sector: against the average loan. Activity: against Farming, with 1,000+ loans."
    }
   },
   {
    "n": "A5",
+   "id": "a_themes",
+   "section": "Appendix",
+   "sublabel": "Loan themes",
+   "layout": "content+takeaways",
+   "figure": "Figure A5.",
+   "title": "Sanitary and water themes look fast, but are not distinct after controls",
+   "subtitle": "Exploratory NMF themes from a 20,000-description sample; associations among completed loans",
+   "content": "NMF themes from the 20,000-loan exploratory sample, labelled as such; not full-data evidence.",
+   "exhibit": {
+    "chart_title": "Eight themes: raw speed against adjusted contrasts",
+    "themes": [
+     {
+      "label": "Sanitary and toilets",
+      "words": "sanitary, toilet, risks, hazard, health",
+      "n": 1029,
+      "mean_days": 1.4559012368174782,
+      "median_days": 0.5280671296296297,
+      "adjusted": {
+       "pct": -17.49171257074995,
+       "ci95": [
+        -39.38069508524558,
+        12.301147366848198
+       ],
+       "p": 0.21511276264782062
+      },
+      "plus_activity": {
+       "pct": 4.914003396218258,
+       "ci95": [
+        -18.578408410672232,
+        35.184634613116785
+       ],
+       "p": 0.704469249890143
+      }
+     },
+     {
+      "label": "Water and filters",
+      "words": "water, village, filter, clean, drinking",
+      "n": 673,
+      "mean_days": 1.8143731082494083,
+      "median_days": 0.2780324074074074,
+      "adjusted": {
+       "pct": -12.564219835133795,
+       "ci95": [
+        -42.1908401369049,
+        32.24574913636356
+       ],
+       "p": 0.5161195459066032
+      },
+      "plus_activity": {
+       "pct": 3.4372522259500826,
+       "ci95": [
+        -18.12955555267638,
+        30.685318985153963
+       ],
+       "p": 0.7719725166623465
+      }
+     },
+     {
+      "label": "Pig raising",
+      "words": "pigs, pig, raise, supplies, nwtf",
+      "n": 1590,
+      "mean_days": 7.258375524109015,
+      "median_days": 1.186892361111111,
+      "adjusted": {
+       "pct": 8.585835453614,
+       "ci95": [
+        2.6297169180903524,
+        14.887617497471428
+       ],
+       "p": 0.0052229667402525866
+      },
+      "plus_activity": {
+       "pct": 8.526347085046716,
+       "ci95": [
+        2.3535159253768256,
+        15.07145509501624
+       ],
+       "p": 0.007303728801053641
+      }
+     },
+     {
+      "label": "Philippines business",
+      "words": "business, nwtf, philippines, php, entrepreneur",
+      "n": 2361,
+      "mean_days": 7.797224295849217,
+      "median_days": 1.4902546296296297,
+      "adjusted": {
+       "pct": 6.08479791843195,
+       "ci95": [
+        1.2670455199988329,
+        11.131753588802384
+       ],
+       "p": 0.013987599015662955
+      },
+      "plus_activity": {
+       "pct": -0.7058246456440487,
+       "ci95": [
+        -5.302123518739088,
+        4.113562264013204
+       ],
+       "p": 0.764442262164654
+      }
+     },
+     {
+      "label": "General store",
+      "words": "store, general, items, canned, goods",
+      "n": 1839,
+      "mean_days": 8.971703824542324,
+      "median_days": 1.8372453703703704,
+      "adjusted": {
+       "pct": 17.752361928475935,
+       "ci95": [
+        13.674451398833787,
+        21.97656174373268
+       ],
+       "p": 7.856962394402516e-12
+      },
+      "plus_activity": {
+       "pct": -5.091675670617102,
+       "ci95": [
+        -13.253320587712459,
+        3.8378654726398898
+       ],
+       "p": 0.24746232336512483
+      }
+     },
+     {
+      "label": "Business and family",
+      "words": "business, loan, income, children, years",
+      "n": 8883,
+      "mean_days": 10.700802681516087,
+      "median_days": 4.3587847222222225,
+      "adjusted": {
+       "pct": -0.3990769404332073,
+       "ci95": [
+        -6.398064937954484,
+        5.984388760145709
+       ],
+       "p": 0.8972609445721279
+      },
+      "plus_activity": {
+       "pct": -1.438026641393364,
+       "ci95": [
+        -6.659334493799307,
+        4.075351720064013
+       ],
+       "p": 0.5940695893196373
+      }
+     },
+     {
+      "label": "Farm inputs",
+      "words": "farm, farming, inputs, quality, farmer",
+      "n": 2739,
+      "mean_days": 12.513396397035956,
+      "median_days": 5.9998611111111115,
+      "adjusted": {
+       "pct": -6.075226253707644,
+       "ci95": [
+        -13.666206570201167,
+        2.183198175643586
+       ],
+       "p": 0.14086293693115437
+      },
+      "plus_activity": {
+       "pct": -1.8553972254183981,
+       "ci95": [
+        -11.776459674825968,
+        9.181325282090015
+       ],
+       "p": 0.7246210372579325
+      }
+     },
+     {
+      "label": "Group solar and farms",
+      "words": "group, solar, acre, total, fund",
+      "n": 886,
+      "mean_days": 13.492798705166791,
+      "median_days": 10.062424768518518,
+      "adjusted": {
+       "pct": -8.17359588049964,
+       "ci95": [
+        -31.05635577329162,
+        22.304072958348932
+       ],
+       "p": 0.551462389057171
+      },
+      "plus_activity": {
+       "pct": 10.765251041836965,
+       "ci95": [
+        -8.463176607615885,
+        34.03284474673989
+       ],
+       "p": 0.2853620661718429
+      }
+     }
+    ],
+    "head_adjusted": "Adjusted for loan details, country, time",
+    "head_activity": "Also adjusted for activity",
+    "legend": [
+     "Sanitary and water themes",
+     "Other themes"
+    ],
+    "caption": "NMF on a 20,000-description sample, 43 countries. Change in (1 + days) against the average theme, country-clustered 95% ranges, not corrected for eight comparisons. Days: raw mean and median. Sample only."
+   },
+   "takeaways": [
+    {
+     "marker": 1,
+     "heading": "Two themes look very fast",
+     "text": "Sanitary and water themes average **1.5 and 1.8 days**; the other six, 7.3–13.5."
+    },
+    {
+     "marker": 2,
+     "heading": "That speed is mostly context",
+     "text": "They **fund fast, but that speed largely reflects which countries and loan types they are**."
+    },
+    {
+     "marker": 3,
+     "heading": "Only pig raising holds up",
+     "text": "Three themes are slower with loan details held fixed; with activity too, only **pig raising** is, at +8.5%."
+    },
+    {
+     "marker": 4,
+     "heading": "A sample, not a lever",
+     "text": "One sample, associations only; a loan’s **theme is not something to change**."
+    }
+   ],
+   "notes": {
+    "purpose": "Show the themes in full and why their raw speed should not be read as a theme effect.",
+    "script": "These eight themes come from an exploratory topic model on a 20,000-description sample, so treat them as a sample view. Each loan is assigned its dominant theme. [Point: Two themes look very fast] Sanitary and water themes have raw means of 1.5 and 1.8 days and medians near half a day or less. The other six average 7.3 to 13.5 days. [Point: That speed is mostly context] With loan details, country and time held fixed, against the average theme, sanitary is minus 17.5 percent, range minus 39.4 to plus 12.3, and water is minus 12.6 percent, range minus 42.2 to plus 32.2. Both ranges include zero. Adding activity moves them to plus 4.9 and plus 3.4 percent. So they fund fast, but that speed largely reflects which countries and loan types they are. [Point: Only pig raising holds up] With loan details held fixed, pig raising, Philippines business and general store are slower than average, at plus 8.6, plus 6.1 and plus 17.8 percent. With activity added, only pig raising stays clear, plus 8.5 percent, range plus 2.4 to plus 15.1, and that is before correcting for eight comparisons. [Point: A sample, not a lever] These are associations among completed loans. A loan's theme is not something to change.",
+    "reference": "reports/evidence_sources/appendix_summary.json (src/appendix_summary.py); reports/experiments_2026_11_08/appendix_experiments.json; src/appendix_experiments.py."
+   }
+  },
+  {
+   "n": "A6",
    "id": "forecast",
    "section": "Appendix",
    "layout": "content+takeaways",
@@ -3981,7 +4091,7 @@
     ],
     "caption": "Linear-model MAE in days (top) and its reduction by text feature group (bottom), identical evaluation rows.",
     "note_sup": "Groups added in order: form, then lexicon and sentiment, then TF-IDF; another order would split the gain differently.",
-    "figure": "Figure A5."
+    "figure": "Figure A6."
    },
    "key_figures": [
     {
@@ -4018,16 +4128,16 @@
     "reference": "Forecast benchmark, run 2026-11-02: docs/6_matched_text_results.md; reports/text_benchmark_reviewed. Stage split: src/gain_breakdown.py from reports/text_benchmark_reviewed/benchmark.json."
    },
    "sublabel": "Forecast benchmark",
-   "figure": "Figure A5."
+   "figure": "Figure A6."
   },
   {
-   "n": "A6",
+   "n": "A7",
    "id": "a_text_methods",
    "section": "Appendix",
    "title": "Text became numbers through classical NLP, not a large language model",
    "subtitle": "Every text feature in the deck, how it was built, and where its limits are",
    "sublabel": "How we turned text into numbers",
-   "figure": "Figure A6.",
+   "figure": "Figure A7.",
    "exhibit": {
     "type": "table",
     "columns": [
@@ -4078,11 +4188,11 @@
       "NMF topics",
       "Eight story themes",
       "TF-IDF up to 1,000 features; 20,000-loan sample",
-      "Appendix A4 only",
+      "Appendix A5 only",
       "Exploratory; sample only, not full-data evidence"
      ]
     ],
-    "figure": "Figure A6.",
+    "figure": "Figure A7.",
     "caption": "Methods as implemented in src/ and the exploratory notebook. No large language model or pretrained embeddings were used.",
     "legend": [
      "Fixed rules",
@@ -4115,14 +4225,14 @@
    ]
   },
   {
-   "n": "A7",
+   "n": "A8",
    "id": "a_pipeline",
    "section": "Appendix",
    "layout": "content+takeaways",
    "title": "Every result follows one path from raw loans to tested claims",
    "subtitle": "The whole modelling flow, step by step, with where each part appears in the deck",
    "sublabel": "Modelling flow",
-   "figure": "Figure A7.",
+   "figure": "Figure A8.",
    "stages": [
     {
      "name": "Raw data",
@@ -4174,7 +4284,7 @@
        "slate"
       ]
      ],
-     "used": "Slide 7, A6"
+     "used": "Slide 7, A7"
     },
     {
      "name": "Models",

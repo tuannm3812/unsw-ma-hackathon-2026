@@ -1944,12 +1944,12 @@ def a_topics(page, slide, pos):
     page.chrome(slide)
     ex = slide['exhibit']
     fmt = lambda value: f'{value:+.1f}%'.replace('-', '−')
-    aw, h = 296, 316
+    aw, h = 322, 322
     panel(page, L, TOP, aw, h, 'Sectors against the average loan', '')
     page.marker(1, L + aw - 20, TOP + 8)
-    x0, x1, lo, hi = L + 140, L + aw - 12, -80, 40
+    x0, x1, lo, hi = L + 142, L + aw - 12, -80, 40
     px = lambda value: x0 + (value - lo) / (hi - lo) * (x1 - x0)
-    first, pitch = TOP + 34, 13.3
+    first, pitch = TOP + 34, 13.6
     axis = first + pitch * len(ex['sectors']) + 2
     page.rect(px(-5), first - 3, px(5) - px(-5), axis - first + 3, TINT_BAND)
     page.line(px(0), first - 3, px(0), axis, NAVY, .75)
@@ -1966,51 +1966,76 @@ def a_topics(page, slide, pos):
         page.rect(px(row['pct']) - 2.5, y + 1.5, 5, 5, VIOLET, 'ELLIPSE')
     rx, rw = L + aw + 10, R - (L + aw + 10)
     panel(page, rx, TOP, rw, h, 'Activities with 1,000+ loans, against farming', '')
-    page.marker(3, rx + rw - 20, TOP + 8)
     def rows(title, items, y):
         page.text(title, rx + 10, y, 120, 12, size=8, color=VIOLET, bold=True)
         page.text('Loans', rx + rw - 96, y, 44, 12, size=8, color=GREY, bold=True, align='right')
         for k, item in enumerate(items):
-            ry = y + 12 + k * 11.6
-            page.text(item['level'], rx + 10, ry, 180, 11, size=8)
+            ry = y + 13 + k * 12.6
+            page.text(item['level'], rx + 10, ry, 150, 11, size=8)
             page.text(f"{item['records']:,}", rx + rw - 96, ry, 44, 11, size=8, color=GREY, align='right')
             page.text(fmt(item['pct']), rx + rw - 48, ry, 40, 11, size=8, bold=True, align='right')
-    rows('Fastest', ex['fastest'][:3], TOP + 26)
-    rows('Slowest', ex['slowest'][:3], TOP + 76)
-    sy = TOP + 130
+    rows('Fastest', ex['fastest'], TOP + 28)
+    rows('Slowest', ex['slowest'], TOP + 110)
+    sy = TOP + 194
     page.line(rx + 10, sy - 5, rx + rw - 10, sy - 5, HAIR, .75)
-    page.text('Sample themes: raw speed against adjusted', rx + 10, sy, 230, 13, size=9, bold=True)
+    page.text('Toilets and sanitation', rx + 10, sy, 180, 13, size=9, bold=True)
     page.marker(2, rx + rw - 20, sy)
-    edges = {'Theme': None, 'Loans': rx + 128, 'Days': rx + 158, 'Adjusted': rx + 200}
-    head = sy + 16
-    page.text('Theme', rx + 10, head, 60, 11, size=8, color=GREY, bold=True)
-    for label, edge in edges.items():
-        if edge:
-            page.text(label, edge - 44, head, 44, 11, size=8, color=GREY, bold=True, align='right')
-    t0, t1, tlo, thi = rx + 206, rx + rw - 12, -45, 35
-    tx = lambda value: t0 + (value - tlo) / (thi - tlo) * (t1 - t0)
-    tfirst, tpitch = head + 13, 11.6
-    taxis = tfirst + tpitch * len(ex['themes']) + 1
-    page.line(tx(0), tfirst - 2, tx(0), taxis, NAVY, .75)
-    page.line(t0, taxis, t1, taxis, SLATE, .75)
-    for value, name in ((-40, '−40'), (0, '0'), (30, '+30')):
-        page.line(tx(value), taxis, tx(value), taxis + 3, SLATE, .75)
-        page.text(name, tx(value) - 16, taxis + 3, 32, 11, size=8, color=GREY, align='center')
-    for k, row in enumerate(ex['themes']):
-        y, focus = tfirst + k * tpitch, k < 2
-        colour = VIOLET if focus else SLATE
-        page.text(row['label'], rx + 10, y - 1.5, 96, 11, size=8, bold=focus, color=VIOLET if focus else NAVY)
-        page.text(f"{row['n']:,}", rx + 84, y - 1.5, 44, 11, size=8, color=GREY, align='right')
-        page.text(f"{row['mean_days']:.1f}", rx + 114, y - 1.5, 44, 11, size=8, color=GREY, align='right')
-        page.text(fmt(row['pct']), rx + 156, y - 1.5, 44, 11, size=8, bold=True, align='right')
-        page.line(tx(row['ci95'][0]), y + 4, tx(row['ci95'][1]), y + 4, colour, 1.25)
-        page.rect(tx(row['pct']) - 2.5, y + 1.5, 5, 5, colour, 'ELLIPSE')
-    y = taxis + 15
+    y = sy + 17
     for line in ex['sanitation']:
         plain, spans = emphasis(line)
-        page.text(plain, rx + 10, y, rw - 20, 36, size=8, color=GREY, spacing=100, spans=spans)
-    page.marker(4, L + aw - 36, TOP + 8)
+        page.text(plain, rx + 10, y, rw - 20, 24, size=8, color=GREY, spacing=100, spans=spans)
+        y += 24 if len(plain) > 54 else 14
+    page.marker(3, L + aw - 36, TOP + 8)
     page.caption(slide['figure'], ex['caption'], TOP + h + 8, w=R - L)
+    page.takeaways(slide['takeaways'], pos)
+
+
+def a_themes(page, slide, pos):
+    """Every sample theme with its size, raw speed and two adjusted contrasts."""
+    page.chrome(slide)
+    ex = slide['exhibit']
+    fmt = lambda value: f'{value:+.1f}%'.replace('-', '−')
+    pw, h = R - L, 298
+    panel(page, L, TOP, pw, h, ex['chart_title'], '')
+    edges = {'Loans': L + 216, 'Mean': L + 252, 'Median': L + 292}
+    head = TOP + 30
+    page.text('Theme and top words', L + 10, head, 160, 11, size=8, color=GREY, bold=True)
+    for label, edge in edges.items():
+        page.text(label, edge - 44, head, 44, 11, size=8, color=GREY, bold=True, align='right')
+    charts = ((L + 300, ex['head_adjusted'], 'adjusted'), (L + 456, ex['head_activity'], 'plus_activity'))
+    first, pitch, lo, hi = head + 18, 28.4, -45, 40
+    bottom = first + pitch * len(ex['themes']) - 2
+    for x, title, _ in charts:
+        page.text(title, x, head, 150, 11, size=8, color=GREY, bold=True)
+    def scale(x):
+        return lambda value: x + 40 + (value - lo) / (hi - lo) * 96
+    for x, _, _ in charts:
+        px = scale(x)
+        page.line(px(0), first - 3, px(0), bottom, NAVY, .75)
+        page.line(px(lo), bottom, px(hi), bottom, SLATE, .75)
+        for value, name in ((-40, '−40'), (0, '0'), (30, '+30')):
+            page.line(px(value), bottom, px(value), bottom + 3, SLATE, .75)
+            page.text(name, px(value) - 16, bottom + 3, 32, 11, size=8, color=GREY, align='center')
+    for k, row in enumerate(ex['themes']):
+        y, focus = first + k * pitch, k < 2
+        colour = VIOLET if focus else SLATE
+        if k:
+            page.line(L + 10, y - 4, L + 296, y - 4, HAIR, .5)
+        page.text(row['label'], L + 10, y - 1, 170, 12, size=9, bold=True, color=VIOLET if focus else NAVY)
+        page.text(row['words'], L + 10, y + 10.5, 170, 11, size=8, color=GREY)
+        page.text(f"{row['n']:,}", edges['Loans'] - 44, y + 3, 44, 12, size=8.5, color=GREY, align='right')
+        page.text(f"{row['mean_days']:.1f}", edges['Mean'] - 44, y + 3, 44, 12, size=8.5, color=GREY, align='right')
+        page.text(f"{row['median_days']:.1f}", edges['Median'] - 44, y + 3, 44, 12, size=8.5, color=GREY, align='right')
+        for x, _, key in charts:
+            px, value = scale(x), row[key]
+            page.text(fmt(value['pct']), x, y + 3, 38, 12, size=8.5, bold=True, align='right')
+            page.line(px(value['ci95'][0]), y + 9, px(value['ci95'][1]), y + 9, colour, 1.25)
+            page.rect(px(value['pct']) - 2.5, y + 6.5, 5, 5, colour, 'ELLIPSE')
+    page.marker(1, L + 272, TOP + 8)
+    page.marker(2, L + 412, TOP + 8)
+    page.marker(3, R - 22, TOP + 8)
+    page.legend([(ex['legend'][0], VIOLET, 'ELLIPSE'), (ex['legend'][1], SLATE, 'ELLIPSE')], TOP + h + 5, L, gap=16)
+    page.caption(slide['figure'], ex['caption'], TOP + h + 21, w=pw)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -2221,7 +2246,7 @@ def main() -> None:
                 'lever': lever, 'outcome': outcome,
                 'clustering': clustering, 'equivalence': forest, 'regions': regions, 'a_screen': regions,
                 'persist': persist, 'forecast': forecast, 'gain_uncertainty': gains, 'approach': approach, 'solution': solution, 'triage': triage, 'prioritise': prioritise, 'gates': gates, 'supports': supports, 'roadmap': roadmap, 'a_asof': a_asof, 'a_text_methods': a_text,
-                'a_primary': a_metrics, 'a_topics': a_topics, 'a_pipeline': a_pipeline}
+                'a_primary': a_metrics, 'a_topics': a_topics, 'a_themes': a_themes, 'a_pipeline': a_pipeline}
     linked = {'agenda': agenda}
     plain = { 'cover': cover, 'close': close}
     for index, (slide, item) in enumerate(zip(story, slides)):

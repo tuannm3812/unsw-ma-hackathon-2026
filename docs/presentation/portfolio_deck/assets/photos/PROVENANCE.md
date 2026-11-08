@@ -24,3 +24,4 @@ and non-commercial use without permission; credit is shown on the cover and in t
 ## Logos
 
 - `assets/logos/kiva-logo-classic.png`: Kiva primary logo, unaltered, downloaded 2026-11-09 from the "Kiva Logo" Google Drive folder linked at https://www.kiva.org/design (file "Kiva logo classic.png"), at Mike's request. Used on slides 16 and 18. The page's guide is written for Kiva partners (corporations, foundations, lending partners). This project is not one, so both slides carry a line saying it is not affiliated with or endorsed by Kiva. Rules followed: brand green, no box or container, no stretching, clear space of half the height of the "K" (the file's own transparent margin provides it).
+- `docs/presentation/poster/assets/unsw-official-logo.png`: official UNSW logo, downloaded from <https://www.unsw.edu.au/content/dam/images/graphics/logos/unsw/unsw_0.png> (see `docs/presentation/poster/README.md`). Used on the cover as the host mark.
