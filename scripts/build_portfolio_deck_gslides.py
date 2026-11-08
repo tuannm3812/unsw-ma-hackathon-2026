@@ -469,7 +469,8 @@ def lever(page, slide, pos):
                 elif kind == 'gratitude':
                     spans.append((m.start(), m.end(), {'underline': True, 'color': VIOLET, 'bold': True}))
     page.text(text, rx + 16, y + 174, rw - 28, 92, size=12, color=NAVY, spacing=135, spans=spans)
-    page.text('Highlights mark framing terms counted per 100 words', rx, y + 276, rw, 12, size=8, color=GREY, bold=True)
+    page.text(ex.get('legend_line', 'Highlights mark framing terms counted per 100 words'), rx, y + 276, rw, 12, size=8,
+              color=GREY, bold=True)
     chips = [('Family', 'family'), ('Business', 'business'), ('Urgency', 'urgency'), ('Gratitude', 'gratitude')]
     cx = rx
     for label, kind in chips:
@@ -483,8 +484,9 @@ def lever(page, slide, pos):
                       spans=[(0, len(label), style)])
         cx += width + 8
     page.marker(1, rx + rw - 14, y + 33)
-    page.marker(3, rx + rw - 14, y + 170)
+    page.marker(4, rx + rw - 14, y + 170)
     page.marker(2, rx + rw - 14, y + 277)
+    page.marker(3, cx + 4, y + 297)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -533,7 +535,8 @@ def outcome(page, slide, pos):
     page.rect(sx, top + 66, sw, 34, '#EEF0F3')
     page.text(ex['not_in_data'], sx + 36, top + 66, sw - 44, 34, size=10, color=GREY, middle=True,
               spans=[(0, ex['not_in_data'].index(':') + 1, {'bold': True})])
-    page.marker(3, sx + sw - 16, top + 77)
+    page.marker(4, sx + sw - 16, top + 77)
+    page.marker(3, L + width + 6, top + 50)
     page.caption(slide['figure'], ex['caption'], 400)
     page.caption('¹', ex['note'], 414)
     page.caption('²', ex['note2'], 428)
@@ -1745,8 +1748,8 @@ def main() -> None:
         if 'lever' in at:
             images.append((at['lever'], framed_photo(Path(work), ASSETS / 'photos' / slide_by_id('lever')['photo'],
                                                      LEVER_PHOTO, 'lever.png', all_corners=True), LEVER_PHOTO))
-            images.append((at['lever'], ASSETS / 'icons/table_rows-slate.png', (L + 202, TOP - 2, 18, 18)))
-            images.append((at['lever'], ASSETS / 'icons/description-violet.png', (L + 202, TOP + 108, 18, 18)))
+            images.append((at['lever'], ASSETS / 'icons/table_rows-slate.png', (L + 202, TOP + 12.4, 18, 18)))
+            images.append((at['lever'], ASSETS / 'icons/description-violet.png', (L + 202, TOP + 122.4, 18, 18)))
         if 'outcome' in at:
             for x, icon in zip(JOURNEY_X, slide_by_id('outcome')['exhibit']['icons']):
                 images.append((at['outcome'], ASSETS / 'icons' / icon, (x - 15, 171, 30, 30)))

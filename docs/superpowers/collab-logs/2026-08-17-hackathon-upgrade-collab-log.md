@@ -2825,3 +2825,15 @@ unseen exact template, which cannot exclude near-duplicates.
     - The first stage label overflowed the frame.
     - The bracket labels collided.
   - QA reports no automated problems; full suite passes; previews, PDF and preview page refreshed; not pushed.
+- **2026-11-08, slides 4 and 7 content and icon check (Mike):** no new owner edits; slides 4 and 7 were rebuilt.
+  - **Audit:**
+    - Every highlighted word on slide 7 matches its pattern in `src/features.py`.
+    - "Eight framing measures" is correct: the inference's nine terms are those eight rates plus sentiment.
+    - Slide 4's brackets match the data dictionary: 2.85 days is `raisedDate − fundraisingDate`; 24.2 days is disbursal before listing, for the 96.4% disbursed first.
+    - Correction: "Borrower repays the partner" now carries the same "not observed in the data" note as the funds-to-partner stage.
+  - **Icons:** the two slide 7 section icons sat about 15 pt too high. They are now centred on their labels, measured at 600 dpi (offset under 0.1 pt, same x and size).
+  - **Takeaways:** four per slide, re-paired with markers.
+    - Slide 4 adds "Speed turns over partner capital" (3.6% paid out after listing).
+    - Slide 7 adds "Some measures are rare" (urgency 1.3%, first person 1.0%, 11.3% never mention family).
+  - One image-insert call failed transiently during a rebuild; rerunning restored the images.
+  - QA reports no automated problems; full suite passes; previews, PDF and preview page refreshed; not pushed.

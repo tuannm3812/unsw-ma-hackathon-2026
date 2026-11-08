@@ -212,7 +212,7 @@
         {
           "marker": 1,
           "heading": "We study the lender-side step",
-          "text": "Our outcome runs from **listing to full funding**, median 2.85 days: the step lenders control."
+          "text": "Our outcome runs from **listing to full funding**, median 2.85 days."
         },
         {
           "marker": 2,
@@ -221,8 +221,13 @@
         },
         {
           "marker": 3,
+          "heading": "Speed turns over partner capital",
+          "text": "Only **3.6%** are paid out after listing, so slow funding mainly holds up the partner’s next loans."
+        },
+        {
+          "marker": 4,
           "heading": "Unfunded loans are missing",
-          "text": "Only loans that **eventually funded** are in the data, so we cannot study whether a loan funds at all."
+          "text": "Only loans that **eventually funded** are in the data; expired listings are not."
         }
       ],
       "notes": {
@@ -251,7 +256,7 @@
             ""
           ],
           [
-            "Borrower repays the partner",
+            "Borrower repays the partner¹",
             ""
           ]
         ],
@@ -262,7 +267,7 @@
         "in_data": "In the data: 1,453,840 completed loans, including 1,637 refunded",
         "not_in_data": "Not in the data: listings that expired or never funded",
         "caption": "Journey of a typical pre-disbursed Kiva loan, not to scale; medians from the full-data audit.",
-        "note": "Typical field-partner flow; this step is not observed in the data.",
+        "note": "Typical field-partner flow; these steps are not observed in the data.",
         "note2": "Separate medians: 24.2 days covers the 96.4% disbursed before listing, and the two do not add up along one loan.",
         "actors": [
           [
@@ -997,7 +1002,8 @@
             "thankful"
           ]
         },
-        "caption": "Illustrative composite listing, not a real borrower; values are dataset medians and most common categories."
+        "caption": "Illustrative composite listing, not a real borrower; values are dataset medians and most common categories.",
+        "legend_line": "Highlights mark 4 of the 8 framing measures in this example"
       },
       "takeaways": [
         {
@@ -1008,12 +1014,17 @@
         {
           "marker": 2,
           "heading": "We score eight framing measures",
-          "text": "**Eight framing rates per 100 words**, plus sentiment and text form, on 1,453,840 loans."
+          "text": "**Eight framing rates per 100 words**, plus sentiment and text form."
         },
         {
           "marker": 3,
+          "heading": "Some measures are rare",
+          "text": "Urgency appears in **1.3%** of descriptions and first person in **1.0%**; only **11.3%** never mention family."
+        },
+        {
+          "marker": 4,
           "heading": "Pronouns mostly reflect the writer",
-          "text": "Descriptions are **written about the borrower**, usually by partner staff, so third person is context, not a lever."
+          "text": "Descriptions are **written about the borrower**, so third person is context."
         }
       ],
       "notes": {
