@@ -2387,9 +2387,9 @@
       "id": "triage",
       "section": "Solution",
       "sublabel": "Step 1: Predict",
-      "layout": "concept",
-      "title": "A slow-funding flag at listing could direct support where it is needed",
-      "subtitle": "Concept to pilot: an early-warning card built on the forecast benchmark’s retrospective predictions",
+      "layout": "content+takeaways",
+      "title": "A flag at listing beats a simple historical lookup in every year",
+      "subtitle": "Concept to pilot: retrospective check on completed loans only, five annual test years",
       "exhibit": {
         "tag": "Concept to pilot",
         "listing": "Agriculture · US$325 · 12-month term",
@@ -2403,8 +2403,6 @@
           "Alert lenders who follow the sector",
           "Ask the partner to review it"
         ],
-        "headline": "2.6–4.0×",
-        "headline_label": "better than chance at catching the slowest fifth of loans, flagging the top 10% of predicted-slow loans",
         "lift": [
           [
             2021,
@@ -2427,18 +2425,81 @@
             3.67
           ]
         ],
-        "text_line": "Text adds little: the tree’s precision changes by −0.003 to +0.005.",
-        "country_line": "Uneven across countries: within the 10 largest, precision ranges 0.18–0.90.",
-        "auc_line": "The primary 24-hour model ranks same-day funding with ROC AUC 0.8997 on later loans.",
-        "caption": "Lift when flagging the top 10% of predicted-slow loans, against the slowest 20% of each test year; boosted tree, loan structure only.",
-        "scope": "Scope: tested only on loans that eventually funded; a retrospective evaluation, not a deployment test; a flag shows a loan is likely slow, not why. Probabilities need recalibration before use as thresholds."
+        "caption": "Top 10% of predicted-slow loans against each test year’s slowest 20%. Lookup: training-only median by country, sector and month.",
+        "compare": [
+          {
+            "year": "2021",
+            "lookup_lift": 1.9733535968137916,
+            "tree_lift": 2.62511184222108,
+            "lookup_within": 0.25401928918913175,
+            "tree_within": 0.518943661971831
+          },
+          {
+            "year": "2022",
+            "lookup_lift": 2.123459201953602,
+            "tree_lift": 3.3554003815364077,
+            "lookup_within": 0.2768736593593156,
+            "tree_within": 0.4924987487984493
+          },
+          {
+            "year": "2023",
+            "lookup_lift": 2.4952524582811493,
+            "tree_lift": 3.4849056087046333,
+            "lookup_within": 0.292356162423955,
+            "tree_within": 0.5578529907371401
+          },
+          {
+            "year": "2024",
+            "lookup_lift": 2.739556872706746,
+            "tree_lift": 4.042830934236522,
+            "lookup_within": 0.22474410731704714,
+            "tree_within": 0.504368796821627
+          },
+          {
+            "year": "2025",
+            "lookup_lift": 2.5754029885075287,
+            "tree_lift": 3.672637665847608,
+            "lookup_within": 0.25950975379228064,
+            "tree_within": 0.5023172383497456
+          }
+        ],
+        "legend": [
+          "Historical lookup",
+          "Boosted tree, loan details only"
+        ],
+        "chart_title": "The flag against a simple lookup",
+        "lift_label": "Lift: top 10% flagged, against the slowest 20% (dashed line: random, 1×)",
+        "within_label": "Median within-country precision (dashed line: random, 0.20)"
       },
       "notes": {
-        "purpose": "Show what acting on the evidence could look like, without overclaiming.",
-        "script": "This is a concept to pilot, not a product. When a loan is posted, a model scores its risk of slow funding from its structure: amount, term, sector, country and timing. Flagged loans get lender-side support. In a retrospective check on 2021 to 2025, flagging the top ten percent of predicted-slow loans caught the slowest fifth 2.6 to 4.0 times better than chance with a boosted tree; adding text barely changed it. Results are uneven across countries, the check only covers loans that eventually funded, and the predicted probabilities drift in 2025, so they need recalibrating before use as thresholds. A flag says a loan is likely slow, not why.",
-        "reference": "reports/evidence_sources/triage_summary.json (src/triage_summary.py); reports/triage_value/triage_value.json (src/triage_value.py); appendix A3 for the 24-hour AUC. Listing values: slide 4 illustrative composite."
+        "purpose": "Show the flag adds something a simple lookup does not, without overclaiming.",
+        "script": "This is a concept to pilot, not a product. When a loan is posted, a model scores its risk of slow funding from loan details: amount, term, sector, country and timing. [Point: Better than a simple lookup] A fair comparison is a historical lookup: the typical funding time for the same country, sector and calendar month, taken from training years. Flagging the top ten percent of predicted-slow loans, the boosted tree catches the slowest fifth 2.63 to 4.04 times better than chance, against 1.97 to 2.74 for the lookup, and it is higher in all five years. [Point: Clearest within a country] Within a country the gap is widest: median precision is 0.49 to 0.56 for the tree and 0.22 to 0.29 for the lookup, where random is 0.20. So the flag is not simply naming slow countries. [Point: Text adds little to the flag] Adding text barely changes it. [Point: Checked looking back only] The check covers completed loans only and looks back; precision ranges from 0.18 to 0.90 across the ten largest countries; the predicted probabilities drift in 2025, so they need recalibrating before use as thresholds; and a flag says a loan is likely slow, not why. The interval for the text change is being rerun, so we quote no interval here. For reference, the primary 24-hour model ranks same-day funding with ROC AUC 0.8997 on later loans.",
+        "reference": "reports/evidence_sources/triage_summary.json (src/triage_summary.py); reports/triage_value/triage_value.json (src/triage_value.py); appendix A3 for the 24-hour AUC. Listing values: slide 4 illustrative composite. Lookup: reports/evidence_sources/triage_lookup_summary.json (src/triage_lookup_summary.py)."
       },
-      "figure": "Figure 11."
+      "figure": "Figure 11.",
+      "takeaways": [
+        {
+          "marker": 1,
+          "heading": "Better than a simple lookup",
+          "text": "Flagging the top 10% gives **2.63–4.04×** lift, against 1.97–2.74× for a historical lookup."
+        },
+        {
+          "marker": 2,
+          "heading": "Clearest within a country",
+          "text": "Median precision is **0.49–0.56**, against 0.22–0.29 for the lookup; random is 0.20."
+        },
+        {
+          "marker": 3,
+          "heading": "Text adds little to the flag",
+          "text": "Adding text changes the tree’s precision by **−0.003 to +0.005**."
+        },
+        {
+          "marker": 4,
+          "heading": "Checked looking back only",
+          "text": "Completed loans only; **precision ranges 0.18–0.90** across the largest countries."
+        }
+      ],
+      "solution_link": "→ Why flagged loans come first"
     },
     {
       "n": 18,

@@ -1355,7 +1355,7 @@ SOLUTION_ICONS = ['target-navy.png', 'groups-navy.png', 'science-navy.png']
 
 
 SOLUTION_W, SOLUTION_GAP = 187, 22.75
-SOLUTION_WHO = ['language-navy.png', 'handshake-navy.png', 'manage_search-navy.png']
+SOLUTION_WHO = ['desktop_windows-navy.png', 'handshake-navy.png', 'manage_search-navy.png']
 
 
 def solution(page, slide, pos):
@@ -1376,10 +1376,10 @@ def solution(page, slide, pos):
             page.text(label, x + 32, y, 120, 12, size=8, color=GREY, bold=True)
             page.text(value, x + 32, y + 12, SOLUTION_W - 44, 28, size=10, color=colour, bold=label == 'Status', spacing=105)
             if label == 'Status':
-                page.rect(x + 16, y + 11, 8, 8, VIOLET, 'ELLIPSE')
+                page.rect(x + 16, y + 14, 8, 8, VIOLET, 'ELLIPSE')
             else:
                 icon = SOLUTION_WHO[i] if label == 'Who' else 'schedule-navy.png'
-                EXTRA_IMAGES.append(('solution', ASSETS / 'icons' / icon, (x + 12, y + 7, 16, 16)))
+                EXTRA_IMAGES.append(('solution', ASSETS / 'icons' / icon, (x + 12, y + 10, 16, 16)))
         page.line(x + 12, top + h - 30, x + SOLUTION_W - 12, top + h - 30, HAIR, .75)
         page.text(f"Evidence: {step['evidence']}", x + 12, top + h - 25, SOLUTION_W - 24, 12, size=8, color=GREY)
         if i == 0:
@@ -1571,46 +1571,54 @@ def insight(page, slide, urls, pos):
     page.takeaways(slide['takeaways'], pos)
 
 
-def triage(page, slide):
-    """Concept card for an early-warning flag beside the retrospective lift by year."""
+def triage(page, slide, pos):
+    """Concept card for the flag beside its lift and within-country precision against a simple lookup."""
     page.chrome(slide)
     ex = slide['exhibit']
-    x, y, w, h = L, TOP, 400, 296
+    x, y, w, h = L, TOP, 222, 300
     card(page, x, y, w, h, VIOLET)
     tag_w = 6.2 * len(ex['tag']) + 20
-    page.badge(ex['tag'], x + w - 14 - tag_w, y + 12, (tag_w, 20), YELLOW, NAVY, 9, 'ROUND_RECTANGLE')
-    page.text('Listing at posting time', x + 16, y + 14, 200, 12, size=8, color=GREY, bold=True)
-    page.text(ex['listing'], x + 16, y + 32, w - 32, 16, size=12, bold=True)
-    page.text(ex['listing_note'], x + 16, y + 50, w - 32, 12, size=8, color=GREY)
-    page.text('Predicted risk of slow funding', x + 16, y + 74, 220, 12, size=8, color=GREY, bold=True)
-    seg, gap = 34, 2.4
+    page.badge(ex['tag'], x + 14, y + 12, (tag_w, 18), YELLOW, NAVY, 8, 'ROUND_RECTANGLE')
+    page.marker(4, x + w - 22, y + 14)
+    page.text('Listing at posting time', x + 14, y + 40, w - 28, 12, size=8, color=GREY, bold=True)
+    page.text(ex['listing'], x + 14, y + 53, w - 28, 14, size=10, bold=True)
+    page.text(ex['listing_note'], x + 14, y + 68, w - 28, 12, size=8, color=GREY)
+    page.text('Predicted risk of slow funding', x + 14, y + 90, w - 28, 12, size=8, color=GREY, bold=True)
+    seg, gap = 17.4, 2
     for k in range(10):
-        page.rect(x + 16 + k * (seg + gap), y + 90, seg, 12, VIOLET if k == 9 else '#E2DCF0')
-    page.text('top 10%', x + 16 + 9 * (seg + gap) - 8, y + 104, seg + 16, 12, size=8, color=VIOLET, bold=True,
-              align='center')
-    page.text(ex['flag'], x + 16, y + 118, w - 32, 16, size=12, color=VIOLET, bold=True)
-    page.text(ex['same_day'], x + 16, y + 136, w - 32, 14, size=10, color=GREY)
-    page.text(ex['support_title'], x + 16, y + 164, 200, 14, size=10, bold=True)
+        page.rect(x + 14 + k * (seg + gap), y + 104, seg, 11, VIOLET if k == 9 else '#E2DCF0')
+    page.text('top 10%', x + w - 54, y + 116, 40, 12, size=8, color=VIOLET, bold=True, align='right')
+    page.text(ex['flag'], x + 14, y + 130, w - 28, 15, size=11, color=VIOLET, bold=True)
+    page.text(ex['same_day'], x + 14, y + 147, w - 28, 13, size=9, color=GREY)
+    page.text(ex['support_title'], x + 14, y + 172, w - 28, 13, size=9, bold=True)
     for k, item in enumerate(ex['support']):
-        page.text(item, x + 42, y + 184 + 24 * k, w - 60, 14, size=10)
-    rx, rw = 470, FULL - 470
-    page.text(ex['headline'], rx, TOP - 2, rw, 44, size=36, bold=True)
-    page.text(ex['headline_label'], rx, TOP + 44, rw, 32, size=11, color=GREY, spacing=110)
-    base, per, bar, step = TOP + 236, 30, 46, 86
-    page.text('Lift by test year; dashed line = random (1×)', rx, TOP + 90, rw, 12, size=8, color=GREY, bold=True)
-    page.line(rx, base - per, rx + 5 * step - 20, base - per, SLATE, .75)
-    page.ops[-1]['dash_style'] = 'DASH'
-    for k, (year, value) in enumerate(ex['lift']):
-        bx = rx + 8 + k * step
-        page.rect(bx, base - value * per, bar, value * per, NAVY)
-        page.text(f'{value:.2f}×', bx - 10, base - value * per - 15, bar + 20, 13, size=9, bold=True, align='center')
-        page.text(str(year), bx - 10, base + 3, bar + 20, 12, size=8, color=GREY, align='center')
-    page.line(rx, base, rx + 5 * step - 20, base, NAVY, 1)
-    for k, key in enumerate(['text_line', 'country_line', 'auc_line']):
-        page.text(ex[key], rx, base + 22 + 13 * k, rw, 12, size=8, color=NAVY if k < 2 else GREY, bold=k < 2)
-    page.caption(slide['figure'], ex['caption'], 440, w=FULL - L)
-    page.text(ex['scope'], L, 453, FULL - L, 22, size=8, color=GREY, spacing=105,
-              spans=[(0, len('Scope:'), {'bold': True})])
+        page.text(item, x + 34, y + 192 + 25 * k, w - 46, 13, size=9)
+    # Lookup against the flag
+    px0, pw = x + w + 10, R - (x + w + 10)
+    panel(page, px0, y, pw, h, ex['chart_title'], '')
+    page.marker(1, px0 + pw - 22, y + 8)
+    rows = ex['compare']
+    left, step, bar = px0 + 18, (pw - 32) / 5, 26
+    def bars(base, per, keys, fmt, chance):
+        for k, row in enumerate(rows):
+            for j, (key, fill) in enumerate(zip(keys, (SLATE, NAVY))):
+                bx, value = left + k * step + j * (bar + 3), row[key]
+                page.rect(bx, base - value * per, bar, value * per, fill)
+                page.text(fmt(value), bx - 6, base - value * per - 12, bar + 12, 11, size=8, bold=j == 1, align='center',
+                          color=NAVY if j else GREY)
+        page.line(px0 + 10, base - chance * per, px0 + pw - 10, base - chance * per, SLATE, .75)
+        page.ops[-1]['dash_style'] = 'DASH'
+        page.line(px0 + 10, base, px0 + pw - 10, base, NAVY, .75)
+    page.text(ex['lift_label'], px0 + 10, y + 27, pw - 20, 12, size=8, color=GREY, bold=True)
+    bars(y + 144, 23, ('lookup_lift', 'tree_lift'), lambda v: f'{v:.2f}×', 1)
+    page.text(ex['within_label'], px0 + 10, y + 158, pw - 40, 12, size=8, color=GREY, bold=True)
+    page.marker(2, px0 + pw - 22, y + 157)
+    bars(y + 272, 145, ('lookup_within', 'tree_within'), lambda v: f'{v:.2f}', .2)
+    for k, row in enumerate(rows):
+        page.text(row['year'], left + k * step - 4, y + 276, 2 * bar + 11, 12, size=8, color=GREY, align='center')
+    page.legend([(ex['legend'][0], SLATE), (ex['legend'][1], NAVY, 'RECTANGLE', 3)], y + h + 6, px0, gap=16)
+    page.caption(slide['figure'], ex['caption'], y + h + 24, w=R - L)
+    page.takeaways(slide['takeaways'], pos)
 
 
 LEVER_BOXES = [(L + (k % 2) * 292, TOP + (k // 2) * 130, 282, 120) for k in range(4)]
@@ -1905,9 +1913,9 @@ def main() -> None:
     builders = {'summary': summary, 'problem': problem, 'text_adds': text_adds, 'where': where, 'subgroups': subgroups,
                 'lever': lever, 'outcome': outcome,
                 'clustering': clustering, 'equivalence': forest, 'regions': regions, 'a_screen': regions,
-                'persist': persist, 'forecast': forecast, 'gain_uncertainty': gains, 'approach': approach, 'solution': solution}
+                'persist': persist, 'forecast': forecast, 'gain_uncertainty': gains, 'approach': approach, 'solution': solution, 'triage': triage}
     linked = {'agenda': agenda}
-    plain = {'gates': gates, 'supports': supports, 'prioritise': prioritise, 'triage': triage, 'roadmap': roadmap,
+    plain = {'gates': gates, 'supports': supports, 'prioritise': prioritise, 'roadmap': roadmap,
              'a_asof': a_table, 'a_text_methods': a_table, 'a_primary': a_metrics, 'a_topics': a_topics, 'cover': cover, 'close': close}
     for index, (slide, item) in enumerate(zip(story, slides)):
         if only is not None and index not in only:
@@ -1978,7 +1986,7 @@ def main() -> None:
         for item, (x, y, _, _) in zip(slide_by_id('prioritise')['levers'], LEVER_BOXES):
             images.append((at['prioritise'], ASSETS / 'icons' / item['icon'], (x + 16, y + 15, 20, 20)))
         for k in range(len(slide_by_id('triage')['exhibit']['support'])):
-            images.append((at['triage'], ASSETS / 'icons/check_circle-navy.png', (L + 16, TOP + 182 + 24 * k, 16, 16)))
+            images.append((at['triage'], ASSETS / 'icons/check_circle-navy.png', (L + 14, TOP + 190 + 25 * k, 15, 15)))
         for index, path, (x, y, w, h) in images:
             if only is not None and index not in only:
                 continue

@@ -2979,3 +2979,9 @@ unseen exact template, which cannot exclude near-duplicates.
 ## 2026-11-08: slide 16 row icons
 
 - Mike suggested the Kiva logo and partner pictures; icons chosen instead, so the slide does not imply Kiva endorses the proposal. Who and When rows have deck-style icons; Status has a violet dot. Live deck re-read first: no owner edits to mirror. Verified: deck QA, rendered slide 16, full offline pytest. Nothing pushed.
+
+## 2026-11-08: slide 17 lookup comparison
+
+- Live deck re-read first: no owner edits to mirror. `src/triage_lookup_summary.py` (tested) reads the lookup baseline; register rows added. Slide 17 now compares the boosted tree with a historical lookup on lift and median within-country precision, in every test year, beside a smaller concept card. The ROC AUC moved to the notes. No interval wording is used, because the triage month-block bootstrap is being rerun.
+- Slide 16's Who icon is now a screen, and icons are centred on their value lines.
+- Verified: pyflakes, deck QA, word-box overlap check, rendered slides, full offline pytest. Slides 16 and 17 only were rebuilt; nothing pushed.
