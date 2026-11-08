@@ -496,7 +496,7 @@
       "notes": {
         "purpose": "Show why we distrust headline significance.",
         "script": "With 1.45 million rows almost everything looks significant, because standard HC3 errors treat every loan as independent. When we let errors correlate within each of 48 countries, 64 of the 120 significant terms fell away. [Point: Text terms are hit hardest] Most of those are text terms. [Point: Few text terms survive] Only sentiment and some family interactions remain. [Point: Urgency no longer passes] Urgency is the clearest case. [Point: Few countries dominate] The reason is concentration: ten countries hold 81 percent of loans and behave very differently. Losing significance is weak evidence, not evidence of no effect; the next slide tests that.",
-        "reference": "Explanatory models, primary saved run 2026-08-31: association_summary.txt; split by src/clustering_split.py (reports/evidence_sources/clustering_split.json); shares by src/country_shares.py."
+        "reference": "Explanatory models, primary saved run 2026-08-31: association_summary.txt; split by src/clustering_split.py (reports/evidence_sources/clustering_split.json); shares by src/country_shares.py; map by scripts/build_country_map.py from Natural Earth 1:110m admin-0 countries (public domain)."
       },
       "sublabel": "Explanatory models",
       "exhibit": {
@@ -816,7 +816,7 @@
           }
         ],
         "top10_label": "10 countries hold 81% of loans",
-        "caption": "Explanatory models, HC3 versus errors clustered by country (48 clusters); same-day is the share funded within 24 hours.",
+        "caption": "Explanatory models, HC3 versus errors clustered by country (48 clusters); map and table: share of all loans and of loans funded within 24 hours, by country.",
         "note": "Printed as 0.0000 in the saved run. Text terms include interactions of a text measure with a control.",
         "panels": [
           {
@@ -829,7 +829,7 @@
           },
           {
             "title": "(c) Where the loans are",
-            "guide": "Ten of 48 countries hold 81% of loans, and same-day funding varies widely between them."
+            "guide": "Ten of 48 countries hold 81% of loans (outlined on the map); same-day shading compares each with the 36.6% overall rate."
           }
         ],
         "country_names": {

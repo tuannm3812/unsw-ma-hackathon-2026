@@ -640,6 +640,24 @@ def pipe_x(i):
     return L + i * (PIPE_W + 22) + (18 if i == 3 else 0)
 
 
+# Slide 8 panel (c): map frame matches scripts/build_country_map.py's 270:86 crop.
+MAP_PANEL = (L, TOP + 166, R - 16 - L, 148)
+MAP_FRAME = (L + 10, TOP + 166 + 40, 264, 264 * 86 / 270)
+MAP_PNG = ASSETS / 'maps/country_share_map.png'
+MAP_LEGEND = [('#E2DCF0', 'under 1%'), ('#B4A9D2', '1–3%'), ('#8677B4', '3–10%'), ('#5B4B8A', '10%+'),
+              ('#E4E2DC', 'none')]
+# Same-day share against the overall 36.6% (claims register), in percentage points.
+OVERALL_SAME_DAY = 0.366
+SAME_DAY_STEPS = [(-0.15, '#E8E4F2', NAVY), (-0.05, '#C4BBDF', NAVY), (0.05, '#A093C8', NAVY), (9, VIOLET, WHITE)]
+SAME_DAY_LABELS = ['15+ pts below', '5–15 below', 'within 5', '5+ above']
+
+
+def same_day_style(share: float) -> tuple[str, str]:
+    """Chip fill and text colour for a country's same-day share."""
+    gap = share - OVERALL_SAME_DAY
+    return next((fill, ink) for limit, fill, ink in SAME_DAY_STEPS if gap < limit)
+
+
 def panel(page, x, y, w, h, title, guide):
     """A light block with a bold header and a one-line reading guide."""
     page.rect(x, y, w, h, PAPER)
@@ -692,27 +710,46 @@ def clustering(page, slide, pos):
     page.text('HC3', bx + 22, by + 142, 40, 12, size=8, color=GREY)
     page.rect(bx + 54, by + 144, 8, 8, VIOLET, 'ELLIPSE')
     page.text('country-clustered', bx + 66, by + 142, 120, 12, size=8, color=GREY)
-    # (c)
-    cx, cy, cw, ch = L, TOP + 166, R - 16 - L, 148
+    # (c) map on the left, top-10 table on the right
+    cx, cy, cw, ch = MAP_PANEL
     panel(page, cx, cy, cw, ch, ex['panels'][2]['title'], ex['panels'][2]['guide'])
+    # Same-day legend on the title line: shading relative to the overall rate.
+    lx = cx + 196
+    page.text('Same-day vs 36.6% overall:', lx, cy + 9, 110, 12, size=8, color=GREY, bold=True)
+    lx += 110
+    for (_, fill, _), label in zip(SAME_DAY_STEPS, SAME_DAY_LABELS):
+        page.rect(lx, cy + 11, 8, 8, fill)
+        page.text(label, lx + 11, cy + 9, 4.3 * len(label), 12, size=8, color=GREY)
+        lx += 11 + 4.3 * len(label) + 6
+    # Map legend under the map (image inserted later at MAP_FRAME).
+    mx, my, mw, mh = MAP_FRAME
+    lx, ly = mx, my + mh + 3
+    page.text('Loan share', lx, ly, 46, 12, size=8, color=GREY, bold=True)
+    lx += 48
+    for fill, label in MAP_LEGEND:
+        page.rect(lx, ly + 2, 8, 8, fill)
+        page.text(label, lx + 11, ly, 4.3 * len(label) + 4, 12, size=8, color=GREY)
+        lx += 11 + 4.3 * len(label) + 8
+    page.text(ex['other_row'], mx, ly + 10, mw + 10, 12, size=8, color=GREY, bold=True)
+    # Table: one column of ten rows, a divider between ranks 5 and 6.
     names = ex['country_names']
     rows = ex['country_shares'][:10]
-    half = (cw - 20) / 2
-    for col in range(2):
-        hx = cx + 10 + col * half
-        for label, off, align in [('Country', 18, None), ('Loans', 110, 'right'), ('Share', 130, None), ('Same-day', 270, 'right')]:
-            page.text(label, hx + off - (40 if align else 0), cy + 46, 50 if align else 80, 12, size=8, color=GREY,
-                      bold=True, align=align)
-        for k in range(5):
-            idx = col * 5 + k
-            item, y = rows[idx], cy + 60 + k * 15
-            page.text(str(idx + 1), hx, y, 14, 12, size=8, color=GREY)
-            page.text(names[item['country']], hx + 18, y, 90, 12, size=8, bold=True)
-            page.text(f"{item['loans']:,}", hx + 70, y, 50, 12, size=8, align='right')
-            page.rect(hx + 130, y + 2, item['share'] * 100 * 1.6, 8, NAVY)
-            page.text(f"{item['share'] * 100:.1f}%", hx + 130 + item['share'] * 100 * 1.6 + 3, y, 40, 12, size=8)
-            page.text(f"{item['same_day_share'] * 100:.0f}%", hx + 230, y, 40, 12, size=8, align='right')
-    page.text(ex['other_row'], cx + 10, cy + 60 + 5 * 15 + 4, cw - 20, 12, size=8, color=GREY, bold=True)
+    tx = cx + 292
+    for label, off, w, align in [('Country', 14, 70, None), ('Loans', 88, 40, 'right'), ('Share', 136, 50, None),
+                                 ('Same-day', 238, 42, 'right')]:
+        page.text(label, tx + off, cy + 38, w, 12, size=8, color=GREY, bold=True, align=align)
+    for k, item in enumerate(rows):
+        y = cy + 49 + k * 9.2 + (4 if k >= 5 else 0)
+        page.text(str(k + 1), tx, y, 12, 12, size=8, color=GREY)
+        page.text(names[item['country']], tx + 14, y, 74, 12, size=8, bold=True)
+        page.text(f"{item['loans']:,}", tx + 88, y, 40, 12, size=8, align='right')
+        page.rect(tx + 136, y + 2, item['share'] * 100 * 1.4, 7, NAVY)
+        page.text(f"{item['share'] * 100:.1f}%", tx + 136 + item['share'] * 100 * 1.4 + 3, y, 34, 12, size=8)
+        fill, ink = same_day_style(item['same_day_share'])
+        page.rect(tx + 252, y + 1, 28, 8.8, fill)
+        page.text(f"{item['same_day_share'] * 100:.0f}%", tx + 252, y + 0.6, 28, 12, size=8, color=ink,
+                  bold=ink == WHITE, align='center')
+    page.line(tx, cy + 49 + 5 * 9.2 + 0.6, tx + 280, cy + 49 + 5 * 9.2 + 0.6, RULE, .5)
     page.marker(1, ax + aw - 22, ay + 8)
     page.marker(2, ax + 210, ay + 46)
     page.marker(3, bx + bw - 22, by + 8)
@@ -1154,6 +1191,7 @@ def main() -> None:
             x = pipe_x(i)
             images.append((6, ASSETS / 'icons' / step['icon'], (x + 8, 172 + 5, 20, 20)))
         images.append((6, ASSETS / 'icons/table_rows-navy.png', (L + 14, TOP + 5, 18, 18)))
+        images.append((7, MAP_PNG, MAP_FRAME))
         for x, icon in zip(JOURNEY_X, JOURNEY_ICONS):
             images.append((4, ASSETS / 'icons' / icon, (x - 15, 171, 30, 30)))
         images.append((4, ASSETS / 'icons/check_circle-navy.png', (356 + 12, 284 + 31, 18, 18)))
