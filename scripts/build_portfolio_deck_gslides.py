@@ -979,32 +979,62 @@ def forecast(page, slide, pos):
 
 
 def gains(page, slide, pos):
+    """Per year: linear gain with month, country and capped-country ranges; tree gain on the same scale."""
     page.chrome(slide)
-    panels = slide['exhibit']['series']
-    lo, hi, width, top, pitch = -.1, .55, 244, 168, 49
-    for p, panel in enumerate(panels):
-        px0 = L + p * 310
-        plot = px0 + 40
-        px = lambda value: plot + (value - lo) * width / (hi - lo)
-        colour = [NAVY, VIOLET][p]
-        page.sup(panel['name'] + '¹', px0, TOP + 2, 290, 16, size=10, bold=True, color=colour)
-        page.line(px(0), top - 12, px(0), top + 5 * pitch - 12, GREY, .75)
-        for i, (year, gain, low, high) in enumerate(panel['rows']):
-            y = top + i * pitch
-            page.text(str(year), px0, y + 6, 36, 14, size=10)
-            text = f'{gain:.3f} [{low:.3f}, {high:.3f}]'.replace('-', '−')
-            page.text(text, px(0) + 5, y - 9, width - 40, 14, size=10, color=GREY)
-            page.line(px(low), y + 14, px(high), y + 14, colour, 2)
-            page.rect(px(gain) - 3.5, y + 10.5, 7, 7, colour, 'ELLIPSE')
+    ex = slide['exhibit']
+    scale = 318  # points per day, shared by both panels
+    lx0, llo = L + 44, -.2   # linear panel spans -0.2 to 0.9 days
+    tx0, tlo = 474, -.1      # tree panel spans -0.1 to 0.4 days
+    lpx = lambda v: lx0 + (v - llo) * scale
+    tpx = lambda v: tx0 + (v - tlo) * scale
+    page.text(ex['panels'][0], L, TOP + 2, 300, 13, size=9, bold=True)
+    page.text(ex['panels'][1], tx0 - 4, TOP + 2, 170, 13, size=9, bold=True, color=VIOLET)
+    page.marker(3, tx0 - 4 + 4.6 * len(ex['panels'][1]) + 6, TOP + 2.5)
+    for px in (lpx, tpx):
+        page.text('No gain', px(0) - 30, TOP + 18, 60, 12, size=8, color=NAVY, bold=True, align='center')
+    top, pitch = TOP + 36, 46
+    styles = [('month', NAVY, 2.5, 6), ('country', VIOLET, 1.5, 5), ('capped', SLATE, 1.5, 5)]
+    for k, year in enumerate(sorted(ex['linear'])):
+        gy = top + k * pitch
+        page.text(year, L, gy + 6, 40, 12, size=9, color=GREY)
+        lin, cap, tree = ex['linear'][year], ex['linear_capped'][year], ex['tree'][year]
+        for r, (kind, colour, weight, dot) in enumerate(styles):
+            y = gy + 4 + r * 9
+            source = cap if kind == 'capped' else lin
+            low, high = source['country' if kind != 'month' else 'month']
+            page.line(lpx(low), y, lpx(high), y, colour, weight)
+            page.rect(lpx(source['gain']) - dot / 2, y - dot / 2, dot, dot, colour, 'ELLIPSE')
+            if kind != 'capped':
+                tl, th = tree[kind]
+                page.line(tpx(tl), y, tpx(th), y, colour, weight)
+                page.rect(tpx(tree['gain']) - dot / 2, y - dot / 2, dot, dot, colour, 'ELLIPSE')
+        if year == '2024':
+            page.marker(1, lpx(lin['month'][1]) + 5, gy - 2)
+        if year == '2025':
+            page.marker(2, lpx(lin['country'][0]) - 17, gy + 7)
+    end = top + 5 * pitch - 6
+    for px, lo, hi in ((lpx, llo, .9), (tpx, tlo, .4)):
+        page.line(px(0), top - 4, px(0), end, NAVY, .75)
         for value, name in [(0, '0'), (.25, '0.25'), (.5, '0.50')]:
-            page.text(name, px(value) - 20, top + 5 * pitch - 10, 40, 12, size=8, color=GREY, align='center')
-    page.marker(1, L + 310 + 270, TOP + 3)
-    page.marker(3, L + 31, top + 4 * pitch + 7)
-    axis = top + 5 * pitch - 10 + 12
-    page.caption('Figure 8.', 'Annual MAE gain in days with month-resampled 95% intervals; positive is better.', axis + 8)
-    page.marker(2, L, axis + 22)
-    page.caption('¹', 'Country resampling, not shown: intervals include zero in 4 of 5 linear and 3 of 5 tree years.',
-                 axis + 22, x=L + 18)
+            if lo <= value <= hi:
+                page.line(px(value), end, px(value), end + 3, RULE, .75)
+                page.text(name, px(value) - 20, end + 4, 40, 12, size=8, color=GREY, align='center')
+    page.text('days', lpx(.9) - 30, end + 4, 30, 12, size=8, color=GREY, align='right')
+    ay = end + 18
+    page.text('Text worse', lpx(0) - 66, ay, 60, 12, size=8, color=SLATE, bold=True, align='right')
+    page.line(lpx(0) - 98, ay + 5.1, lpx(0) - 70, ay + 5.1, SLATE, .75)
+    page.ops[-1]['start_arrow'] = 'FILL_ARROW'
+    page.text('Text better', lpx(0) + 6, ay, 60, 12, size=8, color=SLATE, bold=True)
+    page.line(lpx(0) + 62, ay + 5.1, lpx(0) + 90, ay + 5.1, SLATE, .75)
+    page.ops[-1]['end_arrow'] = 'FILL_ARROW'
+    lx, ly = L, ay + 16
+    for (kind, colour, weight, dot), label in zip(styles, ex['legend']):
+        page.line(lx, ly + 5.1, lx + 20, ly + 5.1, colour, weight)
+        page.rect(lx + 10 - dot / 2, ly + 5.1 - dot / 2, dot, dot, colour, 'ELLIPSE')
+        page.sup(label, lx + 24, ly, 4.3 * len(label) + 8, 12, size=8, color=GREY)
+        lx += 24 + 4.3 * len(label) + 18
+    page.caption('Figure 8.', ex['caption'], ly + 15)
+    page.caption('¹', ex['note_sup'], ly + 28)
     page.takeaways(slide['takeaways'], pos)
 
 

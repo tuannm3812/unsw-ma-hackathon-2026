@@ -2662,3 +2662,10 @@ unseen exact template, which cannot exclude near-duplicates.
     - Marker 3 now sits on the "5 of 5" card.
   - **Experiment A (period and loan-size interactions):** the family × period and × loan-size contrasts (against the reference levels, not within-group slopes) and their country-clustered p-values are now in the register. None is below 0.11. No slide uses them yet.
   - QA reports no automated problems; previews, PDF and preview page refreshed; not pushed.
+- **2026-11-08, slide 12 redesign:** no new owner edits; slide 12 was rebuilt alone.
+  - Audit of the old slide: the numbers matched the register. But bracketed interval labels cluttered the chart, the key fragility (country-resampled ranges) appeared only in a note, marker 2 sat on that note and marker 3 on a year label, and the AUC takeaway had no visual.
+  - New title: "The text gain holds every year but is fragile across countries".
+  - The chart: per year, three linear ranges (month, country, and country with extreme forecasts capped¹), with the tree model's ranges on the same scale in a second panel. It adds "No gain" lines, "Text worse/Text better" arrows and a three-item legend under the plot.
+  - Takeaways in story order: (1) text helps in every year (month ranges above zero in 5 of 5, about 7 hours); (2) across countries it is fragile (4 of 5 include zero; 1 of 5 when capped); (3) the gain needs word patterns (tree without TF-IDF gains at most 0.04 days). The AUC point moved to the speaker notes.
+  - New interval numbers come from `src/gain_intervals.py` (tested in `tests/test_gain_intervals.py`), which reads the committed `benchmark.json` and loss-alignment JSONs and reproduces the README table exactly, into `reports/evidence_sources/gain_intervals.json`; the numbers are added to the register.
+  - QA reports no automated problems; previews, PDF and preview page refreshed; not pushed.
