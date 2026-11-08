@@ -2628,3 +2628,4 @@ unseen exact template, which cannot exclude near-duplicates.
   - The caption and the single note are concise; the group labels are shorter.
   - Takeaway bodies are trimmed. The full explanation is now in the speaker notes: how to read the chart, the hours, ±0.05 log(1 + days), TOST with BH across nine terms, t(47), t(4), ±2%, and the two model versions.
   - QA reports no automated problems; previews, PDF and preview page refreshed; not pushed.
+- **2026-11-08, slide 9 legend (Mike's follow-up):** no new owner edits. The legend keeps only "Estimate, 90% range", because the axis already labels the bands. The ¹ note moved to "Too small to matter¹", and marker 2 sits above the +5% band edge. Measured in the PDF at 600 dpi, the legend glyph was 0.7 pt above the text's x-height centre and now sits at 0.0 pt; the direction arrows use the same offset. The legend's left edge aligns with the plot's visible edge (the −10% band edge and tick).

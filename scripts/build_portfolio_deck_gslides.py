@@ -786,7 +786,7 @@ def forest(page, slide, pos):
         rows = [row for row in ex['rows'] if row['status_both_specs'] == group['status']]
         colour = STATUS_COLOURS[group['status']]
         page.line(L, y - 3, R - 6, y - 3, HAIR, .5)
-        page.text(group['label'], L, y, 330, 13, size=9, color=colour, bold=True)
+        page.sup(group['label'], L, y, 330, 13, size=9, color=colour, bold=True)
         header[group['status']] = (L + 4.2 * len(group['label']) + 8, y)
         if group['status'] == 'bounded':
             page.text(ex['t4_tag'], rx, y + 1, track + 40, 12, size=8, color=SLATE)
@@ -816,23 +816,17 @@ def forest(page, slide, pos):
     # Direction: a positive coefficient on log(1 + days) means a longer wait (src/data_loader.py).
     ay = end + 18
     page.text('Faster funding', px(0) - 66, ay, 60, 12, size=8, color=SLATE, bold=True, align='right')
-    page.line(px(0) - 98, ay + 6.5, px(0) - 70, ay + 6.5, SLATE, .75)
+    page.line(px(0) - 98, ay + 5.1, px(0) - 70, ay + 5.1, SLATE, .75)  # on the label x-height centre (measured)
     page.ops[-1]['start_arrow'] = 'FILL_ARROW'
     page.text('Slower funding', px(0) + 6, ay, 60, 12, size=8, color=SLATE, bold=True)
-    page.line(px(0) + 70, ay + 6.5, px(0) + 98, ay + 6.5, SLATE, .75)
+    page.line(px(0) + 70, ay + 5.1, px(0) + 98, ay + 5.1, SLATE, .75)
     page.ops[-1]['end_arrow'] = 'FILL_ARROW'
-    # Legend under the plot, aligned with its left edge, drawn with the chart's own symbols.
-    ly, lx = ay + 15, x0
-    page.line(lx, ly + 6.5, lx + 20, ly + 6.5, NAVY, 2)
-    page.rect(lx + 6.5, ly + 3, 7, 7, NAVY, 'ELLIPSE')
-    page.text('Estimate, 90% range', lx + 24, ly, 80, 12, size=8, color=GREY)
-    lx += 108
-    page.rect(lx, ly + 2, 14, 9, TINT_BAND)
-    page.sup('Within ±5%¹', lx + 18, ly, 52, 12, size=8, color=GREY)
-    page.marker(2, lx + 70, ly + 0.5)
-    lx += 90
-    page.rect(lx, ly + 2, 14, 9, BAND_OUTER)
-    page.text('5–10%', lx + 18, ly, 30, 12, size=8, color=GREY)
+    # Legend under the plot, aligned with its left edge; the bands are labelled by the axis itself.
+    ly, lx = ay + 15, px(-.10)  # the plot's visible left edge: the −10% band edge and tick
+    page.line(lx, ly + 5.1, lx + 20, ly + 5.1, NAVY, 2)
+    page.rect(lx + 6.5, ly + 1.6, 7, 7, NAVY, "ELLIPSE")
+    page.text('Estimate, 90% range', lx + 24, ly, 90, 12, size=8, color=GREY)
+    page.marker(2, px(.05) + 4, TOP + 2.5)
     page.marker(1, *header['bounded'])
     page.marker(3, *header['unresolved'])
     page.marker(4, rx + 3.3 * len(ex['t4_tag']) + 8, header['bounded'][1] + 0.5)

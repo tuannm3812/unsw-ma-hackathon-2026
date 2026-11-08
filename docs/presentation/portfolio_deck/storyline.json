@@ -994,7 +994,7 @@
         "groups": [
           {
             "status": "bounded",
-            "label": "Too small to matter"
+            "label": "Too small to matter¹"
           },
           {
             "status": "mixed",
@@ -1008,7 +1008,7 @@
         "t4_tag": "All five hold under the stricter t(4)",
         "rarity_header": "Records with no mention",
         "caption": "Change in funding time per extra mention per 100 words, expanded model, 1,453,840 loans.",
-        "note_sup": "±0.05 on log(1 + days), BH-adjusted; bound set after the estimates."
+        "note_sup": "Within ±5% of funding time: ±0.05 on log(1 + days), BH-adjusted; bound set after the estimates."
       },
       "takeaways": [
         {
