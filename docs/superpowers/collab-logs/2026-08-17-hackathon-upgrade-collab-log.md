@@ -2923,3 +2923,9 @@ unseen exact template, which cannot exclude near-duplicates.
 - Mike saw slide 13's legend text sitting off its swatches. Measured at 400 dpi: swatch centre was 1.4 pt below the text's x-height centre. Live deck re-read first: no owner edits to mirror.
 - Added `Page.legend`: swatches centred on the label's x-height, even spacing, optional centring under a figure. Applied to slides 6, 9, 10, 11, 13, 14 and A5, and recorded in DESIGN.md. Slide 5 and 12 legends and the slide 6 map legend were already aligned and are unchanged.
 - Verified: zoomed renders, deck QA, full offline pytest. Those seven slides only were rebuilt; nothing pushed.
+- **2026-11-08, exploratory experiments A–I (Mike asked for further analysis alongside the deck work):** new modules in `src/`, three private Kaggle CPU kernels, aggregates in `reports/experiments_2026_11_08/` with a README.
+  - Equivalence verdicts survive a wild cluster bootstrap (35 of 36 rows unchanged); no framing term clears BH-adjusted 0.05 under it.
+  - Common framing terms stay within ±5% on duration across all 10 subgroups, programme-adjusted; subgroup tests are not adjusted across subgroups.
+  - Text adds little on a stronger boosted tree, and about half the linear gain survives a shuffle within country × sector × month.
+  - Loan-detail coefficients are saved from the programme-adjusted refit; no ranking or ratio to framing.
+  - No independent review. Registered numbers remain with the deck thread; `claims_register.md` was not edited here. Not pushed.

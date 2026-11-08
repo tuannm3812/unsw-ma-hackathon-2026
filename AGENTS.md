@@ -40,6 +40,7 @@ benchmark; it does not contain the old self-contained fits.
 - `reports/equivalence_screen_reviewed/` — exploratory equivalence screen of October coefficients (2026-11-08)
 - `reports/loss_alignment_2025/` — loss-alignment extension of the November benchmark, 2025 plus all five years (2026-11-08)
 - `reports/evidence_sources/` — exploratory checks on where the text gain sits and the equivalence screen (2026-11-08)
+- `reports/experiments_2026_11_08/` — exploratory subgroup, wild bootstrap, placebo, forecaster, triage and loan-detail checks (2026-11-08)
 - `docs/presentation/claims_register.md` — every number the current deck and case study quote
 - `docs/presentation/portfolio_deck/` — current portfolio deck source; governed by `docs/presentation/DESIGN.md`
 - `docs/2_evidence_and_corrections.md` — current interpretation and historical corrections

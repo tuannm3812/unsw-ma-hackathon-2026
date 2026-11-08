@@ -1,0 +1,98 @@
+{
+ "duration": {
+  "family_mentions_per_100_words": {
+   "coefficient": -0.0226,
+   "ci95_hc3": [
+    -0.0253,
+    -0.0199
+   ],
+   "hc3_p": 0.0,
+   "clustered_p": 0.1983
+  },
+  "family_mentions_per_100_words:C(analysis_period)[T.pandemic_disruption]": {
+   "coefficient": 0.0218,
+   "ci95_hc3": [
+    0.019,
+    0.0245
+   ],
+   "hc3_p": 0.0,
+   "clustered_p": 0.304
+  },
+  "family_mentions_per_100_words:C(analysis_period)[T.post_pandemic]": {
+   "coefficient": 0.0135,
+   "ci95_hc3": [
+    0.0114,
+    0.0156
+   ],
+   "hc3_p": 0.0,
+   "clustered_p": 0.29
+  },
+  "family_mentions_per_100_words:C(loan_size_band)[T.medium]": {
+   "coefficient": -0.0238,
+   "ci95_hc3": [
+    -0.0259,
+    -0.0216
+   ],
+   "hc3_p": 0.0,
+   "clustered_p": 0.1132
+  },
+  "family_mentions_per_100_words:C(loan_size_band)[T.large]": {
+   "coefficient": -0.0139,
+   "ci95_hc3": [
+    -0.0167,
+    -0.011
+   ],
+   "hc3_p": 0.0,
+   "clustered_p": 0.3799
+  }
+ },
+ "binary": {
+  "family_mentions_per_100_words": {
+   "coefficient": 0.0535,
+   "ci95_hc3": [
+    0.0459,
+    0.0612
+   ],
+   "hc3_p": 0.0,
+   "clustered_p": 0.4179
+  },
+  "family_mentions_per_100_words:C(analysis_period)[T.pandemic_disruption]": {
+   "coefficient": -0.0416,
+   "ci95_hc3": [
+    -0.0491,
+    -0.0341
+   ],
+   "hc3_p": 0.0,
+   "clustered_p": 0.3204
+  },
+  "family_mentions_per_100_words:C(analysis_period)[T.post_pandemic]": {
+   "coefficient": -0.0032,
+   "ci95_hc3": [
+    -0.009,
+    0.0025
+   ],
+   "hc3_p": 0.2729,
+   "clustered_p": 0.9019
+  },
+  "family_mentions_per_100_words:C(loan_size_band)[T.medium]": {
+   "coefficient": 0.011,
+   "ci95_hc3": [
+    0.0052,
+    0.0168
+   ],
+   "hc3_p": 0.0002,
+   "clustered_p": 0.6862
+  },
+  "family_mentions_per_100_words:C(loan_size_band)[T.large]": {
+   "coefficient": 0.0044,
+   "ci95_hc3": [
+    -0.0056,
+    0.0144
+   ],
+   "hc3_p": 0.3882,
+   "clustered_p": 0.9164
+  }
+ },
+ "source": "reports/generated_full_dataset/association_summary.txt",
+ "note": "Interactions vs reference levels (pre-pandemic; small). Duration is log(1 + days), negative = faster; binary is log-odds of 24-hour funding, positive = faster. 48 country clusters, normal reference."
+}

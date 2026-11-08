@@ -273,3 +273,6 @@ docs/presentation/research_refresh/.build/
 
 # Isolated map-rendering environment (geopandas), see scripts/build_country_map.py
 .venv-maps/
+# 2026-11-08 exploratory experiments: aggregate JSON and README only
+!reports/experiments_2026_11_08/README.md
+!reports/experiments_2026_11_08/*.json

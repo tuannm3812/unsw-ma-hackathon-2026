@@ -1,0 +1,1256 @@
+{
+ "config": {
+  "years": [
+   2021,
+   2022,
+   2023,
+   2024,
+   2025
+  ],
+  "seed": 42,
+  "max_text_features": 5000,
+  "min_df": 5,
+  "svd_components": 64,
+  "tree": {
+   "max_iter": 500,
+   "max_leaf_nodes": 63,
+   "learning_rate": 0.05,
+   "min_samples_leaf": 100,
+   "l2_regularization": 1.0,
+   "early_stopping": false
+  },
+  "encoding": {
+   "max_categories": 255,
+   "missing_as_string": true
+  },
+  "arms": [
+   "S",
+   "S+M+L",
+   "S+M+L+D"
+  ],
+  "bootstrap_resamples": 1000,
+  "threads": 8,
+  "tree_name": "large"
+ },
+ "started_utc": "2026-11-08T04:38:17.641760+00:00",
+ "windows": [
+  {
+   "year": 2021,
+   "arm": "S",
+   "train_rows": 717672,
+   "test_rows": 163166,
+   "features": 13,
+   "fit_seconds": 75.06483896999998,
+   "svd_explained_variance": 0.34633833169937134,
+   "rows": 163166,
+   "prevalence": 0.2869102631675717,
+   "mae_days": 8.045793369062702,
+   "median_ae_days": 4.273405931237733,
+   "rmse_days": 12.110296320800897,
+   "r2_days": 0.07016226164182704,
+   "bias_days": -2.181462710478328,
+   "log_mae": 0.78581089196685,
+   "roc_auc": 0.84812151185974,
+   "average_precision": 0.7265263996407539,
+   "brier": 0.15106854289789623,
+   "log_loss": 0.4702366459238678
+  },
+  {
+   "year": 2021,
+   "arm": "S+M+L",
+   "train_rows": 717672,
+   "test_rows": 163166,
+   "features": 35,
+   "fit_seconds": 138.17746129700026,
+   "svd_explained_variance": 0.34633833169937134,
+   "rows": 163166,
+   "prevalence": 0.2869102631675717,
+   "mae_days": 7.961883685821073,
+   "median_ae_days": 4.240288328088953,
+   "rmse_days": 12.00557893360861,
+   "r2_days": 0.08617329842014687,
+   "bias_days": -2.151953808435844,
+   "log_mae": 0.7775161437101638,
+   "roc_auc": 0.8495966528153007,
+   "average_precision": 0.7245101833918253,
+   "brier": 0.14928349174546676,
+   "log_loss": 0.46628890241341964
+  },
+  {
+   "year": 2021,
+   "arm": "S+M+L+D",
+   "train_rows": 717672,
+   "test_rows": 163166,
+   "features": 99,
+   "fit_seconds": 319.56817325799966,
+   "svd_explained_variance": 0.34633833169937134,
+   "rows": 163166,
+   "prevalence": 0.2869102631675717,
+   "mae_days": 7.891704654483726,
+   "median_ae_days": 4.165423665265224,
+   "rmse_days": 11.844860863020102,
+   "r2_days": 0.11047623371884685,
+   "bias_days": -2.1043210786891184,
+   "log_mae": 0.7655646166191546,
+   "roc_auc": 0.853349146897016,
+   "average_precision": 0.7294551236168714,
+   "brier": 0.14566219139388037,
+   "log_loss": 0.4562967844631615
+  },
+  {
+   "year": 2022,
+   "arm": "S",
+   "train_rows": 884448,
+   "test_rows": 143354,
+   "features": 13,
+   "fit_seconds": 84.92753320600059,
+   "svd_explained_variance": 0.34895414113998413,
+   "rows": 143354,
+   "prevalence": 0.2986383358678516,
+   "mae_days": 6.609492992902725,
+   "median_ae_days": 3.6922662259448167,
+   "rmse_days": 9.856145326262032,
+   "r2_days": 0.42489745235402687,
+   "bias_days": -2.402448080056227,
+   "log_mae": 0.6671946991032529,
+   "roc_auc": 0.8684059400858074,
+   "average_precision": 0.774237143031244,
+   "brier": 0.12960527211013909,
+   "log_loss": 0.41549998538876654
+  },
+  {
+   "year": 2022,
+   "arm": "S+M+L",
+   "train_rows": 884448,
+   "test_rows": 143354,
+   "features": 35,
+   "fit_seconds": 164.42266701300014,
+   "svd_explained_variance": 0.34895414113998413,
+   "rows": 143354,
+   "prevalence": 0.2986383358678516,
+   "mae_days": 6.56860654103874,
+   "median_ae_days": 3.641142209875822,
+   "rmse_days": 9.814419701454781,
+   "r2_days": 0.4297564957554816,
+   "bias_days": -2.318926598946027,
+   "log_mae": 0.664226777569457,
+   "roc_auc": 0.869043626568758,
+   "average_precision": 0.7766743519408897,
+   "brier": 0.12915514498580502,
+   "log_loss": 0.413808300741908
+  },
+  {
+   "year": 2022,
+   "arm": "S+M+L+D",
+   "train_rows": 884448,
+   "test_rows": 143354,
+   "features": 99,
+   "fit_seconds": 384.99363884800005,
+   "svd_explained_variance": 0.34895414113998413,
+   "rows": 143354,
+   "prevalence": 0.2986383358678516,
+   "mae_days": 6.5507765119306605,
+   "median_ae_days": 3.635330354607646,
+   "rmse_days": 9.790630540165944,
+   "r2_days": 0.43251757063696206,
+   "bias_days": -2.4004178259063775,
+   "log_mae": 0.6599883764112303,
+   "roc_auc": 0.8705030361876966,
+   "average_precision": 0.778354799807394,
+   "brier": 0.1282117031165777,
+   "log_loss": 0.41003824295949565
+  },
+  {
+   "year": 2023,
+   "arm": "S",
+   "train_rows": 1028174,
+   "test_rows": 143233,
+   "features": 13,
+   "fit_seconds": 97.32097020400033,
+   "svd_explained_variance": 0.3482421636581421,
+   "rows": 143233,
+   "prevalence": 0.2746154866546117,
+   "mae_days": 6.525928248194395,
+   "median_ae_days": 3.420742384682434,
+   "rmse_days": 9.960247381458483,
+   "r2_days": 0.41413913743282615,
+   "bias_days": -3.193280379959543,
+   "log_mae": 0.6274245872502207,
+   "roc_auc": 0.8971871562770379,
+   "average_precision": 0.8004534467750266,
+   "brier": 0.10805001564579937,
+   "log_loss": 0.34809079247277197
+  },
+  {
+   "year": 2023,
+   "arm": "S+M+L",
+   "train_rows": 1028174,
+   "test_rows": 143233,
+   "features": 35,
+   "fit_seconds": 186.72319585199966,
+   "svd_explained_variance": 0.3482421636581421,
+   "rows": 143233,
+   "prevalence": 0.2746154866546117,
+   "mae_days": 6.512294442389612,
+   "median_ae_days": 3.419851509914338,
+   "rmse_days": 9.928416470783894,
+   "r2_days": 0.4178777366266142,
+   "bias_days": -3.1842373706419367,
+   "log_mae": 0.6251616986575884,
+   "roc_auc": 0.8974430699260375,
+   "average_precision": 0.8020237053789377,
+   "brier": 0.10766555391283435,
+   "log_loss": 0.3468619007645119
+  },
+  {
+   "year": 2023,
+   "arm": "S+M+L+D",
+   "train_rows": 1028174,
+   "test_rows": 143233,
+   "features": 99,
+   "fit_seconds": 448.50527212999987,
+   "svd_explained_variance": 0.3482421636581421,
+   "rows": 143233,
+   "prevalence": 0.2746154866546117,
+   "mae_days": 6.514084572507193,
+   "median_ae_days": 3.374353909942812,
+   "rmse_days": 9.94286377050549,
+   "r2_days": 0.41618235775163837,
+   "bias_days": -3.3453881031079002,
+   "log_mae": 0.6260145501035561,
+   "roc_auc": 0.8981406243999455,
+   "average_precision": 0.8045985518474938,
+   "brier": 0.10689042971220515,
+   "log_loss": 0.3448789020276998
+  },
+  {
+   "year": 2024,
+   "arm": "S",
+   "train_rows": 1169262,
+   "test_rows": 141725,
+   "features": 13,
+   "fit_seconds": 105.83391725199999,
+   "svd_explained_variance": 0.34100785851478577,
+   "rows": 141725,
+   "prevalence": 0.27492679484917976,
+   "mae_days": 5.3404224579105755,
+   "median_ae_days": 2.700569513715456,
+   "rmse_days": 8.349328201350193,
+   "r2_days": 0.5788966784669144,
+   "bias_days": -2.174119264053544,
+   "log_mae": 0.5228307429385946,
+   "roc_auc": 0.9003767947265497,
+   "average_precision": 0.8139728847887707,
+   "brier": 0.10703552902660139,
+   "log_loss": 0.3461952062888679
+  },
+  {
+   "year": 2024,
+   "arm": "S+M+L",
+   "train_rows": 1169262,
+   "test_rows": 141725,
+   "features": 35,
+   "fit_seconds": 211.2984011339995,
+   "svd_explained_variance": 0.34100785851478577,
+   "rows": 141725,
+   "prevalence": 0.27492679484917976,
+   "mae_days": 5.361530554212199,
+   "median_ae_days": 2.7339460244057836,
+   "rmse_days": 8.358448277777415,
+   "r2_days": 0.5779762230976362,
+   "bias_days": -2.1068511730564725,
+   "log_mae": 0.5241326633579173,
+   "roc_auc": 0.900921479194428,
+   "average_precision": 0.8143831481312089,
+   "brier": 0.10729299220017212,
+   "log_loss": 0.3463850730661564
+  },
+  {
+   "year": 2024,
+   "arm": "S+M+L+D",
+   "train_rows": 1169262,
+   "test_rows": 141725,
+   "features": 99,
+   "fit_seconds": 502.2212011210004,
+   "svd_explained_variance": 0.34100785851478577,
+   "rows": 141725,
+   "prevalence": 0.27492679484917976,
+   "mae_days": 5.3512108932586235,
+   "median_ae_days": 2.7132953043145394,
+   "rmse_days": 8.346051155733887,
+   "r2_days": 0.5792271730758087,
+   "bias_days": -2.088077295703527,
+   "log_mae": 0.5243667876680204,
+   "roc_auc": 0.902078352095422,
+   "average_precision": 0.8172413795843342,
+   "brier": 0.10652425359210382,
+   "log_loss": 0.34357936512194936
+  },
+  {
+   "year": 2025,
+   "arm": "S",
+   "train_rows": 1312417,
+   "test_rows": 137162,
+   "features": 13,
+   "fit_seconds": 116.48543425799926,
+   "svd_explained_variance": 0.33882200717926025,
+   "rows": 137162,
+   "prevalence": 0.35361105845642377,
+   "mae_days": 4.798497226617555,
+   "median_ae_days": 2.376335442676052,
+   "rmse_days": 7.678200128428704,
+   "r2_days": 0.48117871432672155,
+   "bias_days": 1.1303075826815552,
+   "log_mae": 0.5541615190845421,
+   "roc_auc": 0.9058427333812052,
+   "average_precision": 0.8620357869989032,
+   "brier": 0.125742764673306,
+   "log_loss": 0.4033524053309892
+  },
+  {
+   "year": 2025,
+   "arm": "S+M+L",
+   "train_rows": 1312417,
+   "test_rows": 137162,
+   "features": 35,
+   "fit_seconds": 230.9862518200007,
+   "svd_explained_variance": 0.33882200717926025,
+   "rows": 137162,
+   "prevalence": 0.35361105845642377,
+   "mae_days": 4.754713977725469,
+   "median_ae_days": 2.354891157701825,
+   "rmse_days": 7.613105303883276,
+   "r2_days": 0.48993842887769334,
+   "bias_days": 1.0266919673346326,
+   "log_mae": 0.5487493004464649,
+   "roc_auc": 0.9078097661801393,
+   "average_precision": 0.8648486009343739,
+   "brier": 0.12445071810416695,
+   "log_loss": 0.397050337068241
+  },
+  {
+   "year": 2025,
+   "arm": "S+M+L+D",
+   "train_rows": 1312417,
+   "test_rows": 137162,
+   "features": 99,
+   "fit_seconds": 557.456828077,
+   "svd_explained_variance": 0.33882200717926025,
+   "rows": 137162,
+   "prevalence": 0.35361105845642377,
+   "mae_days": 4.734654653294155,
+   "median_ae_days": 2.3562595818176284,
+   "rmse_days": 7.556803271508002,
+   "r2_days": 0.4974547610704141,
+   "bias_days": 1.0798291130986033,
+   "log_mae": 0.5483473894550289,
+   "roc_auc": 0.909832021922245,
+   "average_precision": 0.8686360993954447,
+   "brier": 0.12265513574120948,
+   "log_loss": 0.3927909639846062
+  }
+ ],
+ "paired": [
+  {
+   "year": 2021,
+   "baseline": "S",
+   "candidate": "S+M+L",
+   "metric": "mae_days",
+   "resampling_unit": "calendar_month",
+   "gain": 0.08390968324163135,
+   "clusters": 12,
+   "interval_95": [
+    0.03789640139988388,
+    0.13224528105580954
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2021,
+   "baseline": "S",
+   "candidate": "S+M+L",
+   "metric": "mae_days",
+   "resampling_unit": "country",
+   "gain": 0.08390968324163135,
+   "clusters": 37,
+   "interval_95": [
+    0.026502873060088653,
+    0.1625286705262803
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2021,
+   "baseline": "S",
+   "candidate": "S+M+L",
+   "metric": "brier",
+   "resampling_unit": "calendar_month",
+   "gain": 0.0017850511524294694,
+   "clusters": 12,
+   "interval_95": [
+    -0.0023750714188398806,
+    0.005427154837380361
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2021,
+   "baseline": "S",
+   "candidate": "S+M+L",
+   "metric": "brier",
+   "resampling_unit": "country",
+   "gain": 0.0017850511524294694,
+   "clusters": 37,
+   "interval_95": [
+    0.0009096453864710451,
+    0.0032086742810937055
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2021,
+   "baseline": "S",
+   "candidate": "S+M+L+D",
+   "metric": "mae_days",
+   "resampling_unit": "calendar_month",
+   "gain": 0.15408871457897744,
+   "clusters": 12,
+   "interval_95": [
+    0.09712977909536014,
+    0.2116457130981483
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2021,
+   "baseline": "S",
+   "candidate": "S+M+L+D",
+   "metric": "mae_days",
+   "resampling_unit": "country",
+   "gain": 0.15408871457897744,
+   "clusters": 37,
+   "interval_95": [
+    0.07066604036241232,
+    0.26600163991100134
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2021,
+   "baseline": "S",
+   "candidate": "S+M+L+D",
+   "metric": "brier",
+   "resampling_unit": "calendar_month",
+   "gain": 0.005406351504015924,
+   "clusters": 12,
+   "interval_95": [
+    -0.0013974562077982181,
+    0.014873899653771217
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2021,
+   "baseline": "S",
+   "candidate": "S+M+L+D",
+   "metric": "brier",
+   "resampling_unit": "country",
+   "gain": 0.005406351504015924,
+   "clusters": 37,
+   "interval_95": [
+    0.0038673406137178516,
+    0.006296113305867509
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2021,
+   "baseline": "S+M+L",
+   "candidate": "S+M+L+D",
+   "metric": "mae_days",
+   "resampling_unit": "calendar_month",
+   "gain": 0.07017903133734613,
+   "clusters": 12,
+   "interval_95": [
+    -0.00015117761373661934,
+    0.11874446730151342
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2021,
+   "baseline": "S+M+L",
+   "candidate": "S+M+L+D",
+   "metric": "mae_days",
+   "resampling_unit": "country",
+   "gain": 0.07017903133734613,
+   "clusters": 37,
+   "interval_95": [
+    0.03365275459845193,
+    0.13013759235044703
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2021,
+   "baseline": "S+M+L",
+   "candidate": "S+M+L+D",
+   "metric": "brier",
+   "resampling_unit": "calendar_month",
+   "gain": 0.0036213003515864544,
+   "clusters": 12,
+   "interval_95": [
+    -0.00013389949564238614,
+    0.01043481986787468
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2021,
+   "baseline": "S+M+L",
+   "candidate": "S+M+L+D",
+   "metric": "brier",
+   "resampling_unit": "country",
+   "gain": 0.0036213003515864544,
+   "clusters": 37,
+   "interval_95": [
+    0.001492072264700704,
+    0.004403553851548102
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2022,
+   "baseline": "S",
+   "candidate": "S+M+L",
+   "metric": "mae_days",
+   "resampling_unit": "calendar_month",
+   "gain": 0.040886451863984374,
+   "clusters": 12,
+   "interval_95": [
+    0.01240519197764719,
+    0.07093663964505473
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2022,
+   "baseline": "S",
+   "candidate": "S+M+L",
+   "metric": "mae_days",
+   "resampling_unit": "country",
+   "gain": 0.040886451863984374,
+   "clusters": 37,
+   "interval_95": [
+    -0.02373751267036868,
+    0.09493103099701308
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2022,
+   "baseline": "S",
+   "candidate": "S+M+L",
+   "metric": "brier",
+   "resampling_unit": "calendar_month",
+   "gain": 0.00045012712433406207,
+   "clusters": 12,
+   "interval_95": [
+    -0.00017721183381878063,
+    0.0012141374560182341
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2022,
+   "baseline": "S",
+   "candidate": "S+M+L",
+   "metric": "brier",
+   "resampling_unit": "country",
+   "gain": 0.00045012712433406207,
+   "clusters": 37,
+   "interval_95": [
+    -0.000344015924108202,
+    0.001256387839561737
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2022,
+   "baseline": "S",
+   "candidate": "S+M+L+D",
+   "metric": "mae_days",
+   "resampling_unit": "calendar_month",
+   "gain": 0.05871648097206399,
+   "clusters": 12,
+   "interval_95": [
+    0.010627490621161789,
+    0.10035790734023858
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2022,
+   "baseline": "S",
+   "candidate": "S+M+L+D",
+   "metric": "mae_days",
+   "resampling_unit": "country",
+   "gain": 0.05871648097206399,
+   "clusters": 37,
+   "interval_95": [
+    -0.0223288551617298,
+    0.1531167750276388
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2022,
+   "baseline": "S",
+   "candidate": "S+M+L+D",
+   "metric": "brier",
+   "resampling_unit": "calendar_month",
+   "gain": 0.001393568993561432,
+   "clusters": 12,
+   "interval_95": [
+    0.0005251295832017553,
+    0.0022851777468450756
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2022,
+   "baseline": "S",
+   "candidate": "S+M+L+D",
+   "metric": "brier",
+   "resampling_unit": "country",
+   "gain": 0.001393568993561432,
+   "clusters": 37,
+   "interval_95": [
+    0.0001640980423126549,
+    0.0020838430738444502
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2022,
+   "baseline": "S+M+L",
+   "candidate": "S+M+L+D",
+   "metric": "mae_days",
+   "resampling_unit": "calendar_month",
+   "gain": 0.017830029108079595,
+   "clusters": 12,
+   "interval_95": [
+    -0.0117726272421677,
+    0.04282857490477785
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2022,
+   "baseline": "S+M+L",
+   "candidate": "S+M+L+D",
+   "metric": "mae_days",
+   "resampling_unit": "country",
+   "gain": 0.017830029108079595,
+   "clusters": 37,
+   "interval_95": [
+    -0.018494732315837696,
+    0.06803426103973065
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2022,
+   "baseline": "S+M+L",
+   "candidate": "S+M+L+D",
+   "metric": "brier",
+   "resampling_unit": "calendar_month",
+   "gain": 0.0009434418692273699,
+   "clusters": 12,
+   "interval_95": [
+    -4.849244362370772e-05,
+    0.002053525604722906
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2022,
+   "baseline": "S+M+L",
+   "candidate": "S+M+L+D",
+   "metric": "brier",
+   "resampling_unit": "country",
+   "gain": 0.0009434418692273699,
+   "clusters": 37,
+   "interval_95": [
+    1.851711123659356e-05,
+    0.0013329456625691897
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2023,
+   "baseline": "S",
+   "candidate": "S+M+L",
+   "metric": "mae_days",
+   "resampling_unit": "calendar_month",
+   "gain": 0.013633805804782828,
+   "clusters": 12,
+   "interval_95": [
+    -0.0345095010980508,
+    0.06760093660421382
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2023,
+   "baseline": "S",
+   "candidate": "S+M+L",
+   "metric": "mae_days",
+   "resampling_unit": "country",
+   "gain": 0.013633805804782828,
+   "clusters": 40,
+   "interval_95": [
+    -0.04153847287260928,
+    0.04382359647684999
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2023,
+   "baseline": "S",
+   "candidate": "S+M+L",
+   "metric": "brier",
+   "resampling_unit": "calendar_month",
+   "gain": 0.0003844617329650438,
+   "clusters": 12,
+   "interval_95": [
+    -0.00015400629832065967,
+    0.0009597369395308536
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2023,
+   "baseline": "S",
+   "candidate": "S+M+L",
+   "metric": "brier",
+   "resampling_unit": "country",
+   "gain": 0.0003844617329650438,
+   "clusters": 40,
+   "interval_95": [
+    -0.00018250303581003794,
+    0.0010928100595535531
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2023,
+   "baseline": "S",
+   "candidate": "S+M+L+D",
+   "metric": "mae_days",
+   "resampling_unit": "calendar_month",
+   "gain": 0.011843675687202584,
+   "clusters": 12,
+   "interval_95": [
+    -0.04098775244479611,
+    0.066979379143005
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2023,
+   "baseline": "S",
+   "candidate": "S+M+L+D",
+   "metric": "mae_days",
+   "resampling_unit": "country",
+   "gain": 0.011843675687202584,
+   "clusters": 40,
+   "interval_95": [
+    -0.06704150174509158,
+    0.07067188268577826
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2023,
+   "baseline": "S",
+   "candidate": "S+M+L+D",
+   "metric": "brier",
+   "resampling_unit": "calendar_month",
+   "gain": 0.0011595859335942276,
+   "clusters": 12,
+   "interval_95": [
+    0.00021174842824279457,
+    0.002153853179593785
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2023,
+   "baseline": "S",
+   "candidate": "S+M+L+D",
+   "metric": "brier",
+   "resampling_unit": "country",
+   "gain": 0.0011595859335942276,
+   "clusters": 40,
+   "interval_95": [
+    0.0004259759668830573,
+    0.0017102567624262958
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2023,
+   "baseline": "S+M+L",
+   "candidate": "S+M+L+D",
+   "metric": "mae_days",
+   "resampling_unit": "calendar_month",
+   "gain": -0.0017901301175802322,
+   "clusters": 12,
+   "interval_95": [
+    -0.03854075248259141,
+    0.03579447006900643
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2023,
+   "baseline": "S+M+L",
+   "candidate": "S+M+L+D",
+   "metric": "mae_days",
+   "resampling_unit": "country",
+   "gain": -0.0017901301175802322,
+   "clusters": 40,
+   "interval_95": [
+    -0.05076763537139396,
+    0.03848970483471358
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2023,
+   "baseline": "S+M+L",
+   "candidate": "S+M+L+D",
+   "metric": "brier",
+   "resampling_unit": "calendar_month",
+   "gain": 0.0007751242006291837,
+   "clusters": 12,
+   "interval_95": [
+    -2.0335133032830582e-05,
+    0.0014969760034065412
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2023,
+   "baseline": "S+M+L",
+   "candidate": "S+M+L+D",
+   "metric": "brier",
+   "resampling_unit": "country",
+   "gain": 0.0007751242006291837,
+   "clusters": 40,
+   "interval_95": [
+    -0.00024747502015504727,
+    0.0015245705935849124
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2024,
+   "baseline": "S",
+   "candidate": "S+M+L",
+   "metric": "mae_days",
+   "resampling_unit": "calendar_month",
+   "gain": -0.021108096301622015,
+   "clusters": 12,
+   "interval_95": [
+    -0.06374356714336175,
+    0.0224318194704654
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2024,
+   "baseline": "S",
+   "candidate": "S+M+L",
+   "metric": "mae_days",
+   "resampling_unit": "country",
+   "gain": -0.021108096301622015,
+   "clusters": 38,
+   "interval_95": [
+    -0.0843731287923675,
+    0.03835158860293952
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2024,
+   "baseline": "S",
+   "candidate": "S+M+L",
+   "metric": "brier",
+   "resampling_unit": "calendar_month",
+   "gain": -0.0002574631735707374,
+   "clusters": 12,
+   "interval_95": [
+    -0.0017973028230229813,
+    0.0011756165515001721
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2024,
+   "baseline": "S",
+   "candidate": "S+M+L",
+   "metric": "brier",
+   "resampling_unit": "country",
+   "gain": -0.0002574631735707374,
+   "clusters": 38,
+   "interval_95": [
+    -0.0009922176581055094,
+    0.0006363463072720478
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2024,
+   "baseline": "S",
+   "candidate": "S+M+L+D",
+   "metric": "mae_days",
+   "resampling_unit": "calendar_month",
+   "gain": -0.010788435348046896,
+   "clusters": 12,
+   "interval_95": [
+    -0.06393837747290172,
+    0.03682997619543137
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2024,
+   "baseline": "S",
+   "candidate": "S+M+L+D",
+   "metric": "mae_days",
+   "resampling_unit": "country",
+   "gain": -0.010788435348046896,
+   "clusters": 38,
+   "interval_95": [
+    -0.08973873883965176,
+    0.03474237280463516
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2024,
+   "baseline": "S",
+   "candidate": "S+M+L+D",
+   "metric": "brier",
+   "resampling_unit": "calendar_month",
+   "gain": 0.0005112754344975565,
+   "clusters": 12,
+   "interval_95": [
+    -0.0018329123643374455,
+    0.0029412537428254643
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2024,
+   "baseline": "S",
+   "candidate": "S+M+L+D",
+   "metric": "brier",
+   "resampling_unit": "country",
+   "gain": 0.0005112754344975565,
+   "clusters": 38,
+   "interval_95": [
+    -0.0007336576610223322,
+    0.00131206800768355
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2024,
+   "baseline": "S+M+L",
+   "candidate": "S+M+L+D",
+   "metric": "mae_days",
+   "resampling_unit": "calendar_month",
+   "gain": 0.010319660953575118,
+   "clusters": 12,
+   "interval_95": [
+    -0.018823870072544407,
+    0.04156958794419445
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2024,
+   "baseline": "S+M+L",
+   "candidate": "S+M+L+D",
+   "metric": "mae_days",
+   "resampling_unit": "country",
+   "gain": 0.010319660953575118,
+   "clusters": 38,
+   "interval_95": [
+    -0.043096916552823494,
+    0.03906358090433687
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2024,
+   "baseline": "S+M+L",
+   "candidate": "S+M+L+D",
+   "metric": "brier",
+   "resampling_unit": "calendar_month",
+   "gain": 0.0007687386080682937,
+   "clusters": 12,
+   "interval_95": [
+    -0.00022741143022521156,
+    0.0018190433934957475
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2024,
+   "baseline": "S+M+L",
+   "candidate": "S+M+L+D",
+   "metric": "brier",
+   "resampling_unit": "country",
+   "gain": 0.0007687386080682937,
+   "clusters": 38,
+   "interval_95": [
+    -6.342002386365045e-05,
+    0.0012945324830312026
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2025,
+   "baseline": "S",
+   "candidate": "S+M+L",
+   "metric": "mae_days",
+   "resampling_unit": "calendar_month",
+   "gain": 0.04378324889208865,
+   "clusters": 12,
+   "interval_95": [
+    0.0016826514279882378,
+    0.08408431767776339
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2025,
+   "baseline": "S",
+   "candidate": "S+M+L",
+   "metric": "mae_days",
+   "resampling_unit": "country",
+   "gain": 0.04378324889208865,
+   "clusters": 34,
+   "interval_95": [
+    0.0051892922463265745,
+    0.10942374931404714
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2025,
+   "baseline": "S",
+   "candidate": "S+M+L",
+   "metric": "brier",
+   "resampling_unit": "calendar_month",
+   "gain": 0.001292046569139031,
+   "clusters": 12,
+   "interval_95": [
+    0.0006257175195612441,
+    0.0019271520943226444
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2025,
+   "baseline": "S",
+   "candidate": "S+M+L",
+   "metric": "brier",
+   "resampling_unit": "country",
+   "gain": 0.001292046569139031,
+   "clusters": 34,
+   "interval_95": [
+    9.875529058423063e-05,
+    0.002106317155218178
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2025,
+   "baseline": "S",
+   "candidate": "S+M+L+D",
+   "metric": "mae_days",
+   "resampling_unit": "calendar_month",
+   "gain": 0.06384257332340125,
+   "clusters": 12,
+   "interval_95": [
+    0.02244705499107863,
+    0.10577935283920753
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2025,
+   "baseline": "S",
+   "candidate": "S+M+L+D",
+   "metric": "mae_days",
+   "resampling_unit": "country",
+   "gain": 0.06384257332340125,
+   "clusters": 34,
+   "interval_95": [
+    -0.0063203064396865636,
+    0.158698246659859
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2025,
+   "baseline": "S",
+   "candidate": "S+M+L+D",
+   "metric": "brier",
+   "resampling_unit": "calendar_month",
+   "gain": 0.0030876289320965157,
+   "clusters": 12,
+   "interval_95": [
+    0.0019997767944476366,
+    0.004146984565759233
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2025,
+   "baseline": "S",
+   "candidate": "S+M+L+D",
+   "metric": "brier",
+   "resampling_unit": "country",
+   "gain": 0.0030876289320965157,
+   "clusters": 34,
+   "interval_95": [
+    0.0009109427565440293,
+    0.004158729013885873
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2025,
+   "baseline": "S+M+L",
+   "candidate": "S+M+L+D",
+   "metric": "mae_days",
+   "resampling_unit": "calendar_month",
+   "gain": 0.02005932443131261,
+   "clusters": 12,
+   "interval_95": [
+    -0.017563826942132058,
+    0.05583361352581176
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2025,
+   "baseline": "S+M+L",
+   "candidate": "S+M+L+D",
+   "metric": "mae_days",
+   "resampling_unit": "country",
+   "gain": 0.02005932443131261,
+   "clusters": 34,
+   "interval_95": [
+    -0.022784906913312943,
+    0.07934297480531231
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2025,
+   "baseline": "S+M+L",
+   "candidate": "S+M+L+D",
+   "metric": "brier",
+   "resampling_unit": "calendar_month",
+   "gain": 0.0017955823629574842,
+   "clusters": 12,
+   "interval_95": [
+    0.0008445037685136055,
+    0.0029248283124960655
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  },
+  {
+   "year": 2025,
+   "baseline": "S+M+L",
+   "candidate": "S+M+L+D",
+   "metric": "brier",
+   "resampling_unit": "country",
+   "gain": 0.0017955823629574842,
+   "clusters": 34,
+   "interval_95": [
+    0.00040953291374949734,
+    0.002319314088615195
+   ],
+   "resamples": 1000,
+   "boundary": "Fixed-model cluster-resampling sensitivity; positive means lower loss. Not causal, not retraining uncertainty, few clusters limit interpretation."
+  }
+ ],
+ "finished_utc": "2026-11-08T06:05:24.521917+00:00"
+}
