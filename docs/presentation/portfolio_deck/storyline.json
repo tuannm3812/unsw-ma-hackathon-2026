@@ -1301,34 +1301,34 @@
       "id": "clustering",
       "section": "Evidence",
       "layout": "content+takeaways",
-      "title": "Large row counts did not remove country-level uncertainty",
+      "title": "Clustering by country removed 64 of 120 significant terms",
       "subtitle": "Explanatory models: HC3 versus 48-country clustered errors on 1,453,840 loans",
       "takeaways": [
         {
           "marker": 1,
+          "heading": "Few countries dominate",
+          "text": "Ten countries hold **81% of loans**; regional patterns rest on **two countries each**."
+        },
+        {
+          "marker": 2,
           "heading": "Text terms are hit hardest",
           "text": "**42 of 56 text terms** lost significance, against 22 of 64 controls."
         },
         {
-          "marker": 2,
-          "heading": "Few text terms survive",
-          "text": "Only **sentiment and some family-framing interactions** with sector or region stay significant."
-        },
-        {
           "marker": 3,
-          "heading": "Urgency no longer passes",
-          "text": "Its p-value rose from below 0.001 to **0.49** for funding time and 0.22 for same-day funding."
+          "heading": "Few text terms survive",
+          "text": "Only **14** stay significant: sentiment in both models and 12 family-framing interactions."
         },
         {
           "marker": 4,
-          "heading": "Few countries dominate",
-          "text": "Ten countries hold **81% of loans**; regional patterns rest on **two countries each**."
+          "heading": "Urgency no longer passes",
+          "text": "Its p-value rose from below 0.001 to **0.49** for funding time and 0.22 for same-day funding."
         }
       ],
       "notes": {
         "purpose": "Show why we distrust headline significance.",
-        "script": "With 1.45 million rows almost everything looks significant, because standard HC3 errors treat every loan as independent. When we let errors correlate within each of 48 countries, 64 of the 120 significant terms fell away. [Point: Text terms are hit hardest] Most of those are text terms. [Point: Few text terms survive] Only sentiment and some family interactions remain. [Point: Urgency no longer passes] Urgency is the clearest case. [Point: Few countries dominate] The reason is concentration: ten countries hold 81 percent of loans and behave very differently. Regional family-framing patterns rest on two countries each, so they support no regional writing rules; the appendix shows the check. Losing significance is weak evidence, not evidence of no effect; the next two slides ask what survives programme controls and how small the remaining links are.",
-        "reference": "Explanatory models, primary saved run 2026-08-31: association_summary.txt; split by src/clustering_split.py (reports/evidence_sources/clustering_split.json); shares by src/country_shares.py; map by scripts/build_country_map.py from Natural Earth 1:110m admin-0 countries (public domain)."
+        "script": "With 1.45 million rows almost everything looks significant, because standard HC3 errors treat every loan as independent. When we let errors correlate within each of 48 countries, 64 of the 120 significant terms fell away. [Point: Few countries dominate] The reason is concentration: ten countries hold 81 percent of loans and behave very differently, and regional family-framing patterns rest on two countries each, so they support no regional writing rules; the appendix shows the check. [Point: Text terms are hit hardest] Most of the terms lost are text terms. [Point: Few text terms survive] Only sentiment and some family interactions remain, and the next slide tests the framing terms harder. [Point: Urgency no longer passes] Urgency is the clearest case. For the solution, this means three things: report country-clustered uncertainty rather than only loan-level errors, validate the slow-funding flag country by country before using it, and give no country or regional writing rules from two-country regions. Losing significance is weak evidence, not evidence of no effect; the next two slides ask what survives programme controls and how small the remaining links are.",
+        "reference": "Explanatory models, primary saved run 2026-08-31: association_summary.txt; split by src/clustering_split.py (reports/evidence_sources/clustering_split.json); shares by src/country_shares.py."
       },
       "sublabel": "Explanatory models",
       "exhibit": {
@@ -1357,382 +1357,29 @@
             "clustered": 0.2233
           }
         ],
-        "country_shares": [
-          {
-            "country": "PH",
-            "loans": 521586,
-            "share": 0.3588,
-            "same_day_share": 0.4795,
-            "region": "Asia"
-          },
-          {
-            "country": "KE",
-            "loans": 266562,
-            "share": 0.1834,
-            "same_day_share": 0.2916,
-            "region": "Africa"
-          },
-          {
-            "country": "UG",
-            "loans": 69651,
-            "share": 0.0479,
-            "same_day_share": 0.3108,
-            "region": "Africa"
-          },
-          {
-            "country": "TJ",
-            "loans": 68865,
-            "share": 0.0474,
-            "same_day_share": 0.1814,
-            "region": "Asia"
-          },
-          {
-            "country": "KH",
-            "loans": 58074,
-            "share": 0.0399,
-            "same_day_share": 0.4853,
-            "region": "Asia"
-          },
-          {
-            "country": "MG",
-            "loans": 55670,
-            "share": 0.0383,
-            "same_day_share": 0.67,
-            "region": "Africa"
-          },
-          {
-            "country": "PK",
-            "loans": 42767,
-            "share": 0.0294,
-            "same_day_share": 0.1498,
-            "region": "Asia"
-          },
-          {
-            "country": "NI",
-            "loans": 38520,
-            "share": 0.0265,
-            "same_day_share": 0.1521,
-            "region": "Central America"
-          },
-          {
-            "country": "LR",
-            "loans": 28847,
-            "share": 0.0198,
-            "same_day_share": 0.2835,
-            "region": "Africa"
-          },
-          {
-            "country": "TG",
-            "loans": 27513,
-            "share": 0.0189,
-            "same_day_share": 0.3783,
-            "region": "Africa"
-          },
-          {
-            "country": "SN",
-            "loans": 21420,
-            "share": 0.0147,
-            "same_day_share": 0.0716,
-            "region": "Africa"
-          },
-          {
-            "country": "HN",
-            "loans": 20871,
-            "share": 0.0144,
-            "same_day_share": 0.1731,
-            "region": "Central America"
-          },
-          {
-            "country": "KG",
-            "loans": 20530,
-            "share": 0.0141,
-            "same_day_share": 0.1263,
-            "region": "Asia"
-          },
-          {
-            "country": "IN",
-            "loans": 20397,
-            "share": 0.014,
-            "same_day_share": 0.4414,
-            "region": "Asia"
-          },
-          {
-            "country": "SL",
-            "loans": 19408,
-            "share": 0.0133,
-            "same_day_share": 0.3436,
-            "region": "Africa"
-          },
-          {
-            "country": "RW",
-            "loans": 18395,
-            "share": 0.0127,
-            "same_day_share": 0.1859,
-            "region": "Africa"
-          },
-          {
-            "country": "PS",
-            "loans": 14500,
-            "share": 0.01,
-            "same_day_share": 0.1693,
-            "region": "Middle East"
-          },
-          {
-            "country": "NG",
-            "loans": 14320,
-            "share": 0.0098,
-            "same_day_share": 0.3359,
-            "region": "Africa"
-          },
-          {
-            "country": "GH",
-            "loans": 14193,
-            "share": 0.0098,
-            "same_day_share": 0.354,
-            "region": "Africa"
-          },
-          {
-            "country": "CD",
-            "loans": 11151,
-            "share": 0.0077,
-            "same_day_share": 0.2061,
-            "region": "Africa"
-          },
-          {
-            "country": "BF",
-            "loans": 10660,
-            "share": 0.0073,
-            "same_day_share": 0.2726,
-            "region": "Africa"
-          },
-          {
-            "country": "TZ",
-            "loans": 10621,
-            "share": 0.0073,
-            "same_day_share": 0.328,
-            "region": "Africa"
-          },
-          {
-            "country": "TL",
-            "loans": 10401,
-            "share": 0.0072,
-            "same_day_share": 0.1515,
-            "region": "Oceania"
-          },
-          {
-            "country": "MZ",
-            "loans": 8066,
-            "share": 0.0055,
-            "same_day_share": 0.1494,
-            "region": "Africa"
-          },
-          {
-            "country": "SB",
-            "loans": 7924,
-            "share": 0.0055,
-            "same_day_share": 0.1114,
-            "region": "Oceania"
-          },
-          {
-            "country": "HT",
-            "loans": 7559,
-            "share": 0.0052,
-            "same_day_share": 0.4702,
-            "region": "North America"
-          },
-          {
-            "country": "EG",
-            "loans": 7398,
-            "share": 0.0051,
-            "same_day_share": 0.1694,
-            "region": "Africa"
-          },
-          {
-            "country": "ZW",
-            "loans": 6380,
-            "share": 0.0044,
-            "same_day_share": 0.3044,
-            "region": "Africa"
-          },
-          {
-            "country": "LS",
-            "loans": 4910,
-            "share": 0.0034,
-            "same_day_share": 0.9222,
-            "region": "Africa"
-          },
-          {
-            "country": "ML",
-            "loans": 4281,
-            "share": 0.0029,
-            "same_day_share": 0.1972,
-            "region": "Africa"
-          },
-          {
-            "country": "VU",
-            "loans": 4018,
-            "share": 0.0028,
-            "same_day_share": 0.2093,
-            "region": "Oceania"
-          },
-          {
-            "country": "CM",
-            "loans": 3670,
-            "share": 0.0025,
-            "same_day_share": 0.2932,
-            "region": "Africa"
-          },
-          {
-            "country": "MW",
-            "loans": 3294,
-            "share": 0.0023,
-            "same_day_share": 0.5965,
-            "region": "Africa"
-          },
-          {
-            "country": "ZM",
-            "loans": 3157,
-            "share": 0.0022,
-            "same_day_share": 0.6484,
-            "region": "Africa"
-          },
-          {
-            "country": "MM",
-            "loans": 3146,
-            "share": 0.0022,
-            "same_day_share": 0.1144,
-            "region": "Asia"
-          },
-          {
-            "country": "NP",
-            "loans": 1276,
-            "share": 0.0009,
-            "same_day_share": 0.9882,
-            "region": "Asia"
-          },
-          {
-            "country": "LA",
-            "loans": 1121,
-            "share": 0.0008,
-            "same_day_share": 0.6646,
-            "region": "Asia"
-          },
-          {
-            "country": "PG",
-            "loans": 1042,
-            "share": 0.0007,
-            "same_day_share": 0.8925,
-            "region": "Oceania"
-          },
-          {
-            "country": "CI",
-            "loans": 595,
-            "share": 0.0004,
-            "same_day_share": 0.1008,
-            "region": "Africa"
-          },
-          {
-            "country": "YE",
-            "loans": 446,
-            "share": 0.0003,
-            "same_day_share": 0.6345,
-            "region": "Middle East"
-          },
-          {
-            "country": "UZ",
-            "loans": 389,
-            "share": 0.0003,
-            "same_day_share": 0.2314,
-            "region": "Asia"
-          },
-          {
-            "country": "BI",
-            "loans": 190,
-            "share": 0.0001,
-            "same_day_share": 0.0789,
-            "region": "Africa"
-          },
-          {
-            "country": "BD",
-            "loans": 39,
-            "share": 0.0,
-            "same_day_share": 0.6667,
-            "region": "Asia"
-          },
-          {
-            "country": "SO",
-            "loans": 10,
-            "share": 0.0,
-            "same_day_share": 0.2,
-            "region": "Africa"
-          },
-          {
-            "country": "BJ",
-            "loans": 3,
-            "share": 0.0,
-            "same_day_share": 0.0,
-            "region": "Africa"
-          },
-          {
-            "country": "SS",
-            "loans": 2,
-            "share": 0.0,
-            "same_day_share": 0.0,
-            "region": "Africa"
-          },
-          {
-            "country": "AF",
-            "loans": 1,
-            "share": 0.0,
-            "same_day_share": 1.0,
-            "region": "Asia"
-          },
-          {
-            "country": "NE",
-            "loans": 1,
-            "share": 0.0,
-            "same_day_share": 0.0,
-            "region": "Africa"
-          }
-        ],
         "top10_label": "10 countries hold 81% of loans",
-        "caption": "Explanatory models, HC3 versus errors clustered by country (48 clusters).",
+        "caption": "Explanatory models, HC3 versus errors clustered by country (48 clusters). Dots in the top panel are illustrative.",
         "note": "Printed as 0.0000 in the saved run. Text terms include interactions of a text measure with a control.",
-        "panels": [
-          {
-            "title": "(a) Which terms lost significance",
-            "guide": "64 of 120 terms significant under HC3 lost it under clustering; each square is one term."
-          },
-          {
-            "title": "(b) Urgency before and after",
-            "guide": "HC3 errors allow unequal variance but treat every loan as independent; clustering by country lets loans in a country share shocks."
-          },
-          {
-            "title": "(c) Where the loans are",
-            "guide": "Ten of 48 countries hold 81% of loans (outlined on the map); table share cells use the map's colour scale."
-          }
-        ],
-        "country_names": {
-          "PH": "Philippines",
-          "KE": "Kenya",
-          "UG": "Uganda",
-          "TJ": "Tajikistan",
-          "KH": "Cambodia",
-          "MG": "Madagascar",
-          "PK": "Pakistan",
-          "NI": "Nicaragua",
-          "LR": "Liberia",
-          "TG": "Togo"
-        },
         "figure": "Figure A2.",
-        "implication": {
-          "title": "(c) What it means for the solution",
-          "guide": "Country-level uncertainty shapes every step of the framework.",
-          "lines": [
-            "Report country-clustered uncertainty, never only loan-level errors.",
-            "Validate the slow-funding flag country by country before using it.",
-            "Give no country or regional writing rules from two-country regions."
+        "why": {
+          "title": "Why the errors widen",
+          "guide": "The loans and estimates stay the same; only the assumption about how loans vary together changes.",
+          "hc3": [
+            "HC3 errors",
+            "Each loan counts as independent"
+          ],
+          "clustered": [
+            "Country-clustered errors",
+            "Loans in a country share shocks: 48 clusters"
           ]
+        },
+        "terms": {
+          "title": "Which terms lost significance",
+          "guide": "Each square is one term significant under HC3."
+        },
+        "urgency_panel": {
+          "title": "Urgency before and after",
+          "guide": "p-value for urgency in each model; clustering moves both past the 0.05 line."
         }
       },
       "figure": "Figure 5.",

@@ -2864,3 +2864,10 @@ unseen exact template, which cannot exclude near-duplicates.
 - Link chips now appear only on the agenda and the key insight slide; rule added to DESIGN.md. Removed the chips and the linked "next" reference on slides 9, 16, 18, 19 and 20. Slides 5 and 13 had no chips to remove.
 - Slide 9: add-on checks moved to the speaker notes, the claim line dropped, and each card ends in a plain "Feeds" line.
 - Verified: pyflakes, deck QA, rendered slides, full offline pytest. Those five slides only were rebuilt; nothing pushed.
+
+## 2026-11-08: slide 10 (country uncertainty) rework
+
+- Re-read the live deck first: no owner edits to mirror.
+- Title now states the result. Slide 10 now shows why clustering widens the errors (illustrative dots), then the terms lost and the urgency example with direct labels. The implications list moved to the speaker notes; unused map and table data removed from this slide's source.
+- Takeaways reordered to follow the story; the 14 surviving text terms come from the register.
+- Verified: pyflakes, deck QA, rendered slide 10, full offline pytest. Slide 10 only was rebuilt; nothing pushed.

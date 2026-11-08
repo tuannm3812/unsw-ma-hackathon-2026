@@ -761,64 +761,73 @@ def panel(page, x, y, w, h, title, guide):
 
 
 def clustering(page, slide, pos):
-    """Three blocks: (a) which terms lost significance, (b) urgency before and after, (c) where loans are."""
+    """Why the errors widen (illustrative dots), then which terms lost significance and the urgency example."""
     page.chrome(slide)
     ex = slide['exhibit']
-    ax, ay, aw, ah = L, TOP, 290, 158
-    panel(page, ax, ay, aw, ah, ex['panels'][0]['title'], ex['panels'][0]['guide'])
-    cell, gap = 8.4, 2.1
+    pw = R - L
+    why = ex['why']
+    panel(page, L, TOP, pw, 104, why['title'], why['guide'])
+    dot, pitch, dy = 5, 8, TOP + 56
+    for row in range(5):
+        for col in range(16):
+            page.rect(L + 14 + col * pitch, dy + row * pitch, dot, dot, NAVY, 'ELLIPSE')
+    page.text(f"{why['hc3'][0]}\n{why['hc3'][1]}", L + 150, dy, 136, 38, size=9, color=GREY, spacing=105,
+              spans=[(0, len(why['hc3'][0]), {'bold': True, 'color': NAVY})])
+    page.line(L + 288, dy + 18, L + 312, dy + 18, SLATE, .75)
+    page.ops[-1]['end_arrow'] = 'FILL_ARROW'
+    x = L + 322
+    for size in (5, 3, 2, 1, 1, 1):
+        for row in range(5):
+            for col in range(size):
+                page.rect(x + col * pitch, dy + row * pitch, dot, dot, VIOLET, 'ELLIPSE')
+        x += size * pitch + 10
+    text = why['clustered']
+    page.text(f'{text[0]}\n{text[1]}', L + 482, dy, pw - 490, 38, size=9, color=GREY, spacing=105,
+              spans=[(0, len(text[0]), {'bold': True, 'color': VIOLET})])
+    page.marker(1, L + pw - 22, TOP + 8)
+    # Which terms lost significance
+    ax, ay, aw, ah = L, TOP + 114, 290, 182
+    panel(page, ax, ay, aw, ah, ex['terms']['title'], ex['terms']['guide'])
+    cell, gap = 9, 2.6
     for g, group in enumerate(ex['groups']):
-        x0 = ax + 10 + g * 104
-        page.text(f"{group['name']}: {group['lost']} of {group['significant']}", x0, ay + 46, 100, 12,
-                  size=8, bold=True)
+        x0 = ax + 12 + g * 140
+        page.text(f"{group['name']}: {group['lost']} of {group['significant']} lost", x0, ay + 40, 130, 12, size=9, bold=True)
         for i in range(group['significant']):
             row, col = divmod(i, 8)
-            page.rect(x0 + col * (cell + gap), ay + 62 + row * (cell + gap), cell, cell,
+            page.rect(x0 + col * (cell + gap), ay + 56 + row * (cell + gap), cell, cell,
                       YELLOW if i < group['lost'] else NAVY)
-    lx = ax + 220
-    page.rect(lx, ay + 64, 8, 8, YELLOW)
-    page.text('lost', lx + 12, ay + 62, 50, 12, size=8, color=GREY)
-    page.rect(lx, ay + 80, 8, 8, NAVY)
-    page.text('kept', lx + 12, ay + 78, 50, 12, size=8, color=GREY)
-    # (b)
-    bx, by, bw, bh = L + 300, TOP, R - 16 - L - 300, 158
-    panel(page, bx, by, bw, bh, ex['panels'][1]['title'], ex['panels'][1]['guide'])
-    x0, x1 = bx + 20, bx + bw - 20
+    ly = ay + ah - 18
+    page.rect(ax + 12, ly + 2, 8, 8, YELLOW)
+    page.text('lost', ax + 24, ly, 30, 12, size=8, color=GREY)
+    page.rect(ax + 56, ly + 2, 8, 8, NAVY)
+    page.text('kept', ax + 68, ly, 30, 12, size=8, color=GREY)
+    page.marker(2, ax + aw - 22, ay + 8)
+    page.marker(3, ax + 98, ly - 1)
+    # Urgency
+    bx, by, bw, bh = L + 300, ay, pw - 300, ah
+    panel(page, bx, by, bw, bh, ex['urgency_panel']['title'], ex['urgency_panel']['guide'])
+    x0, x1 = bx + 20, bx + bw - 24
     px = lambda p_value: x0 + (math.log10(p_value) + 4) / 4 * (x1 - x0)  # 0.0001 .. 1
-    page.line(px(.05), by + 54, px(.05), by + 126, VIOLET, .75)
+    page.line(px(.05), by + 56, px(.05), by + 158, VIOLET, .75)
     page.ops[-1]['dash_style'] = 'DASH'
-    page.text('0.05', px(.05) - 14, by + 128, 28, 12, size=8, color=VIOLET, bold=True, align='center')
-    for value, name in [(0.001, '0.001'), (0.01, '0.01'), (1, '1')]:
-        page.text(name, px(value) - 16, by + 128, 32, 12, size=8, color=GREY, align='center')
+    page.text('significant', px(.05) - 74, by + 46, 70, 12, size=8, color=GREY, align='right')
+    page.text('not significant', px(.05) + 4, by + 46, 74, 12, size=8, color=GREY)
+    for value, name in [(0.001, '0.001'), (0.01, '0.01'), (.05, '0.05'), (1, '1')]:
+        page.text(name, px(value) - 16, by + 160, 32, 12, size=8, color=VIOLET if value == .05 else GREY,
+                  bold=value == .05, align='center')
     for r, row in enumerate(ex['urgency']):
-        y = by + 72 + r * 32
-        page.text(row['model'], bx + 10, y - 16, 200, 12, size=8, bold=True)
+        y = by + 84 + r * 44
+        page.text(row['model'], bx + 10, y - 19, 150, 12, size=9, bold=True)
         page.line(px(.0004) + 4, y, px(row['clustered']) - 5, y, SLATE, .75)
         page.ops[-1]['end_arrow'] = 'FILL_ARROW'
         page.rect(px(.0004) - 4, y - 4, 8, 8, NAVY, 'ELLIPSE')
         page.rect(px(row['clustered']) - 4, y - 4, 8, 8, VIOLET, 'ELLIPSE')
-        page.sup('<0.001¹', px(.0004) - 24, y + 4, 48, 12, size=8, align='center')
-        page.text(f"{row['clustered']:.2f}", px(row['clustered']) - 20, y + 4, 40, 12, size=8, bold=True,
-                  color=VIOLET, align='center')
-    page.rect(bx + 10, by + 144, 8, 8, NAVY, 'ELLIPSE')
-    page.text('HC3', bx + 22, by + 142, 40, 12, size=8, color=GREY)
-    page.rect(bx + 54, by + 144, 8, 8, VIOLET, 'ELLIPSE')
-    page.text('country-clustered', bx + 66, by + 142, 120, 12, size=8, color=GREY)
-    cx, cy, cw, ch = MAP_PANEL
-    if ex.get('implication'):
-        imp = ex['implication']
-        panel(page, cx, cy, cw, ch, imp['title'], imp['guide'])
-        for k, line in enumerate(imp['lines']):
-            page.badge(str(k + 1), cx + 12, cy + 50 + 26 * k, (16, 16), VIOLET, WHITE, 8)
-            page.text(line, cx + 36, cy + 50 + 26 * k, cw - 50, 16, size=11)
-    else:
-        country_panel(page, ex, cx, cy, cw, ch, ex['panels'][2]['title'], ex['panels'][2]['guide'])
-    page.marker(1, ax + aw - 22, ay + 8)
-    page.marker(2, ax + 210, ay + 46)
-    page.marker(3, bx + bw - 22, by + 8)
-    page.marker(4, cx + cw - 22, cy + 8)
-    page.caption(slide['figure'], ex['caption'], cy + ch + 8, w=cw)
-    page.caption('¹', ex['note'], cy + ch + 22, w=cw)
+        page.sup('HC3 <0.001¹', px(.0004) - 12, y + 5, 70, 12, size=8)
+        page.text(f"Clustered {row['clustered']:.2f}", px(.05) + 8, y + 5, 80, 12, size=8, bold=True,
+                  color=VIOLET)
+    page.marker(4, bx + bw - 22, by + 8)
+    page.caption(slide['figure'], ex['caption'], ay + ah + 8, w=pw)
+    page.caption('¹', ex['note'], ay + ah + 22, w=pw)
     page.takeaways(slide['takeaways'], pos)
 
 
