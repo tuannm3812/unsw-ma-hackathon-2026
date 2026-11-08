@@ -45,3 +45,38 @@ def test_wcr_size_is_roughly_nominal():
         p = wcr_pvalues(stats, 0, 0.0, beta[0] / se[0], 399, np.random.default_rng(seed))
         rejections += p["two_sided"] < 0.10
     assert rejections <= 14  # nominal 6 of 60
+
+
+def _with_shared_control(seed=3, g=8, n=240):
+    import scipy.sparse as sp
+    from src.feature_sensitivity import _residualize
+    rng = np.random.default_rng(seed)
+    codes = np.arange(n) % g
+    shared = rng.normal(size=n) + 0.5 * codes
+    fe = np.eye(g)[codes]
+    Z = sp.csr_matrix(np.column_stack([fe, shared]))
+    raw = rng.normal(size=(n, 2)) + shared[:, None]
+    y = 0.2 * raw[:, 0] + 0.4 * shared + rng.normal(size=g)[codes] + rng.normal(size=n)
+    return y, raw, codes, g, Z, _residualize(Z, y).ravel(), _residualize(Z, raw)
+
+
+def test_bootstrap_t_matches_full_model_refit_with_shared_controls():
+    y, raw, codes, g, Z, y_r, x_r = _with_shared_control()
+    stats = ClusterStats(y_r, x_r, codes, g, n_params=Z.shape[1] + 2, controls=Z)
+    xo = stats.xs[:, [1]]
+    fitted = xo @ np.linalg.solve(xo.T @ xo, xo.T @ stats.y)
+    resid = stats.y - fitted
+    w = np.array([1.0, -1.0, 0.5**0.5, -1.5**0.5, 1.0, -1.0, 1.5**0.5, -0.5**0.5])[None]
+    adj = stats.control_adjustment(resid, w)
+    beta, se = stats.fit(stats.cluster_xt(fitted)[None] + w[..., None] * stats.cluster_xt(resid)[None], adj)
+    full = np.column_stack([x_r, Z.toarray()])
+    ystar = fitted + w[0][codes] * resid
+    ref = sm.OLS(ystar, full).fit(cov_type="cluster", cov_kwds={"groups": codes, "use_correction": False})
+    bread = np.linalg.inv(x_r.T @ x_r)
+    e = ystar - full @ np.linalg.pinv(full) @ ystar
+    meat = sum(np.outer(x_r[codes == h].T @ e[codes == h], x_r[codes == h].T @ e[codes == h]) for h in range(g))
+    want = np.sqrt(np.diag(stats.corr * bread @ meat @ bread))
+    np.testing.assert_allclose(beta[0] / stats.scale, ref.params[:2], rtol=1e-6)
+    np.testing.assert_allclose(se[0] / stats.scale, want, rtol=1e-6)
+    no_adj = stats.fit(stats.cluster_xt(fitted)[None] + w[..., None] * stats.cluster_xt(resid)[None])[1]
+    assert not np.allclose(no_adj, se, rtol=1e-3)

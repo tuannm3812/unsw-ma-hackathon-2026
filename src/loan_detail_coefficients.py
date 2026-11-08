@@ -48,7 +48,7 @@ CATEGORIES = {  # column: fixed reference, or None for the most common level
     "repaymentInterval": None, "activity": None,
 }
 NUMERIC = {  # column: (edit size, unit)
-    "log_loan_amount": (math.log(2), "per doubling of loan amount, within loan-size band"),
+    "log_loan_amount": (None, "per doubling from the median loan amount, within loan-size band"),
     "lenderRepaymentTerm": (1.0, "per additional month of repayment term"),
     "borrowerCount": (1.0, "per additional borrower, holding the group-loan indicator"),
     "is_group_loan": (1.0, "group loan vs individual loan, holding borrower count"),
@@ -138,6 +138,12 @@ def contrast_row(c: np.ndarray, beta, cov, df, outcome) -> dict:
     return row
 
 
+def doubling_scale(log1p_amount: pd.Series) -> tuple[float, float]:
+    """Edit on log1p(amount) for doubling the median amount A: log((1+2A)/(1+A))."""
+    median = float(np.expm1(log1p_amount.median()))
+    return math.log((1 + 2 * median) / (1 + median)), median
+
+
 def report(frame, d, fitted, dummies, outcome) -> dict:
     beta, cov, df = fitted["beta"], fitted["cov"], fitted["clusters"] - 1
     index = {name: i for i, name in enumerate(d["kept"])}
@@ -152,12 +158,16 @@ def report(frame, d, fitted, dummies, outcome) -> dict:
         return row(name, sd, {"unit": "per 1 SD of this column", "sd": sd,
                               "edit_scale_for_reference": scale})
 
+    amount_scale, median_amount = doubling_scale(frame["log_loan_amount"])
+    edits = {n: (amount_scale if s is None else s, u) for n, (s, u) in NUMERIC.items()}
     framing = [row(n, s, {"unit": "per +1 mention per 100 words" if s == 1.0
                           else "per +0.5 VADER compound"})
                for n, s in FRAMING_SCALE.items() if n in index]
-    numeric = [row(n, s, {"unit": u}) for n, (s, u) in NUMERIC.items() if n in index]
+    numeric = [row(n, s, {"unit": u, **({"median_amount_usd": median_amount}
+                                        if n == "log_loan_amount" else {})})
+               for n, (s, u) in edits.items() if n in index]
     per_sd = [scaled_sd(n, s) for n, s in FRAMING_SCALE.items() if n in index]
-    per_sd += [scaled_sd(n, s) for n, (s, _) in NUMERIC.items() if n in index]
+    per_sd += [scaled_sd(n, s) for n, (s, _) in edits.items() if n in index]
     categories = [row(n, 1.0, {**m, "unit": f"{m['level']} vs {m['reference']}"})
                   for n, m in dummies.items() if n in index]
     # Reference-free summary of the activity block: each sector's loan-weighted

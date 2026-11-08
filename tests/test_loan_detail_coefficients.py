@@ -51,3 +51,10 @@ def test_fit_matches_full_ols_with_cr1(monkeypatch):
     assert got["n_params"] == X.shape[1]
     np.testing.assert_allclose(got["beta"], ref.params[["x1", "group_x"]].to_numpy(), rtol=1e-6)
     np.testing.assert_allclose(np.sqrt(np.diag(got["cov"])), ref.bse[["x1", "group_x"]].to_numpy(), rtol=1e-5)
+
+
+def test_doubling_scale_uses_log1p_at_the_median():
+    amounts = pd.Series(np.log1p([100.0, 325.0, 1000.0]))
+    scale, median = ld.doubling_scale(amounts)
+    assert abs(median - 325) < 1e-6
+    assert abs(scale - np.log(651 / 326)) < 1e-9

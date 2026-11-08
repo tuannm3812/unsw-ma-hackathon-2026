@@ -16,3 +16,11 @@ def test_flag_top_counts_and_calibration_bins():
     assert flag_top(score, 0.2).sum() == 200
     bins = calibration_deciles(np.zeros(1000), np.linspace(0, 1, 1000))
     assert sum(b["rows"] for b in bins) == 1000 and len(bins) == 10
+
+
+def test_month_bootstrap_reselects_capacity_each_draw():
+    from src.triage_value import month_bootstrap
+    days = np.arange(200, dtype=float)
+    months = np.array(["a", "b"] * 100)
+    low, high = month_bootstrap(days, days, days, months, draws=50)
+    assert low == 0.0 and high == 0.0

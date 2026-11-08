@@ -15,7 +15,7 @@ how many of the year's slowest 20% would it catch?
   ten largest countries, so it measures ranking within a country rather than
   country base rates.
 * Month-block bootstrap (1,000 draws) for the text-minus-structure difference
-  in precision at the top 10%.
+  in precision at the top 10%, reselecting flags and target within each draw.
 
 Population: eventually completed loans only. Unfunded or expired listings are
 absent from the data, so this is not a test on all listings, and the
@@ -72,16 +72,21 @@ def calibration_deciles(y, p) -> list[dict]:
              "observed": float(y[codes == i].mean())} for i in range(10)]
 
 
-def month_bootstrap(diff_hits_base, diff_hits_text, flagged_base, flagged_text, months,
-                    draws=1000, seed=42):
-    frame = pd.DataFrame({"m": months, "hb": diff_hits_base, "ht": diff_hits_text,
-                          "fb": flagged_base, "ft": flagged_text}).groupby("m").sum()
+def month_bootstrap(base, text, days, months, share=0.10, draws=1000, seed=42):
+    """Interval for text-minus-structure precision, reselecting within each draw.
+
+    Each draw resamples whole months, redefines the slowest-20% target on the
+    resampled cohort, and flags the top `share` afresh, so capacity stays fixed.
+    """
+    groups = [np.flatnonzero(months == m) for m in np.unique(months)]
     rng = np.random.default_rng(seed)
-    idx = rng.integers(0, len(frame), size=(draws, len(frame)))
-    v = frame.to_numpy()
-    s = v[idx].sum(axis=1)
-    diff = s[:, 1] / s[:, 3] - s[:, 0] / s[:, 2]
-    return np.quantile(diff, [0.025, 0.975]).tolist()
+    differences = np.empty(draws)
+    for i, picks in enumerate(rng.integers(0, len(groups), size=(draws, len(groups)))):
+        rows = np.concatenate([groups[p] for p in picks])
+        target = slow_target(days[rows])
+        differences[i] = (triage_metrics(text[rows], target, share)["precision"]
+                          - triage_metrics(base[rows], target, share)["precision"])
+    return np.quantile(differences, [0.025, 0.975]).tolist()
 
 
 def scores_for(z, key):
@@ -125,12 +130,12 @@ def main() -> int:
                     if outcome == "24h":
                         entry[label]["calibration_deciles"] = calibration_deciles(
                             y24, z[f"{key}__probability"])
-                fb = flag_top(scores_for(z, base_key)[outcome], 0.10)
-                ft = flag_top(scores_for(z, text_key)[outcome], 0.10)
                 entry["text_minus_structure_precision_top_10"] = {
                     "difference": entry["structure_text"]["top_10"]["precision"]
                     - entry["structure"]["top_10"]["precision"],
-                    "month_block_95": month_bootstrap(fb & target, ft & target, fb, ft, months)}
+                    "month_block_95": month_bootstrap(
+                        scores_for(z, base_key)[outcome], scores_for(z, text_key)[outcome],
+                        days, months)}
                 record["models"][f"{family}/{outcome}"] = entry
         out["years"].append(record)
         OUTPUT.parent.mkdir(parents=True, exist_ok=True)
