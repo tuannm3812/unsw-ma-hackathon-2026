@@ -2689,3 +2689,10 @@ unseen exact template, which cannot exclude near-duplicates.
     - Writing advice: Not yet, 0 tested edits.
   - A slim strip links to slide 14's gates. The moved items (96.4% reach the borrower before listing, unfunded loans) are in the speaker notes. The old icon placements for slide 13 were removed from the builder.
   - QA reports no automated problems; previews, PDF and preview page refreshed; not pushed.
+- **2026-11-08, slide 12 as three panels (Mike: "too hard to understand"):** no new owner edits; slide 12 was rebuilt alone.
+  - The single chart became three light panels, each with a header, a one-line guide and a paired marker:
+    - (a) "Every year, text helps": linear month ranges;
+    - (b) "It needs word patterns": linear with TF-IDF versus tree without it;
+    - (c) "Across countries it is fragile": country versus capped-country ranges, full width.
+  - The takeaways follow the same order. The AUC note, the resample count and the cap definition sit in the speaker notes and the ¹ note.
+  - QA reports no automated problems; previews, PDF and preview page refreshed; not pushed.

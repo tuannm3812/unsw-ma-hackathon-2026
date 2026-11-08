@@ -979,66 +979,66 @@ def forecast(page, slide, pos):
 
 
 def gains(page, slide, pos):
-    """Per year: linear gain with month, country and capped-country ranges; tree gain on the same scale."""
+    """Three panels: (a) month ranges every year, (b) linear versus tree, (c) country versus capped ranges."""
     page.chrome(slide)
     ex = slide['exhibit']
-    scale = 318  # points per day, shared by both panels
-    lx0, llo = L + 44, -.2   # linear panel spans -0.2 to 0.9 days
-    tx0, tlo = 474, -.1      # tree panel spans -0.1 to 0.4 days
-    lpx = lambda v: lx0 + (v - llo) * scale
-    tpx = lambda v: tx0 + (v - tlo) * scale
-    page.text(ex['panels'][0], L, TOP + 2, 300, 13, size=9, bold=True)
-    page.text(ex['panels'][1], tx0 - 4, TOP + 2, 170, 13, size=9, bold=True, color=VIOLET)
-    page.marker(3, tx0 - 4 + 4.6 * len(ex['panels'][1]) + 6, TOP + 2.5)
-    for px in (lpx, tpx):
-        page.text('No gain', px(0) - 30, TOP + 18, 60, 12, size=8, color=NAVY, bold=True, align='center')
-    top, pitch = TOP + 36, 46
-    styles = [('month', NAVY, 2.5, 6), ('country', VIOLET, 1.5, 5), ('capped', SLATE, 1.5, 5)]
-    for k, year in enumerate(sorted(ex['linear'])):
-        gy = top + k * pitch
-        page.text(year, L, gy + 6, 40, 12, size=9, color=GREY)
-        lin, cap, tree = ex['linear'][year], ex['linear_capped'][year], ex['tree'][year]
-        for r, (kind, colour, weight, dot) in enumerate(styles):
-            y = gy + 4 + r * 9
-            source = cap if kind == 'capped' else lin
-            low, high = source['country' if kind != 'month' else 'month']
-            page.line(lpx(low), y, lpx(high), y, colour, weight)
-            page.rect(lpx(source['gain']) - dot / 2, y - dot / 2, dot, dot, colour, 'ELLIPSE')
-            if kind != 'capped':
-                tl, th = tree[kind]
-                page.line(tpx(tl), y, tpx(th), y, colour, weight)
-                page.rect(tpx(tree['gain']) - dot / 2, y - dot / 2, dot, dot, colour, 'ELLIPSE')
-        if year == '2024':
-            page.marker(1, lpx(lin['month'][1]) + 5, gy - 2)
-        if year == '2025':
-            page.marker(2, lpx(lin['country'][0]) - 17, gy + 7)
-    end = top + 5 * pitch - 6
-    for px, lo, hi in ((lpx, llo, .9), (tpx, tlo, .4)):
-        page.line(px(0), top - 4, px(0), end, NAVY, .75)
-        for value, name in [(0, '0'), (.25, '0.25'), (.5, '0.50')]:
-            if lo <= value <= hi:
-                page.line(px(value), end, px(value), end + 3, RULE, .75)
-                page.text(name, px(value) - 20, end + 4, 40, 12, size=8, color=GREY, align='center')
-    page.text('days', lpx(.9) - 30, end + 4, 30, 12, size=8, color=GREY, align='right')
-    ay = end + 18
-    page.text('Text worse', lpx(0) - 66, ay, 60, 12, size=8, color=SLATE, bold=True, align='right')
-    page.line(lpx(0) - 98, ay + 5.1, lpx(0) - 70, ay + 5.1, SLATE, .75)
-    page.ops[-1]['start_arrow'] = 'FILL_ARROW'
-    page.text('Text better', lpx(0) + 6, ay, 60, 12, size=8, color=SLATE, bold=True)
-    page.line(lpx(0) + 62, ay + 5.1, lpx(0) + 90, ay + 5.1, SLATE, .75)
-    page.ops[-1]['end_arrow'] = 'FILL_ARROW'
-    lx, ly = L, ay + 16
-    for (kind, colour, weight, dot), label in zip(styles, ex['legend']):
-        page.line(lx, ly + 5.1, lx + 20, ly + 5.1, colour, weight)
-        page.rect(lx + 10 - dot / 2, ly + 5.1 - dot / 2, dot, dot, colour, 'ELLIPSE')
-        page.sup(label, lx + 24, ly, 4.3 * len(label) + 8, 12, size=8, color=GREY)
-        lx += 24 + 4.3 * len(label) + 18
-    page.caption('Figure 8.', ex['caption'], ly + 15)
-    page.caption('¹', ex['note_sup'], ly + 28)
+    years = sorted(ex['linear'])
+
+    def axis(px, y, values):
+        for value in values:
+            page.line(px(value), y, px(value), y + 3, RULE, .75)
+            page.text(f'{value:.2f}'.rstrip('0').rstrip('.') if value else '0', px(value) - 16, y + 3, 32, 11,
+                      size=8, color=GREY, align='center')
+
+    def rng(px, low, high, gain, y, colour, weight, dot):
+        page.line(px(low), y, px(high), y, colour, weight)
+        page.rect(px(gain) - dot / 2, y - dot / 2, dot, dot, colour, 'ELLIPSE')
+
+    # Top row: (a) and (b), each 296 wide; bottom row: (c) full width.
+    top_h, bottom_h, gap = 142, 150, 8
+    pw = (R - L - 6 - gap) / 2
+    boxes = [(L, TOP, pw, top_h), (L + pw + gap, TOP, pw, top_h), (L, TOP + top_h + gap, R - L - 6, bottom_h)]
+    for (x, y, w, h), meta, number in zip(boxes, ex['panels'], (1, 2, 3)):
+        panel(page, x, y, w, h, meta['title'], meta['guide'])
+        page.marker(number, x + w - 22, y + 8)
+    # (a) month ranges, linear model
+    x, y, w, h = boxes[0]
+    lo, hi = -.1, .6
+    px = lambda v, x=x, w=w: x + 44 + (v - lo) * (w - 58) / (hi - lo)
+    page.line(px(0), y + 42, px(0), y + 42 + 5 * 16, NAVY, .75)
+    for k, year in enumerate(years):
+        ry = y + 50 + 16 * k
+        page.text(year, x + 10, ry - 6, 32, 12, size=8, color=GREY)
+        v = ex['linear'][year]
+        rng(px, *v['month'], v['gain'], ry, NAVY, 2.5, 6)
+    axis(px, y + 42 + 5 * 16, [0, .25, .5])
+    # (b) linear versus tree, month ranges
+    x, y, w, h = boxes[1]
+    px = lambda v, x=x, w=w: x + 44 + (v - lo) * (w - 58) / (hi - lo)
+    page.line(px(0), y + 42, px(0), y + 42 + 5 * 16, NAVY, .75)
+    for k, year in enumerate(years):
+        ry = y + 47 + 16 * k
+        page.text(year, x + 10, ry - 3, 32, 12, size=8, color=GREY)
+        v, t = ex['linear'][year], ex['tree'][year]
+        rng(px, *v['month'], v['gain'], ry, NAVY, 2, 5)
+        rng(px, *t['month'], t['gain'], ry + 6, VIOLET, 2, 5)
+    axis(px, y + 42 + 5 * 16, [0, .25, .5])
+    # (c) country versus capped country ranges, linear model
+    x, y, w, h = boxes[2]
+    lo2, hi2 = -.2, .9
+    px = lambda v, x=x, w=w: x + 44 + (v - lo2) * (w - 70) / (hi2 - lo2)
+    page.line(px(0), y + 42, px(0), y + 42 + 5 * 18, NAVY, .75)
+    for k, year in enumerate(years):
+        ry = y + 49 + 18 * k
+        page.text(year, x + 10, ry - 3, 32, 12, size=8, color=GREY)
+        v, c = ex['linear'][year], ex['linear_capped'][year]
+        rng(px, *v['country'], v['gain'], ry, VIOLET, 2, 5)
+        rng(px, *c['country'], c['gain'], ry + 6, SLATE, 2, 5)
+    axis(px, y + 42 + 5 * 18, [0, .25, .5])
+    page.text('days of MAE gain', px(.9) - 80, y + 42 + 5 * 18 + 3, 80, 11, size=8, color=GREY, align='right')
+    page.caption('Figure 8.', ex['caption'], TOP + top_h + gap + bottom_h + 8)
+    page.caption('¹', ex['note_sup'], TOP + top_h + gap + bottom_h + 21)
     page.takeaways(slide['takeaways'], pos)
-
-
-VERDICT_FILLS = {'yes': NAVY, 'unclear': SLATE, 'not_yet': VIOLET}
 
 
 def supports(page, slide, urls):

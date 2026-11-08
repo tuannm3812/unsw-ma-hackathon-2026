@@ -1406,13 +1406,18 @@
           }
         },
         "panels": [
-          "Linear model: form, lexicon and TF-IDF",
-          "Tree model: no TF-IDF"
-        ],
-        "legend": [
-          "Month resampling",
-          "Country resampling",
-          "Country, extremes capped¹"
+          {
+            "title": "(a) Every year, text helps",
+            "guide": "Month-resampled ranges for the linear model; right of 0 means lower error."
+          },
+          {
+            "title": "(b) It needs word patterns",
+            "guide": "Navy: linear model with TF-IDF. Violet: tree model without it."
+          },
+          {
+            "title": "(c) Across countries it is fragile",
+            "guide": "Violet: resampling countries. Slate: the same with extreme forecasts capped¹."
+          }
         ],
         "caption": "Annual MAE gain in days from adding text, identical evaluation rows.",
         "note_sup": "Forecasts capped at the longest training wait (173.4 days); a diagnostic, not the reported model."
@@ -1425,18 +1430,18 @@
         },
         {
           "marker": 2,
-          "heading": "Across countries it is fragile",
-          "text": "Country resampling **includes zero in 4 of 5 years**; capping extreme forecasts leaves zero in **1 of 5**."
+          "heading": "The gain needs word patterns",
+          "text": "The tree model, without TF-IDF, gains **at most 0.04 days**."
         },
         {
           "marker": 3,
-          "heading": "The gain needs word patterns",
-          "text": "The tree model, without TF-IDF, gains **at most 0.04 days**, in line with word patterns carrying most of the gain."
+          "heading": "Across countries it is fragile",
+          "text": "Country resampling **includes zero in 4 of 5 years**; capping extreme forecasts leaves zero in **1 of 5**."
         }
       ],
       "notes": {
         "purpose": "Keep the gain in proportion.",
-        "script": "Answer first: the text gain holds every year, but it is fragile across countries. How to read it: each year has three ranges for the linear model. Navy resamples calendar months, violet resamples countries, and slate resamples countries after capping extreme forecasts. Right of the centre line means text lowered forecast error. [Point: Text helps in every year] Month-resampled ranges stay above zero in all five years; the median gain is 0.293 days, about seven hours. [Point: Across countries it is fragile] Resampling countries widens the ranges, and four of five include zero. Much of that comes from a few extreme forecasts: capped at the longest training wait, 173.4 days, only 2025 still includes zero. The cap is a diagnostic, not the reported model. [Point: The gain needs word patterns] The tree model, which has form and lexicon but no TF-IDF, gains at most 0.04 days, in line with word patterns carrying most of the linear gain. Metrics also disagree at the margin: in 2025 text improved error and calibration, but AUC for same-day funding fell from 0.893 to 0.888. Each range uses 1,000 resamples. These are fixed-model resampling ranges, not retraining or causal uncertainty.",
+        "script": "Answer first: the text gain holds every year, but it is fragile across countries. Three panels, read in order. [Point: Text helps in every year] Panel a resamples calendar months: all five ranges sit right of zero, and the median gain is 0.293 days, about seven hours. [Point: The gain needs word patterns] Panel b sets the linear model, which uses TF-IDF word patterns, against the tree model, which has form and lexicon but no TF-IDF: the tree gains at most 0.04 days. [Point: Across countries it is fragile] Panel c resamples countries instead: four of five ranges include zero. Capping forecasts at the longest training wait, 173.4 days, a diagnostic rather than the reported model, leaves only 2025 including zero, so much of the fragility comes from a few extreme forecasts. Metrics also disagree at the margin: in 2025 text improved error and calibration, but AUC for same-day funding fell from 0.893 to 0.888. Each range uses 1,000 resamples; these are fixed-model resampling ranges, not retraining or causal uncertainty.",
         "reference": "docs/6_matched_text_results.md; reports/loss_alignment_2025/README.md; ranges from src/gain_intervals.py (reports/evidence_sources/gain_intervals.json)."
       },
       "sublabel": "Forecast benchmark"
