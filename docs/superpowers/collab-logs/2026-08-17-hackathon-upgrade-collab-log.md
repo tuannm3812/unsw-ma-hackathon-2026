@@ -2917,3 +2917,9 @@ unseen exact template, which cannot exclude near-duplicates.
 - Grid recoloured to match slide 12 (yellow within ±5%, violet can't tell yet) so the exceptions stand out; counts added for the expanded model and same-day funding, read from the robustness summary and matching the register.
 - Wording: the clustering claim now says family interactions with period or loan size, which is what the register row covers. Fourth takeaway states that the count depends on the model.
 - Verified: pyflakes, deck QA, rendered slide 13, full offline pytest. Slide 13 only was rebuilt; nothing pushed.
+
+## 2026-11-08: legend alignment
+
+- Mike saw slide 13's legend text sitting off its swatches. Measured at 400 dpi: swatch centre was 1.4 pt below the text's x-height centre. Live deck re-read first: no owner edits to mirror.
+- Added `Page.legend`: swatches centred on the label's x-height, even spacing, optional centring under a figure. Applied to slides 6, 9, 10, 11, 13, 14 and A5, and recorded in DESIGN.md. Slide 5 and 12 legends and the slide 6 map legend were already aligned and are unchanged.
+- Verified: zoomed renders, deck QA, full offline pytest. Those seven slides only were rebuilt; nothing pushed.

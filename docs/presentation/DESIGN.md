@@ -53,6 +53,10 @@ body of work:
 Evidence that comes from none of these is labelled descriptive. Each evidence slide's sublabel and subtitle use these names. Run dates and provenance go
 only in speaker-note Reference blocks and the claims register.
 
+## Legends (Mike's decision)
+
+Legends sit under the figure and only where direct labels cannot do the job. Every swatch is centred on its label's x-height, with the same swatch-to-label gap and even spacing between items. Build them with `Page.legend` in `scripts/build_portfolio_deck_gslides.py` so they stay aligned.
+
 ## Takeaway column
 
 - Position as in the parent: thin grey rule at x658 from y130 to y476; text area x684/y136, 235 pt wide; 12 pt, 110% line spacing, 6 pt after paragraphs and 14 pt before later headings; content ends by y476.

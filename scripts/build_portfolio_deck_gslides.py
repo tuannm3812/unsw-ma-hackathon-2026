@@ -61,6 +61,14 @@ TINT_BAND = '#FFF0A8'  # DESIGN.md yellow tint: the slide 9 "too small to matter
 BAND_OUTER = '#FFF8D6'  # lighter yellow: slide 9's 5-10% area
 FONT = 'Google Sans'
 INSET = 7.2  # native text box inset; the API cannot change it, so frames compensate
+LEGEND_MID = 4.9  # x-height centre of 8 pt text below its box top, measured at 400 dpi; scales with size
+NARROW, WIDE = set("iljt.,:;’'()¹ "), set('mwW')
+
+
+def label_width(text: str, size: float = 8) -> float:
+    """Approximate Google Sans width in points, close enough to space legend items evenly."""
+    width = sum(2.4 if c in NARROW else 6.6 if c in WIDE else 5.5 if c.isupper() else 4.5 for c in text)
+    return width * size / 8
 L, R, FULL, TOP, END = 43.5, 650, 919, 130, 476
 
 
@@ -202,6 +210,26 @@ class Page:
         mark = len(text.rstrip('¹²³'))
         spans = [(mark, len(text), {'color': SLATE, 'bold': True})] if mark < len(text) else []
         return self.text(text, x, y, w, h, size=size, color=color, bold=bold, align=align, spans=spans)
+
+    def legend(self, items, y, x, span=None, gap=20, size=8):
+        """Swatches centred on their labels' x-height, evenly spaced, optionally centred within span.
+
+        Each item is (label, fill) or (label, fill, shape) or (label, fill, shape, marker number).
+        """
+        mid, scale = LEGEND_MID * size / 8, size / 8
+        def parts(item):
+            label, fill, shape, marker = (*item, 'RECTANGLE', None)[:4] if len(item) == 2 else (*item, None)[:4]
+            return label, fill, shape, marker, (7 * scale if shape == 'ELLIPSE' else 12 * scale)
+        widths = [p[4] + 4 + label_width(p[0], size) + (16 if p[3] else 0) for p in map(parts, items)]
+        lx = x + (span - sum(widths) - gap * (len(items) - 1)) / 2 if span else x
+        for item, width in zip(items, widths):
+            label, fill, shape, marker, swatch = parts(item)
+            tall = swatch if shape == 'ELLIPSE' else 8 * scale
+            self.rect(lx, y + mid - tall / 2, swatch, tall, fill, shape)
+            self.sup(label, lx + swatch + 4, y, label_width(label, size) + 10, 12 * scale, size=size, color=GREY)
+            if marker:
+                self.marker(marker, lx + width - 12, y + mid - 6)
+            lx += width + gap
 
     def caption(self, label, text, y, x=L, w=R - L):
         full = f'{label} {text}'
@@ -699,10 +727,7 @@ def timeline(page, tl, top):
     page.text('test: 278,887', x0 + 8 * per + 4, y, 2 * per - 6, 13, size=8, bold=True, middle=True)
     y += 17
     page.text(rows[2]['label'], L, y, label_w, 22, size=8, bold=True, spacing=95)
-    page.rect(L, y + 26, 8, 8, SLATE)
-    page.text('train', L + 11, y + 24, 28, 12, size=8, color=GREY)
-    page.rect(L + 42, y + 26, 8, 8, YELLOW)
-    page.text('test', L + 53, y + 24, 28, 12, size=8, color=GREY)
+    page.legend([('train', SLATE), ('test', YELLOW)], y + 24, L, gap=12)
     for test in range(2021, 2026):
         span(2016, test - 1, y, 6, SLATE)
         span(test, test, y, 6, YELLOW)
@@ -797,12 +822,8 @@ def clustering(page, slide, pos):
             page.rect(x0 + col * (cell + gap), ay + 56 + row * (cell + gap), cell, cell,
                       YELLOW if i < group['lost'] else NAVY)
     ly = ay + ah - 18
-    page.rect(ax + 12, ly + 2, 8, 8, YELLOW)
-    page.text('lost', ax + 24, ly, 30, 12, size=8, color=GREY)
-    page.rect(ax + 56, ly + 2, 8, 8, NAVY)
-    page.text('kept', ax + 68, ly, 30, 12, size=8, color=GREY)
+    page.legend([('lost', YELLOW), ('kept', NAVY, 'RECTANGLE', 3)], ly, ax + 12, gap=20)
     page.marker(2, ax + aw - 22, ay + 8)
-    page.marker(3, ax + 98, ly - 1)
     # Urgency
     bx, by, bw, bh = L + 300, ay, pw - 300, ah
     panel(page, bx, by, bw, bh, ex['urgency_panel']['title'], ex['urgency_panel']['guide'])
@@ -914,18 +935,9 @@ def subgroups(page, slide, pos):
         if row['term'] == 'urgency':
             page.marker(2, L + 62, y + 4)
     ly = top + len(ex['rows']) * (ch + 6) + 6
-    lx = x0
-    for n, (label, fill, shape) in enumerate(zip(ex['legend'], [small, unknown, NAVY], ['RECTANGLE', 'RECTANGLE', 'ELLIPSE'])):
-        if shape == 'ELLIPSE':
-            page.rect(lx + 3, ly + 2.5, 7, 7, fill, shape)
-        else:
-            page.rect(lx, ly + 1.5, 14, 10, fill)
-        page.sup(label, lx + 18, ly, 4.4 * len(label) + 10, 12, size=8, color=GREY)
-        lx += 18 + 4.4 * len(label) + 22
-        if n == 0:
-            page.marker(1, lx - 18, ly + 0.5)
-            lx += 8
-    page.marker(3, lx - 14, ly + 0.5)
+    names = ex['legend']
+    page.legend([(names[0], small, 'RECTANGLE', 1), (names[1], unknown), (names[2], NAVY, 'ELLIPSE', 3)],
+                ly, x0, span=xs[-1] + cw - x0, gap=26)
     page.caption(slide['figure'], ex['caption'], ly + 18, w=R - L)
     page.caption('¹', ex['note_sup'], ly + 31, w=R - L)
     page.takeaways(slide['takeaways'], pos)
@@ -959,11 +971,7 @@ def where(page, slide, pos):
         page.text(label, left + 4, y, 200, 12, size=8, color=NAVY if row['top3'] else GREY, bold=row['top3'])
         if row['country'] == 'Tajikistan':
             page.marker(4, left + 4 + 4.3 * len(label) + 8, y)
-    lx, ly = cx + 92, by + 42 + 14 * 6 + 2
-    for fill, name in zip(bands + [NAVY], lw['legend']):
-        page.rect(lx, ly + 1.6, 12, 8, fill)
-        page.text(name, lx + 16, ly, 4.3 * len(name) + 6, 12, size=8, color=GREY)
-        lx += 16 + 4.3 * len(name) + 18
+    page.legend(list(zip(lw['legend'], bands + [NAVY])), by + 42 + 14 * 6 + 2, cx + 92, gap=18)
     page.caption(slide['figure'], ex['caption'], by + bh + 8, w=cw)
     page.takeaways(slide['takeaways'], pos)
 
@@ -1181,10 +1189,7 @@ def persist(page, slide, pos):
         page.ops[-1]['end_arrow'] = 'FILL_ARROW'
         page.rect(px(before) - 3.5, dot - 3.5, 7, 7, NAVY, 'ELLIPSE')
         page.rect(px(after) - 3.5, dot - 3.5, 7, 7, VIOLET, 'ELLIPSE')
-    page.rect(ax + 10, top + h - 14, 7, 7, NAVY, 'ELLIPSE')
-    page.text(absorb['legend'][0], ax + 20, top + h - 16, 66, 12, size=8, color=GREY)
-    page.rect(ax + 88, top + h - 14, 7, 7, VIOLET, 'ELLIPSE')
-    page.text(absorb['legend'][1], ax + 98, top + h - 16, 90, 12, size=8, color=GREY)
+    page.legend([(absorb['legend'][0], NAVY, 'ELLIPSE'), (absorb['legend'][1], VIOLET, 'ELLIPSE')], top + h - 16, ax + 10, gap=12)
     page.marker(4, ax + aw - 22, top + 8)
     page.caption(slide['figure'], ex['note'], top + h + 8, w=pw)
     page.takeaways(slide['takeaways'], pos)
@@ -1199,10 +1204,7 @@ def forecast(page, slide, pos):
     exhibit = slide['exhibit']
     base, per, x0, group, bar = 300, 13, L + 4, 90, 36
     legend_y = TOP + 2
-    page.rect(L, legend_y + 2, 11, 11, SLATE)
-    page.text(exhibit['series'][0], L + 17, legend_y, 110, 14, size=10)
-    page.rect(160, legend_y + 2, 11, 11, NAVY)
-    page.text(exhibit['series'][1], 177, legend_y, 120, 14, size=10)
+    page.legend([(exhibit['series'][0], SLATE), (exhibit['series'][1], NAVY, 'RECTANGLE', 2)], legend_y, L, gap=24, size=10)
     for i, row in enumerate(exhibit['data']):
         x = x0 + i * group
         for j, (value, fill) in enumerate(zip(row['values'], [SLATE, NAVY])):
@@ -1237,7 +1239,6 @@ def forecast(page, slide, pos):
     key_card(page, {'value': '5 of 5', 'label': 'years with lower error'}, 498, 246, 152, 92, VIOLET, 24)
     key_card(page, {'value': '728,640', 'label': 'evaluation records'}, 498, 350, 152, 92, SLATE, 24)
     page.marker(1, 498 + 152 - 22, TOP + 10)
-    page.marker(2, 290, legend_y + 1)
     page.marker(3, 498 + 152 - 22, 246 + 10)  # gain stays positive every year
     page.caption(slide['figure'], exhibit['caption'], ly + 16)
     page.caption('¹', exhibit['note_sup'], ly + 29)
@@ -1616,14 +1617,8 @@ def text_adds(page, slide, pos):
     page.marker(1, L + pw - 22, TOP + 8)
     # Legend under the figure
     ly, names = TOP + h + 6, ex['legend']
-    page.rect(L, ly + 2, 9, 8, context_fill)
-    page.text(names[0], L + 13, ly, 236, 12, size=8, color=GREY)
-    page.marker(2, L + 250, ly - 1)
-    page.rect(L + 276, ly + 2, 9, 8, VIOLET)
-    page.text(names[1], L + 289, ly, 84, 12, size=8, color=GREY)
-    page.rect(L + 386, ly + 2.5, 7, 7, NAVY, 'ELLIPSE')
-    page.text(names[2], L + 397, ly, 130, 12, size=8, color=GREY)
-    page.marker(3, L + 530, ly - 1)
+    page.legend([(names[0], context_fill, 'RECTANGLE', 2), (names[1], VIOLET), (names[2], NAVY, 'ELLIPSE', 3)],
+                ly, L, span=pw, gap=24)
     # Text alone
     sy = ly + 18
     page.rect(L, sy, pw, 22, PAPER)
