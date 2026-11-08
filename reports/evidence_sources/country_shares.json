@@ -18,336 +18,530 @@
       "region": "Asia",
       "loans": 521586,
       "share": 0.3587643757222253,
-      "same_day_share": 0.4795450798142588
+      "same_day_share": 0.4795450798142588,
+      "median_days": 1.129525462962963,
+      "records_over_14_days": 89412,
+      "share_over_14_days": 0.17142331274228986,
+      "share_of_all_long_waits": 0.22702216850705983
     },
     {
       "country": "KE",
       "region": "Africa",
       "loans": 266562,
       "share": 0.1833502998954493,
-      "same_day_share": 0.29156819051477706
+      "same_day_share": 0.29156819051477706,
+      "median_days": 5.8046875,
+      "records_over_14_days": 96997,
+      "share_over_14_days": 0.36388157351760564,
+      "share_of_all_long_waits": 0.2462809161933441
     },
     {
       "country": "UG",
       "region": "Africa",
       "loans": 69651,
       "share": 0.047908298024541905,
-      "same_day_share": 0.31080673644312357
+      "same_day_share": 0.31080673644312357,
+      "median_days": 4.6817824074074075,
+      "records_over_14_days": 24372,
+      "share_over_14_days": 0.34991600982039023,
+      "share_of_all_long_waits": 0.06188189830060912
     },
     {
       "country": "TJ",
       "region": "Asia",
       "loans": 68865,
       "share": 0.04736766081549552,
-      "same_day_share": 0.1813983881507297
+      "same_day_share": 0.1813983881507297,
+      "median_days": 14.001342592592593,
+      "records_over_14_days": 34434,
+      "share_over_14_days": 0.5000217817468962,
+      "share_of_all_long_waits": 0.08742989028734509
     },
     {
       "country": "KH",
       "region": "Asia",
       "loans": 58074,
       "share": 0.039945248445496066,
-      "same_day_share": 0.48534628232944177
+      "same_day_share": 0.48534628232944177,
+      "median_days": 1.1099074074074076,
+      "records_over_14_days": 11382,
+      "share_over_14_days": 0.1959913214175018,
+      "share_of_all_long_waits": 0.02889954728612888
     },
     {
       "country": "MG",
       "region": "Africa",
       "loans": 55670,
       "share": 0.0382916964727893,
-      "same_day_share": 0.6700197592958506
+      "same_day_share": 0.6700197592958506,
+      "median_days": 0.40328703703703705,
+      "records_over_14_days": 2174,
+      "share_over_14_days": 0.0390515537991737,
+      "share_of_all_long_waits": 0.005519910015818325
     },
     {
       "country": "PK",
       "region": "Asia",
       "loans": 42767,
       "share": 0.029416579541077424,
-      "same_day_share": 0.14976500572871607
+      "same_day_share": 0.14976500572871607,
+      "median_days": 8.317256944444445,
+      "records_over_14_days": 16474,
+      "share_over_14_days": 0.38520354478920665,
+      "share_of_all_long_waits": 0.04182842575924153
     },
     {
       "country": "NI",
       "region": "Central America",
       "loans": 38520,
       "share": 0.02649535024486876,
-      "same_day_share": 0.15210280373831775
+      "same_day_share": 0.15210280373831775,
+      "median_days": 11.401550925925926,
+      "records_over_14_days": 17580,
+      "share_over_14_days": 0.45638629283489096,
+      "share_of_all_long_waits": 0.04463662285100559
     },
     {
       "country": "LR",
       "region": "Africa",
       "loans": 28847,
       "share": 0.019841935838881858,
-      "same_day_share": 0.283495684126599
+      "same_day_share": 0.283495684126599,
+      "median_days": 2.8590856481481484,
+      "records_over_14_days": 3474,
+      "share_over_14_days": 0.120428467431622,
+      "share_of_all_long_waits": 0.008820684174311344
     },
     {
       "country": "TG",
       "region": "Africa",
       "loans": 27513,
       "share": 0.01892436581742145,
-      "same_day_share": 0.37829389743030567
+      "same_day_share": 0.37829389743030567,
+      "median_days": 2.7220370370370373,
+      "records_over_14_days": 7070,
+      "share_over_14_days": 0.25696943263184674,
+      "share_of_all_long_waits": 0.017951133308112033
     },
     {
       "country": "SN",
       "region": "Africa",
       "loans": 21420,
       "share": 0.014733395696913003,
-      "same_day_share": 0.07156862745098039
+      "same_day_share": 0.07156862745098039,
+      "median_days": 22.474629629629632,
+      "records_over_14_days": 13224,
+      "share_over_14_days": 0.6173669467787115,
+      "share_of_all_long_waits": 0.033576490363008984
     },
     {
       "country": "HN",
       "region": "Central America",
       "loans": 20871,
       "share": 0.014355775050899687,
-      "same_day_share": 0.17306310191174357
+      "same_day_share": 0.17306310191174357,
+      "median_days": 11.963344907407407,
+      "records_over_14_days": 9820,
+      "share_over_14_days": 0.47050931915097505,
+      "share_of_all_long_waits": 0.024933540181847267
     },
     {
       "country": "KG",
       "region": "Asia",
       "loans": 20530,
       "share": 0.014121223793539866,
-      "same_day_share": 0.1262542620555285
+      "same_day_share": 0.1262542620555285,
+      "median_days": 19.364953703703705,
+      "records_over_14_days": 11629,
+      "share_over_14_days": 0.5664393570384803,
+      "share_of_all_long_waits": 0.02952669437624255
     },
     {
       "country": "IN",
       "region": "Asia",
       "loans": 20397,
       "share": 0.014029741924833545,
-      "same_day_share": 0.4413884394763936
+      "same_day_share": 0.4413884394763936,
+      "median_days": 1.3163657407407408,
+      "records_over_14_days": 1475,
+      "share_over_14_days": 0.07231455606216601,
+      "share_of_all_long_waits": 0.003745109141367079
     },
     {
       "country": "SL",
       "region": "Africa",
       "loans": 19408,
       "share": 0.013349474495130138,
-      "same_day_share": 0.343621187139324
+      "same_day_share": 0.343621187139324,
+      "median_days": 2.340011574074074,
+      "records_over_14_days": 3336,
+      "share_over_14_days": 0.1718878812860676,
+      "share_of_all_long_waits": 0.008470294302102086
     },
     {
       "country": "RW",
       "region": "Africa",
       "loans": 18395,
       "share": 0.012652699059043636,
-      "same_day_share": 0.18592008698015766
+      "same_day_share": 0.18592008698015766,
+      "median_days": 9.50611111111111,
+      "records_over_14_days": 7532,
+      "share_over_14_days": 0.4094590921446045,
+      "share_of_all_long_waits": 0.019124177662899554
     },
     {
       "country": "PS",
       "region": "Middle East",
       "loans": 14500,
       "share": 0.009973587189787046,
-      "same_day_share": 0.1693103448275862
+      "same_day_share": 0.1693103448275862,
+      "median_days": 5.736585648148148,
+      "records_over_14_days": 4409,
+      "share_over_14_days": 0.3040689655172414,
+      "share_of_all_long_waits": 0.011194702511381324
     },
     {
       "country": "NG",
       "region": "Africa",
       "loans": 14320,
       "share": 0.009849777141913828,
-      "same_day_share": 0.33589385474860334
+      "same_day_share": 0.33589385474860334,
+      "median_days": 4.379861111111111,
+      "records_over_14_days": 5054,
+      "share_over_14_days": 0.35293296089385473,
+      "share_of_all_long_waits": 0.01283239430540286
     },
     {
       "country": "GH",
       "region": "Africa",
       "loans": 14193,
       "share": 0.009762422274803279,
-      "same_day_share": 0.35404777002747834
+      "same_day_share": 0.35404777002747834,
+      "median_days": 2.439837962962963,
+      "records_over_14_days": 2428,
+      "share_over_14_days": 0.17107024589586417,
+      "share_of_all_long_waits": 0.006164830505246961
     },
     {
       "country": "CD",
       "region": "Africa",
       "loans": 11151,
       "share": 0.0076700324657458865,
-      "same_day_share": 0.2060801721818671
+      "same_day_share": 0.2060801721818671,
+      "median_days": 5.6622916666666665,
+      "records_over_14_days": 3312,
+      "share_over_14_days": 0.2970137207425343,
+      "share_of_all_long_waits": 0.008409356933022215
     },
     {
       "country": "BF",
       "region": "Africa",
       "loans": 10660,
       "share": 0.007332306168491718,
-      "same_day_share": 0.2726078799249531
+      "same_day_share": 0.2726078799249531,
+      "median_days": 4.51775462962963,
+      "records_over_14_days": 3239,
+      "share_over_14_days": 0.3038461538461538,
+      "share_of_all_long_waits": 0.008224005768737606
     },
     {
       "country": "TZ",
       "region": "Africa",
       "loans": 10621,
       "share": 0.007305480658119188,
-      "same_day_share": 0.32802937576499386
+      "same_day_share": 0.32802937576499386,
+      "median_days": 3.278159722222222,
+      "records_over_14_days": 2782,
+      "share_over_14_days": 0.26193390452876375,
+      "share_of_all_long_waits": 0.0070636566991750605
     },
     {
       "country": "TL",
       "region": "Oceania",
       "loans": 10401,
       "share": 0.007154157266274143,
-      "same_day_share": 0.15152389193346794
+      "same_day_share": 0.15152389193346794,
+      "median_days": 10.520891203703703,
+      "records_over_14_days": 4600,
+      "share_over_14_days": 0.44226516681088357,
+      "share_of_all_long_waits": 0.011679662406975298
     },
     {
       "country": "MZ",
       "region": "Africa",
       "loans": 8066,
       "share": 0.005548065811918781,
-      "same_day_share": 0.1493925117778329
+      "same_day_share": 0.1493925117778329,
+      "median_days": 10.032725694444444,
+      "records_over_14_days": 3409,
+      "share_over_14_days": 0.42263823456484007,
+      "share_of_all_long_waits": 0.008655645466386693
     },
     {
       "country": "SB",
       "region": "Oceania",
       "loans": 7924,
       "share": 0.005450393440818797,
-      "same_day_share": 0.11143361938414942
+      "same_day_share": 0.11143361938414942,
+      "median_days": 13.544832175925926,
+      "records_over_14_days": 3849,
+      "share_over_14_days": 0.4857395254921757,
+      "share_of_all_long_waits": 0.00977283056618433
     },
     {
       "country": "HT",
       "region": "North America",
       "loans": 7559,
       "share": 0.005199334177075882,
-      "same_day_share": 0.47016801164175154
+      "same_day_share": 0.47016801164175154,
+      "median_days": 1.1650462962962962,
+      "records_over_14_days": 521,
+      "share_over_14_days": 0.06892446090752745,
+      "share_of_all_long_waits": 0.0013228487204422022
     },
     {
       "country": "EG",
       "region": "Africa",
       "loans": 7398,
       "share": 0.005088592967589281,
-      "same_day_share": 0.16937010002703434
+      "same_day_share": 0.16937010002703434,
+      "median_days": 7.495891203703704,
+      "records_over_14_days": 2484,
+      "share_over_14_days": 0.3357664233576642,
+      "share_of_all_long_waits": 0.00630701769976666
     },
     {
       "country": "ZW",
       "region": "Africa",
       "loans": 6380,
       "share": 0.004388378363506301,
-      "same_day_share": 0.30438871473354234
+      "same_day_share": 0.30438871473354234,
+      "median_days": 2.9606655092592593,
+      "records_over_14_days": 1123,
+      "share_over_14_days": 0.17601880877742948,
+      "share_of_all_long_waits": 0.002851361061528969
     },
     {
       "country": "LS",
       "region": "Africa",
       "loans": 4910,
       "share": 0.003377262972541683,
-      "same_day_share": 0.9221995926680244
+      "same_day_share": 0.9221995926680244,
+      "median_days": 0.13729166666666667,
+      "records_over_14_days": 18,
+      "share_over_14_days": 0.0036659877800407333,
+      "share_of_all_long_waits": 4.5703026809903336e-05
     },
     {
       "country": "ML",
       "region": "Africa",
       "loans": 4281,
       "share": 0.0029446156385847136,
-      "same_day_share": 0.19715019855174024
+      "same_day_share": 0.19715019855174024,
+      "median_days": 13.237615740740742,
+      "records_over_14_days": 2092,
+      "share_over_14_days": 0.48867087129175424,
+      "share_of_all_long_waits": 0.005311707338128766
     },
     {
       "country": "VU",
       "region": "Oceania",
       "loans": 4018,
       "share": 0.0027637154019699555,
-      "same_day_share": 0.20930811348929815
+      "same_day_share": 0.20930811348929815,
+      "median_days": 7.904137731481482,
+      "records_over_14_days": 1435,
+      "share_over_14_days": 0.35714285714285715,
+      "share_of_all_long_waits": 0.0036435468595672938
     },
     {
       "country": "CM",
       "region": "Africa",
       "loans": 3670,
       "share": 0.0025243493094150664,
-      "same_day_share": 0.29318801089918256
+      "same_day_share": 0.29318801089918256,
+      "median_days": 3.447800925925926,
+      "records_over_14_days": 824,
+      "share_over_14_days": 0.2245231607629428,
+      "share_of_all_long_waits": 0.002092183005075575
     },
     {
       "country": "MW",
       "region": "Africa",
       "loans": 3294,
       "share": 0.0022657238760798986,
-      "same_day_share": 0.5965391621129326
+      "same_day_share": 0.5965391621129326,
+      "median_days": 0.6503125000000001,
+      "records_over_14_days": 114,
+      "share_over_14_days": 0.03460837887067395,
+      "share_of_all_long_waits": 0.0002894525031293878
     },
     {
       "country": "ZM",
       "region": "Africa",
       "loans": 3157,
       "share": 0.0021714906729763937,
-      "same_day_share": 0.6484003801076972
+      "same_day_share": 0.6484003801076972,
+      "median_days": 0.45180555555555557,
+      "records_over_14_days": 207,
+      "share_over_14_days": 0.06556857776369972,
+      "share_of_all_long_waits": 0.0005255848083138884
     },
     {
       "country": "MM",
       "region": "Asia",
       "loans": 3146,
       "share": 0.0021639245033841415,
-      "same_day_share": 0.11443102352193261
+      "same_day_share": 0.11443102352193261,
+      "median_days": 9.895179398148148,
+      "records_over_14_days": 1324,
+      "share_over_14_days": 0.42085187539732993,
+      "share_of_all_long_waits": 0.00336171152757289
     },
     {
       "country": "NP",
       "region": "Asia",
       "loans": 1276,
       "share": 0.0008776756727012601,
-      "same_day_share": 0.9882445141065831
+      "same_day_share": 0.9882445141065831,
+      "median_days": 0.13858217592592592,
+      "records_over_14_days": 0,
+      "share_over_14_days": 0.0,
+      "share_of_all_long_waits": 0.0
     },
     {
       "country": "LA",
       "region": "Asia",
       "loans": 1121,
       "share": 0.0007710614648104331,
-      "same_day_share": 0.6645851917930419
+      "same_day_share": 0.6645851917930419,
+      "median_days": 0.49005787037037035,
+      "records_over_14_days": 2,
+      "share_over_14_days": 0.001784121320249777,
+      "share_of_all_long_waits": 5.078114089989259e-06
     },
     {
       "country": "PG",
       "region": "Oceania",
       "loans": 1042,
       "share": 0.0007167226104660761,
-      "same_day_share": 0.8925143953934741
+      "same_day_share": 0.8925143953934741,
+      "median_days": 0.19455439814814815,
+      "records_over_14_days": 0,
+      "share_over_14_days": 0.0,
+      "share_of_all_long_waits": 0.0
     },
     {
       "country": "CI",
       "region": "Africa",
       "loans": 595,
       "share": 0.00040926099158091676,
-      "same_day_share": 0.10084033613445378
+      "same_day_share": 0.10084033613445378,
+      "median_days": 7.568935185185185,
+      "records_over_14_days": 104,
+      "share_over_14_days": 0.17478991596638654,
+      "share_of_all_long_waits": 0.0002640619326794415
     },
     {
       "country": "YE",
       "region": "Middle East",
       "loans": 446,
       "share": 0.00030677378528586366,
-      "same_day_share": 0.6345291479820628
+      "same_day_share": 0.6345291479820628,
+      "median_days": 0.7002893518518518,
+      "records_over_14_days": 1,
+      "share_over_14_days": 0.002242152466367713,
+      "share_of_all_long_waits": 2.5390570449946297e-06
     },
     {
       "country": "UZ",
       "region": "Asia",
       "loans": 389,
       "share": 0.0002675672701260111,
-      "same_day_share": 0.23136246786632392
+      "same_day_share": 0.23136246786632392,
+      "median_days": 2.9891087962962963,
+      "records_over_14_days": 59,
+      "share_over_14_days": 0.15167095115681234,
+      "share_of_all_long_waits": 0.00014980436565468317
     },
     {
       "country": "BI",
       "region": "Africa",
       "loans": 190,
       "share": 0.0001306883838661751,
-      "same_day_share": 0.07894736842105263
+      "same_day_share": 0.07894736842105263,
+      "median_days": 8.729097222222222,
+      "records_over_14_days": 69,
+      "share_over_14_days": 0.3631578947368421,
+      "share_of_all_long_waits": 0.00017519493610462946
     },
     {
       "country": "BD",
       "region": "Asia",
       "loans": 39,
       "share": 2.6825510372530677e-05,
-      "same_day_share": 0.6666666666666666
+      "same_day_share": 0.6666666666666666,
+      "median_days": 0.38592592592592595,
+      "records_over_14_days": 2,
+      "share_over_14_days": 0.05128205128205128,
+      "share_of_all_long_waits": 5.078114089989259e-06
     },
     {
       "country": "SO",
       "region": "Africa",
       "loans": 10,
       "share": 6.878335992956584e-06,
-      "same_day_share": 0.2
+      "same_day_share": 0.2,
+      "median_days": 2.883796296296296,
+      "records_over_14_days": 0,
+      "share_over_14_days": 0.0,
+      "share_of_all_long_waits": 0.0
     },
     {
       "country": "BJ",
       "region": "Africa",
       "loans": 3,
       "share": 2.0635007978869753e-06,
-      "same_day_share": 0.0
+      "same_day_share": 0.0,
+      "median_days": 13.967071759259259,
+      "records_over_14_days": 1,
+      "share_over_14_days": 0.3333333333333333,
+      "share_of_all_long_waits": 2.5390570449946297e-06
     },
     {
       "country": "SS",
       "region": "Africa",
       "loans": 2,
       "share": 1.3756671985913167e-06,
-      "same_day_share": 0.0
+      "same_day_share": 0.0,
+      "median_days": 2.6185127314814816,
+      "records_over_14_days": 0,
+      "share_over_14_days": 0.0,
+      "share_of_all_long_waits": 0.0
     },
     {
       "country": "AF",
       "region": "Asia",
       "loans": 1,
       "share": 6.878335992956584e-07,
-      "same_day_share": 1.0
+      "same_day_share": 1.0,
+      "median_days": 0.4066550925925926,
+      "records_over_14_days": 0,
+      "share_over_14_days": 0.0,
+      "share_of_all_long_waits": 0.0
     },
     {
       "country": "NE",
       "region": "Africa",
       "loans": 1,
       "share": 6.878335992956584e-07,
-      "same_day_share": 0.0
+      "same_day_share": 0.0,
+      "median_days": 3.751377314814815,
+      "records_over_14_days": 0,
+      "share_over_14_days": 0.0,
+      "share_of_all_long_waits": 0.0
     }
-  ]
+  ],
+  "records_over_14_days": 393847,
+  "top10_share_of_long_waits": 0.7702711966829757
 }

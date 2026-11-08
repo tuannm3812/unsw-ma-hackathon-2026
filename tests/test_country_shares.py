@@ -29,3 +29,16 @@ def test_country_in_two_regions_is_rejected():
                           'funded_within_24h': [1, 0], 'region': ['Asia', 'Africa']})
     with pytest.raises(ValueError):
         country_shares(frame)
+
+
+def test_country_shares_adds_long_waits_when_days_present():
+    frame = pd.DataFrame({'valid_completed_outcome': [True] * 4, 'country_iso': ['A', 'A', 'A', 'B'],
+                          'funded_within_24h': [1, 0, 0, 0], 'region': ['Asia'] * 3 + ['Africa'],
+                          'funding_speed_days': [0.5, 20.0, 30.0, 15.0]})
+    result = country_shares(frame)
+    first, second = result['shares']
+    assert first['records_over_14_days'] == 2 and first['share_over_14_days'] == pytest.approx(2 / 3)
+    assert first['median_days'] == 20.0
+    assert result['records_over_14_days'] == 3
+    assert first['share_of_all_long_waits'] == pytest.approx(2 / 3)
+    assert second['share_of_all_long_waits'] == pytest.approx(1 / 3)

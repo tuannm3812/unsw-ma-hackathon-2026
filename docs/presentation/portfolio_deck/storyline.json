@@ -381,8 +381,8 @@
       "section": "Problem",
       "sublabel": "Where loans sit",
       "layout": "content+takeaways",
-      "title": "Ten countries hold 81% of loans, and same-day funding varies widely",
-      "subtitle": "Descriptive: share of all loans and of loans funded within 24 hours, by country and Kiva region",
+      "title": "Over half of all two-week waits come from just three countries",
+      "subtitle": "Descriptive: where loans sit and where they wait over two weeks, by country, 1,453,840 completed loans",
       "exhibit": {
         "country_names": {
           "PH": "Philippines",
@@ -735,32 +735,79 @@
           }
         ],
         "panel": {
-          "title": "Where the loans are",
+          "title": "(a) Where the loans are",
           "guide": "Ten of 48 countries hold 81% of loans (outlined on the map); table share cells use the map's colour scale."
         },
-        "caption": "Share of all loans by country (map and table) and share funded within 24 hours (table); Kiva regions."
+        "caption": "Share of all loans by country (a, map and table) and loans waiting over two weeks (b); same-day: funded within 24 hours.",
+        "long": {
+          "title": "(b) Where the long waits are",
+          "guide": "Loans waiting over two weeks, by country; the label gives that share of each country's own loans.",
+          "rows": [
+            {
+              "country": "Kenya",
+              "count": 96997,
+              "own_share": 0.364,
+              "top3": true
+            },
+            {
+              "country": "Philippines",
+              "count": 89412,
+              "own_share": 0.171,
+              "top3": true
+            },
+            {
+              "country": "Tajikistan",
+              "count": 34434,
+              "own_share": 0.5,
+              "top3": true
+            },
+            {
+              "country": "Uganda",
+              "count": 24372,
+              "own_share": 0.35,
+              "top3": false
+            },
+            {
+              "country": "Nicaragua",
+              "count": 17580,
+              "own_share": 0.456,
+              "top3": false
+            },
+            {
+              "country": "Pakistan",
+              "count": 16474,
+              "own_share": 0.385,
+              "top3": false
+            }
+          ]
+        }
       },
       "takeaways": [
         {
           "marker": 1,
-          "heading": "A few countries dominate",
+          "heading": "Ten countries hold most loans",
           "text": "Ten of 48 countries hold **81% of loans**; Asia and Africa hold **92.8%**."
         },
         {
           "marker": 2,
-          "heading": "Same-day funding differs by country",
-          "text": "It ranges from **15% in Pakistan to 67% in Madagascar** among the ten largest."
+          "heading": "Speed varies widely by country",
+          "text": "Same-day funding runs from **15% in Pakistan to 67% in Madagascar**."
         },
         {
           "marker": 3,
-          "heading": "So results must hold by country",
-          "text": "Any flag or advice has to be checked **country by country**, not only on average."
+          "heading": "Three countries hold half the long waits",
+          "text": "Kenya, the Philippines and Tajikistan hold **56.1%** of the **393,847** loans that waited over two weeks."
+        },
+        {
+          "marker": 4,
+          "heading": "Large markets wait too",
+          "text": "In Kenya **36.4%** of loans wait over two weeks; in Tajikistan **50.0%**."
         }
       ],
-      "solution_link": "→ Why the flag is validated country by country",
+      "solution_link": "→ Why the flag must work country by country",
       "notes": {
         "purpose": "Where the loans and the delays are.",
-        "script": "Ten of 48 countries hold 81 percent of loans, and Asia and Africa together hold 92.8 percent. Same-day funding differs widely, from 15 percent in Pakistan to 67 percent in Madagascar among the ten largest. That is why every result, and later the slow-funding flag, has to be checked country by country.",
+        "script": "Where the loans sit, and where they wait. Ten of 48 countries hold 81 percent of loans, and Asia and Africa 92.8 percent. Speed varies widely: same-day funding runs from 15 percent in Pakistan to 67 percent in Madagascar, and the median wait from 1.13 days in the Philippines to 14.0 days in Tajikistan. In all, 393,847 loans, 27.1 percent, waited more than two weeks, and three countries, Kenya, the Philippines and Tajikistan, hold 56.1 percent of them. Long waits are not a small-country problem: 36.4 percent of Kenya's loans and half of Tajikistan's wait over two weeks. That is why the early warning has to be validated country by country: its precision ranges from 0.18 to 0.90 across the largest countries.",
         "reference": "reports/evidence_sources/country_shares.json (src/country_shares.py); map: scripts/build_country_map.py."
       },
       "figure": "Figure 2."

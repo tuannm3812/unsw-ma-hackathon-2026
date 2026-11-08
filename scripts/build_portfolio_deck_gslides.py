@@ -907,19 +907,29 @@ def subgroups(page, slide, pos):
 
 
 def where(page, slide, pos):
-    """Where loans sit: the country panel, then three key figures."""
+    """(a) the country panel (map and top-10 table); (b) where the long waits are, as bars by country."""
     page.chrome(slide)
     ex = slide['exhibit']
     cx, cy, cw, ch = L, TOP, R - 16 - L, 148
     country_panel(page, ex, cx, cy, cw, ch, ex['panel']['title'], ex['panel']['guide'])
     page.marker(1, cx + cw - 22, cy + 8)
-    figures = [{'value': '81%', 'label': 'of loans in ten of 48 countries'},
-               {'value': '92.8%', 'label': 'of loans in Asia and Africa'},
-               {'value': '15–67%', 'label': 'same-day share across the ten largest countries'}]
-    for k, (figure, bar) in enumerate(zip(figures, [NAVY, NAVY, VIOLET])):
-        key_card(page, figure, L + k * 200, cy + ch + 16, 190, 100, bar, 26)
-    page.marker(2, L + 2 * 200 + 190 - 22, cy + ch + 26)
-    page.caption(slide['figure'], ex['caption'], cy + ch + 130, w=cw)
+    page.marker(2, cx + cw - 12, cy + 54)
+    lw = ex['long']
+    by, bh = cy + ch + 8, 142
+    panel(page, cx, by, cw, bh, lw['title'], lw['guide'])
+    page.marker(3, cx + cw - 22, by + 8)
+    top = max(r['count'] for r in lw['rows'])
+    scale = 300 / top
+    for k, row in enumerate(lw['rows']):
+        y = by + 46 + 15 * k
+        page.text(row['country'], cx + 10, y, 80, 12, size=9, bold=row['top3'])
+        page.rect(cx + 92, y + 1.5, row['count'] * scale, 10, NAVY if row['top3'] else '#A093C8')
+        label = f"{row['count']:,} · {row['own_share'] * 100:.1f}% of its loans"
+        page.text(label, cx + 96 + row['count'] * scale, y, 170, 12, size=8, color=NAVY if row['top3'] else GREY,
+                  bold=row['top3'])
+        if row['country'] == 'Tajikistan':
+            page.marker(4, cx + 96 + row['count'] * scale + 4.3 * len(label) + 8, y)
+    page.caption(slide['figure'], ex['caption'], by + bh + 8, w=cw)
     page.takeaways(slide['takeaways'], pos)
 
 

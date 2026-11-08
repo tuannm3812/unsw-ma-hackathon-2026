@@ -10,6 +10,8 @@ import pandas as pd
 from src.evidence_sources import clusters_for_share, effective_clusters
 from src.programme_audit import file_sha256
 
+LONG_WAIT_DAYS = 14
+
 
 def country_shares(frame: pd.DataFrame) -> dict:
     eligible = frame.loc[frame['valid_completed_outcome'].fillna(False).astype(bool)]
@@ -29,6 +31,18 @@ def country_shares(frame: pd.DataFrame) -> dict:
             'region_shares': {str(k): float(v / counts.sum()) for k, v in region_counts.items()},
             'shares': [{'country': str(k), 'region': str(regions[k][0]), 'loans': int(counts[k]), 'share': float(v),
                         'same_day_share': float(same_day[k])} for k, v in shares.items()]}
+    if 'funding_speed_days' in eligible:
+        # Long waits: more than two weeks from listing to full funding.
+        days = eligible.groupby('country_iso')['funding_speed_days']
+        long_counts = days.apply(lambda d: int((d > LONG_WAIT_DAYS).sum()))
+        total_long = int(long_counts.sum())
+        for row in result['shares']:
+            k = row['country']
+            row.update({'median_days': float(days.median()[k]), 'records_over_14_days': int(long_counts[k]),
+                        'share_over_14_days': float(long_counts[k] / counts[k]),
+                        'share_of_all_long_waits': float(long_counts[k] / total_long)})
+        result['records_over_14_days'] = total_long
+        result['top10_share_of_long_waits'] = float(sum(r['share_of_all_long_waits'] for r in result['shares'][:10]))
     return result
 
 

@@ -2803,3 +2803,15 @@ unseen exact template, which cannot exclude near-duplicates.
     - Four takeaways plus "→ Why early warning matters".
   - **New numbers:** `src/period_trend.py` (tests extended) adds yearly median wait, share waiting over 14 days and their counts. Examples: median 1.72 → 4.57 days (2019 → 2020); over two weeks 19.2% → 35.8%, and 55,408 loans in 2021. All are in the register.
   - QA reports no automated problems; full suite 216 passed; previews, PDF and preview page refreshed; not pushed.
+- **2026-11-08, slide 5 (where loans and delays sit):** no new owner edits; slide 5 was rebuilt alone.
+  - **Audit:** the old slide showed only where the volume is, and its three key cards repeated the table.
+  - New title: "Over half of all two-week waits come from just three countries".
+  - **Panels:** (a) keeps the map and top-10 table. (b) "Where the long waits are" is new: loans waiting over two weeks by country, with the top three in navy and each label giving that share of the country's own loans.
+  - **Takeaways:**
+    1. Ten countries hold most loans (81%, Asia and Africa 92.8%).
+    2. Speed varies widely (same-day 15% to 67%).
+    3. Three countries hold half the long waits (56.1% of 393,847).
+    4. Large markets wait too: Kenya 36.4%, Tajikistan 50.0%.
+    The column ends with "→ Why the flag must work country by country".
+  - **New numbers:** `src/country_shares.py` (tests extended) adds per-country median wait, loans and share waiting over 14 days, and share of all long waits; all are in the register.
+  - QA reports no automated problems; full suite 217 passed; previews, PDF and preview page refreshed; not pushed.
