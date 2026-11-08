@@ -2998,3 +2998,9 @@ unseen exact template, which cannot exclude near-duplicates.
 - Live deck re-read first: no owner edits to mirror. Slide 19 now states its conclusion in the title, uses slide 16's card grid, keeps the ladder and stop rule, and has four takeaways. No numbers repeated from slides 16–18.
 - The Kiva logo is still not added: its download waits for Mike's own confirmation in the thread.
 - Verified: pyflakes, deck QA, rendered slide 19, full offline pytest. Slide 19 only was rebuilt; nothing pushed.
+
+## 2026-11-09: Kiva logo on slide 16; slide 19 staircase
+
+- Mike confirmed the logo download in his own words. Primary logo saved unaltered with its source and terms in PROVENANCE.md; used on slide 16's two Who lines with an independence footer. Live deck re-read first: no owner edits to mirror.
+- Slide 19's lower half is now a staircase of the claim unlocked after each gate, with a dashed stop branch at every gate. Heights are illustrative, and the speaker notes say so.
+- Verified: pyflakes, deck QA, word-box overlap check, rendered slides, full offline pytest. Slides 16 and 19 only were rebuilt; nothing pushed.

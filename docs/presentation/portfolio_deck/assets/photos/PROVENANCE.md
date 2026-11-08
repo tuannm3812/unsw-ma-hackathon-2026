@@ -20,3 +20,7 @@ None of these people are records in the project's dataset; the photos give conte
 Each photo page showed "Download free", meaning it is not an Unsplash+ image. Files are the
 2000 px wide renditions from the Unsplash image CDN. The Unsplash Licence permits commercial
 and non-commercial use without permission; credit is shown on the cover and in the notes.
+
+## Logos
+
+- `assets/logos/kiva-logo-classic.png`: Kiva primary logo, unaltered, downloaded 2026-11-09 from the "Kiva Logo" Google Drive folder linked at https://www.kiva.org/design (file "Kiva logo classic.png"), at Mike's request. Used on slide 16 only. The page's guide is written for Kiva partners (corporations, foundations, lending partners). This project is not one, so slide 16 carries a line saying it is not affiliated with or endorsed by Kiva. Rules followed: brand green, no box or container, no stretching, clear space of half the height of the "K" (the file's own transparent margin provides it).

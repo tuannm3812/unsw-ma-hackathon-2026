@@ -2329,7 +2329,8 @@
           "who": "Kiva’s platform",
           "when": "At posting",
           "status": "Retrospective check only",
-          "evidence": "Slide 17"
+          "evidence": "Slide 17",
+          "who_after": "platform"
         },
         {
           "n": "02",
@@ -2339,7 +2340,8 @@
           "who": "Kiva and partners",
           "when": "While the loan raises funds",
           "status": "Needs a pilot",
-          "evidence": "Slides 12–13 and 18"
+          "evidence": "Slides 12–13 and 18",
+          "who_after": "and partners"
         },
         {
           "n": "03",
@@ -2380,7 +2382,8 @@
           "text": "The flag is checked on past loans only, and the **support levers still need a controlled pilot**."
         }
       ],
-      "solution_link": "→ Why we start by flagging slow loans"
+      "solution_link": "→ Why we start by flagging slow loans",
+      "footer": "Independent hackathon analysis; not affiliated with or endorsed by Kiva."
     },
     {
       "n": 17,
@@ -2607,7 +2610,7 @@
       ],
       "notes": {
         "purpose": "End on a decision path.",
-        "script": "Before anyone tells borrowers how to write, three things need to happen, in order. [Point: Check the measures first] First, check that our word counts measure what we think. [Point: Then fill what we cannot see] Second, get the data we are missing: what lenders saw and the listings that never funded. [Point: Only a pilot can test an edit] Third, test one truthful prompt with partners. Each gate lets us say a little more, from associations today to a tested effect of editing. [Point: A failed gate stops the work] If a gate fails, we stop and report the uncertainty.",
+        "script": "Before anyone tells borrowers how to write, three things need to happen, in order. [Point: Check the measures first] First, check that our word counts measure what we think. [Point: Then fill what we cannot see] Second, get the data we are missing: what lenders saw and the listings that never funded. [Point: Only a pilot can test an edit] Third, test one truthful prompt with partners. Each gate lets us say a little more, from associations today to a tested effect of editing. [Point: A failed gate stops the work] If a gate fails, we stop and report the uncertainty. The staircase shows the order of claims; its heights are illustrative and measure nothing.",
         "reference": "docs/6_matched_text_results.md, What to do next; docs/4_research_review.md."
       },
       "sublabel": "Step 3: Test",

@@ -1375,7 +1375,14 @@ def solution(page, slide, pos):
         for k, (label, value, colour) in enumerate((('Who', step['who'], GREY), ('When', step['when'], GREY), ('Status', step['status'], VIOLET))):
             y = top + 134 + k * pitch
             page.text(label, x + 32, y, 120, 12, size=8, color=GREY, bold=True)
-            page.text(value, x + 32, y + 12, SOLUTION_W - 44, 28, size=10, color=colour, bold=label == 'Status', spacing=105)
+            after = step.get('who_after') if label == 'Who' else None
+            if after:  # logo file unaltered: its transparent margin is the brand's clear space
+                ink_h, scale = 10, 10 / 409
+                EXTRA_IMAGES.append(('solution', ASSETS / 'logos/kiva-logo-classic.png',
+                                     (x + 32 - 201 * scale, y + 13 - 201 * scale, 1365 * scale, 811 * scale)))
+                page.text(after, x + 32 + 963 * scale + 5, y + 12, SOLUTION_W - 72, 14, size=10, color=colour)
+            else:
+                page.text(value, x + 32, y + 12, SOLUTION_W - 44, 28, size=10, color=colour, bold=label == 'Status', spacing=105)
             if label == 'Status':
                 page.rect(x + 16, y + 14, 8, 8, VIOLET, 'ELLIPSE')
             else:
@@ -1388,46 +1395,54 @@ def solution(page, slide, pos):
         if i < 2:
             page.line(x + SOLUTION_W + 3, top + h / 2, x + SOLUTION_W + SOLUTION_GAP - 3, top + h / 2, SLATE, .75)
             page.ops[-1]['end_arrow'] = 'FILL_ARROW'
+    page.text(slide['footer'], L, top + h + 8, R - L, 12, size=8, color=SLATE)
     page.takeaways(slide['takeaways'], pos)
 
 
 def gates(page, slide, pos):
-    """Three gates as linked cards, then the claim each one unlocks and the stop rule."""
+    """Three gate cards above a staircase of the claim each gate unlocks, with a stop branch at every gate."""
     page.chrome(slide)
     ladder = slide['ladder']
-    top, h = TOP, 212
+    top, h = TOP, 176
     fills = [(NAVY, WHITE), (VIOLET, WHITE), (YELLOW, NAVY)]
     for i, step in enumerate(slide['steps']):
         x = L + i * (SOLUTION_W + SOLUTION_GAP)
         card(page, x, top, SOLUTION_W, h, fills[i][0])
-        page.badge(step['n'], x + 12, top + 12, (26, 26), *fills[i], 10)
-        page.text(step['name'], x + 12, top + 44, SOLUTION_W - 40, 15, size=11, bold=True)
-        page.marker(i + 1, x + SOLUTION_W - 22, top + 45)
-        rows = [('Question', step['question'], 66, True), ('Do', step['do'], 106, False), ('Done when', step['done'], 162, False)]
+        page.badge(step['n'], x + 10, top + 9, (22, 22), *fills[i], 9)
+        page.text(step['name'], x + 38, top + 9, SOLUTION_W - 66, 22, size=10.5, bold=True, middle=True)
+        page.marker(i + 1, x + SOLUTION_W - 22, top + 36)
+        rows = [('Question', step['question'], 38, True), ('Do', step['do'], 80, False), ('Done when', step['done'], 134, False)]
         for name, value, offset, bold in rows:
-            page.text(name, x + 12, top + offset, 120, 12, size=8, color=GREY, bold=True)
-            page.text(value, x + 12, top + offset + 11, SOLUTION_W - 24, 40, size=9, color=NAVY if bold else GREY, bold=bold, spacing=105)
+            page.text(name, x + 12, top + offset, 120, 11, size=8, color=GREY, bold=True)
+            page.text(value, x + 12, top + offset + 11, SOLUTION_W - 24, 40, size=9, color=NAVY if bold else GREY, bold=bold, spacing=100)
         if i < 2:
             page.line(x + SOLUTION_W + 3, top + h / 2, x + SOLUTION_W + SOLUTION_GAP - 3, top + h / 2, SLATE, .75)
             page.ops[-1]['end_arrow'] = 'FILL_ARROW'
-    y = top + h + 10
-    page.text(ladder['title'], L, y, 400, 12, size=9, bold=True, color=VIOLET)
-    gap = 12
-    chip_w = (R - L - 3 * gap) / 4
+    # Staircase: each step is the strongest claim available after that gate; heights are illustrative.
+    title_y, base = top + h + 8, 442
+    page.text(ladder['title'], L, title_y, 300, 12, size=9, bold=True, color=VIOLET)
+    gap = 22
+    step_w = (R - L - 3 * gap) / 4
+    heights, tints = (46, 62, 78, 94), (('#E2DCF0', NAVY), ('#C4BBDF', NAVY), (VIOLET, WHITE), (NAVY, WHITE))
+    stop_y = base + 7
     for i, (stage, claim) in enumerate(ladder['steps']):
-        x = L + i * (chip_w + gap)
-        page.rect(x, y + 16, chip_w, 44, PAPER)
-        page.rect(x, y + 16, 3, 44, [SLATE, NAVY, VIOLET, YELLOW][i])
-        page.text(f'{stage}\n{claim}', x + 10, y + 16, chip_w - 14, 44, size=9, middle=True, spacing=100,
-                  spans=[(0, len(stage), {'bold': True, 'color': GREY, 'font_size': 8})])
+        x, y = L + i * (step_w + gap), base - heights[i]
+        fill, ink = tints[i]
+        page.rect(x, y, step_w, heights[i], fill)
+        page.text(f'{stage}\n{claim}', x + 9, y + 6, step_w - 16, heights[i] - 8, size=9, color=ink, spacing=100,
+                  spans=[(0, len(stage), {'bold': True, 'font_size': 8})])
         if i < 3:
-            page.line(x + chip_w + 2, y + 38, x + chip_w + gap - 2, y + 38, SLATE, .75)
+            cx, cy = x + step_w + gap / 2, base - heights[i + 1] + 11
+            page.line(cx, cy + 8, cx, stop_y, SLATE, .75)
+            page.ops[-1]['dash_style'] = 'DASH'
+            page.line(cx + 8, cy, x + step_w + gap, cy, SLATE, .75)
             page.ops[-1]['end_arrow'] = 'FILL_ARROW'
-    sy = y + 68
-    page.rect(L, sy, R - L, 24, PAPER)
-    page.rect(L, sy, 4, 24, YELLOW)
-    page.text(ladder['stop'], L + 14, sy, R - L - 50, 24, size=10, bold=True, middle=True)
-    page.marker(4, R - 22, sy + 6)
+            page.badge(str(i + 1), cx - 8, cy - 8, (16, 16), *fills[i], 8)
+    first, last = L + step_w + gap / 2, L + 3 * step_w + 2.5 * gap
+    page.line(first, stop_y, last, stop_y, SLATE, .75)
+    page.ops[-1]['dash_style'] = 'DASH'
+    page.text(ladder['stop'], L, stop_y + 4, R - L - 24, 12, size=9, bold=True, color=SLATE)
+    page.marker(4, R - 22, stop_y + 4)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -1983,7 +1998,7 @@ def main() -> None:
             images.append((at['approach'], ASSETS / 'icons' / step['icon'], (pipe_x(i) + 6, 166 + 5, 16, 16)))
         images.append((at['approach'], ASSETS / 'icons/table_rows-navy.png', (L + 11, TOP + 4, 16, 16)))
         for i, icon in enumerate(GATE_ICONS):
-            images.append((at['gates'], ASSETS / 'icons' / icon, (L + i * (SOLUTION_W + SOLUTION_GAP) + SOLUTION_W - 32, TOP + 15, 20, 20)))
+            images.append((at['gates'], ASSETS / 'icons' / icon, (L + i * (SOLUTION_W + SOLUTION_GAP) + SOLUTION_W - 28, TOP + 11, 18, 18)))
         for i, icon in enumerate(SOLUTION_ICONS):
             images.append((at['solution'], ASSETS / 'icons' / icon, (L + i * (SOLUTION_W + SOLUTION_GAP) + SOLUTION_W - 32, TOP + 17, 20, 20)))
         for icon, x in zip(slide_by_id('agenda').get('icons', []), [43.5, 267.5, 491.5, 715.5]):
