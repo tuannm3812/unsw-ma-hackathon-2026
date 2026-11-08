@@ -1,0 +1,352 @@
+{
+ "target": "slowest 20% of funding duration per test year",
+ "lookup": "training-only shrunken median by country x sector x calendar month (benchmark B1)",
+ "population": "eventually completed loans only; retrospective",
+ "years": [
+  {
+   "year": 2021,
+   "rows": 163166,
+   "models": {
+    "lookup_B1": {
+     "top_10": {
+      "flagged": 16317,
+      "precision": 0.3946803946803947,
+      "recall": 0.19734019734019734,
+      "lift": 1.9733535968137916,
+      "target_rate": 0.20000490298223894
+     },
+     "top_20": {
+      "flagged": 32633,
+      "precision": 0.3699322771427696,
+      "recall": 0.36992094134951276,
+      "lift": 1.8496160425408208,
+      "target_rate": 0.20000490298223894
+     },
+     "within_country_precision_top_10": {
+      "median": 0.25401928918913175,
+      "min": 0.08862876254180602,
+      "max": 0.4349593495934959
+     }
+    },
+    "tree_structure": {
+     "top_10": {
+      "flagged": 16317,
+      "precision": 0.5250352393209536,
+      "recall": 0.2625176196604768,
+      "lift": 2.62511184222108,
+      "target_rate": 0.20000490298223894
+     },
+     "top_20": {
+      "flagged": 32633,
+      "precision": 0.46226212729445654,
+      "recall": 0.4622479622479623,
+      "lift": 2.311253976286306,
+      "target_rate": 0.20000490298223894
+     },
+     "within_country_precision_top_10": {
+      "median": 0.518943661971831,
+      "min": 0.3469555677454745,
+      "max": 0.8175438596491228
+     }
+    },
+    "linear_structure": {
+     "top_10": {
+      "flagged": 16317,
+      "precision": 0.5589262732119875,
+      "recall": 0.27946313660599376,
+      "lift": 2.7945628575996553,
+      "target_rate": 0.20000490298223894
+     },
+     "top_20": {
+      "flagged": 32633,
+      "precision": 0.5007507737566267,
+      "recall": 0.5007354293068579,
+      "lift": 2.5036924909840583,
+      "target_rate": 0.20000490298223894
+     },
+     "within_country_precision_top_10": {
+      "median": 0.4797220212588347,
+      "min": 0.2876712328767123,
+      "max": 0.856140350877193
+     }
+    }
+   }
+  },
+  {
+   "year": 2022,
+   "rows": 143354,
+   "models": {
+    "lookup_B1": {
+     "top_10": {
+      "flagged": 14335,
+      "precision": 0.42469480292989187,
+      "recall": 0.2123399951170172,
+      "lift": 2.123459201953602,
+      "target_rate": 0.20000139514767637
+     },
+     "top_20": {
+      "flagged": 28671,
+      "precision": 0.3669561577901015,
+      "recall": 0.3669561577901015,
+      "lift": 1.8347679900890173,
+      "target_rate": 0.20000139514767637
+     },
+     "within_country_precision_top_10": {
+      "median": 0.2768736593593156,
+      "min": 0.10909090909090909,
+      "max": 0.5795724465558195
+     }
+    },
+    "tree_structure": {
+     "top_10": {
+      "flagged": 14335,
+      "precision": 0.6710847575863271,
+      "recall": 0.3355306755955495,
+      "lift": 3.3554003815364077,
+      "target_rate": 0.20000139514767637
+     },
+     "top_20": {
+      "flagged": 28671,
+      "precision": 0.5951309685745179,
+      "recall": 0.5951309685745179,
+      "lift": 2.975634085627688,
+      "target_rate": 0.20000139514767637
+     },
+     "within_country_precision_top_10": {
+      "median": 0.4924987487984493,
+      "min": 0.24645892351274787,
+      "max": 0.8111638954869359
+     }
+    },
+    "linear_structure": {
+     "top_10": {
+      "flagged": 14335,
+      "precision": 0.5563306592256715,
+      "recall": 0.2781556276376827,
+      "lift": 2.7816338921780517,
+      "target_rate": 0.20000139514767637
+     },
+     "top_20": {
+      "flagged": 28671,
+      "precision": 0.4978200969620871,
+      "recall": 0.4978200969620871,
+      "lift": 2.4890831216177687,
+      "target_rate": 0.20000139514767637
+     },
+     "within_country_precision_top_10": {
+      "median": 0.469102618771045,
+      "min": 0.2096317280453258,
+      "max": 0.7814726840855107
+     }
+    }
+   }
+  },
+  {
+   "year": 2023,
+   "rows": 143233,
+   "models": {
+    "lookup_B1": {
+     "top_10": {
+      "flagged": 14323,
+      "precision": 0.49905746002932344,
+      "recall": 0.24952001954829475,
+      "lift": 2.4952524582811493,
+      "target_rate": 0.20000279265253118
+     },
+     "top_20": {
+      "flagged": 28647,
+      "precision": 0.40220616469438336,
+      "recall": 0.40220616469438336,
+      "lift": 2.0110027433124102,
+      "target_rate": 0.20000279265253118
+     },
+     "within_country_precision_top_10": {
+      "median": 0.292356162423955,
+      "min": 0.1419939577039275,
+      "max": 0.4209770114942529
+     }
+    },
+    "tree_structure": {
+     "top_10": {
+      "flagged": 14323,
+      "precision": 0.6969908538713957,
+      "recall": 0.34848326177261146,
+      "lift": 3.4849056087046333,
+      "target_rate": 0.20000279265253118
+     },
+     "top_20": {
+      "flagged": 28647,
+      "precision": 0.5884036722868015,
+      "recall": 0.5884036722868015,
+      "lift": 2.9419772818324934,
+      "target_rate": 0.20000279265253118
+     },
+     "within_country_precision_top_10": {
+      "median": 0.5578529907371401,
+      "min": 0.2991202346041056,
+      "max": 0.8455882352941176
+     }
+    },
+    "linear_structure": {
+     "top_10": {
+      "flagged": 14323,
+      "precision": 0.6655728548488445,
+      "recall": 0.33277481062589453,
+      "lift": 3.327817807050112,
+      "target_rate": 0.20000279265253118
+     },
+     "top_20": {
+      "flagged": 28647,
+      "precision": 0.5748594966314099,
+      "recall": 0.5748594966314099,
+      "lift": 2.8742573491467427,
+      "target_rate": 0.20000279265253118
+     },
+     "within_country_precision_top_10": {
+      "median": 0.5519714488672834,
+      "min": 0.1348973607038123,
+      "max": 0.8308823529411765
+     }
+    }
+   }
+  },
+  {
+   "year": 2024,
+   "rows": 141725,
+   "models": {
+    "lookup_B1": {
+     "top_10": {
+      "flagged": 14172,
+      "precision": 0.5479113745413492,
+      "recall": 0.27394602222614217,
+      "lift": 2.739556872706746,
+      "target_rate": 0.2
+     },
+     "top_20": {
+      "flagged": 28345,
+      "precision": 0.40638560592697126,
+      "recall": 0.40638560592697126,
+      "lift": 2.031928029634856,
+      "target_rate": 0.2
+     },
+     "within_country_precision_top_10": {
+      "median": 0.22474410731704714,
+      "min": 0.07917888563049853,
+      "max": 0.41654571843251087
+     }
+    },
+    "tree_structure": {
+     "top_10": {
+      "flagged": 14172,
+      "precision": 0.8085661868473045,
+      "recall": 0.4042688304815664,
+      "lift": 4.042830934236522,
+      "target_rate": 0.2
+     },
+     "top_20": {
+      "flagged": 28345,
+      "precision": 0.6765567119421415,
+      "recall": 0.6765567119421415,
+      "lift": 3.3827835597107074,
+      "target_rate": 0.2
+     },
+     "within_country_precision_top_10": {
+      "median": 0.504368796821627,
+      "min": 0.187683284457478,
+      "max": 0.8896308662585791
+     }
+    },
+    "linear_structure": {
+     "top_10": {
+      "flagged": 14172,
+      "precision": 0.6853655094552639,
+      "recall": 0.34267066502028576,
+      "lift": 3.426827547276319,
+      "target_rate": 0.2
+     },
+     "top_20": {
+      "flagged": 28345,
+      "precision": 0.5683542070911978,
+      "recall": 0.5683542070911978,
+      "lift": 2.841771035455989,
+      "target_rate": 0.2
+     },
+     "within_country_precision_top_10": {
+      "median": 0.49765951205507325,
+      "min": 0.1495601173020528,
+      "max": 0.8490076052680393
+     }
+    }
+   }
+  },
+  {
+   "year": 2025,
+   "rows": 137162,
+   "models": {
+    "lookup_B1": {
+     "top_10": {
+      "flagged": 13716,
+      "precision": 0.5150918635170604,
+      "recall": 0.2575365435789013,
+      "lift": 2.5754029885075287,
+      "target_rate": 0.20000437438940816
+     },
+     "top_20": {
+      "flagged": 27432,
+      "precision": 0.42115048118985127,
+      "recall": 0.4211351292239274,
+      "lift": 2.1057063500514848,
+      "target_rate": 0.20000437438940816
+     },
+     "within_country_precision_top_10": {
+      "median": 0.25950975379228064,
+      "min": 0.17566079295154186,
+      "max": 0.5423728813559322
+     }
+    },
+    "tree_structure": {
+     "top_10": {
+      "flagged": 13716,
+      "precision": 0.7345435987168271,
+      "recall": 0.3672584114023257,
+      "lift": 3.672637665847608,
+      "target_rate": 0.20000437438940816
+     },
+     "top_20": {
+      "flagged": 27432,
+      "precision": 0.6240522018081073,
+      "recall": 0.6240294535778077,
+      "lift": 3.1201927643496377,
+      "target_rate": 0.20000437438940816
+     },
+     "within_country_precision_top_10": {
+      "median": 0.5023172383497456,
+      "min": 0.2535211267605634,
+      "max": 0.9032672540381792
+     }
+    },
+    "linear_structure": {
+     "top_10": {
+      "flagged": 13716,
+      "precision": 0.6788422280548265,
+      "recall": 0.33940874129697807,
+      "lift": 3.3941369038915217,
+      "target_rate": 0.20000437438940816
+     },
+     "top_20": {
+      "flagged": 27432,
+      "precision": 0.5789953339165937,
+      "recall": 0.5789742281194182,
+      "lift": 2.894913352191442,
+      "target_rate": 0.20000437438940816
+     },
+     "within_country_precision_top_10": {
+      "median": 0.40969868173258006,
+      "min": 0.22300469483568075,
+      "max": 0.8473019517795637
+     }
+    }
+   }
+  }
+ ]
+}
