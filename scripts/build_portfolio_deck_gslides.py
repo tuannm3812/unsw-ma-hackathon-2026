@@ -806,28 +806,30 @@ def clustering(page, slide, pos):
     # Urgency
     bx, by, bw, bh = L + 300, ay, pw - 300, ah
     panel(page, bx, by, bw, bh, ex['urgency_panel']['title'], ex['urgency_panel']['guide'])
-    x0, x1 = bx + 20, bx + bw - 24
-    px = lambda p_value: x0 + (math.log10(p_value) + 4) / 4 * (x1 - x0)  # 0.0001 .. 1
+    x0, x1 = bx + 78, bx + bw - 18
+    px = lambda p_value: x0 + (math.log10(p_value) + 3) / 3 * (x1 - x0)  # 0.001 .. 1; HC3 p sits at the floor
     axis = by + 150
     page.line(x0, axis, x1, axis, SLATE, .75)
+    page.line(x0, by + 60, x0, axis, SLATE, .75)
     page.line(px(.05), by + 56, px(.05), axis, VIOLET, .75)
     page.ops[-1]['dash_style'] = 'DASH'
     page.text('significant', px(.05) - 74, by + 46, 70, 12, size=8, color=GREY, align='right')
     page.text('not significant', px(.05) + 4, by + 46, 74, 12, size=8, color=GREY)
-    for value, name in [(0.001, '0.001'), (0.01, '0.01'), (.05, '0.05'), (1, '1')]:
+    for value, name in [(.001, '<0.001'), (.01, '0.01'), (.05, '0.05'), (.1, '0.1'), (.5, '0.5'), (1, '1')]:
         page.line(px(value), axis, px(value), axis + 3, SLATE, .75)
         page.text(name, px(value) - 16, axis + 3, 32, 12, size=8, color=VIOLET if value == .05 else GREY,
                   bold=value == .05, align='center')
     page.text('p-value (log scale)', x0, axis + 15, x1 - x0, 12, size=8, color=GREY, align='center')
     for r, row in enumerate(ex['urgency']):
         y = by + 80 + r * 42
-        page.text(row['model'], bx + 10, y - 19, 150, 12, size=9, bold=True)
-        page.line(px(.0004) + 4, y, px(row['clustered']) - 5, y, SLATE, .75)
+        page.text(row['model'].replace(' model', ''), bx + 10, y - 13, 62, 26, size=8, bold=True, middle=True,
+                  spacing=100)
+        page.line(px(.001) + 4, y, px(row['clustered']) - 5, y, SLATE, .75)
         page.ops[-1]['end_arrow'] = 'FILL_ARROW'
-        page.rect(px(.0004) - 4, y - 4, 8, 8, NAVY, 'ELLIPSE')
+        page.rect(px(.001) - 4, y - 4, 8, 8, NAVY, 'ELLIPSE')
         page.rect(px(row['clustered']) - 4, y - 4, 8, 8, VIOLET, 'ELLIPSE')
-        page.sup('HC3 <0.001¹', px(.0004) - 12, y + 5, 70, 12, size=8)
-        page.text(f"Clustered {row['clustered']:.2f}", px(.05) + 8, y + 5, 80, 12, size=8, bold=True,
+        page.sup('Before: HC3 <0.001¹', x0 + 6, y + 5, 100, 12, size=8)
+        page.text(f"After: clustered {row['clustered']:.2f}", px(.05) + 6, y + 5, 90, 12, size=8, bold=True,
                   color=VIOLET)
     page.marker(4, bx + bw - 22, by + 8)
     page.caption(slide['figure'], ex['caption'], ay + ah + 8, w=pw)

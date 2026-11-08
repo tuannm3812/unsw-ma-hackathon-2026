@@ -2875,3 +2875,8 @@ unseen exact template, which cannot exclude near-duplicates.
 ## 2026-11-08: slide 10 urgency axis
 
 - Mike asked whether the urgency chart needs an axis. Added an axis line, tick marks and the title "p-value (log scale)". Live deck re-read first: no owner edits to mirror. Deck QA and pytest pass; nothing pushed.
+
+## 2026-11-08: slide 10 urgency chart axes
+
+- Log-scale p-value axis from the 0.001 floor to 1, with the ticks asked for, plus a category axis naming the two models; dots labelled before (HC3) and after (clustered). Live deck re-read first: no owner edits to mirror.
+- Checked against a 300 dpi render: points and tick labels sit within 0.1 pt of their computed positions. Deck QA and pytest pass; nothing pushed.
