@@ -254,7 +254,7 @@ def cover(page, slide):
     x, y, w, h = COVER_SMALL[0][1]
     page.rect(x + 8, y + 8, w, h, VIOLET, 'ROUND_RECTANGLE')
     page.rect(L, 156, 28, 3, YELLOW)
-    page.text('UNSW MARKETING ANALYTICS HACKATHON 2026', L, 166, 440, 14, size=10, color=VIOLET, bold=True)
+    page.text(slide.get('kicker', 'UNSW Marketing Analytics Hackathon 2026').upper(), L, 166, 440, 14, size=10, color=VIOLET, bold=True)
     page.text(slide['title'], L, 186, 450, 112, size=44, bold=True, spacing=95)
     page.text(slide['subtitle'], L, 304, 430, 50, size=16, color=SLATE, spacing=115)
     page.text(slide['names'], L, 394, 420, 16, size=12, bold=True)
@@ -284,7 +284,8 @@ STEP_X = [548, 670, 792]
 def summary(page, slide, pos):
     """Three mini-exhibits, each with an icon, key figure and a native chart, then the decision."""
     page.chrome(slide)
-    minis = {'periods': period_mini, 'lift': lift_mini, 'bound': bound_mini, 'waffle': waffle_mini, 'gain': gain_mini}
+    minis = {'periods': period_mini, 'lift': lift_mini, 'bound': bound_mini, 'waffle': waffle_mini, 'gain': gain_mini,
+             'waits': waits_mini}
     for (x, y, w, h), body, colour in zip(SUMMARY_CARDS, slide['body'], [SLATE, NAVY, VIOLET]):
         draw = minis[body.get('mini', 'gain')]
         card(page, x, y, w, h, colour)
@@ -295,13 +296,35 @@ def summary(page, slide, pos):
     bx, by, bw, bh = BAND
     page.rect(bx, by, bw, bh, NAVY)
     page.rect(bx, by, 6, bh, YELLOW)
-    label = 'Next decision:'
+    label_end = slide['decision'].index(':') + 1
     page.text(slide['decision'], bx + 22, by, 470, bh, size=12, color=WHITE, middle=True, spacing=110,
-              spans=[(0, len(label), {'bold': True})])
+              spans=[(0, label_end, {'bold': True})])
+    for (x, y, w, h), (nx, _, _, _) in zip(SUMMARY_CARDS, SUMMARY_CARDS[1:]):
+        page.line(x + w + 3, y + h / 2, nx - 3, y + h / 2, SLATE, .75)
+        page.ops[-1]['end_arrow'] = 'FILL_ARROW'
     for x, step in zip(STEP_X, slide['steps']):
         page.text(step, x + 26, by, 96, bh, size=10, color=WHITE, middle=True, spacing=110)
     if slide.get('pending'):
         page.text(slide['pending'], L, by + bh + 8, FULL - L, 12, size=8, color=GREY)
+
+
+def wait_scale(x, w, lo=0.1, hi=100):
+    """Log-scale position for a funding time in days."""
+    return lambda days: x + (math.log10(days) - math.log10(lo)) / (math.log10(hi) - math.log10(lo)) * w
+
+
+def waits_mini(page, x, y, w, slide):
+    """Funding-time quartiles on a log scale: the middle half as a band, the median as a bar."""
+    q = slide_by_id('problem')['exhibit']['quartiles']
+    px = wait_scale(x, w)
+    base = y + 46
+    page.line(x, base, x + w, base, RULE, .75)
+    page.rect(px(q['q1']), base - 22, px(q['q3']) - px(q['q1']), 22, '#E2DCF0')
+    page.rect(px(q['median']) - 1.5, base - 30, 3, 30, NAVY)
+    page.text(f"{q['median']} days", px(q['median']) - 30, base - 44, 60, 12, size=8, bold=True, align='center')
+    page.text(f"{q['q3']} days", px(q['q3']) - 30, base + 4, 60, 12, size=8, color=VIOLET, bold=True, align='center')
+    for days, name in [(0.1, '0.1'), (1, '1'), (10, '10'), (100, '100 days')]:
+        page.text(name, px(days) - 22, base + 18, 44, 12, size=8, color=GREY, align='center')
 
 
 def period_mini(page, x, y, w, slide):
@@ -379,6 +402,14 @@ def slide_by_id(slide_id: str) -> dict:
 def agenda(page, slide, urls):
     page.chrome(slide)
     colours = [(NAVY, WHITE), (VIOLET, WHITE), (SLATE, WHITE), (YELLOW, NAVY)]
+    xs = [43.5, 267.5, 491.5, 715.5]
+    for x0, x1 in zip(xs, xs[1:]):
+        page.line(x0 + 42, TOP + 18, x1 - 6, TOP + 18, SLATE, .75)
+        page.ops[-1]['end_arrow'] = 'FILL_ARROW'
+    for i, (teaser, x) in enumerate(zip(slide.get('teasers', []), xs)):
+        card(page, x, 400, 200, 62, colours[i][0])
+        page.text(teaser['value'], x + 12, 408, 176, 26, size=20, bold=True)
+        page.text(teaser['label'], x + 12, 436, 176, 14, size=9, color=GREY)
     for i, part in enumerate(slide['parts']):
         x = [43.5, 267.5, 491.5, 715.5][i]
         fill, ink = colours[i]
@@ -386,11 +417,11 @@ def agenda(page, slide, urls):
         page.text(part['name'], x, 176, 200, 24, size=16, bold=True)
         page.text(part['question'], x, 204, 196, 36, size=12, color=GREY, spacing=110)
         page.line(x, 252, x + 200, 252, RULE, .75)
-        pitch = min(28, 200 / len(part['items']))
+        pitch = min(24, 128 / len(part['items']))
         for j, (label, number) in enumerate(part['items']):
             y = 262 + j * pitch
             page.text(label, x, y + 1, 168, 16, size=10)
-            chip = page.badge(str(number), x + 176, y, (24, 18), fill, ink, 8, 'ROUND_RECTANGLE')
+            chip = page.badge(str(number), x + 176, y + 1, (24, 15), fill, ink, 8, 'ROUND_RECTANGLE')
             page.ops.append({'op': 'style-text', 'element': chip, 'start': 0, 'end': len(str(number)),
                              'link': urls[number], 'color': ink, 'underline': False})
 
@@ -1243,30 +1274,47 @@ def chip_link(page, label, x, y, fill, urls, ink=WHITE):
 
 
 def problem(page, slide, pos):
-    """Two key waits, then same-day share by period as bars from zero."""
+    """Hero: funding-time quartiles on a log scale; below, same-day share by period beside a framed photo."""
     page.chrome(slide)
     ex = slide['exhibit']
-    for i, (figure, bar) in enumerate(zip(ex['cards'], [NAVY, VIOLET])):
-        key_card(page, figure, L + i * 208, TOP, 198, 92, bar, 26)
-        page.marker(i + 1, L + i * 208 + 198 - 22, TOP + 10)
-    ty = TOP + 108
-    page.text(ex['period_title'], L, ty, 400, 13, size=9, bold=True)
-    base, per, bar, step = ty + 196, 3.6, 120, 196
-    for i, (name, value) in enumerate(ex['periods']):
-        bx = L + 20 + i * step
-        page.rect(bx, base - value * per, bar, value * per, SLATE if i == 0 else NAVY)
-        page.text(f'{value:.1f}%', bx, base - value * per - 18, bar, 14, size=11, bold=True, align='center')
-        page.text(name, bx - 10, base + 4, bar + 20, 13, size=9, color=GREY, align='center')
-        if i == 1:
-            page.marker(3, bx + bar + 6, base - value * per - 6)
-    page.line(L, base, L + 20 + 2 * step + bar + 20, base, NAVY, 1)
-    page.caption(slide['figure'], ex['caption'], base + 24)
+    q = ex['quartiles']
+    pw = R - 6 - L
+    panel(page, L, TOP, pw, 132, ex['strip_title'], 'The violet band holds the middle half of loans; the navy bar is the median.')
+    x0, w = L + 24, pw - 48
+    px = wait_scale(x0, w)
+    base = TOP + 104
+    page.line(x0, base, x0 + w, base, NAVY, .75)
+    for days, name in [(0.1, '0.1'), (1, '1 day'), (10, '10'), (100, '100 days')]:
+        page.line(px(days), base, px(days), base + 3, RULE, .75)
+        page.text(name, px(days) - 26, base + 5, 52, 12, size=8, color=GREY, align='center')
+    page.rect(px(q['q1']), base - 34, px(q['q3']) - px(q['q1']), 34, '#E2DCF0')
+    page.rect(px(q['median']) - 2, base - 46, 4, 46, NAVY)
+    page.text(f"Median {q['median']} days", px(q['median']) - 60, base - 62, 120, 14, size=10, bold=True, align='center')
+    page.marker(1, px(q['median']) + 64, base - 62)
+    page.text(f"Quarter within {q['q1']} days", px(q['q1']) - 128, base - 24, 122, 12, size=8, color=GREY, align='right')
+    page.text(f"A quarter wait over {q['q3']} days", px(q['q3']) + 6, base - 24, 170, 12, size=9, color=VIOLET, bold=True)
+    page.line(px(q['q3']) + 6, base - 8, px(q['q3']) + 70, base - 8, VIOLET, .75)
+    page.ops[-1]['end_arrow'] = 'FILL_ARROW'
+    page.marker(2, px(q['q3']) + 6, base - 42)
+    # Same-day share by period, compact bars.
+    ty = TOP + 150
+    page.text(ex['period_title'], L, ty, 300, 13, size=9, bold=True)
+    bbase, per, bar, step = ty + 132, 2.2, 70, 110
+    for k, (name, value) in enumerate(ex['periods']):
+        bx = L + 10 + k * step
+        page.rect(bx, bbase - value * per, bar, value * per, SLATE if k == 0 else NAVY)
+        page.text(f'{value:.1f}%', bx, bbase - value * per - 16, bar, 13, size=10, bold=True, align='center')
+        page.text(name, bx - 15, bbase + 4, bar + 30, 12, size=8, color=GREY, align='center')
+        if k == 1:
+            page.marker(3, bx + bar + 4, bbase - value * per - 8)
+    page.line(L, bbase, L + 10 + 2 * step + bar + 10, bbase, NAVY, 1)
+    page.caption(slide['figure'], ex['caption'], bbase + 22, w=pw)
     page.takeaways(slide['takeaways'], pos)
 
 
 INSIGHT_CARDS = [(L + i * 245, TOP, 233, 236) for i in range(3)]
 INSIGHT_PHOTO = (L + 735, TOP, FULL - L - 735, 236)
-PROBLEM_PHOTO = (L + 416, TOP, R - 6 - L - 416, 92)
+PROBLEM_PHOTO = (L + 360, TOP + 150, R - 6 - L - 360, 140)
 PRIORITISE_PHOTO = (L + 600, TOP + 162, FULL - L - 600, 88)
 
 
@@ -1659,6 +1707,8 @@ def main() -> None:
             images.append((at['gates'], ASSETS / 'icons' / icon, (x + 262 - 72, 136 + 18, 20, 20)))
         for x, icon in zip(GATE_X, SOLUTION_ICONS):
             images.append((at['solution'], ASSETS / 'icons' / icon, (x + 262 - 72, 136 + 18, 20, 20)))
+        for icon, x in zip(slide_by_id('agenda').get('icons', []), [43.5, 267.5, 491.5, 715.5]):
+            images.append((at['agenda'], ASSETS / 'icons' / icon, (x + 178, 177, 20, 20)))
         for icon, (x, y, _, _) in zip(SUMMARY_ICONS, SUMMARY_CARDS):
             images.append((at['summary'], ASSETS / 'icons' / icon, (x + 16, y + 14, 22, 22)))
         for icon, x in zip(STEP_ICONS, STEP_X):

@@ -26,7 +26,8 @@
       },
       "names": "Mike Nguyen and Sophia Nguyen",
       "team": "Team Cultural Blend",
-      "label": "UNSW Marketing Analytics Hackathon 2026"
+      "label": "UNSW Marketing Analytics Hackathon 2026",
+      "kicker": "UNSW Marketing Analytics Hackathon 2026 · Finalist"
     },
     {
       "n": 2,
@@ -38,23 +39,23 @@
       "body": [
         {
           "figure": "2.85 days",
-          "heading": "The problem",
-          "text": "Median wait to be fully funded; a quarter of loans wait over 15.95 days.",
-          "layer": "Problem",
-          "mini": "periods"
+          "heading": "Median wait to full funding",
+          "text": "A quarter of loans wait over 15.95 days.",
+          "layer": "The problem",
+          "mini": "waits"
         },
         {
           "figure": "2.6–4.0×",
-          "heading": "The solution",
-          "text": "Loan details flag the slowest fifth of loans better than chance, so support can go there first.",
-          "layer": "Solution: predict and prioritise",
+          "heading": "Better than chance at flagging slow loans",
+          "text": "Loan details flag the slowest fifth early, so support can go there first.",
+          "layer": "Our solution",
           "mini": "lift"
         },
         {
           "figure": "±5%",
-          "heading": "The proof",
+          "heading": "Framing links stay small",
           "text": "Five framings stay within ±5% of funding time, so rewriting stories is not the lever.",
-          "layer": "Evidence",
+          "layer": "The proof",
           "mini": "bound"
         }
       ],
@@ -179,7 +180,31 @@
         "purpose": "Orient the reader.",
         "script": "Four parts: the problem, what drives the wait, our solution, and how to take it forward safely."
       },
-      "hide_label": true
+      "hide_label": true,
+      "teasers": [
+        {
+          "value": "2.85 days",
+          "label": "median wait"
+        },
+        {
+          "value": "±5%",
+          "label": "framing links stay small"
+        },
+        {
+          "value": "2.6–4.0×",
+          "label": "better than chance at flagging slow loans"
+        },
+        {
+          "value": "4",
+          "label": "guardrails, then a roadmap"
+        }
+      ],
+      "icons": [
+        "account_balance-navy.png",
+        "query_stats-violet.png",
+        "target-navy.png",
+        "science-navy.png"
+      ]
     },
     {
       "n": 4,
@@ -215,14 +240,20 @@
             30.0
           ]
         ],
-        "period_title": "Share funded within 24 hours, by period",
-        "caption": "Funding time and same-day share, completed loans 2016–2025; periods as in the explanatory models."
+        "period_title": "Share funded within 24 hours",
+        "caption": "Funding-time quartiles and same-day share by period, 1,453,840 completed loans, 2016–2025.",
+        "quartiles": {
+          "q1": 0.39,
+          "median": 2.85,
+          "q3": 15.95
+        },
+        "strip_title": "Days from listing to full funding (log scale)"
       },
       "takeaways": [
         {
           "marker": 1,
           "heading": "Most loans fund within days",
-          "text": "The median loan is fully funded in **2.85 days**."
+          "text": "Half are fully funded within **2.85 days**, and a quarter within **0.39 days**."
         },
         {
           "marker": 2,
@@ -237,7 +268,7 @@
       ],
       "notes": {
         "purpose": "Define the problem in lender-time terms.",
-        "script": "The median completed loan is fully funded in 2.85 days, but the slowest quarter wait more than 15.95 days. Same-day funding fell from 46.0 percent before the pandemic to 30.3 percent during it, and stayed near 30.0 percent afterwards. Only completed loans are in the data, so loans that never funded are not counted.",
+        "script": "The middle loan is fully funded in 2.85 days, and a quarter fund within 0.39 days, about nine hours. But the slowest quarter wait more than 15.95 days, a long tail on a log scale. Same-day funding also fell, from 46.0 percent before the pandemic to 30.3 percent during it, and stayed near 30.0 percent afterwards. Only completed loans are in the data, so loans that never funded are not counted.",
         "reference": "Funding duration and period shares: claims register (features.pkl; notebooks/1_full_dataset_eda.py period trend). Photo: Ali Mkumbwa (shop owner) on Unsplash (Unsplash Licence)."
       },
       "photo": "unsplash-shop-ali-mkumbwa.jpg"

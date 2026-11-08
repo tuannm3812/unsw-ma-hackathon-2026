@@ -2777,3 +2777,16 @@ unseen exact template, which cannot exclude near-duplicates.
   - **Placeholders:** the "for whom and when" placeholders on the summary, key insight and guardrails are replaced with the real line. The Test slide names urgency in Asia as a candidate pilot hypothesis.
   - **Renumbering:** agenda (Evidence 6–13, Solution 14–17, Next steps 18–19), all link chips and figures 6–9.
   - QA reports no automated problems; previews, PDF and preview page refreshed; not pushed.
+- **2026-11-08, slides 1–4 polish (Mike):** no new owner edits; slides 1–4 were rebuilt.
+  - **Cover:** the kicker now reads "UNSW Marketing Analytics Hackathon 2026 · Finalist" (finalist status per AGENTS.md); the rest of the layout is unchanged.
+  - **Summary:**
+    - The first card's big number (2.85 days) now has a matching chart: funding-time quartiles on a log scale, with the median bar and the 15.95-day upper quartile.
+    - Card labels read "The problem / Our solution / The proof", and the headings no longer repeat them.
+    - Thin connectors join the cards.
+    - Fixed a bold-span bug that rendered "**Our ask to Kiv**a".
+  - **Agenda:** the four badges are joined by thin arrows; each section has an icon beside its name, compact chips, and a key-figure card at the bottom (2.85 days, ±5%, 2.6–4.0×, 4).
+  - **Slide 4 (The wait):**
+    - The hero is now a log-scale funding-time strip: the middle half (0.39–15.95 days) as a violet band, the median at 2.85 days, and a long-tail arrow.
+    - Same-day share by period became compact bars beside the framed shop photo.
+    - The takeaways name the 0.39-day quarter.
+  - QA reports no automated problems; full suite passes; previews, PDF and preview page refreshed; not pushed.
