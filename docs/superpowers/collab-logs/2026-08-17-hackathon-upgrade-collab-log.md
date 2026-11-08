@@ -2964,3 +2964,9 @@ unseen exact template, which cannot exclude near-duplicates.
 
 - Live deck re-read first: no owner edits to mirror. Each scorecard cell now has the count and five dots, one per test year in order, filled where the 95% range excludes zero; flags are checked against the counts at edit time. Calendar and globe icons added to the column headers, a plain line under each row name, and a reading key at the foot of the box.
 - Verified: pyflakes, deck QA, zoomed render, word-box overlap check, full offline pytest. Slide 15 only was rebuilt; nothing pushed.
+
+## 2026-11-08: slide 15 alignment audit; slide 16 rework
+
+- Live deck re-read first: no owner edits to mirror. Slide 15 measured at 400 dpi: digits and dots level within 0.2 pt, columns on the same left edges, header icons level with labels, box and chart edges equal. No change needed.
+- Slide 16 now has a takeaway column and a violet line; cards narrowed to the content width, and each step's evidence names its slide. The claim is tightened to five framings, so urgency and first person are not overstated.
+- Verified: pyflakes, deck QA, rendered slide 16, full offline pytest. Slide 16 only was rebuilt; nothing pushed.

@@ -1352,6 +1352,31 @@ GATE_ICONS = ['fact_check-navy.png', 'table_rows-navy.png', 'science-navy.png']
 SOLUTION_ICONS = ['target-navy.png', 'groups-navy.png', 'science-navy.png']
 
 
+SOLUTION_W, SOLUTION_GAP = 187, 22.75
+
+
+def solution(page, slide, pos):
+    """Predict, Prioritise and Test as three linked cards, each with what, how and its evidence."""
+    page.chrome(slide)
+    top, h, pitch = TOP, 316, 80
+    fills = [(NAVY, WHITE), (VIOLET, WHITE), (YELLOW, NAVY)]
+    for i, step in enumerate(slide['steps']):
+        x = L + i * (SOLUTION_W + SOLUTION_GAP)
+        card(page, x, top, SOLUTION_W, h, fills[i][0])
+        page.badge(step['n'], x + 12, top + 14, (26, 26), *fills[i], 10)
+        page.text(step['name'], x + 12, top + 48, SOLUTION_W - 44, 16, size=12, bold=True)
+        page.marker(i + 1, x + SOLUTION_W - 22, top + 50)
+        for j, (name, value) in enumerate(step['rows']):
+            y = top + 74 + j * pitch
+            page.text(name, x + 12, y, 120, 12, size=8, color=GREY, bold=True)
+            page.text(value, x + 12, y + 12, SOLUTION_W - 24, pitch - 16, size=10, color=NAVY if j == 0 else GREY,
+                      bold=j == 0, spacing=105)
+        if i < 2:
+            page.line(x + SOLUTION_W + 3, top + h / 2, x + SOLUTION_W + SOLUTION_GAP - 3, top + h / 2, SLATE, .75)
+            page.ops[-1]['end_arrow'] = 'FILL_ARROW'
+    page.takeaways(slide['takeaways'], pos)
+
+
 def gates(page, slide):
     """Three steps as full cards with labelled rows; then either a ladder of claims or a stop line."""
     page.chrome(slide)
@@ -1867,9 +1892,9 @@ def main() -> None:
     builders = {'summary': summary, 'problem': problem, 'text_adds': text_adds, 'where': where, 'subgroups': subgroups,
                 'lever': lever, 'outcome': outcome,
                 'clustering': clustering, 'equivalence': forest, 'regions': regions, 'a_screen': regions,
-                'persist': persist, 'forecast': forecast, 'gain_uncertainty': gains, 'approach': approach}
+                'persist': persist, 'forecast': forecast, 'gain_uncertainty': gains, 'approach': approach, 'solution': solution}
     linked = {'agenda': agenda}
-    plain = {'gates': gates, 'solution': gates, 'supports': supports, 'prioritise': prioritise, 'triage': triage, 'roadmap': roadmap,
+    plain = {'gates': gates, 'supports': supports, 'prioritise': prioritise, 'triage': triage, 'roadmap': roadmap,
              'a_asof': a_table, 'a_text_methods': a_table, 'a_primary': a_metrics, 'a_topics': a_topics, 'cover': cover, 'close': close}
     for index, (slide, item) in enumerate(zip(story, slides)):
         if only is not None and index not in only:
@@ -1927,8 +1952,8 @@ def main() -> None:
         images.append((at['approach'], ASSETS / 'icons/table_rows-navy.png', (L + 11, TOP + 4, 16, 16)))
         for x, icon in zip(GATE_X, GATE_ICONS):
             images.append((at['gates'], ASSETS / 'icons' / icon, (x + 262 - 72, 136 + 18, 20, 20)))
-        for x, icon in zip(GATE_X, SOLUTION_ICONS):
-            images.append((at['solution'], ASSETS / 'icons' / icon, (x + 262 - 72, 136 + 18, 20, 20)))
+        for i, icon in enumerate(SOLUTION_ICONS):
+            images.append((at['solution'], ASSETS / 'icons' / icon, (L + i * (SOLUTION_W + SOLUTION_GAP) + SOLUTION_W - 32, TOP + 17, 20, 20)))
         for icon, x in zip(slide_by_id('agenda').get('icons', []), [43.5, 267.5, 491.5, 715.5]):
             images.append((at['agenda'], ASSETS / 'icons' / icon, (x + 178, 177, 20, 20)))
         for icon, (x, y, _, _) in zip(SUMMARY_ICONS, SUMMARY_CARDS):

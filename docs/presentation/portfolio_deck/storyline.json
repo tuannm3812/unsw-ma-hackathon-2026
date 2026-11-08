@@ -2311,7 +2311,7 @@
       "n": 16,
       "id": "solution",
       "section": "Solution",
-      "layout": "three_steps",
+      "layout": "content+takeaways",
       "title": "Our solution: predict slow loans, prioritise support, test before advising",
       "subtitle": "A three-step framework for Kiva and partners, built only on what the evidence supports",
       "steps": [
@@ -2329,7 +2329,7 @@
             ],
             [
               "Evidence",
-              "Flags the slowest fifth of loans 2.6–4.0× better than chance."
+              "Slide 17: flags the slowest fifth 2.6–4.0× better than chance."
             ]
           ]
         },
@@ -2347,7 +2347,7 @@
             ],
             [
               "Evidence",
-              "Framing links stay within ±5%, so don’t chase framing tweaks."
+              "Slides 12–13: five framings stay within ±5%, in all ten subgroups."
             ]
           ]
         },
@@ -2365,18 +2365,35 @@
             ],
             [
               "Evidence",
-              "No edit to a description has been tested yet."
+              "Slide 19: no edit to a description has been tested yet."
             ]
           ]
         }
       ],
       "notes": {
         "purpose": "Turn the evidence into a framework Kiva can act on.",
-        "script": "Three steps. Predict: at posting time, score each listing’s risk of slow funding. In a retrospective check on the November benchmark, a boosted tree using loan structure flags the slowest fifth of loans 2.6 to 4.0 times better than chance; adding text barely changes it. Prioritise: send lender-side support, such as featuring, matching funds, lender alerts and partner follow-up, to the flagged loans, and do not chase framing tweaks, because framing links stay within five percent of funding time. Test: before any writing advice, pass three gates: validate the measures, close the data gaps, and pilot one truthful clarity prompt against a control. Later, a data partnership with listing-time text and unfunded listings would let us answer for whom and when properly. If a gate fails, stop there and report the uncertainty.",
+        "script": "Three steps. Predict: at posting time, score each listing’s risk of slow funding. In a retrospective check on the November benchmark, a boosted tree using loan structure flags the slowest fifth of loans 2.6 to 4.0 times better than chance; adding text barely changes it. Prioritise: send lender-side support, such as featuring, matching funds, lender alerts and partner follow-up, to the flagged loans, and do not chase framing tweaks, because five framings stay within five percent of funding time; urgency and first person are still unknown. Test: before any writing advice, pass three gates: validate the measures, close the data gaps, and pilot one truthful clarity prompt against a control. Later, a data partnership with listing-time text and unfunded listings would let us answer for whom and when properly. If a gate fails, stop there and report the uncertainty.",
         "reference": "reports/evidence_sources/triage_summary.json (src/triage_summary.py, from reports/triage_value/triage_value.json); docs/6_matched_text_results.md."
       },
       "sublabel": "Overview",
-      "stop": "Writing advice waits until a tested pilot shows it helps."
+      "takeaways": [
+        {
+          "marker": 1,
+          "heading": "Start with what is known at posting",
+          "text": "A listing’s risk can be scored the moment it is posted, **from loan details**."
+        },
+        {
+          "marker": 2,
+          "heading": "Act on loans, not wording",
+          "text": "Support goes to flagged loans, because **most framing links stay small**."
+        },
+        {
+          "marker": 3,
+          "heading": "Advice comes last",
+          "text": "No description edit has been tested, so **writing advice waits for a pilot**."
+        }
+      ],
+      "solution_link": "→ Why we start by flagging slow loans"
     },
     {
       "n": 17,
