@@ -2880,3 +2880,9 @@ unseen exact template, which cannot exclude near-duplicates.
 
 - Log-scale p-value axis from the 0.001 floor to 1, with the ticks asked for, plus a category axis naming the two models; dots labelled before (HC3) and after (clustered). Live deck re-read first: no owner edits to mirror.
 - Checked against a 300 dpi render: points and tick labels sit within 0.1 pt of their computed positions. Deck QA and pytest pass; nothing pushed.
+
+## 2026-11-08: slide 11 (robustness) rework
+
+- Re-read the live deck first: no owner edits to mirror.
+- Replaced the table and two key-figure cards with one chart: bootstrap BH-adjusted p for third person and business in both models, with a p-value axis, the 0.05 line and each estimate alongside. Removed the stray appendix figure label and unused key figures.
+- All values come from the register's bootstrap rows; no retired p-value appears. Points checked against a 300 dpi render, within 0.2 pt. Deck QA and full offline pytest pass; slide 11 only was rebuilt; nothing pushed.

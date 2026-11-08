@@ -1393,37 +1393,56 @@
       "title": "The only remaining signals are tiny and fail a stricter test",
       "subtitle": "Robustness checks: programme controls, then a wild cluster bootstrap across 48 countries",
       "exhibit": {
-        "type": "table",
-        "columns": [
-          "Term and outcome",
-          "Expanded",
-          "Programme-adjusted"
-        ],
-        "rows": [
-          [
-            "Third person, log(1 + days)",
-            "−0.0090, bootstrap p 0.136",
-            "−0.0081, bootstrap p 0.261"
-          ],
-          [
-            "Business, 24-hour (pp)",
-            "−0.357 pp, bootstrap p 0.337",
-            "−0.258 pp, bootstrap p 0.275"
-          ]
-        ],
+        "type": "p_values",
+        "title": "Bootstrap p-value: third person and business framing",
+        "guide": "BH-adjusted p across nine terms; points right of the 0.05 line do not pass.",
         "note": "Per extra mention per 100 words; BH-adjusted wild cluster bootstrap p across nine terms (Webb weights, 9,999 draws).",
-        "figure": "Figure A3."
+        "estimate_header": "Estimate per extra mention",
+        "groups": [
+          {
+            "name": "Third person · funding time",
+            "unit": "on log(1 + days)",
+            "rows": [
+              {
+                "spec": "Expanded",
+                "p": 0.136,
+                "estimate": "−0.0090"
+              },
+              {
+                "spec": "Programme-adjusted",
+                "p": 0.261,
+                "estimate": "−0.0081"
+              }
+            ]
+          },
+          {
+            "name": "Business · same-day funding",
+            "unit": "on the same-day rate",
+            "rows": [
+              {
+                "spec": "Expanded",
+                "p": 0.337,
+                "estimate": "−0.357 pp"
+              },
+              {
+                "spec": "Programme-adjusted",
+                "p": 0.275,
+                "estimate": "−0.258 pp"
+              }
+            ]
+          }
+        ]
       },
       "takeaways": [
         {
           "marker": 1,
           "heading": "No signal survives a stricter test",
-          "text": "After BH, the lowest **bootstrap p is 0.136**; third person and business no longer pass."
+          "text": "After BH, the lowest **bootstrap p is 0.136**, so neither term passes 0.05 in either model."
         },
         {
           "marker": 2,
           "heading": "What remains is tiny",
-          "text": "Business framing is linked to about **−0.258 pp** in same-day funding per extra mention."
+          "text": "Per extra mention, business framing is linked to **−0.258 to −0.357 pp** in same-day funding."
         },
         {
           "marker": 3,
@@ -1432,20 +1451,10 @@
         }
       ],
       "notes": {
-        "purpose": "Show that not everything disappears.",
+        "purpose": "Show that the remaining framing links are tiny and fail a stricter test.",
         "script": "Under richer programme controls, only two terms looked like signals: third-person framing for funding time and business framing for same-day funding. With 48 countries, the usual clustered test can be too generous, so we re-ran every term with a wild cluster bootstrap, 9,999 draws with Webb weights. After adjusting for nine terms, the lowest p-value is 0.136, so neither survives. What remains is tiny: business framing is linked to about a quarter of a percentage point in same-day funding per extra mention. [Point: Pronouns may reflect the writer] Descriptions are usually written by partner staff, so the third-person link may say more about who writes than about the borrower. The next slide asks how small the remaining links really are.",
         "reference": "Robustness checks: reports/expanded_feature_sensitivity_reviewed; bootstrap: reports/evidence_sources/robustness_summary.json (src/robustness_summary.py, src/wild_cluster.py)."
       },
-      "key_figures": [
-        {
-          "value": "0.136",
-          "label": "lowest bootstrap p after BH, any term or model"
-        },
-        {
-          "value": "−0.258 pp",
-          "label": "business framing, same-day rate per mention, programme-adjusted"
-        }
-      ],
       "sublabel": "Robustness checks",
       "figure": "Figure 6.",
       "solution_link": "→ Why we prioritise loans, not wording"

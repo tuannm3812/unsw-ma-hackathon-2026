@@ -1116,16 +1116,45 @@ def regions(page, slide, pos):
 
 
 def persist(page, slide, pos):
+    """Bootstrap p-values for the two framing terms in both models, with each estimate alongside."""
     page.chrome(slide)
-    exhibit = slide['exhibit']
-    table(page, exhibit['columns'], exhibit['rows'], L, TOP, R - L - 6, 40)
-    page.caption(slide['figure'], exhibit['note'], TOP + 120 + 8)
-    first, second = slide['key_figures']
-    key_card(page, first, L, 286, 296, 110, VIOLET, 24)
-    key_card(page, second, 353.5, 286, 296.5, 110, NAVY, 24)
-    page.marker(1, L + 296 - 22, 296)
-    page.marker(3, L + 296 - 40, 296)
-    page.marker(2, 353.5 + 296.5 - 22, 296)
+    ex = slide['exhibit']
+    pw, top, h = R - L, TOP, 296
+    panel(page, L, top, pw, h, ex['title'], ex['guide'])
+    x0, x1 = L + 160, L + 440
+    px = lambda value: x0 + value / .4 * (x1 - x0)
+    axis = top + 248
+    page.line(x0, axis, x1, axis, SLATE, .75)
+    page.line(x0, top + 58, x0, axis, SLATE, .75)
+    page.line(px(.05), top + 56, px(.05), axis, VIOLET, .75)
+    page.ops[-1]['dash_style'] = 'DASH'
+    page.text('significant', px(.05) - 74, top + 44, 70, 12, size=8, color=GREY, align='right')
+    page.text('not significant', px(.05) + 4, top + 44, 74, 12, size=8, color=GREY)
+    for value, name in [(0, '0'), (.05, '0.05'), (.1, '0.1'), (.2, '0.2'), (.3, '0.3'), (.4, '0.4')]:
+        page.line(px(value), axis, px(value), axis + 3, SLATE, .75)
+        page.text(name, px(value) - 16, axis + 3, 32, 12, size=8, color=VIOLET if value == .05 else GREY,
+                  bold=value == .05, align='center')
+    page.text('Bootstrap p-value (BH-adjusted)', x0, axis + 15, x1 - x0, 12, size=8, color=GREY, align='center')
+    ex_x = L + 456
+    page.text(ex['estimate_header'], ex_x, top + 44, 112, 12, size=8, color=GREY, bold=True)
+    page.marker(2, ex_x + 118, top + 43)
+    y = top + 66
+    for g, group in enumerate(ex['groups']):
+        page.text(group['name'], L + 12, y, 132, 12, size=9, bold=True)
+        page.text(group['unit'], ex_x, y, pw - 466, 12, size=8, color=GREY)
+        if g == 0:
+            page.marker(3, L + 141, y - 1)
+        for r, row in enumerate(group['rows']):
+            cy = y + 28 + r * 30
+            page.text(row['spec'], L + 20, cy - 6, 130, 12, size=9, color=GREY, middle=True)
+            page.line(px(.05), cy, px(row['p']) - 4, cy, SLATE, .75)
+            page.rect(px(row['p']) - 4, cy - 4, 8, 8, VIOLET, 'ELLIPSE')
+            page.text(f"{row['p']:.3f}", px(row['p']) + 7, cy - 6, 34, 12, size=9, bold=True, color=VIOLET, middle=True)
+            page.text(row['estimate'], ex_x, cy - 6, pw - 466, 12, size=9, bold=True, middle=True)
+            if row['p'] == .136:
+                page.marker(1, px(row['p']) + 41, cy - 6)
+        y += 92
+    page.caption(slide['figure'], ex['note'], top + h + 8, w=pw)
     page.takeaways(slide['takeaways'], pos)
 
 
