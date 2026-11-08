@@ -1236,7 +1236,7 @@ def forecast(page, slide, pos):
 
 
 def gains(page, slide, pos):
-    """Three panels: (a) month ranges every year, (b) linear versus tree, (c) country versus capped ranges."""
+    """Three panels: (a) month ranges every year, (b) linear versus larger tree, (c) country versus capped ranges."""
     page.chrome(slide)
     ex = slide['exhibit']
     years = sorted(ex['linear'])
@@ -1276,7 +1276,7 @@ def gains(page, slide, pos):
     for k, year in enumerate(years):
         ry = y + 47 + 16 * k
         page.text(year, x + 10, ry - 3, 32, 12, size=8, color=GREY)
-        v, t = ex['linear'][year], ex['tree'][year]
+        v, t = ex['linear'][year], ex['large_tree'][year]
         rng(px, *v['month'], v['gain'], ry, NAVY, 2, 5)
         rng(px, *t['month'], t['gain'], ry + 6, VIOLET, 2, 5)
     axis(px, y + 42 + 5 * 16, [0, .25, .5])
@@ -1574,41 +1574,54 @@ def prioritise(page, slide):
 
 
 def text_adds(page, slide, pos):
-    """(a) gain by text feature group per year; (b) month versus country ranges per year."""
+    """Linear gain per year split into context and loan-specific parts, with the larger-tree gain as a dot."""
     page.chrome(slide)
     ex = slide['exhibit']
-    pw = R - L - 6
-    ah, bh, gap = 150, 150, 8
-    panel(page, L, TOP, pw, ah, ex['panels'][0]['title'], ex['panels'][0]['guide'])
-    panel(page, L, TOP + ah + gap, pw, bh, ex['panels'][1]['title'], ex['panels'][1]['guide'])
+    pw, h = R - L, 276
+    panel(page, L, TOP, pw, h, ex['title'], ex['guide'])
+    x0, x1, lo, hi = L + 52, R - 20, -.05, .42
+    px = lambda value: x0 + (value - lo) / (hi - lo) * (x1 - x0)
+    pitch, first, axis = 38, TOP + 48, TOP + 240
+    page.line(px(0), TOP + 42, px(0), axis, NAVY, .75)
+    page.line(x0, axis, x1, axis, SLATE, .75)
+    for value, name in [(0, '0'), (.1, '0.1'), (.2, '0.2'), (.3, '0.3'), (.4, '0.4')]:
+        page.line(px(value), axis, px(value), axis + 3, SLATE, .75)
+        page.text(name, px(value) - 16, axis + 3, 32, 11, size=8, color=GREY, align='center')
+    page.text('MAE gain, days', x0, axis + 14, x1 - x0, 12, size=8, color=GREY, align='center')
+    context_fill = STAGE_FILLS[0]
+    for k, row in enumerate(ex['rows']):
+        y = first + k * pitch
+        page.text(row['year'], L + 10, y, 36, 15, size=9, color=GREY, middle=True)
+        split = px(row['context'])
+        page.rect(px(0), y, split - px(0), 15, context_fill)
+        page.text(f"{row['context']:.3f}", px(0), y, split - px(0), 15, size=8, bold=True, align='center', middle=True)
+        end = px(row['context'] + row['loan_specific'])
+        page.rect(split, y, end - split, 15, VIOLET)
+        page.text(f"{row['loan_specific']:.3f}", split, y, end - split, 15, size=8, bold=True, color=WHITE,
+                  align='center', middle=True)
+        tree, dot = row['tree'], y + 23
+        page.line(px(0), dot, px(tree), dot, SLATE, .75)
+        page.rect(px(tree) - 3.5, dot - 3.5, 7, 7, NAVY, 'ELLIPSE')
+        label = f'{tree:.3f}'.replace('-', '−')
+        page.text(label, px(max(tree, 0)) + 7, dot - 6, 40, 12, size=8, bold=True, middle=True)
     page.marker(1, L + pw - 22, TOP + 8)
-    page.marker(3, L + pw - 22, TOP + ah + gap + 8)
-    scale, bx0 = 900, L + 50
-    for k, row in enumerate(ex['breakdown']):
-        y = TOP + 42 + 15 * k
-        page.text(str(row['year']), L + 10, y, 34, 12, size=8, color=GREY)
-        left = bx0
-        for value, fill in zip(row['stages'], STAGE_FILLS):
-            page.rect(left, y + 1.5, value * scale, 9, fill)
-            left += value * scale
-        page.text(f"{row['total']:.3f}", left + 4, y, 40, 12, size=8, color=NAVY, bold=True)
-    ly, lx = TOP + 42 + 15 * 5 + 4, bx0
-    for label, fill in zip(ex['stage_labels'], STAGE_FILLS):
-        page.rect(lx, ly + 1.6, 9, 7, fill)
-        page.text(label, lx + 13, ly, 4.2 * len(label) + 6, 12, size=8, color=GREY)
-        lx += 13 + 4.2 * len(label) + 16
-    page.marker(2, lx - 10, ly + 0.5)
-    y0 = TOP + ah + gap
-    # (b) extra error from text alone versus loan structure alone, per year
-    per = 330
-    for k, (year, worse) in enumerate(ex['text_only']):
-        ry = y0 + 44 + 18 * k
-        page.text(str(year), L + 10, ry, 34, 12, size=8, color=GREY)
-        page.rect(L + 50, ry + 1.5, worse * per, 9, VIOLET)
-        page.text(f'+{worse:.3f} days', L + 50 + worse * per + 4, ry, 70, 12, size=8, color=VIOLET, bold=True)
-    page.line(L + 50, y0 + 40, L + 50, y0 + 44 + 18 * 5, NAVY, .75)
-    page.caption(slide['figure'], ex['caption'], TOP + ah + gap + bh + 8)
-    page.caption('¹', ex['note_sup'], TOP + ah + gap + bh + 21)
+    # Legend under the figure
+    ly, names = TOP + h + 6, ex['legend']
+    page.rect(L, ly + 2, 9, 8, context_fill)
+    page.text(names[0], L + 13, ly, 236, 12, size=8, color=GREY)
+    page.marker(2, L + 250, ly - 1)
+    page.rect(L + 276, ly + 2, 9, 8, VIOLET)
+    page.text(names[1], L + 289, ly, 84, 12, size=8, color=GREY)
+    page.rect(L + 386, ly + 2.5, 7, 7, NAVY, 'ELLIPSE')
+    page.text(names[2], L + 397, ly, 130, 12, size=8, color=GREY)
+    page.marker(3, L + 530, ly - 1)
+    # Text alone
+    sy = ly + 18
+    page.rect(L, sy, pw, 22, PAPER)
+    page.rect(L, sy, 4, 22, YELLOW)
+    page.text(ex['strip'], L + 14, sy, pw - 50, 22, size=10, bold=True, middle=True)
+    page.marker(4, L + pw - 22, sy + 5)
+    page.caption(slide['figure'], ex['caption'], sy + 28, w=pw)
     page.takeaways(slide['takeaways'], pos)
 
 

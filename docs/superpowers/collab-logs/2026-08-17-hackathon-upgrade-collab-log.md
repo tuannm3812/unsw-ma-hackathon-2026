@@ -2894,3 +2894,11 @@ unseen exact template, which cannot exclude near-duplicates.
 - Slide 11 now shows three blocks of 36 squares, two real-unit cards with how common each word is, and the shift under programme controls. Associations only; the conversions do not measure an edit.
 - The possible "framings vs loan details" panel is not built: the saved programme-adjusted run has no control coefficients, so it would need a rerun.
 - Verified: pyflakes, deck QA, rendered slide 11, full offline pytest. Slide 11 only was rebuilt; nothing pushed.
+
+## 2026-11-08: forecast slides after experiments D and F
+
+- Re-read the live deck first: no owner edits to mirror.
+- `src/forecast_experiments.py` (tested) reads the larger-tree and text-placebo outputs into `reports/evidence_sources/forecast_experiments.json`. Register rows added; headline gains stay the November benchmark's 0.26–0.39 days.
+- Slide 14 now splits the linear gain into context and loan-specific text, with the larger boosted tree as a dot. Slide 15 panel b uses the larger tree; the claim that the gain "needs word patterns" is dropped because a tree with full text also gains little. Slide 9's headline and A5's title and notes are rescoped.
+- The summary has no text-gain claim, and the slide 8, 16, 17 and 18 "text adds little to the flag" lines remain consistent, so those slides are unchanged.
+- Verified: pyflakes, deck QA, rendered slides 14, 15 and A5, full offline pytest. Slides 9, 14, 15 and A5 only were rebuilt; nothing pushed.

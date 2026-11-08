@@ -1244,7 +1244,7 @@
             "question": "Does text improve a forecast built on loan structure?",
             "method": "Train on earlier years, then test each year with and without text.",
             "data": "728,640 evaluation records over five years",
-            "headline": "Error fell in 5 of 5 years, by 0.26–0.39 days",
+            "headline": "Small gain: 0.26–0.39 days, about half context",
             "feeds": "Predict"
           }
         ],
@@ -1881,175 +1881,78 @@
       "section": "Evidence",
       "sublabel": "What text adds",
       "layout": "content+takeaways",
-      "title": "Text adds a little forecast accuracy, mostly from word patterns",
-      "subtitle": "Forecast benchmark: linear model gain from adding text, five annual test years, identical rows",
+      "title": "Text adds a small, inconsistent forecast gain; about half is context",
+      "subtitle": "Forecast benchmark: gain from adding text to loan details, five annual test years, identical rows",
       "figure": "Figure 9.",
       "exhibit": {
-        "breakdown": [
+        "title": "Where the forecast gain comes from",
+        "guide": "MAE gain in days from adding text to loan details; right of 0 means lower error.",
+        "rows": [
           {
-            "year": 2021,
-            "stages": [
-              0.025,
-              0.0096,
-              0.258
-            ],
-            "total": 0.293
+            "year": "2021",
+            "context": 0.12141555873443843,
+            "loan_specific": 0.17059778092943906,
+            "tree": 0.15408871457897744
           },
           {
-            "year": 2022,
-            "stages": [
-              0.0182,
-              0.018,
-              0.3363
-            ],
-            "total": 0.372
+            "year": "2022",
+            "context": 0.1588899992422093,
+            "loan_specific": 0.2133578078219441,
+            "tree": 0.05871648097206399
           },
           {
-            "year": 2023,
-            "stages": [
-              0.1156,
-              0.0549,
-              0.089
-            ],
-            "total": 0.259
+            "year": "2023",
+            "context": 0.15943170612116547,
+            "loan_specific": 0.10204851965056742,
+            "tree": 0.011843675687202584
           },
           {
-            "year": 2024,
-            "stages": [
-              0.0628,
-              0.0136,
-              0.3124
-            ],
-            "total": 0.389
+            "year": "2024",
+            "context": 0.22047821700809622,
+            "loan_specific": 0.1652840957864202,
+            "tree": -0.010788435348046896
           },
           {
-            "year": 2025,
-            "stages": [
-              0.0326,
-              0.0027,
-              0.2244
-            ],
-            "total": 0.26
+            "year": "2025",
+            "context": 0.11382682776181707,
+            "loan_specific": 0.14583261017927288,
+            "tree": 0.06384257332340125
           }
         ],
-        "stage_labels": [
-          "Text form",
-          "Lexicon and sentiment",
-          "Word patterns (TF-IDF)"
+        "legend": [
+          "Context: text shuffled within country, sector and month",
+          "Loan-specific text",
+          "Larger boosted tree, full text"
         ],
-        "linear": {
-          "2021": {
-            "gain": 0.29263292132954616,
-            "month": [
-              0.19821249028954413,
-              0.38379528837254334
-            ],
-            "country": [
-              -0.0415018778789983,
-              0.5426102587336304
-            ]
-          },
-          "2022": {
-            "gain": 0.37249962497178596,
-            "month": [
-              0.20825577440151818,
-              0.5179507474430224
-            ],
-            "country": [
-              0.10143137873640054,
-              0.8465709059507317
-            ]
-          },
-          "2023": {
-            "gain": 0.25947434649312545,
-            "month": [
-              0.08777876584363045,
-              0.40593479227433
-            ],
-            "country": [
-              -0.05559236755319213,
-              0.7255607721269023
-            ]
-          },
-          "2024": {
-            "gain": 0.38883107337292594,
-            "month": [
-              0.2871274486139258,
-              0.4995217826885441
-            ],
-            "country": [
-              -0.06148949300972169,
-              0.891502804256225
-            ]
-          },
-          "2025": {
-            "gain": 0.25971464872389366,
-            "month": [
-              0.13914941483208526,
-              0.3961788795569971
-            ],
-            "country": [
-              -0.18041335543455866,
-              0.5649489357293407
-            ]
-          }
-        },
-        "panels": [
-          {
-            "title": "(a) Where the gain comes from¹",
-            "guide": "MAE gain in days by text feature group, added in order."
-          },
-          {
-            "title": "(b) Text alone does worse than loan details alone",
-            "guide": "Extra MAE in days when text replaces loan structure; longer is worse."
-          }
-        ],
-        "caption": "Annual MAE gain in days from adding text (a), and extra error from text alone (b); linear model, identical rows.",
-        "note_sup": "Groups added in order: form, then lexicon and sentiment, then TF-IDF; another order would split the gain differently.",
-        "text_only": [
-          [
-            2021,
-            0.846
-          ],
-          [
-            2022,
-            0.552
-          ],
-          [
-            2023,
-            0.859
-          ],
-          [
-            2024,
-            1.032
-          ],
-          [
-            2025,
-            0.146
-          ]
-        ]
+        "strip": "Text alone is 0.146–1.032 days worse than loan details alone",
+        "caption": "Annual MAE gain in days, identical evaluation rows. Linear bars come from the placebo refit, within 0.003 days of the benchmark."
       },
       "takeaways": [
         {
           "marker": 1,
-          "heading": "About seven hours less error",
-          "text": "Adding text lowered error in **5 of 5 years**, by 0.26–0.39 days."
+          "heading": "A small gain on a simple model",
+          "text": "Text lowers a linear model’s error by **0.26–0.39 days**, about 7 hours at the median."
         },
         {
           "marker": 2,
-          "heading": "Word patterns carry most of it",
-          "text": "TF-IDF gives the largest share in **4 of 5 years**; lexicon and sentiment add **0.003–0.055 days**."
+          "heading": "About half is context",
+          "text": "Shuffled text keeps **42–61%** of the gain; the loan-specific part is 0.10–0.21 days."
         },
         {
           "marker": 3,
-          "heading": "Text works only with loan details",
-          "text": "Text alone is worse than loan structure alone by **0.146–1.032 days**, and adds little to the flag."
+          "heading": "A stronger tree gains less",
+          "text": "A larger boosted tree gains **at most about 0.15 days**, and under 0.07 in four of five years."
+        },
+        {
+          "marker": 4,
+          "heading": "It does not show rewriting helps",
+          "text": "Text alone does worse than loan details, and no forecast tests an edit."
         }
       ],
       "notes": {
-        "purpose": "Keep text in proportion: it helps forecasts a little and does not drive triage.",
-        "script": "Text does carry forecast information: added to loan structure it lowered error in every test year, by 0.26 to 0.39 days, about seven hours at the median. Most of that comes from word patterns; the lexicon and sentiment measures closest to framing add 0.003 to 0.055 days. On its own, text forecasts worse than loan structure alone, by 0.146 to 1.032 days, and adding it barely changes the slow-funding flag. That is why the flag is built on loan details. The next slide shows how fragile the gain is across countries.",
-        "reference": "reports/evidence_sources/gain_intervals.json; reports/gain_breakdown/gain_breakdown.json; reports/evidence_sources/triage_summary.json."
+        "purpose": "Keep text in proportion: a small, inconsistent forecast gain that does not drive triage.",
+        "script": "Answer first: text adds a small and inconsistent forecast gain. [Point: A small gain on a simple model] Added to loan details in a simple linear model, text lowered error by 0.26 to 0.39 days, about seven hours at the median. [Point: About half is context] To see how much is the loan's own words, we shuffled the text among loans in the same country, sector and month. The shuffled text keeps 42 to 61 percent of the gain, so about half is context, such as place and programme templates. The loan-specific part is 0.10 to 0.21 days. [Point: A stronger tree gains less] A larger boosted tree on loan details alone already beats the benchmark tree in four of five years, and adding text gains at most about 0.15 days, under 0.07 in four of five years, and slightly negative in 2024. So much of the linear gain looks like a weak baseline catching up. Same-day Brier scores improve in all five years, but by tiny amounts. [Point: It does not show rewriting helps] On its own, text forecasts worse than loan details by 0.146 to 1.032 days, and adding it barely changes the slow-funding flag, so the flag is built on loan details. None of this tests an edit to a description. The next slide shows how fragile the gain is.",
+        "reference": "Benchmark gains: reports/evidence_sources/gain_intervals.json. Larger tree and placebo: reports/evidence_sources/forecast_experiments.json (src/forecast_experiments.py). Text alone: reports/gain_breakdown/gain_breakdown.json. Flag: reports/evidence_sources/triage_summary.json."
       },
       "solution_link": "→ Why we predict with loan details"
     },
@@ -2058,7 +1961,7 @@
       "id": "gain_uncertainty",
       "section": "Evidence",
       "layout": "content+takeaways",
-      "title": "The text gain holds every year but is fragile across countries",
+      "title": "The text gain is fragile across countries and on a stronger model",
       "subtitle": "Forecast benchmark: annual MAE gain in days, with 95% ranges from resampling months or countries",
       "exhibit": {
         "type": "interval_groups",
@@ -2120,63 +2023,6 @@
             ]
           }
         },
-        "tree": {
-          "2021": {
-            "gain": 0.03528952666979668,
-            "month": [
-              -0.07285303185004914,
-              0.1367094298177881
-            ],
-            "country": [
-              0.00494682846239828,
-              0.08851107284426778
-            ]
-          },
-          "2022": {
-            "gain": 0.02781877893183956,
-            "month": [
-              -0.03636297144945804,
-              0.08399230857351586
-            ],
-            "country": [
-              -0.035043260243088674,
-              0.11736891357950739
-            ]
-          },
-          "2023": {
-            "gain": 0.006364441501212522,
-            "month": [
-              -0.02484535569131672,
-              0.0348539890108552
-            ],
-            "country": [
-              -0.028490822836480807,
-              0.02537971819127279
-            ]
-          },
-          "2024": {
-            "gain": 0.0014794082479031951,
-            "month": [
-              -0.020130551968736535,
-              0.024790312602497897
-            ],
-            "country": [
-              -0.09698755890932852,
-              0.03612276473172682
-            ]
-          },
-          "2025": {
-            "gain": 0.04178389666328167,
-            "month": [
-              0.012702855889262368,
-              0.07378239549968064
-            ],
-            "country": [
-              0.0055359273910809675,
-              0.1112729340505566
-            ]
-          }
-        },
         "linear_capped": {
           "2021": {
             "gain": 0.32356618133299264,
@@ -2216,12 +2062,12 @@
         },
         "panels": [
           {
-            "title": "(a) Every year, text helps",
+            "title": "(a) Across months, the linear gain holds",
             "guide": "Month-resampled ranges for the linear model; right of 0 means lower error."
           },
           {
-            "title": "(b) It needs word patterns",
-            "guide": "Navy: linear model with TF-IDF. Violet: tree model without it."
+            "title": "(b) On a stronger tree, it shrinks",
+            "guide": "Navy: linear model. Violet: larger boosted tree with full text."
           },
           {
             "title": "(c) Across countries it is fragile",
@@ -2230,29 +2076,65 @@
         ],
         "caption": "Annual MAE gain in days from adding text, identical evaluation rows.",
         "note_sup": "Forecasts capped at the longest training wait (173.4 days); a diagnostic, not the reported model.",
-        "figure": "Figure A5."
+        "large_tree": {
+          "2021": {
+            "gain": 0.15408871457897744,
+            "month": [
+              0.09712977909536014,
+              0.2116457130981483
+            ]
+          },
+          "2022": {
+            "gain": 0.05871648097206399,
+            "month": [
+              0.010627490621161789,
+              0.10035790734023858
+            ]
+          },
+          "2023": {
+            "gain": 0.011843675687202584,
+            "month": [
+              -0.04098775244479611,
+              0.066979379143005
+            ]
+          },
+          "2024": {
+            "gain": -0.010788435348046896,
+            "month": [
+              -0.06393837747290172,
+              0.03682997619543137
+            ]
+          },
+          "2025": {
+            "gain": 0.06384257332340125,
+            "month": [
+              0.02244705499107863,
+              0.10577935283920753
+            ]
+          }
+        }
       },
       "takeaways": [
         {
           "marker": 1,
-          "heading": "Text helps in every year",
-          "text": "Month-resampled ranges stay **above zero in 5 of 5 years**; the median gain is about **7 hours**."
+          "heading": "Stable across months, linear only",
+          "text": "Month ranges stay **above zero in 5 of 5 years**; the median gain is about **7 hours**."
         },
         {
           "marker": 2,
-          "heading": "The gain needs word patterns",
-          "text": "The tree model, without TF-IDF, gains **at most 0.04 days**."
+          "heading": "A stronger tree gains little",
+          "text": "Its ranges exclude zero in **3 of 5 years** by month and **1 of 5** by country."
         },
         {
           "marker": 3,
           "heading": "Across countries it is fragile",
-          "text": "Country resampling **includes zero in 4 of 5 years**; capping extreme forecasts leaves zero in **1 of 5**."
+          "text": "Country resampling **includes zero in 4 of 5 years**; the loan-specific part clears zero in 2 of 5."
         }
       ],
       "notes": {
-        "purpose": "Keep the gain in proportion.",
-        "script": "Answer first: the text gain holds every year, but it is fragile across countries. Three panels, read in order. [Point: Text helps in every year] Panel a resamples calendar months: all five ranges sit right of zero, and the median gain is 0.293 days, about seven hours. [Point: The gain needs word patterns] Panel b sets the linear model, which uses TF-IDF word patterns, against the tree model, which has form and lexicon but no TF-IDF: the tree gains at most 0.04 days. [Point: Across countries it is fragile] Panel c resamples countries instead: four of five ranges include zero. Capping forecasts at the longest training wait, 173.4 days, a diagnostic rather than the reported model, leaves only 2025 including zero, so much of the fragility comes from a few extreme forecasts. Metrics also disagree at the margin: in 2025 text improved error and calibration, but AUC for same-day funding fell from 0.893 to 0.888. Each range uses 1,000 resamples; these are fixed-model resampling ranges, not retraining or causal uncertainty.",
-        "reference": "docs/6_matched_text_results.md; reports/loss_alignment_2025/README.md; ranges from src/gain_intervals.py (reports/evidence_sources/gain_intervals.json)."
+        "purpose": "Keep the gain in proportion: it depends on the model and on which countries are in the sample.",
+        "script": "Answer first: the linear gain holds across months, but it is fragile across countries and shrinks on a stronger model. Three panels, read in order. [Point: Stable across months, linear only] Panel a resamples calendar months: all five ranges sit right of zero, and the median gain is 0.293 days, about seven hours. [Point: A stronger tree gains little] Panel b sets the linear model against a larger boosted tree with full text: the tree's ranges exclude zero in three of five years, and by country in only one, and its largest gain is about 0.15 days. [Point: Across countries it is fragile] Panel c resamples countries instead: four of five ranges include zero. Capping forecasts at the longest training wait, 173.4 days, a diagnostic rather than the reported model, leaves only 2025 including zero, so much of the fragility comes from a few extreme forecasts. The loan-specific part of the gain, after removing what shuffled text keeps, clears zero in four of five years by month and two of five by country. Metrics also disagree at the margin: in 2025 text improved error and calibration, but AUC for same-day funding fell from 0.893 to 0.888. Each range uses 1,000 resamples; these are fixed-model resampling ranges, not retraining or causal uncertainty.",
+        "reference": "docs/6_matched_text_results.md; reports/loss_alignment_2025/README.md; ranges from src/gain_intervals.py (reports/evidence_sources/gain_intervals.json). Larger tree and placebo: reports/evidence_sources/forecast_experiments.json."
       },
       "sublabel": "Forecast benchmark",
       "figure": "Figure 10.",
@@ -2869,7 +2751,7 @@
       "id": "forecast",
       "section": "Appendix",
       "layout": "content+takeaways",
-      "title": "Adding text lowered forecast error in 5 of 5 years",
+      "title": "Text lowers a linear model’s error; a stronger tree barely changes",
       "subtitle": "Forecast benchmark: linear model, structure only versus structure plus text, identical evaluation rows",
       "exhibit": {
         "type": "grouped_bar",
@@ -2982,8 +2864,8 @@
       "takeaways": [
         {
           "marker": 1,
-          "heading": "Text carries forecast information",
-          "text": "Gains of **0.26–0.39 days** on 728,640 evaluation records."
+          "heading": "A small linear gain",
+          "text": "Gains of **0.26–0.39 days** on 728,640 evaluation records; about half is context."
         },
         {
           "marker": 2,
@@ -3003,7 +2885,7 @@
       ],
       "notes": {
         "purpose": "Present the strongest new result.",
-        "script": "We trained on earlier years and tested on each of 2021 to 2025, comparing the same model with and without text on the same loans. Text reduced error every year. [Point: Word patterns carry most of it] Splitting the gain by feature group, added in a fixed order, word patterns from TF-IDF give most of it in four of five years; 2023 is the exception, where description form leads. The lexicon, specificity and sentiment measures, the ones closest to framing, add only 0.003 to 0.055 days. Text alone forecasts worse than structure alone in every year, so text adds to context rather than replacing it.",
+        "script": "We trained on earlier years and tested on each of 2021 to 2025, comparing the same model with and without text on the same loans. Text reduced the linear model's error every year; shuffled-text and larger-tree checks in the main deck show about half of that is context and a stronger tree gains at most about 0.15 days. [Point: A small linear gain] [Point: Word patterns carry most of it] Splitting the gain by feature group, added in a fixed order, word patterns from TF-IDF give most of it in four of five years; 2023 is the exception, where description form leads. The lexicon, specificity and sentiment measures, the ones closest to framing, add only 0.003 to 0.055 days. Text alone forecasts worse than structure alone in every year, so text adds to context rather than replacing it.",
         "reference": "Forecast benchmark, run 2026-11-02: docs/6_matched_text_results.md; reports/text_benchmark_reviewed. Stage split: src/gain_breakdown.py from reports/text_benchmark_reviewed/benchmark.json."
       },
       "sublabel": "Forecast benchmark",
