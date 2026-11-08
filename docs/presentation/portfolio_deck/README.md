@@ -1,6 +1,6 @@
 # Portfolio deck (November 2026)
 
-Current Cultural Blend deck for portfolio readers, detailed and solution-led since 2026-11-08: 19 core
+Current Cultural Blend deck for portfolio readers, detailed and solution-led since 2026-11-08: 22 core
 slides and 5 appendix slides. The problem → What drives the wait → Our solution (Predict → Prioritise →
 Test) → Safe next steps.
 

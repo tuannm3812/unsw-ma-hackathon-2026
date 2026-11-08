@@ -2850,3 +2850,10 @@ unseen exact template, which cannot exclude near-duplicates.
   - **Slide 18:** the Abuja shop photo sits beside the soybean farmer, and credits are in the notes and PROVENANCE.md.
   - **Slide 5 legend:** the legend above the chart showed the area without its violet line and did not explain the open 2025 markers or the dashed last segment. It now sits under the plot with the chart's own symbols, and has a third entry, "2025 may be incomplete".
   - QA reports no automated problems; full suite passes; previews, PDF and preview page refreshed; not pushed.
+
+## 2026-11-08: slide 9 (approach) rework
+
+- Re-read the live deck first: no owner edits to mirror.
+- Slide 9 now fits the content column with a takeaway column. Each analysis card ends in a "Feeds" tag to Test, Prioritise or Predict, and the add-on checks (wild cluster bootstrap, subgroup refits, gain by feature group, early-warning check) link to their slides.
+- The stale robustness headline is replaced by "No signal survives a stricter test", shown with the lowest adjusted bootstrap p (0.136) against the 0.05 threshold; the register row now states that threshold. README count corrected to 22 core slides.
+- Verified: pyflakes, deck QA, rendered slide 9, full offline pytest. Slide 9 only was rebuilt; nothing pushed.
