@@ -1,0 +1,285 @@
+{
+  "population": "eligible completed durations; Kiva region field; aggregates only",
+  "regions": {
+    "Africa": {
+      "countries": 27,
+      "loans": 610368,
+      "country_shares": [
+        {
+          "country": "KE",
+          "loans": 266562,
+          "share_of_region": 0.43672341931424974
+        },
+        {
+          "country": "UG",
+          "loans": 69651,
+          "share_of_region": 0.1141131251966027
+        },
+        {
+          "country": "MG",
+          "loans": 55670,
+          "share_of_region": 0.09120727167872497
+        },
+        {
+          "country": "LR",
+          "loans": 28847,
+          "share_of_region": 0.047261651986998006
+        },
+        {
+          "country": "TG",
+          "loans": 27513,
+          "share_of_region": 0.045076085246933
+        },
+        {
+          "country": "SN",
+          "loans": 21420,
+          "share_of_region": 0.035093582887700536
+        },
+        {
+          "country": "SL",
+          "loans": 19408,
+          "share_of_region": 0.031797210862954804
+        },
+        {
+          "country": "RW",
+          "loans": 18395,
+          "share_of_region": 0.030137556359442173
+        },
+        {
+          "country": "NG",
+          "loans": 14320,
+          "share_of_region": 0.0234612561602181
+        },
+        {
+          "country": "GH",
+          "loans": 14193,
+          "share_of_region": 0.023253184963825103
+        },
+        {
+          "country": "CD",
+          "loans": 11151,
+          "share_of_region": 0.018269306385655867
+        },
+        {
+          "country": "BF",
+          "loans": 10660,
+          "share_of_region": 0.017464873649994758
+        },
+        {
+          "country": "TZ",
+          "loans": 10621,
+          "share_of_region": 0.01740097777078746
+        },
+        {
+          "country": "MZ",
+          "loans": 8066,
+          "share_of_region": 0.013214978504770892
+        },
+        {
+          "country": "EG",
+          "loans": 7398,
+          "share_of_region": 0.012120556778861277
+        },
+        {
+          "country": "ZW",
+          "loans": 6380,
+          "share_of_region": 0.01045271049596309
+        },
+        {
+          "country": "LS",
+          "loans": 4910,
+          "share_of_region": 0.008044327356611094
+        },
+        {
+          "country": "ML",
+          "loans": 4281,
+          "share_of_region": 0.007013801509908777
+        },
+        {
+          "country": "CM",
+          "loans": 3670,
+          "share_of_region": 0.006012766068994443
+        },
+        {
+          "country": "MW",
+          "loans": 3294,
+          "share_of_region": 0.005396744259201006
+        },
+        {
+          "country": "ZM",
+          "loans": 3157,
+          "share_of_region": 0.005172289504036909
+        },
+        {
+          "country": "CI",
+          "loans": 595,
+          "share_of_region": 0.0009748217468805704
+        },
+        {
+          "country": "BI",
+          "loans": 190,
+          "share_of_region": 0.00031128761665093847
+        },
+        {
+          "country": "SO",
+          "loans": 10,
+          "share_of_region": 1.6383558771102022e-05
+        },
+        {
+          "country": "BJ",
+          "loans": 3,
+          "share_of_region": 4.915067631330607e-06
+        },
+        {
+          "country": "SS",
+          "loans": 2,
+          "share_of_region": 3.2767117542204047e-06
+        },
+        {
+          "country": "NE",
+          "loans": 1,
+          "share_of_region": 1.6383558771102024e-06
+        }
+      ]
+    },
+    "Asia": {
+      "countries": 12,
+      "loans": 738191,
+      "country_shares": [
+        {
+          "country": "PH",
+          "loans": 521586,
+          "share_of_region": 0.7065732310472493
+        },
+        {
+          "country": "TJ",
+          "loans": 68865,
+          "share_of_region": 0.09328886426412676
+        },
+        {
+          "country": "KH",
+          "loans": 58074,
+          "share_of_region": 0.07867069633739777
+        },
+        {
+          "country": "PK",
+          "loans": 42767,
+          "share_of_region": 0.05793487051454163
+        },
+        {
+          "country": "KG",
+          "loans": 20530,
+          "share_of_region": 0.027811230426813657
+        },
+        {
+          "country": "IN",
+          "loans": 20397,
+          "share_of_region": 0.02763106025405349
+        },
+        {
+          "country": "MM",
+          "loans": 3146,
+          "share_of_region": 0.004261769650402132
+        },
+        {
+          "country": "NP",
+          "loans": 1276,
+          "share_of_region": 0.0017285499281351304
+        },
+        {
+          "country": "LA",
+          "loans": 1121,
+          "share_of_region": 0.001518577170407117
+        },
+        {
+          "country": "UZ",
+          "loans": 389,
+          "share_of_region": 0.0005269638887496597
+        },
+        {
+          "country": "BD",
+          "loans": 39,
+          "share_of_region": 5.283185517027436e-05
+        },
+        {
+          "country": "AF",
+          "loans": 1,
+          "share_of_region": 1.354662953083958e-06
+        }
+      ]
+    },
+    "Oceania": {
+      "countries": 4,
+      "loans": 23385,
+      "country_shares": [
+        {
+          "country": "TL",
+          "loans": 10401,
+          "share_of_region": 0.44477228992944196
+        },
+        {
+          "country": "SB",
+          "loans": 7924,
+          "share_of_region": 0.3388496899722044
+        },
+        {
+          "country": "VU",
+          "loans": 4018,
+          "share_of_region": 0.17181954244173617
+        },
+        {
+          "country": "PG",
+          "loans": 1042,
+          "share_of_region": 0.04455847765661749
+        }
+      ]
+    },
+    "Central America": {
+      "countries": 2,
+      "loans": 59391,
+      "country_shares": [
+        {
+          "country": "NI",
+          "loans": 38520,
+          "share_of_region": 0.6485831186543416
+        },
+        {
+          "country": "HN",
+          "loans": 20871,
+          "share_of_region": 0.35141688134565846
+        }
+      ]
+    },
+    "Middle East": {
+      "countries": 2,
+      "loans": 14946,
+      "country_shares": [
+        {
+          "country": "PS",
+          "loans": 14500,
+          "share_of_region": 0.9701592399304162
+        },
+        {
+          "country": "YE",
+          "loans": 446,
+          "share_of_region": 0.029840760069583836
+        }
+      ]
+    },
+    "North America": {
+      "countries": 1,
+      "loans": 7559,
+      "country_shares": [
+        {
+          "country": "HT",
+          "loans": 7559,
+          "share_of_region": 1.0
+        }
+      ]
+    }
+  },
+  "family_slope_percent": {
+    "Middle East": -7.03,
+    "Central America": -7.15
+  }
+}

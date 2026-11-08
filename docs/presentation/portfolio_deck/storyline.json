@@ -1044,11 +1044,11 @@
       "id": "regions",
       "section": "Evidence",
       "layout": "content+takeaways",
-      "title": "Regional family-framing patterns rest on two countries each",
+      "title": "Regional family links look strong but rest on two countries each",
       "subtitle": "Explanatory models: within-region slopes with country-clustered and heuristic few-cluster intervals",
       "exhibit": {
         "type": "interval_pairs",
-        "unit": "change in log(1 + days) per extra family mention per 100 words",
+        "unit": "change in funding time per extra family mention per 100 words",
         "rows": [
           {
             "region": "Middle East",
@@ -1062,6 +1062,16 @@
             "heuristic_ci": [
               -0.2502,
               0.1043
+            ],
+            "mix": [
+              {
+                "country": "Palestine",
+                "share": 0.97
+              },
+              {
+                "country": "Yemen",
+                "share": 0.03
+              }
             ]
           },
           {
@@ -1076,31 +1086,79 @@
             "heuristic_ci": [
               -0.1629,
               0.0145
+            ],
+            "mix": [
+              {
+                "country": "Nicaragua",
+                "share": 0.649
+              },
+              {
+                "country": "Honduras",
+                "share": 0.351
+              }
             ]
           }
-        ]
+        ],
+        "region_counts": [
+          {
+            "region": "Africa",
+            "countries": 27
+          },
+          {
+            "region": "Asia",
+            "countries": 12
+          },
+          {
+            "region": "Oceania",
+            "countries": 4
+          },
+          {
+            "region": "Central America",
+            "countries": 2
+          },
+          {
+            "region": "Middle East",
+            "countries": 2
+          },
+          {
+            "region": "North America",
+            "countries": 1
+          }
+        ],
+        "row_labels": {
+          "normal": "Standard clustered range",
+          "heuristic": "Few-country check¹"
+        },
+        "strip_title": "Countries behind each region",
+        "caption": "Within-region family-framing slopes, 95% ranges, explanatory models; one dot per country, Kiva regions.",
+        "note_sup": "t(1) reference on the same clustered error: a heuristic screen, not a calibrated test. Axis in log points × 100."
       },
       "takeaways": [
         {
           "marker": 1,
-          "heading": "Two countries cannot make a pattern",
-          "text": "With two clusters, between-country uncertainty **cannot be estimated well**; the heuristic intervals cross zero."
+          "heading": "Both links look strong at first",
+          "text": "Standard errors put family framing at about **7% faster funding** per extra mention in each region."
         },
         {
           "marker": 2,
-          "heading": "No regional writing rules",
-          "text": "These are descriptive patterns, **not grounds for country or regional writing rules**."
+          "heading": "Two countries cannot carry them",
+          "text": "A few-country check widens both ranges **across zero**; the Middle East is **97% Palestine**."
         },
         {
           "marker": 3,
-          "heading": "More countries would settle it",
-          "text": "A regional test needs **more countries per region**, or partner-level data."
+          "heading": "Other regions have many more countries",
+          "text": "Africa has **27 countries** and Asia **12**; these two regions have two each."
+        },
+        {
+          "marker": 4,
+          "heading": "No regional writing rules yet",
+          "text": "Treat both as **descriptive patterns**; a real test needs more countries or partner-level data."
         }
       ],
       "notes": {
         "purpose": "Prevent over-reading the most striking regional result.",
-        "script": "Family framing looks linked to faster funding in two regions. But each region is two countries. A t(1) screen, which is a heuristic and not a calibrated test, widens the intervals across zero.",
-        "reference": "Explanatory models, primary saved run 2026-08-31. docs/2_evidence_and_corrections.md regional table."
+        "script": "Answer first: the two regional family-framing links look strong, but each rests on two countries. How to read it: each panel is one region; the dot is the average change in funding time per extra family mention per 100 words, and the lines are 95 percent ranges. Left of the centre line is faster funding. [Point: Both links look strong at first] With standard country-clustered errors the ranges sit well left of zero: minus 0.1003 to minus 0.0456 in the Middle East and minus 0.0879 to minus 0.0605 in Central America, about seven percent faster per mention. [Point: Two countries cannot carry them] With only two countries, between-country uncertainty cannot be estimated well. A t(1) reference on the same clustered error, a heuristic screen rather than a calibrated test, widens the ranges to minus 0.2502 to plus 0.1043 and minus 0.1629 to plus 0.0145; heuristic p-values are 0.1203 and 0.0597. The bars show the country mix: the Middle East is 97 percent Palestine, so it is close to a one-country result. [Point: Other regions have many more countries] Africa has 27 countries and Asia 12, which is why only these two thin regions are singled out here. [Point: No regional writing rules yet] These are descriptive patterns, not grounds for country or regional writing rules; a real test needs more countries per region or partner-level data.",
+        "reference": "Explanatory models, primary saved run 2026-08-31. docs/2_evidence_and_corrections.md regional table; country mix and counts: src/region_context.py (reports/evidence_sources/region_context.json)."
       },
       "sublabel": "Explanatory models"
     },

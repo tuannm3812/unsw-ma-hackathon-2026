@@ -836,30 +836,72 @@ def forest(page, slide, pos):
 
 
 def regions(page, slide, pos):
+    """One panel per two-country region (its country mix, two ranges) and a strip of countries per region."""
     page.chrome(slide)
-    x0, x1, lo, hi = 170, 630, -.30, .15
+    ex = slide['exhibit']
+    pw = R - 16 - L
+    x0, x1, lo, hi = L + 140, 610, -.27, .13
     scale = (x1 - x0) / (hi - lo)
     px = lambda value: x0 + (value - lo) * scale
-    top, bottom = 140, 420
-    page.line(px(0), top, px(0), bottom, NAVY, .75)
-    fmt = lambda pair: f'[{pair[0]:.4f}, {pair[1]:.4f}]'.replace('-', '−')
-    for i, row in enumerate(slide['exhibit']['rows']):
-        y = top + 14 + i * 136
-        page.block(row['region'], f"{row['countries']} countries\n{row['loans']:,} loans", L, y + 8, 116, 60)
-        normal, heuristic = row['normal_ci'], row['heuristic_ci']
-        page.text(f'Country-clustered, normal reference {fmt(normal)}', x0, y, 450, 14, size=10)
-        page.line(px(normal[0]), y + 26, px(normal[1]), y + 26, NAVY, 3)
-        page.rect(px(row['estimate']) - 4.5, y + 21.5, 9, 9, NAVY, 'ELLIPSE')
-        page.text(f't(1) heuristic screen {fmt(heuristic)}', x0, y + 50, 450, 14, size=10, color=VIOLET, bold=True)
-        page.line(px(heuristic[0]), y + 76, px(heuristic[1]), y + 76, VIOLET, 3)
-        page.rect(px(row['estimate']) - 4.5, y + 71.5, 9, 9, VIOLET, 'ELLIPSE')
-    for value, name in [(-.2, '−0.20'), (-.1, '−0.10'), (0, '0'), (.1, '+0.10')]:
-        page.text(name, px(value) - 20, bottom + 3, 40, 12, size=8, color=GREY, align='center')
-    y = top + 14
-    page.marker(1, px(.1043) + 6, y + 70)
-    page.marker(2, L + 90, y + 8)
-    page.marker(3, L + 104, top + 14 + 136 + 8)
-    page.caption('Figure 6.', 'Within-region family-framing slopes, log(1 + days) per extra mention per 100 words.', 442)
+    page.text('No difference', px(0) - 40, TOP + 2, 80, 12, size=8, color=NAVY, bold=True, align='center')
+    py, ph = TOP + 18, 92
+    for i, row in enumerate(ex['rows']):
+        page.rect(L, py, pw, ph, PAPER)
+        page.rect(L, py, pw, 2, HAIR)
+        page.text(row['region'], L + 10, py + 8, 200, 14, size=10, bold=True)
+        page.text(f"{row['countries']} countries · {row['loans']:,} loans", L + 10, py + 23, 200, 12, size=8, color=GREY)
+        if i == 1:
+            page.marker(4, L + 10 + 6.1 * len(row['region']) + 6, py + 8.5)
+        # Country mix bar, top right of the panel.
+        bx, bw, bx_end = 470, 140, 610
+        page.text('Loan mix', bx - 46, py + 9, 42, 12, size=8, color=GREY, bold=True, align='right')
+        left = bx
+        for k, part in enumerate(row['mix']):
+            width = bw * part['share']
+            page.rect(left, py + 10, width, 10, NAVY if k == 0 else SLATE)
+            left += width
+        first, second = row['mix'][0], row['mix'][1]
+        page.text(f"{first['country']} {first['share'] * 100:.1f}%", bx, py + 22, 90, 12, size=8, bold=True)
+        page.text(f"{second['country']} {second['share'] * 100:.1f}%", bx_end - 90, py + 22, 90, 12, size=8,
+                  color=SLATE, bold=True, align='right')
+        page.line(px(0), py + 40, px(0), py + ph - 6, NAVY, .75)
+        for k, (key, colour) in enumerate([('normal', NAVY), ('heuristic', VIOLET)]):
+            centre = py + 52 + 22 * k
+            low, high = row['normal_ci'] if key == 'normal' else row['heuristic_ci']
+            page.sup(ex['row_labels'][key], L + 10, centre - 6.5, 130, 13, size=8, color=colour, bold=key == 'heuristic')
+            page.line(px(low), centre, px(high), centre, colour, 3)
+            page.rect(px(row['estimate']) - 4, centre - 4, 8, 8, colour, 'ELLIPSE')
+            if i == 0 and key == 'normal':
+                page.marker(1, L + 10 + 3.9 * len(ex['row_labels'][key]) + 6, centre - 6)
+            if i == 0 and key == 'heuristic':
+                page.marker(2, px(high) + 6, centre - 6)
+        py += ph + 6
+    end = py - 6
+    for value, name in [(-.2, '−20%'), (-.1, '−10%'), (0, '0'), (.1, '+10%')]:
+        page.line(px(value), end, px(value), end + 3, RULE, .75)
+        page.text(name, px(value) - 20, end + 4, 40, 12, size=8, color=GREY, align='center')
+    ay = end + 18
+    page.text('Faster funding', px(0) - 66, ay, 60, 12, size=8, color=SLATE, bold=True, align='right')
+    page.line(px(0) - 98, ay + 5.1, px(0) - 70, ay + 5.1, SLATE, .75)
+    page.ops[-1]['start_arrow'] = 'FILL_ARROW'
+    page.text('Slower funding', px(0) + 6, ay, 60, 12, size=8, color=SLATE, bold=True)
+    page.line(px(0) + 70, ay + 5.1, px(0) + 98, ay + 5.1, SLATE, .75)
+    page.ops[-1]['end_arrow'] = 'FILL_ARROW'
+    # Countries behind each region: one dot per country, the two thin regions in violet.
+    sy = ay + 20
+    page.text(ex['strip_title'], L, sy, 160, 12, size=8, color=GREY, bold=True)
+    page.marker(3, L + 4.3 * len(ex['strip_title']) + 6, sy + 0.5)
+    thin = {row['region'] for row in ex['rows']}
+    for k, item in enumerate(ex['region_counts']):
+        col, line = divmod(k, 3)
+        x, y = L + col * 300, sy + 14 + 11 * line
+        colour = VIOLET if item['region'] in thin else SLATE
+        page.text(item['region'], x, y, 86, 12, size=8, color=colour, bold=item['region'] in thin)
+        for d in range(item['countries']):
+            page.rect(x + 90 + 7 * d, y + 2.6, 5, 5, colour, 'ELLIPSE')
+        page.text(str(item['countries']), x + 90 + 7 * item['countries'] + 3, y, 24, 12, size=8, color=colour, bold=True)
+    page.caption('Figure 6.', ex['caption'], sy + 14 + 33 + 8)
+    page.caption('¹', ex['note_sup'], sy + 14 + 33 + 21)
     page.takeaways(slide['takeaways'], pos)
 
 

@@ -2629,3 +2629,16 @@ unseen exact template, which cannot exclude near-duplicates.
   - Takeaway bodies are trimmed. The full explanation is now in the speaker notes: how to read the chart, the hours, ±0.05 log(1 + days), TOST with BH across nine terms, t(47), t(4), ±2%, and the two model versions.
   - QA reports no automated problems; previews, PDF and preview page refreshed; not pushed.
 - **2026-11-08, slide 9 legend (Mike's follow-up):** no new owner edits. The legend keeps only "Estimate, 90% range", because the axis already labels the bands. The ¹ note moved to "Too small to matter¹", and marker 2 sits above the +5% band edge. Measured in the PDF at 600 dpi, the legend glyph was 0.7 pt above the text's x-height centre and now sits at 0.0 pt; the direction arrows use the same offset. The legend's left edge aligns with the plot's visible edge (the −10% band edge and tick).
+- **2026-11-08, slide 10 redesign (Mike asked for better content and visuals):** no new owner edits; slide 10 was rebuilt alone.
+  - Audit of the old slide: numbers matched the register and nothing used a retired claim. But the interval labels carried bracketed numbers, "t(1) heuristic screen" was unexplained jargon, there was no direction cue, marker 2 sat on a region label rather than its evidence, and a lot of space was empty.
+  - New title: "Regional family links look strong but rest on two countries each".
+  - One light panel per region shows the region's loans, a "Loan mix" bar of its two countries, and two ranges: "Standard clustered range" (navy) and "Few-country check¹" (violet). Below are a "No difference" line, a −20%…+10% axis and Faster/Slower arrows, then a "Countries behind each region" dot strip (one dot per country: Africa 27, Asia 12, Oceania 4, Central America 2, Middle East 2, North America 1).
+  - New finding: the Middle East is 97.0% Palestine (14,500 of 14,946 loans), so it is close to a one-country result.
+  - Takeaways in story order:
+    1. Both links look strong at first (about 7% faster).
+    2. Two countries cannot carry them.
+    3. Other regions have many more countries.
+    4. No regional writing rules yet.
+  - The interval values, t(1) and heuristic p-values moved to the speaker notes.
+  - New numbers come from `src/region_context.py` (tested in `tests/test_region_context.py`) into `reports/evidence_sources/region_context.json`, and are added to the register. Concepts considered: a world-map inset (dropped: slide 8 already has the map) and a single comparison chart of all six regions (dropped: only these two regions have saved slopes in the primary run).
+  - QA reports no automated problems; full suite 201 passed; previews, PDF and preview page refreshed; not pushed.
