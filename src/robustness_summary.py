@@ -25,6 +25,8 @@ from src.bound_ladder import MEDIAN_DAYS
 
 ROOT = Path(__file__).resolve().parents[1]
 KAGGLE = ROOT / 'reports/kaggle_experiments/inference/reports'
+# Corrected bootstrap rerun after the 2026-11-08 review; see reports/experiments_2026_11_08/README.md.
+WILD = ROOT / 'reports/kaggle_experiments/review_fix/reports/wild_cluster_bootstrap/wild_cluster.json'
 SCREEN = ROOT / 'reports/equivalence_screen_reviewed/equivalence_screen.csv'
 OUTPUT = ROOT / 'reports/evidence_sources/robustness_summary.json'
 DISTRIBUTION = ROOT / 'reports/equivalence_screen_reviewed/feature_distribution.json'
@@ -65,6 +67,28 @@ def evidence_funnel(wild: dict, threshold: float = 0.05) -> dict:
     return {'tests': len(rows), 'clustered': sum(r['p_t47'] < threshold for r in rows),
             'bootstrap': sum(r['wcr_p_zero'] < threshold for r in rows),
             'adjusted': sum(r['wcr_p_zero_bh'] < threshold for r in rows)}
+
+
+def adjusted_passes(wild: dict, threshold: float = 0.05) -> dict:
+    """Tests passing after BH, their programme-adjusted counterpart, and the lowest BH p among the rest."""
+    def match(outcome: str, feature: str) -> dict | None:
+        block = wild['results'].get(f'programme_adjusted/{outcome}', {'rows': []})
+        return next((r for r in block['rows'] if r['feature'] == feature), None)
+
+    passes, others = [], []
+    for key, block in wild['results'].items():
+        spec, outcome = key.split('/')
+        for row in block['rows']:
+            if row['wcr_p_zero_bh'] >= threshold:
+                others.append(row['wcr_p_zero_bh'])
+                continue
+            twin = match(outcome, row['feature'])
+            passes.append({'specification': spec, 'outcome': outcome, 'term': term(row['feature']), 'estimate': row['estimate'],
+                           'pct_change_in_1_plus_days': (math.exp(row['estimate']) - 1) * 100, 'p_zero': row['wcr_p_zero'],
+                           'p_zero_bh': row['wcr_p_zero_bh'],
+                           'programme_adjusted_p_zero': twin and twin['wcr_p_zero'],
+                           'programme_adjusted_p_zero_bh': twin and twin['wcr_p_zero_bh']})
+    return {'passes': passes, 'lowest_other_p_zero_bh': min(others)}
 
 
 def framing_in_real_units(wild: dict, distribution: dict, median_days: float = MEDIAN_DAYS) -> dict:
@@ -117,9 +141,9 @@ def build(kaggle: Path = KAGGLE, screen_path: Path = SCREEN) -> dict:
     with screen_path.open() as handle:
         screen = {(r['specification'], r['outcome'], r['feature']): r['equivalent'] == 'True'
                   for r in csv.DictReader(handle)}
-    wild = json.loads((kaggle / 'wild_cluster_bootstrap/wild_cluster.json').read_text())
+    wild = json.loads(WILD.read_text())
     distribution = json.loads(DISTRIBUTION.read_text())['features']
-    result = {'bootstrap': bootstrap_summary(wild, screen), 'evidence_funnel': evidence_funnel(wild),
+    result = {'bootstrap': bootstrap_summary(wild, screen), 'evidence_funnel': evidence_funnel(wild), 'adjusted_passes': adjusted_passes(wild),
               'framing_real_units': framing_in_real_units(wild, distribution), 'subgroups': {}}
     for spec in ('programme_adjusted', 'expanded'):
         data = json.loads((kaggle / f'subgroup_inference/subgroup_{spec}.json').read_text())

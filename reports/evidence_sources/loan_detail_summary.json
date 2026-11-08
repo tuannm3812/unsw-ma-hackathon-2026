@@ -2,11 +2,11 @@
   "loan_details": [
     {
       "term": "log_loan_amount",
-      "unit": "per doubling of loan amount, within loan-size band",
-      "pct": 44.7555313482507,
+      "unit": "per doubling from the median loan amount, within loan-size band",
+      "pct": 44.63701620460163,
       "ci95": [
-        32.41513284308011,
-        58.2459905148933
+        32.332829736932524,
+        58.08523476870615
       ]
     },
     {

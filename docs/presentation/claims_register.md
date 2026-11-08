@@ -89,9 +89,9 @@ benchmark. **Equivalence** = exploratory screen of October coefficients (2026-11
 | Share of records with at least one mention, eight framing measures (slide 7) | family 88.7%; business 85.0%; basic needs 23.3%; agency 54.1%; gratitude 19.6%; urgency 1.3%; first person 1.0%; third person 97.3% | complement of the no-mention row (`feature_distribution.json`) | Descriptive |
 | Equivalence reference distribution | t with 47 df on the clustered standard error; stricter heuristic t(4) | `reports/equivalence_screen_reviewed/README.md` | Equivalence |
 | Wild cluster bootstrap of the equivalence screen (Webb weights, 9,999 draws, 48 countries) | 35 of 36 verdicts unchanged; 22 of 23 bounded results survive; the one loss is basic needs, programme-adjusted, 24-hour | `reports/evidence_sources/robustness_summary.json` (`src/robustness_summary.py`, from `reports/kaggle_experiments/inference/reports/`) | Equivalence, exploratory |
-| Lowest BH-adjusted bootstrap p for a nonzero association, any term (slide 9) | 0.136 (third person, expanded, duration; BH threshold 0.05); business 24-hour programme-adjusted 0.275 | same | Equivalence, exploratory |
-| Bootstrap BH p and estimate, third person and business (slide 9) | third person duration: expanded −0.0090, p 0.136; programme-adjusted −0.0081, p 0.261. Business 24-hour: expanded −0.357 pp, p 0.337; programme-adjusted −0.258 pp, p 0.275 | same, from `wild_cluster.json` | Equivalence, exploratory |
-| Tests passing at each stage, p < 0.05 (slide 11): nine measures, two outcomes, two models | 36 tests: 5 pass the clustered t(47) test, 4 the wild cluster bootstrap, 0 the BH-adjusted bootstrap | `reports/evidence_sources/robustness_summary.json` (`src/robustness_summary.py`) | Equivalence, exploratory |
+| One test passes after BH across 36 (corrected bootstrap, slides 9 and 11) | third person, expanded, duration: estimate −0.0090 (−0.9% in 1 + days per extra mention), bootstrap p 0.0009, BH p 0.008. Programme-adjusted: bootstrap p 0.128, BH p 0.426. Lowest BH p among the others 0.156 | `reports/evidence_sources/robustness_summary.json` (`src/robustness_summary.py`), corrected rerun 2026-11-08 | Equivalence, exploratory |
+| Bootstrap BH p, business, 24-hour (corrected) | expanded −0.357 pp, BH p 0.156; programme-adjusted −0.258 pp, BH p 0.314 | same | Equivalence, exploratory |
+| Tests passing at each stage, p < 0.05 (slide 11): nine measures, two outcomes, two models | 36 tests: 5 pass the clustered t(47) test, 4 the wild cluster bootstrap, 1 the BH-adjusted bootstrap | `reports/evidence_sources/robustness_summary.json` (`src/robustness_summary.py`) | Equivalence, exploratory |
 | Third person, shorter funding time per extra mention per 100 words at the 2.85-day median (slide 11) | expanded 49.7 minutes; programme-adjusted 44.7 minutes ("45–50 minutes") | same | Equivalence, exploratory |
 | Business, same-day funding per extra mention per 100 words (slide 11) | −0.357 pp expanded; −0.258 pp programme-adjusted ("0.26–0.36 pp lower") | same | Equivalence, exploratory |
 | Shrink under programme controls (slide 11) | third person, funding time, 10% (−0.0090 → −0.0081); business, same-day, 28% (−0.357 → −0.258 pp) | same | Equivalence, exploratory |
@@ -127,7 +127,7 @@ benchmark. **Equivalence** = exploratory screen of October coefficients (2026-11
 | Text placebo, loan-specific part of the linear gain, days (month 95% interval) | 2021 0.171 [0.132, 0.216]; 2022 0.213 [0.100, 0.324]; 2023 0.102 [−0.009, 0.188]; 2024 0.165 [0.119, 0.210]; 2025 0.146 [0.102, 0.192]; 0.10–0.21 days; month intervals exclude zero in 4 of 5, country intervals in 2 of 5 | same | Forecast experiments, exploratory |
 | Text placebo refit against the benchmark linear gain | within 0.003 days each year; headline gains stay the benchmark's 0.26–0.39 days | same | Forecast experiments, exploratory |
 | Triage, Boosted tree, duration, structure only, top 10% flagged vs slowest 20% (slide 15) | precision 2021 0.525; 2022 0.671; 2023 0.697; 2024 0.809; 2025 0.735 (range 0.53–0.81); lift 2021 2.63; 2022 3.36; 2023 3.48; 2024 4.04; 2025 3.67 (range 2.6–4.0×; random = 0.20) | `reports/evidence_sources/triage_summary.json` (`src/triage_summary.py` from `reports/triage_value/triage_value.json`, `src/triage_value.py`) | November, retrospective |
-| Triage, Boosted tree, duration: adding text, precision change (slide 15) | -0.003–0.005; month-block interval includes zero in 5 of 5 years | same | November, retrospective |
+| Triage, Boosted tree, duration: adding text, precision change (slide 15) | -0.003–0.005; month-block interval (flags reselected in each draw, corrected 2026-11-08) includes zero in 4 of 5 years; 2025 +0.005 [0.001, 0.013] | same | November, retrospective |
 | Triage, Boosted tree, duration, structure only: within-country precision, 10 largest countries | median 0.49–0.56 across years; range 0.18–0.90 | same | November, retrospective |
 | Triage, Boosted tree, 24-hour, structure only, top 10% flagged vs slowest 20% (slide 15) | precision 2021 0.595; 2022 0.655; 2023 0.697; 2024 0.739; 2025 0.679 (range 0.60–0.74); lift 2021 2.98; 2022 3.27; 2023 3.48; 2024 3.69; 2025 3.40 (range 3.0–3.7×; random = 0.20) | `reports/evidence_sources/triage_summary.json` (`src/triage_summary.py` from `reports/triage_value/triage_value.json`, `src/triage_value.py`) | November, retrospective |
 | Triage, Boosted tree, 24-hour: adding text, precision change (slide 15) | -0.020–0.008; month-block interval includes zero in 5 of 5 years | same | November, retrospective |
@@ -187,7 +187,7 @@ Programme-adjusted model; change in (1 + days), not days; country-clustered 95% 
 
 | Claim | Value | Source | Layer |
 | --- | --- | --- | --- |
-| Loan details | loan amount, per doubling within loan-size band +44.8% [+32.4%, +58.2%]; repayment term, per +1 month +8.6% [+2.1%, +15.5%]; male vs female +61.0% [+47.2%, +76.1%]; borrowers, per +1, holding group loan −1.0% [−2.7%, +0.6%] | `reports/evidence_sources/loan_detail_summary.json` (`src/loan_detail_summary.py`), from `reports/experiments_2026_11_08/loan_detail_coefficients.json` | Experiment I, exploratory |
+| Loan details | loan amount, per doubling from the US$325 median within its loan-size band +44.6% [+32.3%, +58.1%], and −14.8 pp [−19.0, −10.5] on 24-hour funding; repayment term, per +1 month +8.6% [+2.1%, +15.5%]; male vs female +61.0% [+47.2%, +76.1%]; borrowers, per +1, holding group loan −1.0% [−2.7%, +0.6%] | `reports/evidence_sources/loan_detail_summary.json` (`src/loan_detail_summary.py`), from `reports/experiments_2026_11_08/loan_detail_coefficients.json` | Experiment I, exploratory |
 | Framings per +1 mention per 100 words, unless labelled | family +0.9% [−0.2%, +2.1%]; business +0.5% [−0.1%, +1.2%]; basic needs −0.7% [−2.0%, +0.6%]; agency +0.6% [−0.3%, +1.5%]; gratitude +1.5% [−0.9%, +3.9%]; urgency −0.4% [−7.5%, +7.2%]; first person +1.0% [−7.5%, +10.2%]; third person −0.8% [−1.3%, −0.3%]; sentiment per +0.5 score +1.3% [−0.2%, +2.9%]; mention-rate point estimates within about ±1.5% | same | Experiment I, exploratory |
 
 ## Text methods
@@ -211,7 +211,7 @@ Programme-adjusted model; change in (1 + days), not days; country-clustered 95% 
 
 "The story barely registers", "robust null", "won't move the needle", "myth busted",
 "third person BH p 0.012 → 0.061" and "business framing is the one term below BH 0.05 (BH p 0.006)" (retired 2026-11-08:
-no term survives the wild cluster bootstrap after BH; lowest p 0.136),
+superseded by the corrected wild cluster bootstrap), "no term survives" / "0 pass BH", "lowest p 0.136", bootstrap BH p third person 0.136 and 0.261, business 0.275 and 0.337, and loan amount +44.8% (retired 2026-11-09: corrected rerun),
 "structure beats story ~10×", LightGBM, "SHAP top 10/15 has no narrative feature",
 "sign reversal" for third-person framing, country-level A/B advice from two-country
 regions, and the 20,000-loan topic results as full-data evidence.

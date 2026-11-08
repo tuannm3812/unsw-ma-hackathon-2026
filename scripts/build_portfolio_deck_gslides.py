@@ -682,16 +682,12 @@ def preview_waffle(page, x, y, w, h, slide):
 
 
 def preview_table(page, x, y, w, h, slide):
-    """Lowest adjusted bootstrap p against the 0.05 line: the closest any term gets to passing."""
-    limit = .2
-    px = lambda v: x + v / limit * w
-    base = y + 32
-    page.rect(px(0), base - 14, px(.05) - px(0), 14, '#FFF0A8')
-    page.line(x, base, x + w, base, NAVY, .75)
-    page.line(px(.05), base - 14, px(.05), base + 3, NAVY, .75)
-    page.rect(px(.136) - 3.5, base - 10, 7, 7, VIOLET, 'ELLIPSE')
-    page.text('Lowest p 0.136', px(.136) - 45, base - 27, 90, 12, size=8, bold=True, color=VIOLET, align='center')
-    page.text('0.05', px(.05) - 15, base + 3, 30, 11, size=8, color=GREY, align='center')
+    """Mini of the slide 11 funnel: 36 tests, the one that passes after adjustment lit."""
+    cell, gap = 7.5, 2
+    for i in range(36):
+        row, col = divmod(i, 12)
+        page.rect(x + col * (cell + gap), y + 4 + row * (cell + gap), cell, cell, VIOLET if i == 0 else HAIR)
+    page.text('1 of 36 passes', x, y + 34, w, 12, size=8, bold=True, color=VIOLET)
 
 
 def preview_bound(page, x, y, w, h, slide):

@@ -3016,3 +3016,9 @@ unseen exact template, which cannot exclude near-duplicates.
 - Live deck re-read first: no owner edits to mirror. Step numbers on slides 16 and 19 now use an empty circle with a separate centred text frame; digits measured within 0.5 pt of the circle centre at 400 dpi.
 - Slide 18: Kiva logo on the Who lines that name Kiva, row icons, independence footer, and an "Instead" list in the framing card. PROVENANCE.md updated.
 - Verified: pyflakes, deck QA, zoomed render, full offline pytest. Slides 16, 18 and 19 only were rebuilt; nothing pushed.
+
+## 2026-11-09: corrected bootstrap, loan amount and triage interval
+
+- An independent code review fixed the wild cluster bootstrap, the triage interval and the per-doubling calculation (`reports/experiments_2026_11_08/README.md`). `src/robustness_summary.py` now reads the corrected rerun and reports the test that passes; summaries regenerated; register updated first and the old values retired.
+- The funnel is 36, 5, 4, 1. The one that passes is third person, expanded, funding time (−0.9%, bootstrap p 0.0009, BH p 0.008); with programme controls it does not pass (p 0.128, BH 0.426). Equivalence counts (35 of 36, 22 of 23) are unchanged, so slides 12 and 13 are unchanged.
+- Slides changed: 9 (headline, preview, takeaway), 11 (title, funnel, takeaways, loan amount, notes), 17 (notes only). Live deck re-read first: no owner edits to mirror. Verified: pyflakes, deck QA, stale-number scan, rendered slides, full offline pytest. Nothing pushed.

@@ -1226,7 +1226,7 @@
             "question": "Do the links survive richer controls?",
             "method": "The same models with more text measures and a programme proxy; multiple-test adjusted.",
             "data": "1,453,840 loans; 642 programme categories",
-            "headline": "No signal survives a stricter test",
+            "headline": "One tiny link passes, in one model only",
             "feeds": "Prioritise"
           },
           {
@@ -1286,7 +1286,7 @@
         {
           "marker": 3,
           "heading": "Framing signals stay small",
-          "text": "After a wild cluster bootstrap, no term passes: the lowest **p is 0.136**."
+          "text": "After a wild cluster bootstrap, **1 of 36** tests passes: third person, in one model only."
         },
         {
           "marker": 4,
@@ -1390,7 +1390,7 @@
       "id": "persist",
       "section": "Evidence",
       "layout": "content+takeaways",
-      "title": "No framing signal survives stricter tests, and what remains is tiny",
+      "title": "One tiny signal passes the strictest test, but not with programme controls",
       "subtitle": "Robustness checks: programme controls, then a wild cluster bootstrap across 48 countries",
       "exhibit": {
         "type": "evidence_funnel",
@@ -1409,7 +1409,7 @@
             },
             {
               "label": "After adjusting for nine measures",
-              "passes": 0
+              "passes": 1
             }
           ]
         },
@@ -1435,10 +1435,10 @@
           "loan": [
             {
               "label": "Amount, per doubling",
-              "pct": 44.7555313482507,
+              "pct": 44.63701620460163,
               "ci": [
-                32.41513284308011,
-                58.2459905148933
+                32.332829736932524,
+                58.08523476870615
               ]
             },
             {
@@ -1550,33 +1550,33 @@
             }
           ]
         },
-        "note2": "Change in (1 + days), not days, with 95% country-clustered ranges; programme-adjusted model. Amount is within a loan-size band. Associations only."
+        "note2": "Change in (1 + days), not days, with 95% country-clustered ranges; programme-adjusted model. Amount: a doubling from the US$325 median, within its size band."
       },
       "takeaways": [
         {
           "marker": 1,
           "heading": "The evidence shrinks with each test",
-          "text": "**5 of 36** tests pass the usual country test, 4 the bootstrap, **none** after adjustment (lowest p 0.136)."
+          "text": "**5 of 36** tests pass the usual country test, 4 the bootstrap, **1** after adjustment."
         },
         {
           "marker": 2,
-          "heading": "What remains is tiny",
-          "text": "**45–50 minutes** shorter funding per third-person mention; **0.26–0.36 pp** lower same-day per business mention."
+          "heading": "The one that passes is tiny",
+          "text": "Third person, expanded model: **−0.9%** per mention (BH p 0.008); with programme controls, BH p 0.426."
         },
         {
           "marker": 3,
           "heading": "Loan details are on another scale",
-          "text": "A doubled amount goes with **+44.8%** and a month of term **+8.6%** in (1 + days); framings stay near ±1.5%."
+          "text": "A doubled amount goes with **+44.6%** and a month of term **+8.6%** in (1 + days); framings stay near ±1.5%."
         },
         {
           "marker": 4,
           "heading": "Pronouns may reflect the writer",
-          "text": "Third person is in **97.3%** of loans, and partners usually write the text."
+          "text": "Third person is in **97.3%** of loans, stays within ±2%, and partners usually write the text."
         }
       ],
       "notes": {
-        "purpose": "Show that the remaining framing links are tiny and fail a stricter test.",
-        "script": "We tested nine framing measures on two outcomes in two models, so 36 tests. Five pass the usual country-clustered test. With 48 countries that test can be too generous, so we re-ran every term with a wild cluster bootstrap, 9,999 draws with Webb weights: four pass. After adjusting for testing nine measures, none passes, and the lowest p-value is 0.136. [Point: What remains is tiny] In real units, one extra third-person mention per 100 words goes with about 45 to 50 minutes shorter funding time on a typical 2.85-day loan, and one extra business mention with 0.26 to 0.36 points lower same-day funding. These are associations, not effects of an edit. [Point: Loan details are on another scale] On one scale, in the programme-adjusted model, a doubled loan amount within its size band goes with 44.8 percent more on one plus days, a further month of term 8.6 percent, and male rather than female borrowers 61 percent; the framings stay within about 1.5 percent per extra mention. These are associations among completed loans, not levers, and the scale is change in one plus days, not days. That is why Predict starts with loan details. This loan-detail comparison has not yet been independently reviewed. [Point: Pronouns may reflect the writer] Third person appears in 97.3 percent of loans and business in 85 percent, so neither is an obvious writing lever. Adding programme controls moves third person only 10 percent towards zero and business 28 percent. Descriptions are usually written by partner staff, so the third-person link may say more about who writes than about the borrower. The next slide asks how small the remaining links really are.",
+        "purpose": "Show that one tiny framing link passes the strictest test in one model only.",
+        "script": "We tested nine framing measures on two outcomes in two models, so 36 tests. Five pass the usual country-clustered test. With 48 countries that test can be too generous, so we re-ran every term with a wild cluster bootstrap, 9,999 draws with Webb weights: four pass. After adjusting for testing nine measures, one passes: third person for funding time in the expanded model, minus 0.9 percent per extra mention, bootstrap p 0.0009 and adjusted p 0.008. With programme controls it does not pass: p 0.128 and adjusted p 0.426. The lowest adjusted p among the others is 0.156. [Point: The one that passes is tiny] In real units, one extra third-person mention per 100 words goes with about 45 to 50 minutes shorter funding time on a typical 2.85-day loan, and one extra business mention with 0.26 to 0.36 points lower same-day funding. These are associations, not effects of an edit. [Point: Loan details are on another scale] On one scale, in the programme-adjusted model, a doubled loan amount, from the 325 dollar median and within its size band, goes with 44.6 percent more on one plus days, a further month of term 8.6 percent, and male rather than female borrowers 61 percent; the framings stay within about 1.5 percent per extra mention. These are associations among completed loans, not levers, and the scale is change in one plus days, not days. That is why Predict starts with loan details. This loan-detail comparison has not yet been independently reviewed. [Point: Pronouns may reflect the writer] Third person appears in 97.3 percent of loans and business in 85 percent, so neither is an obvious writing lever. Adding programme controls moves third person only 10 percent towards zero and business 28 percent. Descriptions are usually written by partner staff, so the third-person link may say more about who writes than about the borrower. The next slide asks how small the remaining links really are.",
         "reference": "Robustness checks: reports/expanded_feature_sensitivity_reviewed; bootstrap: reports/evidence_sources/robustness_summary.json (src/robustness_summary.py, src/wild_cluster.py). Loan details: reports/evidence_sources/loan_detail_summary.json (src/loan_detail_summary.py)."
       },
       "sublabel": "Robustness checks",
@@ -2476,7 +2476,7 @@
       },
       "notes": {
         "purpose": "Show the flag adds something a simple lookup does not, without overclaiming.",
-        "script": "This is a concept to pilot, not a product. When a loan is posted, a model scores its risk of slow funding from loan details: amount, term, sector, country and timing. [Point: Better than a simple lookup] A fair comparison is a historical lookup: the typical funding time for the same country, sector and calendar month, taken from training years. Flagging the top ten percent of predicted-slow loans, the boosted tree catches the slowest fifth 2.63 to 4.04 times better than chance, against 1.97 to 2.74 for the lookup, and it is higher in all five years. [Point: Clearest within a country] Within a country the gap is widest: median precision is 0.49 to 0.56 for the tree and 0.22 to 0.29 for the lookup, where random is 0.20. So the flag is not simply naming slow countries. [Point: Text adds little to the flag] Adding text barely changes it. [Point: Checked looking back only] The check covers completed loans only and looks back; precision ranges from 0.18 to 0.90 across the ten largest countries; the predicted probabilities drift in 2025, so they need recalibrating before use as thresholds; and a flag says a loan is likely slow, not why. The interval for the text change is being rerun, so we quote no interval here. For reference, the primary 24-hour model ranks same-day funding with ROC AUC 0.8997 on later loans.",
+        "script": "This is a concept to pilot, not a product. When a loan is posted, a model scores its risk of slow funding from loan details: amount, term, sector, country and timing. [Point: Better than a simple lookup] A fair comparison is a historical lookup: the typical funding time for the same country, sector and calendar month, taken from training years. Flagging the top ten percent of predicted-slow loans, the boosted tree catches the slowest fifth 2.63 to 4.04 times better than chance, against 1.97 to 2.74 for the lookup, and it is higher in all five years. [Point: Clearest within a country] Within a country the gap is widest: median precision is 0.49 to 0.56 for the tree and 0.22 to 0.29 for the lookup, where random is 0.20. So the flag is not simply naming slow countries. [Point: Text adds little to the flag] Adding text barely changes it. [Point: Checked looking back only] The check covers completed loans only and looks back; precision ranges from 0.18 to 0.90 across the ten largest countries; the predicted probabilities drift in 2025, so they need recalibrating before use as thresholds; and a flag says a loan is likely slow, not why. For the boosted tree on funding time, the month-block range for that text change includes zero in four of five years. For reference, the primary 24-hour model ranks same-day funding with ROC AUC 0.8997 on later loans.",
         "reference": "reports/evidence_sources/triage_summary.json (src/triage_summary.py); reports/triage_value/triage_value.json (src/triage_value.py); appendix A3 for the 24-hour AUC. Listing values: slide 4 illustrative composite. Lookup: reports/evidence_sources/triage_lookup_summary.json (src/triage_lookup_summary.py)."
       },
       "figure": "Figure 11.",
