@@ -3042,3 +3042,9 @@ unseen exact template, which cannot exclude near-duplicates.
 
 - Live deck re-read first: no owner edits to mirror. Slide 21's cards are content-tight. Spacing on slides 16, 19 and 20 checked; no change needed. The closing slide now states the message, shows the three steps and uses the cover's team line; photo and credit unchanged, no finalist claim, no numbers.
 - Verified: pyflakes, deck QA, rendered slides, full offline pytest. Slides 21 and 22 only were rebuilt; nothing pushed.
+
+## 2026-11-09: Our ask strip, close shapes, appendix pass
+
+- Live deck re-read first: no owner edits to mirror. Slide 21 has an Our ask strip under the columns. Slide 22 drops the step row and adds quiet background shapes.
+- Appendix: A3 groups the holdout scores by model with plain meanings and a warning not to compare them with the forecast benchmark; A4 shows the two themes on one scale. A1, A2, A5 and A6 audited, no change needed; no retired wording found.
+- Verified: pyflakes, deck QA, rendered slides, full offline pytest. Slides 21, 22, A3 and A4 only were rebuilt; nothing pushed.

@@ -310,27 +310,19 @@ def cover(page, slide):
 
 
 def close(page, slide):
-    """Closing slide: thanks, the one message, the three steps, the team and the repository link."""
+    """Closing slide: thanks, the one message, the team and the repository link, over quiet background shapes."""
     page.ops.append({'op': 'set-background', 'slide': page.id, 'color': WHITE})
+    page.rect(-150, 392, 320, 320, '#EFEBF6', 'ELLIPSE')
+    page.rect(150, 408, 42, 42, YELLOW, 'ELLIPSE')
     photo_accent(page, *CLOSE_FRAME[:2], 104)
-    page.rect(L, 134, 28, 3, YELLOW)
-    page.text(slide['title'], L, 146, 300, 22, size=16, bold=True, color=VIOLET)
-    page.text(slide['message'], L, 174, 500, 100, size=36, bold=True, spacing=105)
-    x, y = L, 292
-    for k, (name, icon) in enumerate(slide['steps']):
-        EXTRA_IMAGES.append(('close', ASSETS / 'icons' / icon, (x, y, 18, 18)))
-        width = label_width(name, 12) + 6
-        page.text(name, x + 23, y, width + 8, 18, size=12, bold=True, middle=True)
-        x += 23 + width + 6
-        if k < 2:
-            page.line(x + 2, y + 9, x + 26, y + 9, SLATE, .75)
-            page.ops[-1]['end_arrow'] = 'FILL_ARROW'
-            x += 34
+    page.rect(L, 150, 28, 3, YELLOW)
+    page.text(slide['title'], L, 162, 300, 22, size=16, bold=True, color=VIOLET)
+    page.text(slide['message'], L, 190, 520, 100, size=36, bold=True, spacing=105)
     names, team, repo = slide['lines']
     prefix = 'Code and evidence: '
     start = len(names) + len(team) + 2 + len(prefix)
     text = f'{names}\n{team}\n{repo}'
-    page.text(text, L, 338, 560, 62, size=12, color=NAVY, spacing=120,
+    page.text(text, L, 304, 560, 62, size=12, color=NAVY, spacing=120,
               spans=[(0, len(names), {'bold': True}), (start, len(text), {'link': slide['link'], 'color': VIOLET})])
 
 
@@ -1807,6 +1799,15 @@ def roadmap(page, slide, pos):
         if i < 2:
             page.line(x + SOLUTION_W + 3, top + h / 2, x + SOLUTION_W + SOLUTION_GAP - 3, top + h / 2, SLATE, .75)
             page.ops[-1]['end_arrow'] = 'FILL_ARROW'
+    asks = slide['asks']
+    dy = top + h + 8
+    page.text(asks['title'], L, dy, 200, 12, size=9, bold=True, color=VIOLET)
+    for i, (icon, ask) in enumerate(asks['items']):
+        x = L + i * (SOLUTION_W + SOLUTION_GAP)
+        page.rect(x, dy + 16, SOLUTION_W, 44, '#EFEBF6')
+        EXTRA_IMAGES.append(('roadmap', ASSETS / 'icons' / icon, (x + 10, dy + 30, 16, 16)))
+        plain, spans = emphasis(ask)
+        page.text(plain, x + 32, dy + 16, SOLUTION_W - 42, 44, size=10, color=GREY, middle=True, spacing=100, spans=spans)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -1824,22 +1825,57 @@ def a_table(page, slide):
 
 
 def a_metrics(page, slide):
+    """Holdout scores grouped by model, each with a plain meaning, and why they stand apart from the benchmark."""
     page.chrome(slide)
-    figures = slide['key_figures']
-    width = 275
-    for i, figure in enumerate(figures[:2]):
-        key_card(page, figure, L + i * (width + 25), TOP, width, 104, NAVY)
-    for i, figure in enumerate(figures[2:]):
-        key_card(page, figure, L + i * (width + 25), 250, width, 104, VIOLET)
-    page.caption('Scope:', slide['note'].removeprefix('Scope: '), 362, w=FULL - L)
+    gap, width = 10, (FULL - L - 40) / 5
+    figures, y = iter(slide['key_figures']), TOP + 20
+    x = L
+    for name, count in slide['groups']:
+        span = count * width + (count - 1) * gap
+        page.text(name, x, TOP, span, 13, size=9, bold=True, color=VIOLET)
+        page.line(x, TOP + 15, x + span, TOP + 15, HAIR, .75)
+        for _ in range(count):
+            figure = next(figures)
+            card(page, x, y, width, 112, NAVY)
+            page.text(figure['value'], x + 12, y + 14, width - 20, 28, size=20, bold=True)
+            page.text(figure['label'], x + 12, y + 52, width - 20, 14, size=10, bold=True)
+            page.text(figure['meaning'], x + 12, y + 70, width - 20, 28, size=9, color=GREY, spacing=100)
+            x += width + gap
+    sy = y + 124
+    page.rect(L, sy, FULL - L, 26, PAPER)
+    page.rect(L, sy, 4, 26, YELLOW)
+    plain, spans = emphasis(slide['compare_note'])
+    page.text(plain, L + 14, sy, FULL - L - 28, 26, size=10, color=GREY, middle=True, spans=spans)
+    page.text(slide['note'], L, sy + 34, FULL - L, 12, size=8, color=GREY, spans=[(0, len('Scope:'), {'bold': True})])
 
 
 def a_topics(page, slide):
+    """The fastest and slowest themes on one scale, with how to read them."""
     page.chrome(slide)
-    for i, figure in enumerate(slide['key_figures']):
-        key_card(page, figure, L + i * 449, TOP, 426, 104, [VIOLET, SLATE][i])
+    scale = slide['theme_scale']
+    pw, h = FULL - L, 136
+    panel(page, L, TOP, pw, h, scale['title'], '')
+    x0, x1 = L + 40, L + pw - 40
+    px = lambda days: x0 + days / 15 * (x1 - x0)
+    axis = TOP + 100
+    page.line(x0, axis, x1, axis, SLATE, .75)
+    for value in (0, 5, 10, 15):
+        page.line(px(value), axis, px(value), axis + 3, SLATE, .75)
+        page.text(str(value), px(value) - 16, axis + 4, 32, 11, size=8, color=GREY, align='center')
+    page.text('days', x1 + 6, axis + 4, 30, 11, size=8, color=GREY)
+    colours = (VIOLET, NAVY)
+    low, high = scale['points']
+    page.line(px(low[0]), axis - 18, px(high[0]), axis - 18, SLATE, .75)
+    for (days, name, label), colour in zip(scale['points'], colours):
+        page.rect(px(days) - 5, axis - 23, 10, 10, colour, 'ELLIPSE')
+        page.text(label, px(days) - 60, axis - 58, 120, 18, size=14, bold=True, color=colour, align='center')
+        page.text(name, px(days) - 80, axis - 40, 160, 12, size=9, color=GREY, align='center')
     for i, body in enumerate(slide['body']):
-        page.block(body['heading'], body['text'], L + i * 449, 262, 426, 90)
+        x = L + i * 449
+        plain, spans = emphasis(body['text'])
+        page.text(body['heading'], x, TOP + h + 16, 426, 16, size=12, bold=True)
+        page.text(plain, x, TOP + h + 36, 426, 50, size=10, color=GREY, spacing=110, spans=spans)
+    page.caption(slide['figure'], 'Exploratory NMF themes from a 20,000-loan sample; not full-data evidence.', TOP + h + 96, w=pw)
 
 
 def notes_text(slide):

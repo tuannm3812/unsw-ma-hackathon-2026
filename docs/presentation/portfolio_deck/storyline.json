@@ -2888,7 +2888,24 @@
           "text": "It follows **only if the pilot shows it helps**."
         }
       ],
-      "solution_link": "→ Why our ask starts with the flag"
+      "solution_link": "→ Why our ask starts with the flag",
+      "asks": {
+        "title": "Our ask",
+        "items": [
+          [
+            "handshake-navy.png",
+            "**One partner** to pilot the flag"
+          ],
+          [
+            "table_rows-navy.png",
+            "**Expired listings** and **country data**"
+          ],
+          [
+            "science-navy.png",
+            "A partner for **one prompt pilot**"
+          ]
+        ]
+      }
     },
     {
       "n": 22,
@@ -2908,21 +2925,7 @@
       },
       "link": "https://github.com/tuannm3812/unsw-ma-hackathon-2026",
       "visual": "White ground; Unsplash market photo in a rounded frame with the yellow corner block",
-      "message": "Flag slow loans first.\nEarn writing advice last.",
-      "steps": [
-        [
-          "Predict",
-          "target-navy.png"
-        ],
-        [
-          "Prioritise",
-          "groups-navy.png"
-        ],
-        [
-          "Test",
-          "science-navy.png"
-        ]
-      ]
+      "message": "Flag slow loans first.\nEarn writing advice last."
     },
     {
       "n": "A1",
@@ -3113,28 +3116,33 @@
       "id": "a_primary",
       "section": "Appendix",
       "title": "The primary models hold up on later, completed loans",
-      "content": "HistGradientBoosting duration MAE 5.2031 days, R² 0.5420; classifier ROC AUC 0.8997, AP 0.8301, Brier 0.1156; 1,174,953 train, 278,887 holdout; completed loans only.",
+      "content": "Boosted tree duration MAE 5.2031 days, R² 0.5420; classifier ROC AUC 0.8997, AP 0.8301, Brier 0.1156; 1,174,953 train, 278,887 holdout; completed loans only.",
       "subtitle": "Explanatory models: chronological holdout, completed loans only",
       "key_figures": [
         {
           "value": "5.2031 days",
-          "label": "duration MAE, HistGradientBoosting"
+          "label": "Mean absolute error",
+          "meaning": "average miss on later loans"
         },
         {
           "value": "0.5420",
-          "label": "duration R²"
+          "label": "R²",
+          "meaning": "share of variation explained"
         },
         {
           "value": "0.8997",
-          "label": "24-hour ROC AUC"
+          "label": "ROC AUC",
+          "meaning": "how well it ranks loans"
         },
         {
           "value": "0.8301",
-          "label": "24-hour average precision"
+          "label": "Average precision",
+          "meaning": "precision across cut-offs"
         },
         {
           "value": "0.1156",
-          "label": "24-hour Brier score"
+          "label": "Brier score",
+          "meaning": "probability error; lower is better"
         }
       ],
       "note": "Scope: 1,174,953 training and 278,887 holdout loans (2024–2025). Retrospective predictions on completed loans, not deployment estimates.",
@@ -3144,7 +3152,18 @@
         "reference": "Primary saved run 2026-08-31: association_summary.txt; analysis_summary.json."
       },
       "sublabel": "Explanatory models",
-      "figure": "Figure A3."
+      "figure": "Figure A3.",
+      "groups": [
+        [
+          "Funding time, boosted tree",
+          2
+        ],
+        [
+          "Same-day funding, boosted tree",
+          3
+        ]
+      ],
+      "compare_note": "A **different model and split** from the forecast benchmark, so the two sets of scores should not be compared."
     },
     {
       "n": "A4",
@@ -3166,11 +3185,11 @@
       "body": [
         {
           "heading": "What the themes show",
-          "text": "8 themes, including sanitation, clean water, livestock, smallholder farming and retail. They track loan purpose as much as writing style."
+          "text": "**8 themes**, including sanitation, clean water, livestock, smallholder farming and retail. They track **loan purpose** as much as writing style."
         },
         {
           "heading": "How to read them",
-          "text": "Means are unadjusted and come from a sample, so the gap is context, not a tested effect of story content."
+          "text": "Means are **unadjusted** and come from a sample, so the gap is context, not a tested effect of story content."
         }
       ],
       "notes": {
@@ -3179,7 +3198,22 @@
         "reference": "notebooks/1_full_dataset_eda.py topic section; docs/4_research_review.md P2."
       },
       "sublabel": "Exploratory sample",
-      "figure": "Figure A4."
+      "figure": "Figure A4.",
+      "theme_scale": {
+        "title": "Mean funding time by theme, unadjusted",
+        "points": [
+          [
+            1.5,
+            "Sanitation",
+            "1.5 days"
+          ],
+          [
+            13.5,
+            "Group solar and farm plots",
+            "13.5 days"
+          ]
+        ]
+      }
     },
     {
       "n": "A5",
