@@ -2518,21 +2518,27 @@
           "name": "Feature it",
           "text": "Show flagged loans to lenders early on the lending page.",
           "who": "Kiva",
-          "watch": "crowding out other loans"
+          "watch": "crowding out other loans",
+          "who_logo": true,
+          "who_after": ""
         },
         {
           "icon": "payments-navy.png",
           "name": "Match it",
           "text": "Offer matching funds where a loan is likely to stall.",
           "who": "Kiva and funders",
-          "watch": "the cost of matching funds"
+          "watch": "the cost of matching funds",
+          "who_logo": true,
+          "who_after": "and funders"
         },
         {
           "icon": "groups-navy.png",
           "name": "Alert lenders",
           "text": "Notify lenders who follow the loan’s sector or country.",
           "who": "Kiva",
-          "watch": "lender fatigue"
+          "watch": "lender fatigue",
+          "who_logo": true,
+          "who_after": ""
         },
         {
           "icon": "fact_check-navy.png",
@@ -2544,7 +2550,13 @@
       ],
       "dont": {
         "heading": "Don’t chase framing tweaks",
-        "text": "The evidence points away from wording, so effort goes to the loan rather than its story."
+        "text": "The evidence points away from wording, so effort goes to the loan.",
+        "instead_title": "Instead",
+        "instead": [
+          "Flag slow loans at posting",
+          "Reach the right lenders",
+          "Pilot before any advice"
+        ]
       },
       "note": "Scope: the levers are proposals; our data do not measure their effect.",
       "notes": {
@@ -2576,7 +2588,8 @@
           "text": "The evidence so far gives **no reason to rewrite stories** to speed funding."
         }
       ],
-      "solution_link": "→ Why writing advice must pass gates first"
+      "solution_link": "→ Why writing advice must pass gates first",
+      "footer": "Independent hackathon analysis; not affiliated with or endorsed by Kiva."
     },
     {
       "n": 19,

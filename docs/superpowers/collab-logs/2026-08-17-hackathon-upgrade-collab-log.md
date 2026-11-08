@@ -3010,3 +3010,9 @@ unseen exact template, which cannot exclude near-duplicates.
 - Live deck re-read first: no owner edits to mirror. Step badges on slides 16 and 19 now show one digit at one size. Slide 19's Question, Do and Done when rows have deck-style icons, with key terms in bold navy.
 - Verified: pyflakes, deck QA, zoomed render, full offline pytest. Slides 16 and 19 only were rebuilt; nothing pushed.
 - **2026-11-08, Codex review of experiments A–I:** a read-only review of an export (code and aggregates, no data) found a high-severity wild bootstrap error, a medium triage-interval error and a low loan-amount unit error. All confirmed and fixed (c9883da), bootstrap and loan-detail fits rerun on Kaggle, intervals recomputed. Equivalence results unchanged (35 of 36). Third person, expanded, duration now passes BH (0.008), which corrects the earlier "no term survives" reading; with programme controls it does not (0.426). Details in `reports/experiments_2026_11_08/README.md`. Not pushed.
+
+## 2026-11-09: step digits centred; slide 18 logo, icons and card
+
+- Live deck re-read first: no owner edits to mirror. Step numbers on slides 16 and 19 now use an empty circle with a separate centred text frame; digits measured within 0.5 pt of the circle centre at 400 dpi.
+- Slide 18: Kiva logo on the Who lines that name Kiva, row icons, independence footer, and an "Instead" list in the framing card. PROVENANCE.md updated.
+- Verified: pyflakes, deck QA, zoomed render, full offline pytest. Slides 16, 18 and 19 only were rebuilt; nothing pushed.

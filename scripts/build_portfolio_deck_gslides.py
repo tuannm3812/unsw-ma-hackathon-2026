@@ -215,6 +215,11 @@ class Page:
         """A legend mark centred on the x-height of a label whose text box top is at y."""
         return self.rect(x, y + LEGEND_MID * size / 8 - h / 2, w, h, fill, shape)
 
+    def step(self, label, x, y, size, fill, ink):
+        """A numbered step circle; an empty shape plus a compensated text frame keeps the digit centred."""
+        self.rect(x, y, size, size, fill, 'ELLIPSE')
+        return self.text(str(label), x, y, size, size, size=9, color=ink, bold=True, align='center', middle=True)
+
     def legend(self, items, y, x, span=None, gap=20, size=8):
         """Swatches centred on their labels' x-height, evenly spaced, optionally centred within span.
 
@@ -1368,7 +1373,7 @@ def solution(page, slide, pos):
     for i, step in enumerate(slide['steps']):
         x = L + i * (SOLUTION_W + SOLUTION_GAP)
         card(page, x, top, SOLUTION_W, h, fills[i][0])
-        page.badge(step['n'], x + 12, top + 14, (STEP_BADGE, STEP_BADGE), *fills[i], 9)
+        page.step(step['n'], x + 12, top + 14, STEP_BADGE, *fills[i])
         page.text(step['name'], x + 12, top + 48, SOLUTION_W - 44, 16, size=12, bold=True)
         page.marker(i + 1, x + SOLUTION_W - 22, top + 50)
         page.text('What', x + 12, top + 72, 120, 12, size=8, color=GREY, bold=True)
@@ -1409,7 +1414,7 @@ def gates(page, slide, pos):
     for i, step in enumerate(slide['steps']):
         x = L + i * (SOLUTION_W + SOLUTION_GAP)
         card(page, x, top, SOLUTION_W, h, fills[i][0])
-        page.badge(step['n'], x + 11, top + 10, (STEP_BADGE, STEP_BADGE), *fills[i], 9)
+        page.step(step['n'], x + 11, top + 10, STEP_BADGE, *fills[i])
         page.text(step['name'], x + 38, top + 9, SOLUTION_W - 66, 22, size=10.5, bold=True, middle=True)
         page.marker(i + 1, x + SOLUTION_W - 22, top + 36)
         rows = [('Question', step['question'], 38, True), ('Do', step['do'], 80, False), ('Done when', step['done'], 134, False)]
@@ -1441,7 +1446,7 @@ def gates(page, slide, pos):
             cx, cy = x + step_w + gap / 2, base - heights[i + 1] + 11
             page.line(cx, cy + STEP_BADGE / 2, cx, stop_y, SLATE, .75)
             page.ops[-1]['dash_style'] = 'DASH'
-            page.badge(str(i + 1), cx - STEP_BADGE / 2, cy - STEP_BADGE / 2, (STEP_BADGE, STEP_BADGE), *fills[i], 9)
+            page.step(i + 1, cx - STEP_BADGE / 2, cy - STEP_BADGE / 2, STEP_BADGE, *fills[i])
     first, last = L + step_w + gap / 2, L + 3 * step_w + 2.5 * gap
     page.line(first, stop_y, last, stop_y, SLATE, .75)
     page.ops[-1]['dash_style'] = 'DASH'
@@ -1524,8 +1529,8 @@ def problem(page, slide, pos):
 INSIGHT_CARDS = [(L + i * 245, TOP, 233, 236) for i in range(3)]
 INSIGHT_PHOTO = (L + 735, TOP, FULL - L - 735, 236)
 PROBLEM_PHOTO = (L + 392, TOP + 20 + 168 + 36, R - 6 - L - 392, 92)
-PRIORITISE_PHOTO = (L + 400, TOP + 178, 98, 124)
-PRIORITISE_PHOTO2 = (L + 508.5, TOP + 178, 98, 124)
+PRIORITISE_PHOTO = (L + 400, TOP + 178, 98, 112)
+PRIORITISE_PHOTO2 = (L + 508.5, TOP + 178, 98, 112)
 
 
 INSIGHT_ROWS = [(L, TOP + k * 106, 440, 100) for k in range(3)]
@@ -1642,7 +1647,7 @@ def triage(page, slide, pos):
     page.takeaways(slide['takeaways'], pos)
 
 
-LEVER_BOXES = [(L + (k % 2) * 195, TOP + (k // 2) * 156, 185, 146) for k in range(4)]
+LEVER_BOXES = [(L + (k % 2) * 195, TOP + (k // 2) * 150, 185, 140) for k in range(4)]
 
 
 def prioritise(page, slide, pos):
@@ -1652,22 +1657,41 @@ def prioritise(page, slide, pos):
         card(page, x, y, w, h, NAVY)
         page.text(lever['name'], x + 36, y + 12, w - 50, 16, size=12, bold=True)
         page.text(lever['text'], x + 12, y + 38, w - 24, 44, size=10, color=GREY, spacing=105)
-        for r, (label, value) in enumerate((('Who', lever['who']), ('Watch for', lever['watch']))):
-            text = f'{label}: {value}'
-            page.text(text, x + 12, y + 96 + r * 18, w - 24, 14, size=9, color=GREY, spans=[(0, len(label) + 1, {'bold': True, 'color': NAVY})])
+        who_y, watch_y = y + 92, y + 112
+        EXTRA_IMAGES.append(('prioritise', ASSETS / 'icons/groups-navy.png', (x + 12, who_y - .5, 12, 12)))
+        EXTRA_IMAGES.append(('prioritise', ASSETS / 'icons/visibility-navy.png', (x + 12, watch_y - .5, 12, 12)))
+        if lever.get('who_logo'):  # logo file unaltered: its transparent margin is the brand's clear space
+            page.text('Who:', x + 28, who_y, 30, 14, size=9, bold=True)
+            scale = 9 / 409
+            ink_x, ink_y = x + 28 + label_width('Who:', 9) + 5, who_y + 1
+            EXTRA_IMAGES.append(('prioritise', ASSETS / 'logos/kiva-logo-classic.png',
+                                 (ink_x - 201 * scale, ink_y - 201 * scale, 1365 * scale, 811 * scale)))
+            if lever['who_after']:
+                page.text(lever['who_after'], ink_x + 963 * scale + 5, who_y, 80, 14, size=9, color=GREY)
+        else:
+            text = f"Who: {lever['who']}"
+            page.text(text, x + 28, who_y, w - 40, 14, size=9, color=GREY, spans=[(0, 4, {'bold': True, 'color': NAVY})])
+        text = f"Watch: {lever['watch']}"
+        page.text(text, x + 28, watch_y, w - 40, 14, size=9, color=GREY, spans=[(0, 6, {'bold': True, 'color': NAVY})])
     page.marker(1, L + 185 - 22, TOP + 12)
-    page.marker(2, L + 185 - 22, TOP + 112)
+    page.marker(2, L + 185 - 22, TOP + 110)
     dx, dw, dh = L + 400, R - (L + 400), 168
     dont = slide['dont']
     card(page, dx, TOP, dw, dh, VIOLET)
     page.text(dont['heading'], dx + 12, TOP + 14, dw - 44, 34, size=12, color=VIOLET, bold=True, spacing=105)
-    page.text(dont['text'], dx + 12, TOP + 44, dw - 24, 100, size=10, color=GREY, spacing=110)
+    page.text(dont['text'], dx + 12, TOP + 42, dw - 24, 44, size=10, color=GREY, spacing=105)
+    page.text(dont['instead_title'], dx + 12, TOP + 92, 80, 12, size=8, color=GREY, bold=True)
+    for k, item in enumerate(dont['instead']):
+        ry = TOP + 106 + k * 19
+        EXTRA_IMAGES.append(('prioritise', ASSETS / 'icons/check_circle-navy.png', (dx + 12, ry, 13, 13)))
+        page.text(item, dx + 30, ry, dw - 42, 13, size=9.5, color=NAVY, middle=True)
     page.marker(4, dx + dw - 22, TOP + 14)
-    sy = TOP + 312
+    sy = TOP + 300
     page.rect(L, sy, R - L, 24, PAPER)
     page.rect(L, sy, 4, 24, YELLOW)
     page.text(slide['note'], L + 14, sy, R - L - 50, 24, size=10, bold=True, middle=True, spans=[(0, len('Scope:'), {'bold': True})])
     page.marker(3, R - 22, sy + 6)
+    page.text(slide['footer'], L, sy + 30, R - L, 12, size=8, color=SLATE)
     page.takeaways(slide['takeaways'], pos)
 
 

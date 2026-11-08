@@ -19,7 +19,9 @@ ICONS = {'payments': ['violet', 'navy'], 'storefront': ['violet', 'navy'], 'grou
          # slide 16 who row
          'desktop_windows': ['navy'], 'handshake': ['navy'], 'manage_search': ['navy'], 'post_add': ['navy'], 'hourglass_top': ['navy'],
          # slide 19 card rows
-         'help': ['navy'], 'build': ['navy'], 'task_alt': ['navy']}
+         'help': ['navy'], 'build': ['navy'], 'task_alt': ['navy'],
+         # slide 18 lever rows
+         'visibility': ['navy']}
 COLOURS = {'violet': '#5B4B8A', 'navy': '#1C2333', 'slate': '#46576C', 'white': '#FFFFFF'}
 FONT = ('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD'
         '@24,400,0,0')
