@@ -2642,3 +2642,10 @@ unseen exact template, which cannot exclude near-duplicates.
   - The interval values, t(1) and heuristic p-values moved to the speaker notes.
   - New numbers come from `src/region_context.py` (tested in `tests/test_region_context.py`) into `reports/evidence_sources/region_context.json`, and are added to the register. Concepts considered: a world-map inset (dropped: slide 8 already has the map) and a single comparison chart of all six regions (dropped: only these two regions have saved slopes in the primary run).
   - QA reports no automated problems; full suite 201 passed; previews, PDF and preview page refreshed; not pushed.
+- **2026-11-08, regional slide moved to the appendix (Mike approved "yes delete slide 10"):** no new owner edits before the change.
+  - Slide 10 was deleted from the live deck. Its redesign now fills appendix A1, replacing the old A1 table, whose exact intervals and heuristic p-values stay in the speaker notes.
+  - Slide 8's "Few countries dominate" takeaway adds that regional patterns rest on two countries each, so there are no regional writing rules yet. Slide 13's "Not established" line adds the same reason.
+  - Main order: 1 cover, 2 summary, 3 agenda, 4–6 problem, 7 approach, 8–12 evidence (country uncertainty, small framings, programme controls, forecast gain, limits of the gain), 13–14 next steps, 15 close, A1–A4.
+  - Renumbering: the agenda chips, slide 7 and gate link chips, storyline numbers and links, and figures (6–8) were all updated, and the register now cites appendix A1.
+  - Builder fixes from the move: the cross-slide lookups now use stable slide ids (`slide_by_id`), and the close and gate image indices moved to 14 and 13. An intermediate rebuild had put the close photo on A1 before the index fix; rebuilding A1 removed it (the close slide has 1 image, A1 has 0).
+  - QA reports no automated problems; full suite passes; previews, PDF and preview page refreshed; not pushed.

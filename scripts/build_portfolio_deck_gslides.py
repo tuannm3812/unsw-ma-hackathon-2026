@@ -309,7 +309,7 @@ def waffle_mini(page, x, y, w, slide):
 
 def bound_mini(page, x, y, w, slide):
     """Five bounded framings and urgency against the ±0.05 band; values from the equivalence test."""
-    rows = {r['term']: r for r in [s for s in slide_data()['9']['exhibit']['rows']]}
+    rows = {r['term']: r for r in [s for s in slide_by_id('equivalence')['exhibit']['rows']]}
     lo, hi = -.15, .15
     px = lambda value: x + (value - lo) * w / (hi - lo)
     page.rect(px(-.05), y - 2, px(.05) - px(-.05), 76, TINT)
@@ -324,7 +324,7 @@ def bound_mini(page, x, y, w, slide):
 
 def gain_mini(page, x, y, w, slide):
     """Linear MAE gain by year, bars from zero with direct labels."""
-    years = [row[:2] for row in slide_data()['13']['exhibit']['series'][0]['rows']]
+    years = [row[:2] for row in slide_by_id('gain_uncertainty')['exhibit']['series'][0]['rows']]
     bar, step, base, per = 30, 54, y + 62, 120
     for i, (year, gain) in enumerate(years):
         bx = x + 2 + i * step
@@ -338,14 +338,19 @@ def slide_data():
     return {str(s['n']): s for s in json.loads((DECK / 'storyline.json').read_text())['slides']}
 
 
+def slide_by_id(slide_id: str) -> dict:
+    """Storyline slide by its stable id, so renumbering never breaks cross-slide lookups."""
+    return next(s for s in slide_data().values() if s['id'] == slide_id)
+
+
 def agenda(page, slide, urls):
     page.chrome(slide)
     colours = [(NAVY, WHITE), (VIOLET, WHITE), (SLATE, WHITE), (YELLOW, NAVY)]
     contents = [[('Editable fields', 4), ('The outcome', 5), ('A slower market', 6)],
                 [('Four analyses', 7)],
-                [('Country uncertainty', 8), ('Small or unknown', 9), ('Regional patterns', 10),
-                 ('Programme controls', 11), ('Forecast gain', 12), ('Limits of the gain', 13)],
-                [('What is supported', 14), ('Three gates', 15)]]
+                [('Country uncertainty', 8), ('Small or unknown', 9), ('Programme controls', 10),
+                 ('Forecast gain', 11), ('Limits of the gain', 12)],
+                [('What is supported', 13), ('Three gates', 14)]]
     for i, part in enumerate(slide['parts']):
         x = [43.5, 267.5, 491.5, 715.5][i]
         fill, ink = colours[i]
@@ -581,7 +586,7 @@ def preview_table(page, x, y, w, h, slide):
 
 def preview_bound(page, x, y, w, h, slide):
     """Mini of the bound chart: five short intervals inside the band, urgency running out of it."""
-    rows = {r['term']: r for r in slide_data()['9']['exhibit']['rows']}
+    rows = {r['term']: r for r in slide_by_id('equivalence')['exhibit']['rows']}
     lo, hi = -.15, .15
     px = lambda v: x + (v - lo) * w * .8 / (hi - lo)
     page.rect(px(-.05), y, px(.05) - px(-.05), 46, '#FFF0A8')
@@ -593,7 +598,7 @@ def preview_bound(page, x, y, w, h, slide):
 
 def preview_bars(page, x, y, w, h, slide):
     """Mini of the five annual linear gains, bars from zero."""
-    gains = [row[1] for row in slide_data()['13']['exhibit']['series'][0]['rows']]
+    gains = [row[1] for row in slide_by_id('gain_uncertainty')['exhibit']['series'][0]['rows']]
     for i, gain in enumerate(gains):
         height = gain * 110
         page.rect(x + i * 26, y + 46 - height, 18, height, NAVY)
@@ -900,7 +905,7 @@ def regions(page, slide, pos):
         for d in range(item['countries']):
             page.rect(x + 90 + 7 * d, y + 2.6, 5, 5, colour, 'ELLIPSE')
         page.text(str(item['countries']), x + 90 + 7 * item['countries'] + 3, y, 24, 12, size=8, color=colour, bold=True)
-    page.caption('Figure 6.', ex['caption'], sy + 14 + 33 + 8)
+    page.caption(ex.get('figure', 'Figure A1.'), ex['caption'], sy + 14 + 33 + 8)
     page.caption('¹', ex['note_sup'], sy + 14 + 33 + 21)
     page.takeaways(slide['takeaways'], pos)
 
@@ -909,7 +914,7 @@ def persist(page, slide, pos):
     page.chrome(slide)
     exhibit = slide['exhibit']
     table(page, exhibit['columns'], exhibit['rows'], L, TOP, R - L - 6, 40)
-    page.caption('Figure 7.', exhibit['note'], TOP + 120 + 8)
+    page.caption('Figure 6.', exhibit['note'], TOP + 120 + 8)
     first, second = slide['key_figures']
     key_card(page, first, L, 286, 296, 110, VIOLET, 24)
     key_card(page, second, 353.5, 286, 296.5, 110, NAVY, 24)
@@ -945,7 +950,7 @@ def forecast(page, slide, pos):
     page.marker(1, 498 + 152 - 22, TOP + 10)
     page.marker(2, 290, legend_y + 1)
     page.marker(3, 452, 215)
-    page.caption('Figure 8.', 'Linear-model MAE in days on identical evaluation rows; lower is better.', 450)
+    page.caption('Figure 7.', 'Linear-model MAE in days on identical evaluation rows; lower is better.', 450)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -972,7 +977,7 @@ def gains(page, slide, pos):
     page.marker(1, L + 310 + 270, TOP + 3)
     page.marker(3, L + 31, top + 4 * pitch + 7)
     axis = top + 5 * pitch - 10 + 12
-    page.caption('Figure 9.', 'Annual MAE gain in days with month-resampled 95% intervals; positive is better.', axis + 8)
+    page.caption('Figure 8.', 'Annual MAE gain in days with month-resampled 95% intervals; positive is better.', axis + 8)
     page.marker(2, L, axis + 22)
     page.caption('¹', 'Country resampling, not shown: intervals include zero in 4 of 5 linear and 3 of 5 tree years.',
                  axis + 22, x=L + 18)
@@ -1237,9 +1242,9 @@ def main() -> None:
     urls = {i + 1: f'https://docs.google.com/presentation/d/{pres}/edit#slide=id.{s["objectId"]}'
             for i, s in enumerate(slides)}
     builders = {'summary': summary, 'lever': lever, 'outcome': outcome, 'slowdown': slowdown,
-                'clustering': clustering, 'equivalence': forest, 'regions': regions, 'persist': persist,
+                'clustering': clustering, 'equivalence': forest, 'regions': regions, 'a_screen': regions, 'persist': persist,
                 'forecast': forecast, 'gain_uncertainty': gains}
-    plain = {'approach': approach, 'supports': supports, 'gates': gates, 'a_screen': a_table,
+    plain = {'approach': approach, 'supports': supports, 'gates': gates,
              'a_asof': a_table, 'a_primary': a_metrics, 'a_topics': a_topics, 'cover': cover, 'close': close}
     for index, (slide, item) in enumerate(zip(story, slides)):
         if only is not None and index not in only:
@@ -1266,7 +1271,7 @@ def main() -> None:
     # Images last so they sit above the accent blocks.
     with tempfile.TemporaryDirectory() as work:
         images = [(0, framed_photo(Path(work), PHOTO, COVER_FRAME, 'cover.png'), COVER_FRAME),
-                  (15, framed_photo(Path(work), MARKET, CLOSE_FRAME, 'close.png'), CLOSE_FRAME)]
+                  (14, framed_photo(Path(work), MARKET, CLOSE_FRAME, 'close.png'), CLOSE_FRAME)]
         images += [(0, framed_photo(Path(work), path, frame, f'small-{i}.png', all_corners=True), frame)
                    for i, (path, frame) in enumerate(COVER_SMALL)]
         # Logo: UNSW host mark on white, 330 x 140 px source at its own proportions.
@@ -1274,7 +1279,7 @@ def main() -> None:
         images.append((3, framed_photo(Path(work), MARKET, LEVER_PHOTO, 'lever.png', all_corners=True), LEVER_PHOTO))
         images.append((3, ASSETS / 'icons/table_rows-slate.png', (L + 202, TOP + 14, 18, 18)))
         images.append((3, ASSETS / 'icons/description-violet.png', (L + 202, TOP + 124, 18, 18)))
-        for i, step in enumerate(slide_data()['7']['exhibit']['steps']):
+        for i, step in enumerate(slide_by_id('approach')['exhibit']['steps']):
             x = pipe_x(i)
             images.append((6, ASSETS / 'icons' / step['icon'], (x + 8, 172 + 5, 20, 20)))
         images.append((6, ASSETS / 'icons/table_rows-navy.png', (L + 14, TOP + 5, 18, 18)))
@@ -1284,7 +1289,7 @@ def main() -> None:
         images.append((4, ASSETS / 'icons/check_circle-navy.png', (356 + 12, 284 + 31, 18, 18)))
         images.append((4, ASSETS / 'icons/block-slate.png', (356 + 12, 284 + 74, 18, 18)))
         for x, icon in zip(GATE_X, GATE_ICONS):
-            images.append((14, ASSETS / 'icons' / icon, (x + 262 - 72, 136 + 18, 20, 20)))
+            images.append((13, ASSETS / 'icons' / icon, (x + 262 - 72, 136 + 18, 20, 20)))
         for icon, (x, y, _, _) in zip(SUMMARY_ICONS, SUMMARY_CARDS):
             images.append((1, ASSETS / 'icons' / icon, (x + 16, y + 14, 22, 22)))
         for icon, x in zip(STEP_ICONS, STEP_X):

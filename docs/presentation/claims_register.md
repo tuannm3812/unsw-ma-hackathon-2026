@@ -50,9 +50,9 @@ benchmark. **Equivalence** = exploratory screen of October coefficients (2026-11
 | Middle East family slope | −0.0729, 2 countries, 14,946 loans, heuristic interval [−0.2502, 0.1043] | `docs/2_evidence_and_corrections.md` | August |
 | Central America family slope | −0.0742, 2 countries, 59,391 loans, heuristic interval [−0.1629, 0.0145] | same | August |
 | Regional clustered normal intervals and heuristic p | Middle East [−0.1003, −0.0456], p 0.1203; Central America [−0.0879, −0.0605], p 0.0597 | same | August |
-| Family slopes as % of (1 + days) (slide 10) | Middle East −7.03% ("about 7% faster"); Central America −7.15% | `reports/evidence_sources/region_context.json` (`src/region_context.py`) | August, derived |
-| Countries per Kiva region (slide 10) | Africa 27; Asia 12; Oceania 4; Central America 2; Middle East 2; North America 1 | same | Descriptive |
-| Country mix of the two-country regions (slide 10) | Middle East: Palestine 14,500 (97.0%), Yemen 446 (3.0%); Central America: Nicaragua 38,520 (64.9%), Honduras 20,871 (35.1%) | same | Descriptive |
+| Family slopes as % of (1 + days) (appendix A1) | Middle East −7.03% ("about 7% faster"); Central America −7.15% | `reports/evidence_sources/region_context.json` (`src/region_context.py`) | August, derived |
+| Countries per Kiva region (appendix A1) | Africa 27; Asia 12; Oceania 4; Central America 2; Middle East 2; North America 1 | same | Descriptive |
+| Country mix of the two-country regions (appendix A1) | Middle East: Palestine 14,500 (97.0%), Yemen 446 (3.0%); Central America: Nicaragua 38,520 (64.9%), Honduras 20,871 (35.1%) | same | Descriptive |
 | Urgency under HC3 | p < 0.001, printed as 0.0000; clustered duration p rounded to 0.49 | `association_summary.txt` | August |
 | Third-person framing, duration | −0.009008 → −0.008088 with programme controls; BH p 0.01236 → 0.06062 | `reports/expanded_feature_sensitivity_reviewed/README.md` | October |
 | Business framing, 24-hour, programme-adjusted | −0.258 pp per mention per 100 words, BH p 0.00635 | same | October |
