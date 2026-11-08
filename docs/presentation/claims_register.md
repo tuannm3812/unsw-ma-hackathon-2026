@@ -179,6 +179,17 @@ Chosen after results were known. `reports/evidence_sources/README.md`; `reports/
 | Described rows with unseen exact template | at least 99.2% each year (96.0% of all rows in 2021) | November extension |
 | Leave-one-country-out gain | positive in every year; lowest 0.155 days | November extension |
 
+## Text methods
+
+| Claim | Value | Source | Layer |
+| --- | --- | --- | --- |
+| Framing word lists: entries per measure (an entry is one alternative; some include word forms) | family 11; basic needs 13; business 13; agency 11; gratitude 4; urgency 11; first person 8; third person 10 ("4–13 entries"); rates per 100 words; theory-guided, not yet validated | `reports/evidence_sources/text_methods.json` (`src/text_methods.py`), `src/features.py` | Method |
+| Sentiment | VADER compound score, rule-based lexicon, −1 to 1 | same | Method |
+| TF-IDF word patterns | words and two-word phrases; up to 5,000 features; in at least 5 training loans; sublinear term frequency; fitted on training rows only | same, `src/benchmark_models.py` | Method |
+| Compressed text features, larger boosted tree | truncated SVD of TF-IDF, 64 components, fitted on training rows only | same, `src/strong_forecaster.py` | Method |
+| Exploratory topic model | NMF on TF-IDF; eight themes; up to 1,000 features; 20,000-loan sample | same, `notebooks/1_full_dataset_eda.py` | Method, exploratory |
+| Language models | none used: no large language model and no pretrained embeddings | `src/` and `notebooks/` reviewed 2026-11-08 | Method |
+
 ## Exploratory topics
 
 | Claim | Value | Source | Layer |

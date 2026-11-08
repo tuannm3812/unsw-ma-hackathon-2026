@@ -452,7 +452,6 @@ def lever(page, slide, pos):
     x, y, w, h = L, TOP, R - 16 - L, 316
     page.rect(x, y, w, h, PAPER)
     page.rect(x, y, w, 2.5, YELLOW)
-    page.caption(slide['figure'], ex['caption'], y + h + 8, w=w)
     rx, rw = x + 154, w - 166
     page.text('FIXED AT LISTING', rx + 24, y + 12, 200, 14, size=10, color=SLATE, bold=True)
     cw = rw / 3
@@ -493,6 +492,7 @@ def lever(page, slide, pos):
         EXTRA_IMAGES.append(('lever', ASSETS / 'icons' / item['icon'], (cx + 2, cy + 1.5, 14, 14)))
         if item['id'] == 'urgency':
             page.marker(3, cx + cell - 22, cy + 2)
+    page.caption(slide['figure'], ex['caption'], y + h + 8, w=w)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -1031,8 +1031,9 @@ def forest(page, slide, pos):
     page.text('Slower funding', px(0) + 6, ay, 60, 12, size=8, color=SLATE, bold=True)
     page.line(px(0) + 70, ay + 5.1, px(0) + 98, ay + 5.1, SLATE, .75)
     page.ops[-1]['end_arrow'] = 'FILL_ARROW'
-    # Legend under the plot, aligned with its left edge; the bands are labelled by the axis itself.
-    ly, lx = ay + 15, px(-.10)  # the plot's visible left edge: the −10% band edge and tick
+    # Axis title, then the legend to its right; the bands are labelled by the axis itself.
+    ly, lx = ay + 15, px(0) + 60
+    page.text('Change in funding time, %', px(0) - 55, ly, 110, 12, size=8, color=GREY, align='center')
     page.line(lx, ly + 5.1, lx + 20, ly + 5.1, NAVY, 2)
     page.rect(lx + 6.5, ly + 1.6, 7, 7, NAVY, "ELLIPSE")
     page.text('Estimate, 90% range', lx + 24, ly, 90, 12, size=8, color=GREY)
@@ -1650,7 +1651,7 @@ def a_table(page, slide):
     page.chrome(slide)
     exhibit = slide['exhibit']
     row = 40 if len(exhibit['rows']) < 3 else 42
-    table(page, exhibit['columns'], exhibit['rows'], L, TOP, FULL - L, row)
+    table(page, exhibit['columns'], exhibit['rows'], L, TOP, FULL - L, row, exhibit.get('font', 10))
     y = TOP + row * (len(exhibit['rows']) + 1) + 8
     page.caption(exhibit['figure'], exhibit['caption'], y, w=FULL - L)
     if slide.get('note'):
@@ -1853,7 +1854,7 @@ def main() -> None:
                 'persist': persist, 'forecast': forecast, 'gain_uncertainty': gains, 'approach': approach}
     linked = {'agenda': agenda}
     plain = {'gates': gates, 'solution': gates, 'supports': supports, 'prioritise': prioritise, 'triage': triage, 'roadmap': roadmap,
-             'a_asof': a_table, 'a_primary': a_metrics, 'a_topics': a_topics, 'cover': cover, 'close': close}
+             'a_asof': a_table, 'a_text_methods': a_table, 'a_primary': a_metrics, 'a_topics': a_topics, 'cover': cover, 'close': close}
     for index, (slide, item) in enumerate(zip(story, slides)):
         if only is not None and index not in only:
             continue

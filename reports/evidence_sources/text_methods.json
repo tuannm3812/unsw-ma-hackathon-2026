@@ -1,0 +1,31 @@
+{
+  "word_list_entries": {
+    "family": 11,
+    "basic_needs": 13,
+    "business": 13,
+    "agency": 11,
+    "gratitude": 4,
+    "urgency": 11,
+    "first_person": 8,
+    "third_person": 10
+  },
+  "sentiment": "VADER compound score (NLTK, vendored lexicon)",
+  "tfidf": {
+    "max_features": 5000,
+    "min_df": 5,
+    "ngram_range": [
+      1,
+      2
+    ],
+    "sublinear_tf": true
+  },
+  "compressed_components": 64,
+  "topics": {
+    "method": "NMF on TF-IDF",
+    "themes": 8,
+    "max_features": 1000,
+    "min_df": 5,
+    "sample": 20000,
+    "status": "exploratory; sample only"
+  }
+}

@@ -1003,7 +1003,7 @@
             "thankful"
           ]
         },
-        "caption": "Illustrative composite listing, not a real borrower; values are dataset medians and most common categories.",
+        "caption": "Illustrative composite listing, not a real borrower; dataset medians and most common categories. Word lists are not yet validated (gate 1).",
         "key": [
           {
             "id": "family",
@@ -1089,7 +1089,7 @@
         {
           "marker": 2,
           "heading": "We score eight framing measures",
-          "text": "**Eight framing rates per 100 words**, plus sentiment and text form."
+          "text": "Counted with **word lists per 100 words**, plus VADER sentiment and text form."
         },
         {
           "marker": 3,
@@ -1104,7 +1104,7 @@
       ],
       "notes": {
         "purpose": "Show what we measure in each loan.",
-        "script": "This is an illustrative composite listing, not a real borrower, built from the dataset medians: a US$325 loan over 12 months in agriculture. Most of the listing is fixed. The description is the part a field partner writes, and we score it on eight framing rates per 100 words, family, business, basic needs, agency, gratitude, urgency, first person and third person, plus sentiment and text form. Each card shows a plain definition, one example word from its word list and how many descriptions use it at least once. Third-person wording mostly reflects who writes the description, so we treat it as context rather than a lever. The next slides test whether these measures move funding time.",
+        "script": "This is an illustrative composite listing, not a real borrower, built from the dataset medians: a US$325 loan over 12 months in agriculture. Most of the listing is fixed. The description is the part a field partner writes, and we score it on eight framing rates per 100 words, family, business, basic needs, agency, gratitude, urgency, first person and third person, plus sentiment and text form. We remove HTML, measure form, count word lists per 100 words and score tone with VADER; the forecasts also use TF-IDF word patterns. The word lists are theory-guided and not yet validated, which is the first gate before any writing advice. Each card shows a plain definition, one example word from its word list and how many descriptions use it at least once. Third-person wording mostly reflects who writes the description, so we treat it as context rather than a lever. The next slides test whether these measures move funding time.",
         "reference": "src/features.py lexicons; slide values: claims register (illustrative listing values). Photo: Tunde Buremo on Unsplash (Unsplash Licence)."
       },
       "sublabel": "What we read in each loan",
@@ -1607,7 +1607,7 @@
         ],
         "t4_tag": "All five hold under t(4) and a wild cluster bootstrap",
         "rarity_header": "Records with no mention",
-        "caption": "Change in funding time per extra mention per 100 words, expanded model, 1,453,840 loans.",
+        "caption": "Change in funding time per extra mention per 100 words (sentiment: per +0.5 score), expanded model, 1,453,840 loans.",
         "note_sup": "Within ±5% of funding time: ±0.05 on log(1 + days), BH-adjusted; bound set after the estimates."
       },
       "takeaways": [
@@ -1624,7 +1624,7 @@
         {
           "marker": 3,
           "heading": "Urgency is too rare to judge",
-          "text": "Under **2% of descriptions** use urgency or first person; their ranges still allow **6–14%** either way."
+          "text": "Under **2% of descriptions** use urgency or first person; their ranges still reach **6–14%**."
         },
         {
           "marker": 4,
@@ -1634,7 +1634,7 @@
       ],
       "notes": {
         "purpose": "Separate 'small' from 'unknown'.",
-        "script": "Answer first: five of the nine framings have small links to funding time; urgency and first person remain unknown. How to read the chart: each dot is the estimated change in funding time per extra mention per 100 words, and its line is the 90 percent range. Left of the centre line means faster funding, right means slower. The darker yellow area is within plus or minus five percent of funding time, which we treat as too small to matter; the lighter area runs from five to ten percent. A line that sits wholly inside the darker area means the link is small. [Point: Five framings have small links] Family, business, basic needs, agency and third person sit inside it in both model versions: the expanded model shown here and the programme-adjusted model. Gratitude and sentiment are small only in the programme-adjusted model. [Point: Small means under five hours] Five percent sounds abstract: on a typical loan, which takes 2.85 days to fund, it is about four and a half to four point seven hours. [Point: Urgency is too rare to judge] Urgency and first person appear in under two percent of descriptions, as the right-hand bars show, so their ranges stay wide: up to six to fourteen percent faster or slower. That is not evidence of an effect, or of none. [Point: The verdicts hold under stricter tests] Technically, the band is plus or minus 0.05 on log of one plus days, tested with two one-sided tests, BH-adjusted across nine terms, using a t reference with 47 degrees of freedom. With a stricter t(4) reference all five verdicts hold, and family, agency and third person stay small even at plus or minus two percent. We set the band after seeing the estimates, so this is exploratory. A wild cluster bootstrap across 48 countries, with 9,999 draws, confirms the screen: 35 of 36 verdicts are unchanged and 22 of 23 bounded results survive; the one loss is basic needs for same-day funding in the programme-adjusted model.",
+        "script": "Answer first: five of the nine framings have small links to funding time; urgency and first person remain unknown. How to read the chart: each dot is the estimated change in funding time per extra mention per 100 words, or per half a point of sentiment score, and its line is the 90 percent range. Left of the centre line means faster funding, right means slower. The darker yellow area is within plus or minus five percent of funding time, which we treat as too small to matter; the lighter area runs from five to ten percent. A line that sits wholly inside the darker area means the link is small. [Point: Five framings have small links] Family, business, basic needs, agency and third person sit inside it in both model versions: the expanded model shown here and the programme-adjusted model. Gratitude and sentiment are small only in the programme-adjusted model. [Point: Small means under five hours] Five percent sounds abstract: on a typical loan, which takes 2.85 days to fund, it is about four and a half to four point seven hours. [Point: Urgency is too rare to judge] Urgency and first person appear in under two percent of descriptions, as the right-hand bars show, so their ranges stay wide, reaching six to fourteen percent across the two models. That is not evidence of an effect, or of none. [Point: The verdicts hold under stricter tests] Technically, the band is plus or minus 0.05 on log of one plus days, tested with two one-sided tests, BH-adjusted across nine terms, using a t reference with 47 degrees of freedom. With a stricter t(4) reference all five verdicts hold, and family, agency and third person stay small even at plus or minus two percent. We set the band after seeing the estimates, so this is exploratory. A wild cluster bootstrap across 48 countries, with 9,999 draws, confirms the screen: 35 of 36 verdicts are unchanged and 22 of 23 bounded results survive; the one loss is basic needs for same-day funding in the programme-adjusted model.",
         "reference": "Equivalence test run 2026-11-08. reports/equivalence_screen_reviewed/README.md; src/equivalence.py. Bands, hours and no-mention shares: src/bound_ladder.py (reports/evidence_sources/bound_ladder.json), from equivalence_screen.csv and feature_distribution.json."
       },
       "sublabel": "Why not rewrite stories?",
@@ -1925,13 +1925,13 @@
           "Larger boosted tree, full text"
         ],
         "strip": "Text alone is 0.146–1.032 days worse than loan details alone",
-        "caption": "Annual MAE gain in days, identical evaluation rows. Linear bars come from the placebo refit, within 0.003 days of the benchmark."
+        "caption": "Annual MAE gain in days, identical rows; bars from the placebo refit, within 0.003 days of the benchmark. Text = form, word lists, VADER and TF-IDF."
       },
       "takeaways": [
         {
           "marker": 1,
           "heading": "A small gain on a simple model",
-          "text": "Text lowers a linear model’s error by **0.26–0.39 days**, about 7 hours at the median."
+          "text": "Text, mainly **TF-IDF word patterns**, lowers a linear model’s error by 0.26–0.39 days, about 7 hours."
         },
         {
           "marker": 2,
@@ -1951,7 +1951,7 @@
       ],
       "notes": {
         "purpose": "Keep text in proportion: a small, inconsistent forecast gain that does not drive triage.",
-        "script": "Answer first: text adds a small and inconsistent forecast gain. [Point: A small gain on a simple model] Added to loan details in a simple linear model, text lowered error by 0.26 to 0.39 days, about seven hours at the median. [Point: About half is context] To see how much is the loan's own words, we shuffled the text among loans in the same country, sector and month. The shuffled text keeps 42 to 61 percent of the gain, so about half is context, such as place and programme templates. The loan-specific part is 0.10 to 0.21 days. [Point: A stronger tree gains less] A larger boosted tree on loan details alone already beats the benchmark tree in four of five years, and adding text gains at most about 0.15 days, under 0.07 in four of five years, and slightly negative in 2024. So much of the linear gain looks like a weak baseline catching up. Same-day Brier scores improve in all five years, but by tiny amounts. [Point: It does not show rewriting helps] On its own, text forecasts worse than loan details by 0.146 to 1.032 days, and adding it barely changes the slow-funding flag, so the flag is built on loan details. None of this tests an edit to a description. The next slide shows how fragile the gain is.",
+        "script": "Answer first: text adds a small and inconsistent forecast gain. [Point: A small gain on a simple model] Added to loan details in a simple linear model, text lowered error by 0.26 to 0.39 days, about seven hours at the median. [Point: About half is context] To see how much is the loan's own words, we shuffled the text among loans in the same country, sector and month. The shuffled text keeps 42 to 61 percent of the gain, so about half is context, such as place and programme templates. The loan-specific part is 0.10 to 0.21 days. [Point: A stronger tree gains less] A larger boosted tree on loan details alone already beats the benchmark tree in four of five years, and adding text gains at most about 0.15 days, under 0.07 in four of five years, and slightly negative in 2024. So much of the linear gain looks like a weak baseline catching up. Same-day Brier scores improve in all five years, but by tiny amounts. [Point: It does not show rewriting helps] On its own, text forecasts worse than loan details by 0.146 to 1.032 days, and adding it barely changes the slow-funding flag, so the flag is built on loan details. None of this tests an edit to a description. Text here means description form, word-list counts, VADER sentiment and TF-IDF word patterns; the larger tree uses a compressed version of TF-IDF. The next slide shows how fragile the gain is.",
         "reference": "Benchmark gains: reports/evidence_sources/gain_intervals.json. Larger tree and placebo: reports/evidence_sources/forecast_experiments.json (src/forecast_experiments.py). Text alone: reports/gain_breakdown/gain_breakdown.json. Flag: reports/evidence_sources/triage_summary.json."
       },
       "solution_link": "→ Why we predict with loan details"
@@ -2074,7 +2074,7 @@
             "guide": "Violet: resampling countries. Slate: the same with extreme forecasts capped¹."
           }
         ],
-        "caption": "Annual MAE gain in days from adding text, identical evaluation rows.",
+        "caption": "Annual MAE gain in days from adding text, identical rows. Text = form, word-list counts, VADER sentiment and TF-IDF word patterns.",
         "note_sup": "Forecasts capped at the longest training wait (173.4 days); a diagnostic, not the reported model.",
         "large_tree": {
           "2021": {
@@ -2890,6 +2890,77 @@
       },
       "sublabel": "Forecast benchmark",
       "figure": "Figure A5."
+    },
+    {
+      "n": "A6",
+      "id": "a_text_methods",
+      "section": "Appendix",
+      "title": "Text became numbers through classical NLP, not a large language model",
+      "subtitle": "Every text feature in the deck, how it was built, and where its limits are",
+      "sublabel": "How we turned text into numbers",
+      "figure": "Figure A6.",
+      "exhibit": {
+        "type": "table",
+        "columns": [
+          "Technique",
+          "What it captures",
+          "Settings",
+          "Where used",
+          "Limit"
+        ],
+        "font": 9,
+        "rows": [
+          [
+            "Description form",
+            "Length and structure of the text",
+            "Characters, words, sentences, average word and sentence length",
+            "Explanatory models and forecasts",
+            "Says nothing about content"
+          ],
+          [
+            "Word-list counts",
+            "Eight framing measures, including first and third person",
+            "Theory-guided lists of 4–13 entries; rate per 100 words",
+            "Explanatory, robustness and equivalence; forecasts",
+            "Not yet validated (gate 1); counts words, not meaning"
+          ],
+          [
+            "VADER sentiment",
+            "Positive or negative tone",
+            "Rule-based lexicon; compound score from −1 to 1",
+            "Explanatory, robustness and equivalence; forecasts",
+            "General-purpose lexicon, not built for loan text"
+          ],
+          [
+            "TF-IDF word patterns",
+            "Distinctive words and two-word phrases",
+            "Up to 5,000 features, in at least 5 training loans; fitted on training years only",
+            "Linear forecast",
+            "May pick up place and programme templates"
+          ],
+          [
+            "Compressed text features",
+            "TF-IDF reduced for the boosted tree",
+            "Truncated SVD, 64 components; fitted on training years only",
+            "Larger boosted tree",
+            "Hard to interpret"
+          ],
+          [
+            "NMF topics",
+            "Eight story themes",
+            "TF-IDF up to 1,000 features; 20,000-loan sample",
+            "Appendix A4 only",
+            "Exploratory; sample only, not full-data evidence"
+          ]
+        ],
+        "figure": "Figure A6.",
+        "caption": "Methods as implemented in src/ and the exploratory notebook. No large language model or pretrained embeddings were used."
+      },
+      "notes": {
+        "purpose": "Show the text methods in one place.",
+        "script": "This table lists every text feature behind the deck. Description form, word-list counts and VADER sentiment are fixed rules, so nothing is learned from the outcome. TF-IDF and its compressed version are fitted on training years only. The eight framing word lists are theory-guided and not yet validated, which is why validating the measures is the first gate. The topic model is exploratory, on a 20,000-loan sample, and is not full-data evidence. We used classical NLP throughout, with no large language model or pretrained embeddings.",
+        "reference": "reports/evidence_sources/text_methods.json (src/text_methods.py); src/features.py; src/benchmark_models.py; src/strong_forecaster.py; notebooks/1_full_dataset_eda.py."
+      }
     }
   ]
 }

@@ -269,6 +269,7 @@ docs/presentation/research_refresh/.build/
 !reports/evidence_sources/triage_summary.json
 !reports/evidence_sources/robustness_summary.json
 !reports/evidence_sources/forecast_experiments.json
+!reports/evidence_sources/text_methods.json
 
 # Isolated map-rendering environment (geopandas), see scripts/build_country_map.py
 .venv-maps/

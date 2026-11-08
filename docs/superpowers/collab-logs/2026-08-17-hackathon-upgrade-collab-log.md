@@ -2902,3 +2902,11 @@ unseen exact template, which cannot exclude near-duplicates.
 - Slide 14 now splits the linear gain into context and loan-specific text, with the larger boosted tree as a dot. Slide 15 panel b uses the larger tree; the claim that the gain "needs word patterns" is dropped because a tree with full text also gains little. Slide 9's headline and A5's title and notes are rescoped.
 - The summary has no text-gain claim, and the slide 8, 16, 17 and 18 "text adds little to the flag" lines remain consistent, so those slides are unchanged.
 - Verified: pyflakes, deck QA, rendered slides 14, 15 and A5, full offline pytest. Slides 9, 14, 15 and A5 only were rebuilt; nothing pushed.
+
+## 2026-11-08: text methods named; slide 12 audited
+
+- Live deck re-read first: no owner edits to mirror.
+- `src/text_methods.py` (tested) inventories the word lists, VADER, TF-IDF, compressed features and NMF settings from the code; register section added. Methods are named lightly: slide 7 takeaway, slide 14 takeaway, captions on slides 14 and 15, and new appendix slide A6. A slide 7 pipeline strip was built and removed at Mike's request.
+- Slide 14 says text works "mainly" through TF-IDF, supported by the stage split; the placebo did not separate which text features carry the loan-specific part, so that stronger wording was not used.
+- Slide 12: chart kept. Added an axis title, the sentiment unit in the caption, and corrected "6–14% either way" to "reach 6–14%", because the ranges do not span both directions equally.
+- Verified: pyflakes, deck QA, rendered slides, full offline pytest. Nothing pushed.
