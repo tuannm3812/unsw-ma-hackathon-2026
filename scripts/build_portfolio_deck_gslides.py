@@ -1038,32 +1038,37 @@ def gains(page, slide, pos):
     page.takeaways(slide['takeaways'], pos)
 
 
-SUPPORT_ICONS = ['check_circle-navy.png', 'block-slate.png']
+VERDICT_FILLS = {'yes': NAVY, 'unclear': SLATE, 'not_yet': VIOLET}
 
 
 def supports(page, slide, urls):
-    """Two columns of claims, each with its evidence line and a link chip to the slide that shows it."""
+    """2x2 answer board: one block per part of the research question, then a strip into the gates."""
     page.chrome(slide)
-    width = 426
     positions = {str(s['n']): k + 1 for k, s in enumerate(slide_data().values())}
-    for i, column in enumerate(slide['columns']):
-        x = L + i * (width + 22.5)
-        fill = [NAVY, VIOLET][i]
-        page.rect(x, TOP, width, 330, PAPER)
-        page.badge(column['heading'], x, TOP, (width, 36), fill, WHITE, 12, 'RECTANGLE')
-        pitch = 294 / len(column['items'])
-        for j, item in enumerate(column['items']):
-            y = TOP + 36 + j * pitch
-            if j:
-                page.line(x + 14, y, x + width - 14, y, HAIR, .75)
-            top = y + pitch / 2 - 17
-            page.block(item['claim'], item['evidence'], x + 44, top, width - 120, 40, body_size=10, head_size=12)
-            cx = x + width - 14
-            for label in reversed(item['slides']):
-                cx -= 30
-                chip = page.badge(f'→{label}', cx, top + 2, (26, 16), fill, WHITE, 8, 'ROUND_RECTANGLE')
-                page.ops.append({'op': 'style-text', 'element': chip, 'start': 0, 'end': len(label) + 1,
-                                 'link': urls[positions[label]], 'color': WHITE, 'underline': False})
+    gap, bw, bh = 16, (FULL - L - 16) / 2, 136
+    for k, block in enumerate(slide['blocks']):
+        x, y = L + (k % 2) * (bw + gap), TOP + (k // 2) * (bh + gap)
+        fill = VERDICT_FILLS[block['tone']]
+        page.rect(x, y, bw, bh, PAPER)
+        page.rect(x, y, bw, 3, fill)
+        tag_w = 6.2 * len(block['verdict']) + 20
+        page.text(block['question'], x + 18, y + 16, bw - 54 - tag_w, 16, size=11, color=GREY, bold=True)
+        tag = page.badge(block['verdict'], x + bw - 18 - tag_w, y + 14, (tag_w, 20), fill, WHITE, 9, 'ROUND_RECTANGLE')
+        page.text(block['figure'], x + 18, y + 40, bw - 36, 44, size=32, bold=True)
+        page.text(block['evidence'], x + 18, y + 90, bw - 90, 34, size=11, color=GREY, spacing=110)
+        cx = x + bw - 18
+        for label in reversed(block['slides']):
+            cx -= 30
+            chip = page.badge(f'→{label}', cx, y + bh - 28, (26, 16), fill, WHITE, 8, 'ROUND_RECTANGLE')
+            page.ops.append({'op': 'style-text', 'element': chip, 'start': 0, 'end': len(label) + 1,
+                             'link': urls[positions[label]], 'color': WHITE, 'underline': False})
+    sy = TOP + 2 * bh + gap + 14
+    page.rect(L, sy, 2 * bw + gap, 30, PAPER)
+    page.rect(L, sy, 4, 30, YELLOW)
+    nxt = slide['next']
+    label = f"{nxt['text']}  →{nxt['slide']}"
+    page.text(label, L + 16, sy, 2 * bw + gap - 32, 30, size=11, bold=True, middle=True,
+              spans=[(len(nxt['text']) + 2, len(label), {'link': urls[positions[nxt['slide']]], 'color': VIOLET})])
 
 
 GATE_X = [L + i * 306 for i in range(3)]
@@ -1358,12 +1363,6 @@ def main() -> None:
         images.append((4, ASSETS / 'icons/block-slate.png', (356 + 12, 284 + 74, 18, 18)))
         for x, icon in zip(GATE_X, GATE_ICONS):
             images.append((13, ASSETS / 'icons' / icon, (x + 262 - 72, 136 + 18, 20, 20)))
-        support = slide_by_id('supports')
-        for i, column in enumerate(support['columns']):
-            pitch = 294 / len(column['items'])
-            for j, _ in enumerate(column['items']):
-                top = TOP + 36 + j * pitch + pitch / 2 - 17
-                images.append((12, ASSETS / 'icons' / SUPPORT_ICONS[i], (L + i * 448.5 + 14, top + 1, 20, 20)))
         for icon, (x, y, _, _) in zip(SUMMARY_ICONS, SUMMARY_CARDS):
             images.append((1, ASSETS / 'icons' / icon, (x + 16, y + 14, 22, 22)))
         for icon, x in zip(STEP_ICONS, STEP_X):

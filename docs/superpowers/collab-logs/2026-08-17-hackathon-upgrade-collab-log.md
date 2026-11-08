@@ -2681,3 +2681,11 @@ unseen exact template, which cannot exclude near-duplicates.
     - "The primary models hold up on later, completed loans"
     - "Story themes track loan purpose more than writing style"
   - QA reports no automated problems; previews, PDF and preview page refreshed; not pushed.
+- **2026-11-08, slide 13 as an answer board (Mike chose option A):** no new owner edits; slide 13 was rebuilt alone.
+  - New title: "Text helps forecasts a little; no writing advice is ready yet". The seven-claim list became a 2×2 board, one block per part of the research question. Each block has the question, a verdict tag in its colour (navy = yes, slate = small or unclear, violet = not yet), one big key number, one evidence line and small link chips:
+    - Which framings: Small, ±5%.
+    - For whom and when: No reliable difference yet, 2 countries. Its text names the period and loan-size result from the register; the block has id `for_whom` so the subgroup refits can update it.
+    - Forecasting: Yes, modestly, ≈ 7 hours.
+    - Writing advice: Not yet, 0 tested edits.
+  - A slim strip links to slide 14's gates. The moved items (96.4% reach the borrower before listing, unfunded loans) are in the speaker notes. The old icon placements for slide 13 were removed from the builder.
+  - QA reports no automated problems; previews, PDF and preview page refreshed; not pushed.
