@@ -431,22 +431,51 @@ def outcome(page, slide, pos):
 
 
 def slowdown(page, slide, pos):
+    """Yearly same-day share as bars from zero, with period bands and dashed period averages.
+
+    Native lines cannot be flipped through the CLI, so rising segments of a line chart would draw
+    backwards; bars avoid that and keep the zero baseline.
+    """
     page.chrome(slide)
-    base, per = 418, 5.4
-    bars = slide['exhibit']['bars']
-    centres = [150, 345, 540]
-    for bar, cx, fill in zip(bars, centres, [NAVY, SLATE, SLATE]):
-        h = bar['value'] * per
-        page.rect(cx - 62, base - h, 124, h, fill)
-        page.text(f"{bar['value']:.1f}%", cx - 62, base - h - 22, 124, 18, size=12, bold=True, align='center')
-        page.text(bar['label'], cx - 80, base + 6, 160, 16, size=10, bold=True, align='center')
-        page.text(f"{bar['n']:,} loans", cx - 80, base + 22, 160, 16, size=10, color=GREY, align='center')
-    page.line(L, base, R - 10, base, NAVY, 1)
-    page.marker(1, 540 + 70, base - bars[2]['value'] * per - 18)
-    page.marker(2, 150 + 70, base - bars[0]['value'] * per - 18)
-    page.marker(3, 345 + 70, base + 8)
-    page.caption('Figure 3.', 'Share of completed loans funded within 24 hours. Bars start at zero.', 464)
+    ex = slide['exhibit']
+    years = ex['years']
+    x0, x1, base, per, bar = 82, 616, 412, 4.6, 34  # 4.6 pt per percentage point, 0% at the baseline
+    step = (x1 - x0) / (len(years) - 1)
+    px = lambda i: x0 + i * step
+    py = lambda share: base - share * per
+    top = py(60)
+    for band in ex['periods']:
+        first, last = band['from'] - years[0]['year'], band['to'] - years[0]['year']
+        left, right = px(first) - step / 2, px(last) + step / 2
+        page.rect(left, top, right - left, base - top, band_fill(band['shade']))
+        page.text(band['label'], left + 6, top + 6, right - left - 12, 14, size=10, bold=True)
+        page.text(f"Average {band['average']:.1f}%", left + 6, top + 21, right - left - 12, 14, size=10, color=GREY)
+        page.line(left + 4, py(band['average']), right - 4, py(band['average']), VIOLET, 1.25)
+        page.ops[-1]['dash_style'] = 'DASH'
+    for share in (20, 40):
+        page.line(x0 - step / 2, py(share), x1 + step / 2, py(share), HAIR, .5)
+        page.text(f'{share}%', L, py(share) - 6, 28, 12, size=8, color=GREY)
+    page.text('0%', L, base - 6, 28, 12, size=8, color=GREY)
+    for i, row in enumerate(years):
+        value = row['share'] * 100
+        x, y = px(i), py(value)
+        light = row.get('incomplete')
+        page.rect(x - bar / 2, y, bar, base - y, '#B9C1CC' if light else NAVY)
+        # Labels sit inside the bar top so the dashed averages, drawn first, never cross them.
+        page.text(f"{value:.1f}", x - 24, y + 4, 48, 14, size=10, bold=True, align='center',
+                  color=NAVY if light else WHITE)
+        page.text(str(row['year']), x - 22, base + 4, 44, 14, size=10, align='center')
+    page.line(x0 - step / 2, base, x1 + step / 2, base, NAVY, 1)
+    page.marker(1, px(7) - 6, py(30) - 24)
+    page.marker(2, px(3) + step / 2 - 20, top + 6)
+    page.marker(3, px(5) + step / 2 - 20, top + 6)
+    page.caption('Figure 3.', ex['caption'], base + 26)
+    page.caption('Note:', ex['note'], base + 40)
     page.takeaways(slide['takeaways'], pos)
+
+
+def band_fill(shade):
+    return {'paper': PAPER, 'violet': '#EEEBF5'}[shade]
 
 
 def approach(page, slide):

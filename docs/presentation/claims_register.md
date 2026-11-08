@@ -25,6 +25,7 @@ benchmark. **Equivalence** = exploratory screen of October coefficients (2026-11
 | Period definitions | pre-pandemic 2016–2019; pandemic 2020–2021; post-pandemic 2022–2025 ("four years") | `src/data_loader.py` | August |
 | Loans by period | 589,823 pre-pandemic; 298,549 pandemic; 565,474 post-pandemic | same | August |
 | Same-day share by period | 46.0% → 30.3% → 30.0% | `notebooks/1_full_dataset_eda.py` §period trend | Descriptive |
+| Yearly same-day share (records) | 2016 43.3% (129,660); 2017 48.7% (162,622); 2018 48.8% (153,492); 2019 42.5% (144,043); 2020 32.3% (135,383); 2021 28.7% (163,166); 2022 29.9% (143,354); 2023 27.5% (143,233); 2024 27.5% (141,725); 2025 35.4% (137,162); 2025 may be incomplete (unfunded loans missing at extraction) | `reports/period_trend/yearly_same_day_share.json` | Descriptive |
 | Overall same-day share | 36.6% | `association_summary.txt` | August |
 | Illustrative listing values (slide 4) | median loan US$325; median term 12 months; median borrowers 1; most common sector Agriculture (461,563); most common country Philippines (521,586) | `reports/text_benchmark_private/features.pkl`, eligible records (2026-11-08) | Descriptive |
 | Framing families measured | 8 rates per 100 words | `src/features.py` `FRAMING_PATTERNS` | Descriptive |

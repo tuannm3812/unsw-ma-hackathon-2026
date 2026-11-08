@@ -241,35 +241,94 @@
       "id": "slowdown",
       "section": "Problem",
       "layout": "content+takeaways",
-      "title": "Same-day funding fell from 46.0% to 30.3% and has not recovered",
-      "subtitle": "Share of loans fully funded within 24 hours by period; descriptive",
+      "title": "Same-day funding fell from 46.0% to 30.3% and stayed low through 2024",
+      "subtitle": "Share of loans fully funded within 24 hours, by posting year; descriptive",
       "exhibit": {
         "type": "bar",
-        "unit": "% funded within 24 h",
-        "axis_from_zero": true,
-        "bars": [
+        "years": [
+          {
+            "year": 2016,
+            "share": 0.4332,
+            "records": 129660
+          },
+          {
+            "year": 2017,
+            "share": 0.4866,
+            "records": 162622
+          },
+          {
+            "year": 2018,
+            "share": 0.488,
+            "records": 153492
+          },
+          {
+            "year": 2019,
+            "share": 0.4254,
+            "records": 144043
+          },
+          {
+            "year": 2020,
+            "share": 0.3229,
+            "records": 135383
+          },
+          {
+            "year": 2021,
+            "share": 0.2869,
+            "records": 163166
+          },
+          {
+            "year": 2022,
+            "share": 0.2986,
+            "records": 143354
+          },
+          {
+            "year": 2023,
+            "share": 0.2746,
+            "records": 143233
+          },
+          {
+            "year": 2024,
+            "share": 0.2749,
+            "records": 141725
+          },
+          {
+            "year": 2025,
+            "share": 0.3536,
+            "records": 137162,
+            "incomplete": true
+          }
+        ],
+        "periods": [
           {
             "label": "Pre-pandemic",
-            "value": 46.0,
-            "n": 589823
+            "from": 2016,
+            "to": 2019,
+            "average": 46.0,
+            "shade": "paper"
           },
           {
             "label": "Pandemic",
-            "value": 30.3,
-            "n": 298549
+            "from": 2020,
+            "to": 2021,
+            "average": 30.3,
+            "shade": "violet"
           },
           {
             "label": "Post-pandemic",
-            "value": 30.0,
-            "n": 565474
+            "from": 2022,
+            "to": 2025,
+            "average": 30.0,
+            "shade": "paper"
           }
-        ]
+        ],
+        "caption": "Share (%) of completed loans funded within 24 hours, by posting year; dashed lines show period averages. Bars start at zero.",
+        "note": "2025 (lighter bar) may be incomplete: loans still unfunded at extraction are missing, which would raise its share."
       },
       "takeaways": [
         {
           "marker": 1,
           "heading": "A slower market",
-          "text": "The drop **persisted for four years** after the disruption."
+          "text": "From 2021 to 2024 the share stayed **between 27.5% and 29.9%**, well below the pre-pandemic average."
         },
         {
           "marker": 2,
@@ -284,8 +343,8 @@
       ],
       "notes": {
         "purpose": "Show the market context.",
-        "script": "Before 2020 almost half of loans funded within a day. That fell to under a third and stayed there. This is descriptive: we do not claim to know why.",
-        "reference": "notebooks/1_full_dataset_eda.py period trend; counts from association_summary.txt."
+        "script": "Before 2020 roughly 43 to 49 percent of loans funded within a day. That fell to under a third in 2020 and stayed there through 2024. 2025 looks higher, but loans that had not funded by the time the data were extracted are missing, so that year may look faster than it was. This is descriptive: we do not claim to know why.",
+        "reference": "reports/period_trend/yearly_same_day_share.json (src/period_trend.py); period averages from association_summary.txt."
       },
       "sublabel": "Market context"
     },
