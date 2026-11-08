@@ -211,6 +211,10 @@ class Page:
         spans = [(mark, len(text), {'color': SLATE, 'bold': True})] if mark < len(text) else []
         return self.text(text, x, y, w, h, size=size, color=color, bold=bold, align=align, spans=spans)
 
+    def swatch(self, x, y, w, h, fill, shape='RECTANGLE', size=8):
+        """A legend mark centred on the x-height of a label whose text box top is at y."""
+        return self.rect(x, y + LEGEND_MID * size / 8 - h / 2, w, h, fill, shape)
+
     def legend(self, items, y, x, span=None, gap=20, size=8):
         """Swatches centred on their labels' x-height, evenly spaced, optionally centred within span.
 
@@ -225,7 +229,7 @@ class Page:
         for item, width in zip(items, widths):
             label, fill, shape, marker, swatch = parts(item)
             tall = swatch if shape == 'ELLIPSE' else 8 * scale
-            self.rect(lx, y + mid - tall / 2, swatch, tall, fill, shape)
+            self.swatch(lx, y, swatch, tall, fill, shape, size)
             self.sup(label, lx + swatch + 4, y, label_width(label, size) + 10, 12 * scale, size=size, color=GREY)
             if marker:
                 self.marker(marker, lx + width - 12, y + mid - 6)
@@ -869,10 +873,10 @@ def country_panel(page, ex, cx, cy, cw, ch, title, guide):
     for i, (fill, label) in enumerate(legend + [(NO_LOANS, 'no loans'), (None, 'top 10')]):
         y = my + 12 * (i + 1)
         if fill is None:  # navy outline swatch, as drawn on the map
-            page.rect(lx, y + 0.5, 8, 8, NAVY)
-            page.rect(lx + 1.2, y + 1.7, 5.6, 5.6, PAPER)
+            page.swatch(lx, y, 8, 8, NAVY)
+            page.swatch(lx + 1.2, y, 5.6, 5.6, PAPER)
         else:
-            page.rect(lx, y + 0.5, 8, 8, fill)  # centred on the label's cap height
+            page.swatch(lx, y, 8, 8, fill)
         page.text(label, lx + 12, y, 44, 12, size=8, color=GREY)
     # Table: top 10 in one column; share cells use the map's colours, same-day is plain text.
     names = ex['country_names']

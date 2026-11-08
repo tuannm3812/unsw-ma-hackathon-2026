@@ -2936,3 +2936,8 @@ unseen exact template, which cannot exclude near-duplicates.
 - Slide 12 answers how small the links are overall; slide 13 answers for whom. Two points needed fixing on slide 13: it now says its six are slide 12's five plus gratitude, and the rare-words point gives the subgroup detail instead of repeating slide 12. Slide 12 is unchanged.
 - Slide 14's guide now says bars are the linear model and dots the larger boosted tree.
 - Verified: pyflakes, deck QA, rendered slides, full offline pytest. Slides 13 and 14 only were rebuilt; nothing pushed.
+
+## 2026-11-08: slides 12–15 distinct points; map legend
+
+- Live deck re-read first: no owner edits to mirror. Slide 13's subtitle now refers back to slide 12's bound; slide 15 no longer repeats slide 14's seven hours; slide 14 ends on loan details first. Word-box overlap check on slides 12–14 is clean.
+- The slide 6 map legend now uses `Page.swatch`, so all legends share one alignment rule. Nothing pushed.
