@@ -2674,3 +2674,10 @@ unseen exact template, which cannot exclude near-duplicates.
   - **Slide 13** has a new conclusion title: "Text helps forecasts and framings look small; no writing rule is proven". Each item is now a claim, a one-line evidence reason, a check or block icon, and "→N" link chips to the slide that shows it (A1 for the regional rule).
   - **A mid-build failure:** the summary's mini-chart still read slide 12's old `series` data, so the first rebuild failed after clearing slides 2 and 13, which were blank for about a minute. The preview helpers now read the new per-year `linear` gains, and both slides were rebuilt and checked.
   - QA reports no automated problems; previews, PDF and preview page refreshed; not pushed.
+- **2026-11-08, slides 14–15 and appendix A2–A4 review:** no new owner edits.
+  - **Slides 14–15:** audited and left unchanged. Slide 14 (three gates) already follows the design rules, Mike approved it earlier, and its link chips point to the right slides after the renumbering (→4, →5, →13). The close slide needs nothing.
+  - **Appendix A2–A4:** given conclusion titles; their content is backup detail and was kept:
+    - "Each forecast trains only on loans completed before its cutoff"
+    - "The primary models hold up on later, completed loans"
+    - "Story themes track loan purpose more than writing style"
+  - QA reports no automated problems; previews, PDF and preview page refreshed; not pushed.

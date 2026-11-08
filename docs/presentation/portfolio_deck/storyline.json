@@ -1724,7 +1724,7 @@
       "n": "A2",
       "id": "a_asof",
       "section": "Appendix",
-      "title": "As-of training audit",
+      "title": "Each forecast trains only on loans completed before its cutoff",
       "content": "Cohort table from docs/6_matched_text_results.md (pre-cutoff postings completing later, eligible training, evaluation rows per year).",
       "subtitle": "Forecast benchmark: training records must have completed before each cutoff",
       "exhibit": {
@@ -1782,7 +1782,7 @@
       "n": "A3",
       "id": "a_primary",
       "section": "Appendix",
-      "title": "Chronological holdout metrics",
+      "title": "The primary models hold up on later, completed loans",
       "content": "HistGradientBoosting duration MAE 5.2031 days, R² 0.5420; classifier ROC AUC 0.8997, AP 0.8301, Brier 0.1156; 1,174,953 train, 278,887 holdout; completed loans only.",
       "subtitle": "Explanatory models: chronological holdout, completed loans only",
       "key_figures": [
@@ -1819,7 +1819,7 @@
       "n": "A4",
       "id": "a_topics",
       "section": "Appendix",
-      "title": "Exploratory story themes",
+      "title": "Story themes track loan purpose more than writing style",
       "content": "NMF themes from the 20,000-loan exploratory sample, labelled as such; not full-data evidence.",
       "subtitle": "Exploratory NMF themes from a 20,000-loan sample; descriptive, not full-data evidence",
       "key_figures": [
