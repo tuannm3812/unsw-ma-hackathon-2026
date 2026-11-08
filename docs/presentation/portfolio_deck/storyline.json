@@ -3101,7 +3101,28 @@
      ]
     ],
     "figure": "Figure A2.",
-    "caption": "Training availability and evaluation rows by year."
+    "caption": "Training availability and evaluation rows by year, with the 2024 split as a worked example.",
+    "cutoff": {
+     "title": "How a cutoff splits the loans: the 2024 test year",
+     "line": "Cutoff, 1 January 2024",
+     "rows": [
+      [
+       "Posted and finished before the cutoff",
+       "Trains the model",
+       "1,169,262"
+      ],
+      [
+       "Posted before, finished after",
+       "Left out of training",
+       "5,691¹"
+      ],
+      [
+       "Posted in 2024",
+       "Tested",
+       "141,725"
+      ]
+     ]
+    }
    },
    "note": "A posting-only split would keep these 5,691 training records; evaluation windows still select eventual completions.",
    "notes": {
@@ -3137,7 +3158,7 @@
    "title": "Boosted trees forecast best; tuning did not clearly beat fixed settings",
    "content": "Boosted tree duration MAE 5.2031 days, R² 0.5420; classifier ROC AUC 0.8997, AP 0.8301, Brier 0.1156; 1,174,953 train, 278,887 holdout; completed loans only.",
    "subtitle": "Every forecaster on the same loans and test years; tuned rows are exploratory; August is a separate holdout",
-   "note": "Tuned rows, exploratory: 24 settings per family on the prior year, chosen on loan details, reused with text; no same-day score. August: separate holdout. Programme text: an unvalidated proxy.",
+   "note": "Tuned: 24 settings per family on the prior year, chosen on loan details, reused with text; no same-day score. Programme text: an unvalidated proxy.",
    "notes": {
     "purpose": "Compare every model in one place and state what each score means.",
     "script": "This slide puts every forecaster on one scale. Lower is better. The median and lookup models are simple baselines. A linear model on loan details beats the lookup in every year, and a boosted tree beats the linear model. The larger tree is better in four of five years but worse in 2021. Those settings were fixed in advance, which keeps the text comparison matched. To check that choice, an exploratory run tuned a boosted tree and XGBoost on the year before each test year, 24 settings each, chosen on loan details and reused with text. Tuning did not clearly help: tuned trees were lowest in 2023, 2024 and 2025, by at most 0.06 days, while fixed settings were lower in 2021 and 2022, by 0.54 and 0.38 days. XGBoost beat the tuned boosted tree in 2 of 5 years. The tuned models forecast days only, so they have no same-day score. The August models are a separate chronological holdout with library defaults, so do not compare those numbers with the benchmark.",
@@ -3425,9 +3446,52 @@
     },
     "glossary": [
      "**MAE**: average miss in days; lower is better.",
-     "**R²**: share of variation explained; below 0 is worse than the mean.",
+     "**R²**: variation explained; below 0 is worse than the mean.",
      "**ROC AUC**: ranks same-day loans; 0.5 is random, 1 is perfect.",
      "**Brier** 0.1156: same-day probability error; lower is better."
+    ],
+    "groups": [
+     {
+      "title": "Lookup and median baselines",
+      "names": [
+       "Median only",
+       "Historical lookup"
+      ]
+     },
+     {
+      "title": "Linear",
+      "names": [
+       "Linear, loan details",
+       "Linear, with text"
+      ]
+     },
+     {
+      "title": "Boosted trees, fixed settings",
+      "names": [
+       "Boosted tree, loan details",
+       "Larger boosted tree",
+       "Larger tree, full text"
+      ]
+     },
+     {
+      "title": "Tuned trees, exploratory",
+      "names": [
+       "Tuned tree, loan details",
+       "Tuned tree, full text",
+       "Tuned XGBoost, loan details",
+       "Tuned XGBoost, full text"
+      ]
+     },
+     {
+      "title": "Text only and programme text",
+      "names": [
+       "Linear, text only",
+       "Linear, programme text",
+       "Linear, programme and text",
+       "Boosted tree, programme text",
+       "Tree, programme and text"
+      ]
+     }
     ]
    }
   },
@@ -3747,7 +3811,11 @@
      "Sector against the average loan: **−13.4%** [−23.6%, −1.8%]; same-day **+8.8 pp** [+6.3, +11.2], n 6,905.",
      "Sample themes: 1.5 to 13.5 days raw; adjusted on A5."
     ],
-    "caption": "Change in (1 + days), country-clustered 95% ranges. Sector: against the average loan. Activity: against Farming, with 1,000+ loans."
+    "caption": "Change in (1 + days), country-clustered 95% ranges. Sector: against the average loan. Activity: against Farming, with 1,000+ loans.",
+    "legend": [
+     "Faster than average (negative)",
+     "Slower than average (positive)"
+    ]
    }
   },
   {
@@ -3951,8 +4019,8 @@
     "head_adjusted": "Adjusted for loan details, country, time",
     "head_activity": "Also adjusted for activity",
     "legend": [
-     "Sanitary and water themes",
-     "Other themes"
+     "Faster than average (negative)",
+     "Slower than average (positive)"
     ],
     "caption": "NMF on a 20,000-description sample, 43 countries. Change in (1 + days) against the average theme, country-clustered 95% ranges, not corrected for eight comparisons. Days: raw mean and median. Sample only."
    },
@@ -4089,17 +4157,20 @@
      "Lexicon and sentiment",
      "Word patterns (TF-IDF)"
     ],
-    "caption": "Linear-model MAE in days (top) and its reduction by text feature group (bottom), identical evaluation rows.",
+    "caption": "Linear-model MAE in days (left) and its reduction by text feature group (right), identical evaluation rows. Larger tree: full-text gain, fixed settings.",
     "note_sup": "Groups added in order: form, then lexicon and sentiment, then TF-IDF; another order would split the gain differently.",
-    "figure": "Figure A6."
+    "figure": "Figure A6.",
+    "tree_gain": [
+     0.15408871457897744,
+     0.05871648097206399,
+     0.011843675687202584,
+     -0.010788435348046896,
+     0.06384257332340125
+    ],
+    "chart_title": "Adding text lowers linear error in every year",
+    "chart_guide": "MAE in days, linear model; 728,640 records, with and without text.",
+    "breakdown_guide": "Linear MAE gain in days, by text feature group."
    },
-   "key_figures": [
-    {
-     "value": "0.29 days",
-     "label": "Median annual error reduction",
-     "why": "About 7 hours on the linear model; about half is context."
-    }
-   ],
    "takeaways": [
     {
      "marker": 1,
@@ -4152,42 +4223,42 @@
      [
       "Description form",
       "Length and structure of the text",
-      "Characters, words, sentences, average word and sentence length",
+      "**Characters, words, sentences**, average word and sentence length",
       "Explanatory models and forecasts",
       "Says nothing about content"
      ],
      [
       "Word-list counts",
       "Eight framing measures, including first and third person",
-      "Theory-guided lists of 4–13 entries; rate per 100 words",
+      "Theory-guided lists of **4–13 entries**; **rate per 100 words**",
       "Explanatory, robustness and equivalence; forecasts",
       "Not yet validated (gate 1); counts words, not meaning"
      ],
      [
       "VADER sentiment",
       "Positive or negative tone",
-      "Rule-based lexicon; compound score from −1 to 1",
+      "**Rule-based lexicon**; compound score from **−1 to 1**",
       "Explanatory, robustness and equivalence; forecasts",
       "General-purpose lexicon, not built for loan text"
      ],
      [
       "TF-IDF word patterns",
       "Distinctive words and two-word phrases",
-      "Up to 5,000 features, in at least 5 training loans; fitted on training years only",
+      "Up to **5,000 features**, in at least 5 training loans; fitted on **training years only**",
       "Linear forecast",
       "May pick up place and programme templates"
      ],
      [
       "Compressed text features",
       "TF-IDF reduced for the boosted tree",
-      "Truncated SVD, 64 components; fitted on training years only",
+      "Truncated SVD, **64 components**; fitted on **training years only**",
       "Larger boosted tree",
       "Hard to interpret"
      ],
      [
       "NMF topics",
       "Eight story themes",
-      "TF-IDF up to 1,000 features; 20,000-loan sample",
+      "TF-IDF up to **1,000 features**; **20,000-loan sample**",
       "Appendix A5 only",
       "Exploratory; sample only, not full-data evidence"
      ]
@@ -4198,6 +4269,14 @@
      "Fixed rules",
      "Fitted on training years only",
      "Exploratory, sample only"
+    ],
+    "icons": [
+     "notes-navy.png",
+     "format_list_bulleted-navy.png",
+     "sentiment_satisfied-navy.png",
+     "tag-violet.png",
+     "compress-violet.png",
+     "hub-slate.png"
     ]
    },
    "notes": {

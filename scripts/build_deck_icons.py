@@ -9,7 +9,8 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 OUT = Path(__file__).resolve().parents[1] / 'docs/presentation/portfolio_deck/assets/icons'
-ICONS = {'payments': ['violet', 'navy'], 'storefront': ['violet', 'navy'], 'groups': ['violet', 'navy'],
+ICONS = {'notes': ['navy'], 'format_list_bulleted': ['navy'], 'tag': ['violet'], 'compress': ['violet'], 'hub': ['slate'],
+         'payments': ['violet', 'navy'], 'storefront': ['violet', 'navy'], 'groups': ['violet', 'navy'],
          'account_balance': ['violet', 'navy'], 'check_circle': ['navy'], 'block': ['slate'],
          # framing-measure key (slide 7) and the slides that reuse it
          'family_restroom': ['navy'], 'water_drop': ['navy'], 'bolt': ['navy'], 'favorite': ['navy'],

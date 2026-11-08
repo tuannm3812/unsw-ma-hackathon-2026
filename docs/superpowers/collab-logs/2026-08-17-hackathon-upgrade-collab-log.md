@@ -3086,3 +3086,10 @@ unseen exact template, which cannot exclude near-duplicates.
 - Final pass: QA clean, retired-claims scan clean on deck and report apart from that entry, photos and logos credited in PROVENANCE (UNSW logo added). The only overlap flags are the cover title's tight line spacing, inspected on the render.
 - Today's experiment results: corrected wild cluster bootstrap; lookup baseline for the flag; Kaggle appendix run with tuned boosted tree and XGBoost, flag margin ranges, eight-theme adjusted contrasts. All exploratory. Not done: the optional slide 13 subgroup bootstrap.
 - Verified: deck QA, word-box overlap check, rendered slides, retired-claims scan, full offline pytest. Nothing pushed.
+
+## 2026-11-09: appendix feedback
+
+- Live deck re-read first: no owner edits to mirror. Numbers follow the post-split appendix.
+- A1: ranges now carry direct numbers and "clears zero" or "crosses zero", so a reader need not read them off the axis. A2: chart shortened; a worked 2024 cutoff example added. A3: table grouped by model type with zebra rows; score definitions moved under the takeaways; the dot chart stays until a replacement is chosen. A4 and A5: faster values violet, slower navy, in dots, ranges and labels, with a legend. A6: the big cards are replaced by a dumbbell of linear error with gain columns (linear and larger tree) beside the gain split. A7: icons per method, key settings in bold navy. A8: dots centred on their text with the shared helper.
+- A3 chart and A8 pipeline options were mocked up outside the deck for discussion.
+- Verified: deck QA, word-box overlap check, rendered slides, full offline pytest. Nothing pushed.

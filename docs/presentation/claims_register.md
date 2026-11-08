@@ -54,6 +54,7 @@ benchmark. **Equivalence** = exploratory screen of October coefficients (2026-11
 | Loans by wait band, within 24 hours / 1 day to 2 weeks / over 2 weeks (slide 5) | Kenya 77,721 / 91,844 / 96,997; Philippines 250,124 / 182,050 / 89,412; Tajikistan 12,492 / 21,939 / 34,434; Uganda 21,648 / 23,631 / 24,372; Nicaragua 5,859 / 15,081 / 17,580; Pakistan 6,405 / 19,888 / 16,474 | `reports/evidence_sources/country_shares.json` (`src/country_shares.py`) | Descriptive |
 | Terms that kept significance | 56 of 120; 42 controls, 14 text (sentiment in both models plus 12 family-framing interactions) | `reports/evidence_sources/clustering_split.json` | August |
 | Urgency, clustered p | duration 0.4943; 24-hour 0.2233 | `association_summary.txt` | August |
+| A1 direct labels, log points × 100 | Middle East: estimate −7.3, standard clustered [−10.0, −4.6], few-country check [−25.0, +10.4]; Central America: estimate −7.4, standard clustered [−8.8, −6.0], few-country check [−16.3, +1.5] | same | August |
 | Middle East family slope | −0.0729, 2 countries, 14,946 loans, heuristic interval [−0.2502, 0.1043] | `docs/2_evidence_and_corrections.md` | August |
 | Central America family slope | −0.0742, 2 countries, 59,391 loans, heuristic interval [−0.1629, 0.0145] | same | August |
 | Regional clustered normal intervals and heuristic p | Middle East [−0.1003, −0.0456], p 0.1203; Central America [−0.0879, −0.0605], p 0.0597 | same | August |
@@ -151,6 +152,7 @@ benchmark. **Equivalence** = exploratory screen of October coefficients (2026-11
 | Family × period and × loan-size interactions, 24-hour log-odds | family (reference: pre-pandemic, small) +0.0535, clustered p 0.4179; pandemic_disruption -0.0416, clustered p 0.3204; post_pandemic -0.0032, clustered p 0.9019; medium +0.0110, clustered p 0.6862; large +0.0044, clustered p 0.9164 | same | August |
 | Period and loan-size family interactions under clustering | none has country-clustered p below 0.11; all 48-cluster normal reference | same | August |
 | 2025 rounded AUC | 0.893 → 0.888 | same | November |
+| Forecast cutoff | 1 January of each test year; evaluation rows are loans posted in that year | `src/` calendar split, `docs/6_matched_text_results.md` | November |
 | As-of cohort, pre-cutoff completing later; eligible training; evaluation rows | 2021 7,528; 717,672; 163,166. 2022 3,918; 884,448; 143,354. 2023 3,546; 1,028,174; 143,233. 2024 5,691; 1,169,262; 141,725. 2025 4,261; 1,312,417; 137,162 | same | November |
 
 ## Loss alignment, 2025
