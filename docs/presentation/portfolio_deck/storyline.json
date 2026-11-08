@@ -490,7 +490,7 @@
         {
           "marker": 4,
           "heading": "Few countries dominate",
-          "text": "Ten countries hold **81% of loans**, and same-day funding ranges from 15% in Pakistan to 67% in Madagascar."
+          "text": "Ten countries hold **81% of loans**, Asia and Africa **92.8%**; same-day funding ranges from 15% in Pakistan to 67% in Madagascar."
         }
       ],
       "notes": {
@@ -530,289 +530,337 @@
             "country": "PH",
             "loans": 521586,
             "share": 0.3588,
-            "same_day_share": 0.4795
+            "same_day_share": 0.4795,
+            "region": "Asia"
           },
           {
             "country": "KE",
             "loans": 266562,
             "share": 0.1834,
-            "same_day_share": 0.2916
+            "same_day_share": 0.2916,
+            "region": "Africa"
           },
           {
             "country": "UG",
             "loans": 69651,
             "share": 0.0479,
-            "same_day_share": 0.3108
+            "same_day_share": 0.3108,
+            "region": "Africa"
           },
           {
             "country": "TJ",
             "loans": 68865,
             "share": 0.0474,
-            "same_day_share": 0.1814
+            "same_day_share": 0.1814,
+            "region": "Asia"
           },
           {
             "country": "KH",
             "loans": 58074,
             "share": 0.0399,
-            "same_day_share": 0.4853
+            "same_day_share": 0.4853,
+            "region": "Asia"
           },
           {
             "country": "MG",
             "loans": 55670,
             "share": 0.0383,
-            "same_day_share": 0.67
+            "same_day_share": 0.67,
+            "region": "Africa"
           },
           {
             "country": "PK",
             "loans": 42767,
             "share": 0.0294,
-            "same_day_share": 0.1498
+            "same_day_share": 0.1498,
+            "region": "Asia"
           },
           {
             "country": "NI",
             "loans": 38520,
             "share": 0.0265,
-            "same_day_share": 0.1521
+            "same_day_share": 0.1521,
+            "region": "Central America"
           },
           {
             "country": "LR",
             "loans": 28847,
             "share": 0.0198,
-            "same_day_share": 0.2835
+            "same_day_share": 0.2835,
+            "region": "Africa"
           },
           {
             "country": "TG",
             "loans": 27513,
             "share": 0.0189,
-            "same_day_share": 0.3783
+            "same_day_share": 0.3783,
+            "region": "Africa"
           },
           {
             "country": "SN",
             "loans": 21420,
             "share": 0.0147,
-            "same_day_share": 0.0716
+            "same_day_share": 0.0716,
+            "region": "Africa"
           },
           {
             "country": "HN",
             "loans": 20871,
             "share": 0.0144,
-            "same_day_share": 0.1731
+            "same_day_share": 0.1731,
+            "region": "Central America"
           },
           {
             "country": "KG",
             "loans": 20530,
             "share": 0.0141,
-            "same_day_share": 0.1263
+            "same_day_share": 0.1263,
+            "region": "Asia"
           },
           {
             "country": "IN",
             "loans": 20397,
             "share": 0.014,
-            "same_day_share": 0.4414
+            "same_day_share": 0.4414,
+            "region": "Asia"
           },
           {
             "country": "SL",
             "loans": 19408,
             "share": 0.0133,
-            "same_day_share": 0.3436
+            "same_day_share": 0.3436,
+            "region": "Africa"
           },
           {
             "country": "RW",
             "loans": 18395,
             "share": 0.0127,
-            "same_day_share": 0.1859
+            "same_day_share": 0.1859,
+            "region": "Africa"
           },
           {
             "country": "PS",
             "loans": 14500,
             "share": 0.01,
-            "same_day_share": 0.1693
+            "same_day_share": 0.1693,
+            "region": "Middle East"
           },
           {
             "country": "NG",
             "loans": 14320,
             "share": 0.0098,
-            "same_day_share": 0.3359
+            "same_day_share": 0.3359,
+            "region": "Africa"
           },
           {
             "country": "GH",
             "loans": 14193,
             "share": 0.0098,
-            "same_day_share": 0.354
+            "same_day_share": 0.354,
+            "region": "Africa"
           },
           {
             "country": "CD",
             "loans": 11151,
             "share": 0.0077,
-            "same_day_share": 0.2061
+            "same_day_share": 0.2061,
+            "region": "Africa"
           },
           {
             "country": "BF",
             "loans": 10660,
             "share": 0.0073,
-            "same_day_share": 0.2726
+            "same_day_share": 0.2726,
+            "region": "Africa"
           },
           {
             "country": "TZ",
             "loans": 10621,
             "share": 0.0073,
-            "same_day_share": 0.328
+            "same_day_share": 0.328,
+            "region": "Africa"
           },
           {
             "country": "TL",
             "loans": 10401,
             "share": 0.0072,
-            "same_day_share": 0.1515
+            "same_day_share": 0.1515,
+            "region": "Oceania"
           },
           {
             "country": "MZ",
             "loans": 8066,
             "share": 0.0055,
-            "same_day_share": 0.1494
+            "same_day_share": 0.1494,
+            "region": "Africa"
           },
           {
             "country": "SB",
             "loans": 7924,
             "share": 0.0055,
-            "same_day_share": 0.1114
+            "same_day_share": 0.1114,
+            "region": "Oceania"
           },
           {
             "country": "HT",
             "loans": 7559,
             "share": 0.0052,
-            "same_day_share": 0.4702
+            "same_day_share": 0.4702,
+            "region": "North America"
           },
           {
             "country": "EG",
             "loans": 7398,
             "share": 0.0051,
-            "same_day_share": 0.1694
+            "same_day_share": 0.1694,
+            "region": "Africa"
           },
           {
             "country": "ZW",
             "loans": 6380,
             "share": 0.0044,
-            "same_day_share": 0.3044
+            "same_day_share": 0.3044,
+            "region": "Africa"
           },
           {
             "country": "LS",
             "loans": 4910,
             "share": 0.0034,
-            "same_day_share": 0.9222
+            "same_day_share": 0.9222,
+            "region": "Africa"
           },
           {
             "country": "ML",
             "loans": 4281,
             "share": 0.0029,
-            "same_day_share": 0.1972
+            "same_day_share": 0.1972,
+            "region": "Africa"
           },
           {
             "country": "VU",
             "loans": 4018,
             "share": 0.0028,
-            "same_day_share": 0.2093
+            "same_day_share": 0.2093,
+            "region": "Oceania"
           },
           {
             "country": "CM",
             "loans": 3670,
             "share": 0.0025,
-            "same_day_share": 0.2932
+            "same_day_share": 0.2932,
+            "region": "Africa"
           },
           {
             "country": "MW",
             "loans": 3294,
             "share": 0.0023,
-            "same_day_share": 0.5965
+            "same_day_share": 0.5965,
+            "region": "Africa"
           },
           {
             "country": "ZM",
             "loans": 3157,
             "share": 0.0022,
-            "same_day_share": 0.6484
+            "same_day_share": 0.6484,
+            "region": "Africa"
           },
           {
             "country": "MM",
             "loans": 3146,
             "share": 0.0022,
-            "same_day_share": 0.1144
+            "same_day_share": 0.1144,
+            "region": "Asia"
           },
           {
             "country": "NP",
             "loans": 1276,
             "share": 0.0009,
-            "same_day_share": 0.9882
+            "same_day_share": 0.9882,
+            "region": "Asia"
           },
           {
             "country": "LA",
             "loans": 1121,
             "share": 0.0008,
-            "same_day_share": 0.6646
+            "same_day_share": 0.6646,
+            "region": "Asia"
           },
           {
             "country": "PG",
             "loans": 1042,
             "share": 0.0007,
-            "same_day_share": 0.8925
+            "same_day_share": 0.8925,
+            "region": "Oceania"
           },
           {
             "country": "CI",
             "loans": 595,
             "share": 0.0004,
-            "same_day_share": 0.1008
+            "same_day_share": 0.1008,
+            "region": "Africa"
           },
           {
             "country": "YE",
             "loans": 446,
             "share": 0.0003,
-            "same_day_share": 0.6345
+            "same_day_share": 0.6345,
+            "region": "Middle East"
           },
           {
             "country": "UZ",
             "loans": 389,
             "share": 0.0003,
-            "same_day_share": 0.2314
+            "same_day_share": 0.2314,
+            "region": "Asia"
           },
           {
             "country": "BI",
             "loans": 190,
             "share": 0.0001,
-            "same_day_share": 0.0789
+            "same_day_share": 0.0789,
+            "region": "Africa"
           },
           {
             "country": "BD",
             "loans": 39,
             "share": 0.0,
-            "same_day_share": 0.6667
+            "same_day_share": 0.6667,
+            "region": "Asia"
           },
           {
             "country": "SO",
             "loans": 10,
             "share": 0.0,
-            "same_day_share": 0.2
+            "same_day_share": 0.2,
+            "region": "Africa"
           },
           {
             "country": "BJ",
             "loans": 3,
             "share": 0.0,
-            "same_day_share": 0.0
+            "same_day_share": 0.0,
+            "region": "Africa"
           },
           {
             "country": "SS",
             "loans": 2,
             "share": 0.0,
-            "same_day_share": 0.0
+            "same_day_share": 0.0,
+            "region": "Africa"
           },
           {
             "country": "AF",
             "loans": 1,
             "share": 0.0,
-            "same_day_share": 1.0
+            "same_day_share": 1.0,
+            "region": "Asia"
           },
           {
             "country": "NE",
             "loans": 1,
             "share": 0.0,
-            "same_day_share": 0.0
+            "same_day_share": 0.0,
+            "region": "Africa"
           }
         ],
         "top10_label": "10 countries hold 81% of loans",
@@ -851,7 +899,7 @@
       "id": "equivalence",
       "section": "Evidence",
       "layout": "content+takeaways",
-      "title": "Most framing associations are small; urgency remains unresolved",
+      "title": "Five framings have small links to funding time; urgency remains unknown",
       "subtitle": "Equivalence test of the robustness-check coefficients; exploratory, bound set after the estimates",
       "exhibit": {
         "type": "forest",
@@ -946,63 +994,53 @@
         "groups": [
           {
             "status": "bounded",
-            "label": "Small in both specifications"
+            "label": "Too small to matter"
           },
           {
             "status": "mixed",
-            "label": "Small in one specification"
+            "label": "Small in one model only²"
           },
           {
             "status": "unresolved",
-            "label": "Can't tell yet"
+            "label": "Can't tell yet: too few descriptions use these words"
           }
         ],
-        "bands": [
-          {
-            "bound": 0.1,
-            "label": "loose"
-          },
-          {
-            "bound": 0.05,
-            "label": "primary"
-          },
-          {
-            "bound": 0.02,
-            "label": "tight"
-          }
-        ],
-        "plain": "Shaded bands are three sizes of “too small to matter”; the primary ±0.05 is about ±5% of funding time, or 4.5–4.7 hours for a median loan.",
         "t4_tag": "All five hold under the stricter t(4)",
         "rarity_header": "Records with no mention",
-        "caption": "Change in log(1 + days) per extra mention per 100 words, 90% intervals, expanded specification; groups use both specifications.",
-        "note_sup": "Per +0.5 change in the sentiment score; no mention means a score of exactly zero.",
-        "note": "±0.05 is the BH-adjusted primary bound; ±0.02 and ±0.10 are unadjusted sensitivity bounds."
+        "caption": "Change in funding time per extra mention per 100 words, 90% ranges, expanded model, 1,453,840 loans.",
+        "note_sup": "±5% of funding time is ±0.05 on log(1 + days), BH-adjusted; axis shows log points × 100. Sentiment is per +0.5 score.",
+        "note": "² Groups combine the expanded and programme-adjusted models; gratitude and sentiment are small only in the programme-adjusted one.",
+        "key": {
+          "interval": "estimate and 90% range",
+          "band": "too small to matter: within ±5% of funding time¹",
+          "rule": "A range fully inside the band means the link is small."
+        }
       },
       "takeaways": [
         {
           "marker": 1,
-          "heading": "Five framings are small",
-          "text": "Five framings stay **inside ±5% of funding time** in both specifications, about **4.5–4.7 hours** for a median loan."
+          "heading": "Five framings have small links",
+          "text": "Family, business, basic needs, agency and third person stay **within ±5% of funding time** in both models."
         },
         {
           "marker": 2,
-          "heading": "Urgency and first person are unknown",
-          "text": "Their intervals still reach **6–14% faster or slower funding** per mention. Each is absent from **over 98% of records**, so the data say little about them."
+          "heading": "Small means under five hours",
+          "text": "On a typical loan, ±5% is about **4.5–4.7 hours** of a 2.85-day wait to be funded."
         },
         {
           "marker": 3,
-          "heading": "The bound came after the data",
-          "text": "It was chosen **after seeing the estimates**, so three bands are shown: family, agency and third person hold even at **±2%**."
+          "heading": "Urgency is too rare to judge",
+          "text": "Urgency and first person appear in **under 2% of descriptions**, so their ranges still allow **6–14% faster or slower funding**."
         },
         {
           "marker": 4,
-          "heading": "The verdicts survive a stricter test",
-          "text": "Swapping the t(47) reference for a stricter **t(4)** keeps **all five duration verdicts**."
+          "heading": "The verdicts hold under stricter tests",
+          "text": "All five pass a **stricter t(4) test**; family, agency and third person stay small even within **±2%**. The bound came after the data, so this is exploratory."
         }
       ],
       "notes": {
         "purpose": "Separate 'small' from 'unknown'.",
-        "script": "The shaded bands are three choices of how small counts as small. The primary band, ±0.05, is about five percent of funding time, roughly four and a half hours for a median loan. When a whole interval sits inside a band, the association is small at that size. [Point: Five framings are small] Five framings sit inside the primary band in both specifications. [Point: Urgency and first person are unknown] Urgency and first person do not: their intervals are wide, and the right-hand bars show why. Almost no descriptions use these words, so the data carry little information. [Point: The bound came after the data] We chose the bound after seeing the results, so the slide shows a tighter and a looser band too; three framings hold even at two percent. [Point: The verdicts survive a stricter test] With a stricter reference distribution, all five verdicts still hold. Treat all of this as exploratory.",
+        "script": "The answer first: five of the nine framings have small links to funding time. [Point: Five framings have small links] Each dot is an estimate and each line its 90 percent range; when the whole line sits inside the yellow band, the link is smaller than five percent of funding time. [Point: Small means under five hours] On a typical loan that is about four and a half hours. [Point: Urgency is too rare to judge] Urgency and first person are different: fewer than two in a hundred descriptions use these words, so their ranges stay wide. That is not evidence of an effect or of no effect. [Point: The verdicts hold under stricter tests] The five verdicts survive a stricter test, and three hold even at two percent. We set the band after seeing the data, so treat this as exploratory.",
         "reference": "Equivalence test run 2026-11-08. reports/equivalence_screen_reviewed/README.md; src/equivalence.py. Bands, hours and no-mention shares: src/bound_ladder.py (reports/evidence_sources/bound_ladder.json), from equivalence_screen.csv and feature_distribution.json."
       },
       "sublabel": "Equivalence test"

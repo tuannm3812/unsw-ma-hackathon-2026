@@ -43,6 +43,8 @@ benchmark. **Equivalence** = exploratory screen of October coefficients (2026-11
 | Lost significance by term type | text terms 42 of 56; control terms 22 of 64 (text includes interactions with a text measure) | `reports/evidence_sources/clustering_split.json` (`src/clustering_split.py`) | August |
 | Country concentration | top 10 countries 81.0% of eligible loans; Philippines 35.9%; Kenya 18.3%; 48 countries | `reports/evidence_sources/country_shares.json` (`src/country_shares.py`) | Descriptive |
 | Top 10 countries: loans (share, same-day share) | Philippines 521,586 (35.9%, same-day 48%); Kenya 266,562 (18.3%, same-day 29%); Uganda 69,651 (4.8%, same-day 31%); Tajikistan 68,865 (4.7%, same-day 18%); Cambodia 58,074 (4.0%, same-day 49%); Madagascar 55,670 (3.8%, same-day 67%); Pakistan 42,767 (2.9%, same-day 15%); Nicaragua 38,520 (2.6%, same-day 15%); Liberia 28,847 (2.0%, same-day 28%); Togo 27,513 (1.9%, same-day 38%); other 38 countries 275,785 (19.0%) | `reports/evidence_sources/country_shares.json` | Descriptive |
+| Loans by Kiva region (slide 8) | Asia 50.8%; Africa 42.0%; Central America 4.1%; Oceania 1.6%; Middle East 1.0%; North America 0.5%; Asia and Africa together 92.8% | `reports/evidence_sources/country_shares.json` (`src/country_shares.py`, Kiva `region` field) | Descriptive |
+| Top 10 countries by Kiva region | Asia: Philippines, Tajikistan, Cambodia, Pakistan; Africa: Kenya, Uganda, Madagascar, Liberia, Togo; Central America: Nicaragua | same | Descriptive |
 | Terms that kept significance | 56 of 120; 42 controls, 14 text (sentiment in both models plus 12 family-framing interactions) | `reports/evidence_sources/clustering_split.json` | August |
 | Urgency, clustered p | duration 0.4943; 24-hour 0.2233 | `association_summary.txt` | August |
 | Middle East family slope | −0.0729, 2 countries, 14,946 loans, heuristic interval [−0.2502, 0.1043] | `docs/2_evidence_and_corrections.md` | August |
@@ -73,6 +75,7 @@ benchmark. **Equivalence** = exploratory screen of October coefficients (2026-11
 | Tightest bound held, expanded duration (slide 9) | ±0.02: family, agency, third person; ±0.05: basic needs, business; ±0.10: sentiment; none: gratitude, urgency, first person. Counts 3 / 5 / 6 of 9 | same; ±0.05 BH-adjusted, ±0.02 and ±0.10 unadjusted flags | Equivalence, exploratory |
 | Tightest bound held, programme-adjusted duration | ±0.02: family, basic needs, business, agency, third person; ±0.05: gratitude, sentiment; ±0.10: urgency, first person. Counts 5 / 7 / 9 of 9 | same | Equivalence, exploratory |
 | Share of records with no mention, all nine terms (slide 9) | third person 2.7%; sentiment 3.4% (score exactly zero); family 11.3%; business 15.0%; agency 45.9%; basic needs 76.7%; gratitude 80.4%; urgency 98.7%; first person 99.0% | same, from `feature_distribution.json` | Descriptive |
+| Share of records that mention urgency or first person | urgency 1.3%; first person 1.0%; "under 2%" covers each | complement of the row above | Descriptive |
 | Equivalence reference distribution | t with 47 df on the clustered standard error; stricter heuristic t(4) | `reports/equivalence_screen_reviewed/README.md` | Equivalence |
 
 ## Prediction

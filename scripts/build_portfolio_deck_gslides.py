@@ -55,6 +55,7 @@ FOOTER = 'Cultural Blend   Kiva funding speed, 1.45 million loans, 2016–2025'
 NAVY, YELLOW, VIOLET, PAPER = '#1C2333', '#FFDD04', '#5B4B8A', '#FBFAF6'
 GREY, SLATE, RED, RULE, WHITE = '#59636E', '#46576C', '#C64040', '#999999', '#FFFFFF'
 TINT, HAIR = '#FFF6B8', '#D9D7CE'
+TINT_BAND = '#FFF0A8'  # DESIGN.md yellow tint: the slide 9 "too small to matter" band
 FONT = 'Google Sans'
 INSET = 7.2  # native text box inset; the API cannot change it, so frames compensate
 L, R, FULL, TOP, END = 43.5, 650, 919, 130, 476
@@ -644,7 +645,7 @@ def pipe_x(i):
 # Slide 8 panel (c): map frame matches scripts/build_country_map.py's 270:86 crop, and the table's
 # share cells reuse that script's bins so one legend explains both.
 MAP_PANEL = (L, TOP + 166, R - 16 - L, 148)
-MAP_FRAME = (L + 10, TOP + 166 + 42, 286, 286 * 86 / 270)
+MAP_FRAME = (L + 10, TOP + 166 + 42, 250, 250 * 86 / 270)
 MAP_PNG = ASSETS / 'maps/country_share_map.png'
 _MAP_SPEC = importlib.util.spec_from_file_location('build_country_map', ROOT / 'scripts/build_country_map.py')
 COUNTRY_MAP = importlib.util.module_from_spec(_MAP_SPEC)
@@ -740,21 +741,22 @@ def clustering(page, slide, pos):
     # Table: top 10 in one column; share cells use the map's colours, same-day is plain text.
     names = ex['country_names']
     rows = ex['country_shares'][:10]
-    tx = cx + 376
-    for label, off, w, align in [('Country', 12, 62, None), ('Loans', 74, 40, 'right'), ('Share', 122, 34, 'center'),
-                                 ('Same-day', 166, 42, 'center')]:
+    tx = cx + 336
+    for label, off, w, align in [('Country', 12, 54, None), ('Region', 66, 56, None), ('Loans', 124, 38, 'right'),
+                                 ('Share', 166, 36, 'center'), ('Same-day', 202, 40, 'center')]:
         page.text(label, tx + off, my, w, 12, size=8, color=GREY, bold=True, align=align)
     for k, item in enumerate(rows):
         y = my + 12 + k * 9
         page.text(str(k + 1), tx, y, 10, 12, size=8, color=GREY)
-        page.text(names[item['country']], tx + 12, y, 62, 12, size=8, bold=True)
-        page.text(f"{item['loans']:,}", tx + 74, y, 40, 12, size=8, align='right')
+        page.text(names[item['country']], tx + 12, y, 54, 12, size=8, bold=True)
+        page.text(item['region'], tx + 66, y, 58, 12, size=8, color=GREY)
+        page.text(f"{item['loans']:,}", tx + 124, y, 38, 12, size=8, align='right')
         fill, ink = share_style(item['share'])
-        page.rect(tx + 122, y + 1.2, 34, 8, fill)
-        page.text(f"{item['share'] * 100:.1f}%", tx + 122, y + 0.4, 34, 12, size=8, color=ink,
+        page.rect(tx + 168, y + 1.2, 32, 8, fill)
+        page.text(f"{item['share'] * 100:.1f}%", tx + 168, y + 0.4, 32, 12, size=8, color=ink,
                   bold=ink == WHITE, align='center')
-        page.rect(tx + 170, y + 1.2, 34, 8, same_day_fill(item['same_day_share']))
-        page.text(f"{item['same_day_share'] * 100:.0f}%", tx + 170, y + 0.4, 34, 12, size=8, align='center')
+        page.rect(tx + 206, y + 1.2, 32, 8, same_day_fill(item['same_day_share']))
+        page.text(f"{item['same_day_share'] * 100:.0f}%", tx + 206, y + 0.4, 32, 12, size=8, align='center')
     page.marker(1, ax + aw - 22, ay + 8)
     page.marker(2, ax + 210, ay + 46)
     page.marker(3, bx + bw - 22, by + 8)
@@ -764,47 +766,47 @@ def clustering(page, slide, pos):
     page.takeaways(slide['takeaways'], pos)
 
 
-# Slide 9 bands, widest first so the tighter tints sit on top.
-BAND_FILLS = {0.10: '#FFFAE0', 0.05: '#FFF0A8', 0.02: '#FFE36B'}
 STATUS_COLOURS = {'bounded': NAVY, 'mixed': SLATE, 'unresolved': VIOLET}
 
 
 def forest(page, slide, pos):
-    """Nested goalposts: verdict groups, three bound bands, and how rare each framing is."""
+    """One yellow band (within ±5% of funding time), verdict groups, and how rare each framing is."""
     page.chrome(slide)
     ex = slide['exhibit']
     x0, x1, lo, hi = L + 66, 420, -.15, .11
     scale = (x1 - x0) / (hi - lo)
     px = lambda value: x0 + (value - lo) * scale
     rx, track = 440, 150
-    page.text(ex['plain'], L, TOP + 2, R - L - 10, 12, size=9, color=GREY)
-    for band in ex['bands']:
-        b, primary = band['bound'], band['bound'] == .05
-        page.text(band['label'], px(b) - 22, TOP + 18, 44, 12, size=8, color=NAVY if primary else GREY,
-                  bold=primary, align='center')
-    page.marker(3, 602, TOP + 2.5)  # measured: the plain-language line ends near x594
-    page.text(ex['rarity_header'], rx, TOP + 18, track + 40, 12, size=8, color=GREY, bold=True)
+    # Reading key: glyphs drawn like the chart, then the rule in words.
+    ky = TOP + 2
+    page.text('How to read', L, ky, 60, 12, size=8, color=NAVY, bold=True)
+    page.line(L + 62, ky + 6.5, L + 84, ky + 6.5, NAVY, 2)
+    page.rect(L + 69.5, ky + 3, 7, 7, NAVY, 'ELLIPSE')
+    page.text(ex['key']['interval'], L + 88, ky, 100, 12, size=8, color=GREY)
+    page.rect(L + 182, ky + 2, 16, 9, TINT_BAND)
+    page.sup(ex['key']['band'], L + 202, ky, 200, 12, size=8, color=GREY)
+    page.marker(2, L + 374, ky + 0.5)
+    page.text(ex['key']['rule'], L, ky + 13, 360, 12, size=8, color=NAVY)
+    page.text('Records with no mention', rx, TOP + 18, track + 40, 12, size=8, color=GREY, bold=True)
     y = TOP + 36
-    header_x = {}
+    header = {}
     for group in ex['groups']:
         rows = [row for row in ex['rows'] if row['status_both_specs'] == group['status']]
         colour = STATUS_COLOURS[group['status']]
         page.line(L, y - 3, R - 6, y - 3, HAIR, .5)
-        page.text(group['label'], L, y, 200, 13, size=9, color=colour, bold=True)
-        header_x[group['status']] = (L + 4.2 * len(group['label']) + 8, y)
+        page.sup(group['label'], L, y, 330, 13, size=9, color=colour, bold=True)
+        header[group['status']] = (L + 4.2 * len(group['label']) + 8, y)
         if group['status'] == 'bounded':
             page.text(ex['t4_tag'], rx, y + 1, track + 40, 12, size=8, color=SLATE)
         top = y + 16
         bottom = top + 21 * len(rows)
-        for band in ex['bands']:
-            b = band['bound']
-            page.rect(px(-b), top - 2, px(b) - px(-b), bottom - top + 2, BAND_FILLS[b])
+        page.rect(px(-.05), top - 2, px(.05) - px(-.05), bottom - top + 2, TINT_BAND)
         page.line(px(0), top - 2, px(0), bottom, NAVY, .75)
         for k, row in enumerate(rows):
             ry = top + 21 * k
             centre = ry + 7.5
-            name = 'Sentiment¹' if row['term'].startswith('sentiment') else row['term'].capitalize()
-            page.sup(name, L, ry + 1, 96, 14, size=9)
+            name = 'Sentiment' if row['term'].startswith('sentiment') else row['term'].capitalize()
+            page.text(name, L, ry + 1, 96, 14, size=9)
             page.line(px(row['ci90_low']), centre, px(row['ci90_high']), centre, colour, 2)
             page.rect(px(row['estimate']) - 3.5, centre - 3.5, 7, 7, colour, 'ELLIPSE')
             page.rect(rx, centre - 3.5, track, 7, '#ECEAE4')
@@ -813,18 +815,18 @@ def forest(page, slide, pos):
                       color=colour, bold=group['status'] == 'unresolved')
         y = bottom + 8
     end = y - 8
-    for value, name in [(-.1, '−0.10'), (-.05, '−0.05'), (0, '0'), (.05, '+0.05'), (.1, '+0.10')]:
-        page.text(name, px(value) - 20, end + 3, 40, 12, size=8, color=GREY, align='center')
+    for value, name in [(-.1, '−10%'), (-.05, '−5%'), (0, '0'), (.05, '+5%'), (.1, '+10%')]:
+        page.line(px(value), end, px(value), end + 3, RULE, .75)
+        page.text(name, px(value) - 20, end + 4, 40, 12, size=8, color=GREY, align='center')
     for value, name in [(0, '0%'), (1, '100%')]:
-        page.text(name, rx + value * track - 15, end + 3, 30, 12, size=8, color=GREY, align='center')
-    mx, my = header_x['bounded']
-    page.marker(1, mx, my + 0.5)
-    mx, my = header_x['unresolved']
-    page.marker(2, mx, my + 0.5)
-    page.marker(4, rx + 3.3 * len(ex['t4_tag']) + 8, header_x['bounded'][1] + 0.5)
+        page.text(name, rx + value * track - 15, end + 4, 30, 12, size=8, color=GREY, align='center')
+    page.marker(1, *header['bounded'])
+    page.marker(3, header['unresolved'][0], header['unresolved'][1])
+    page.marker(4, rx + 3.3 * len(ex['t4_tag']) + 8, header['bounded'][1] + 0.5)
     page.caption('Figure 5.', ex['caption'], end + 18)
     page.caption('¹', ex['note_sup'], end + 31)
-    page.caption('Note:', ex['note'], end + 44)
+    page.text(ex['note'], L, end + 44, R - L, 12, size=8, color=GREY,
+              spans=[(0, 1, {'color': SLATE, 'bold': True})])
     page.takeaways(slide['takeaways'], pos)
 
 

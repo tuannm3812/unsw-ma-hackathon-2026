@@ -2607,3 +2607,15 @@ unseen exact template, which cannot exclude near-duplicates.
   - New numbers come from `src/bound_ladder.py` (tested in `tests/test_bound_ladder.py`) into `reports/evidence_sources/bound_ladder.json`, and are added to the register. In the programme-adjusted fit, urgency and first person do pass the loose ±0.10 band, so the slide makes no "fails every band" claim.
   - Other concepts considered: a verdict-by-bound dot strip (dropped: it duplicated the nested bands); per-framing icons (dropped: only a few framings have matching icons, and the rarity column carries more meaning).
   - QA reports no automated problems; full suite 197 passed; previews, PDF and preview page refreshed; not pushed.
+- **2026-11-08, slides 8–9 storytelling (Mike's follow-up):** no new owner edits; slides 8 and 9 were rebuilt alone.
+  - **Slide 9** is simplified around one answer.
+    - New title: "Five framings have small links to funding time; urgency remains unknown". It avoids the retired "barely registers" and "robust" phrasing.
+    - A "How to read" key uses glyphs drawn like the chart: estimate and 90% range; the yellow band means too small to matter, within ±5% of funding time.
+    - One solid ±5% band; the tight and loose bands moved into takeaway 4.
+    - The axis is relabelled −10% … +10%. Tick labels were measured in the PDF within 0.1 pt of their values, and the band edges sit on the ±5% ticks.
+    - Plain verdict groups: "Too small to matter", "Small in one model only²", "Can't tell yet: too few descriptions use these words".
+    - The technical bound (±0.05 log(1 + days), BH-adjusted) and the two-model detail moved to notes.
+    - Takeaways now tell a story: answer, under five hours, too rare to judge, stricter tests.
+  - **Slide 8:** the table has a Region column from Kiva's own `region` field. `src/country_shares.py` now reports region per country and region shares, and rejects a country with more than one region (tested). The map narrowed to 250 pt to make room. The takeaway adds that Asia and Africa hold 92.8% of loans.
+  - New register rows: region shares, top-10 regions, and the share of descriptions that mention urgency (1.3%) and first person (1.0%).
+  - QA reports no automated problems; previews, PDF and preview page refreshed; not pushed.
