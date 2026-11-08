@@ -425,12 +425,11 @@ def outcome(page, slide, pos):
         if i < 3:
             page.line(xs[i] + 18, line_y, xs[i + 1] - 18, line_y, HAIR if i != 1 else NAVY, 2 if i == 1 else 1.25)
         page.sup(label, xs[i] - 64, 208, 128, 16, size=10, bold=True, align='center')
-        page.text(note, xs[i] - 64, 226, 128, 14, size=8, color=GREY, align='center')
     for (a, b), fill, text, mark in [((0, 1), SLATE, ex['before'], 3), ((1, 2), YELLOW, ex['measure'], 1)]:
         page.rect(xs[a], 158, xs[b] - xs[a], 3, fill)
         page.rect(xs[a], 158, 2, 10, fill)
         page.rect(xs[b] - 2, 158, 2, 10, fill)
-        page.text(text, xs[a] + 4, 130, xs[b] - xs[a] - 8, 26, size=10, bold=True, align='center', spacing=105)
+        page.sup(text, xs[a] - 6, 128, xs[b] - xs[a] + 12, 28, size=10, bold=True, align='center')
     page.marker(1, xs[0] - 18, 157)
     page.marker(3, xs[2] + 6, 157)
     # 96.4% stacked bar
@@ -454,7 +453,8 @@ def outcome(page, slide, pos):
     page.marker(2, sx + sw - 16, top + 77)
     page.caption('Figure 2.', ex['caption'], 400)
     page.caption('¹', ex['note'], 414)
-    page.caption('Scope:', slide['body'][0]['text'], 428)
+    page.caption('²', ex['note2'], 428)
+    page.caption('Scope:', slide['body'][0]['text'], 442)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -494,9 +494,10 @@ def slowdown(page, slide, pos):
                   color=NAVY if light else WHITE)
         page.sup(f"{row['year']}¹" if light else str(row['year']), x - 22, base + 4, 44, 14, size=10, align='center')
     page.line(x0 - step / 2, base, x1 + step / 2, base, NAVY, 1)
-    page.marker(1, px(7) - 6, py(30) - 24)
-    page.marker(2, px(3) + step / 2 - 20, top + 6)
-    page.marker(3, px(5) + step / 2 - 20, top + 6)
+    page.marker(1, px(4) - 6, py(years[4]['share'] * 100) - 18)
+    page.marker(2, px(9) + step / 2 - 20, top + 6)
+    page.marker(3, px(3) + step / 2 - 20, top + 6)
+    page.marker(4, px(5) + step / 2 - 20, top + 6)
     page.caption('Figure 3.', ex['caption'], base + 26)
     page.caption('¹', ex['note'], base + 40)
     page.takeaways(slide['takeaways'], pos)

@@ -230,29 +230,30 @@
         "steps": [
           [
             "Partner pays the borrower",
-            "day 0"
+            ""
           ],
           [
             "Loan is listed on Kiva",
-            "median 24.2 days later"
+            ""
           ],
           [
             "Lenders fully fund it",
-            "median 2.85 days later"
+            ""
           ],
           [
             "Funds go to the partner¹",
-            "after full funding"
+            ""
           ]
         ],
-        "before": "Borrower already has the money",
-        "measure": "What we measure: listing to full funding",
+        "before": "Borrower already has the money: median 24.2 days²",
+        "measure": "What we measure: median 2.85 days²",
         "before_share": 96.4,
         "bar_title": "Loans disbursed to the borrower before listing",
         "in_data": "In the data: 1,453,840 completed loans, including 1,637 refunded",
         "not_in_data": "Not in the data: listings that expired or never funded",
         "caption": "Journey of a typical pre-disbursed Kiva loan, not to scale; medians from the full-data audit.",
-        "note": "Typical field-partner flow; this step is not observed in the data."
+        "note": "Typical field-partner flow; this step is not observed in the data.",
+        "note2": "Separate medians: 24.2 days covers the 96.4% disbursed before listing, and the two do not add up along one loan."
       }
     },
     {
@@ -346,23 +347,28 @@
       "takeaways": [
         {
           "marker": 1,
-          "heading": "The market stayed slower",
-          "text": "From 2021 to 2024 the share stayed **between 27.5% and 29.9%**, well below the pre-pandemic average."
+          "heading": "The drop came in one year",
+          "text": "Same-day funding fell from **42.5% in 2019 to 32.3% in 2020**."
         },
         {
           "marker": 2,
-          "heading": "Every model controls for period",
-          "text": "Period is a control in every model; **narrative effects are judged within periods**."
+          "heading": "The low level held four years",
+          "text": "From 2021 to 2024 the share stayed **between 27.5% and 29.9%**; the 2025 rise may reflect an incomplete year."
         },
         {
           "marker": 3,
-          "heading": "This is context, not framing",
-          "text": "A platform-wide shift like this is **context to control for**, not evidence about how descriptions are written."
+          "heading": "Every model controls for period",
+          "text": "The shift is platform-wide, so **narrative effects are compared within periods**, not across them."
+        },
+        {
+          "marker": 4,
+          "heading": "Causes are untested here",
+          "text": "Possible drivers, such as lender supply or listing volume, are **not measured** in this analysis."
         }
       ],
       "notes": {
         "purpose": "Show the market context.",
-        "script": "Before 2020 roughly 43 to 49 percent of loans funded within a day. That fell to under a third in 2020 and stayed there through 2024. 2025 looks higher, but loans that had not funded by the time the data were extracted are missing, so that year may look faster than it was. This is descriptive: we do not claim to know why.",
+        "script": "Before 2020 roughly 43 to 49 percent of loans funded within a day. [Point: The drop came in one year] The share fell sharply in 2020 and stayed under 30 percent through 2024. 2025 looks higher, but loans that had not funded by the time the data were extracted are missing, so that year may look faster than it was. [Point: Every model controls for period] Because the change is platform-wide, every model compares narratives within periods. [Point: Causes are untested here] We do not know why it happened; lender supply and listing volume are not in our data.",
         "reference": "reports/period_trend/yearly_same_day_share.json (src/period_trend.py); period averages from association_summary.txt."
       },
       "sublabel": "Market context"
