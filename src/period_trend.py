@@ -14,12 +14,25 @@ import pandas as pd
 from src.programme_audit import file_sha256
 
 
+LONG_WAIT_DAYS = 14
+
+
 def yearly_share(frame: pd.DataFrame) -> list[dict]:
-    """Return per-year record counts and the share funded within 24 hours."""
+    """Return per-year record counts, the share funded within 24 hours and, when funding time is
+    available, the median wait and the share waiting more than two weeks."""
     eligible = frame.loc[frame['valid_completed_outcome'].fillna(False).astype(bool)]
     grouped = eligible.groupby('fundraising_year')['funded_within_24h'].agg(['size', 'sum'])
-    return [{'year': int(year), 'records': int(row['size']), 'funded_within_24h': int(row['sum']),
+    rows = [{'year': int(year), 'records': int(row['size']), 'funded_within_24h': int(row['sum']),
              'share_within_24h': float(row['sum'] / row['size'])} for year, row in grouped.iterrows()]
+    if 'funding_speed_days' in eligible:
+        days = eligible.groupby('fundraising_year')['funding_speed_days']
+        median, long_wait = days.median(), days.apply(lambda d: float((d > LONG_WAIT_DAYS).mean()))
+        long_count = days.apply(lambda d: int((d > LONG_WAIT_DAYS).sum()))
+        for row in rows:
+            row.update({'median_days': float(median[row['year']]),
+                        'share_over_14_days': float(long_wait[row['year']]),
+                        'records_over_14_days': int(long_count[row['year']])})
+    return rows
 
 
 def main(argv=None) -> int:

@@ -2790,3 +2790,16 @@ unseen exact template, which cannot exclude near-duplicates.
     - Same-day share by period became compact bars beside the framed shop photo.
     - The takeaways name the 0.39-day quarter.
   - QA reports no automated problems; full suite passes; previews, PDF and preview page refreshed; not pushed.
+- **2026-11-08, slides 2–4 follow-up (Mike):**
+  - **Owner edits:** Mike edited the live cover: he removed "· Finalist" from the kicker and changed the team line to "Team Cultural Blend - University of Technology Sydney". Both are mirrored into the storyline; slide 1 was not rebuilt.
+  - **Summary:** all three mini charts share one geometry, with the chart area at y + 0–62 and the axis line at y + 62. Tick labels sit 3 pt below the axis, which a 200 dpi render confirmed are on one line. The bound mini gained a −5% / 0 / +5% axis.
+  - **Agenda:** uniform 24 pt row spacing in every section. The key-figure cards were removed because they repeated the summary.
+  - **Slide 4:**
+    - New title: "Waits got longer after 2019: a third of loans now wait over two weeks".
+    - The hero is the yearly view again: same-day share as a violet area and the share waiting over two weeks as a navy line, 2016–2025.
+      - It is a transparent PNG from `scripts/build_trend_chart.py` (tested in `tests/test_trend_chart.py`), with every label, tick and band native.
+      - Additions: a pandemic band, a "−10.2 points in one year" annotation, and open markers for the possibly incomplete 2025.
+    - The funding-time strip moved below the chart as a compact panel beside the photo.
+    - Four takeaways plus "→ Why early warning matters".
+  - **New numbers:** `src/period_trend.py` (tests extended) adds yearly median wait, share waiting over 14 days and their counts. Examples: median 1.72 → 4.57 days (2019 → 2020); over two weeks 19.2% → 35.8%, and 55,408 loans in 2021. All are in the register.
+  - QA reports no automated problems; full suite 216 passed; previews, PDF and preview page refreshed; not pushed.

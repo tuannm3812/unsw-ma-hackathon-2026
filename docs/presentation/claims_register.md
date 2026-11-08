@@ -26,6 +26,9 @@ benchmark. **Equivalence** = exploratory screen of October coefficients (2026-11
 | Loans by period | 589,823 pre-pandemic; 298,549 pandemic; 565,474 post-pandemic | same | August |
 | Same-day share by period | 46.0% → 30.3% → 30.0% | `notebooks/1_full_dataset_eda.py` §period trend | Descriptive |
 | Yearly same-day share (records) | 2016 43.3% (129,660); 2017 48.7% (162,622); 2018 48.8% (153,492); 2019 42.5% (144,043); 2020 32.3% (135,383); 2021 28.7% (163,166); 2022 29.9% (143,354); 2023 27.5% (143,233); 2024 27.5% (141,725); 2025 35.4% (137,162); 2025 may be incomplete (unfunded loans missing at extraction) | `reports/period_trend/yearly_same_day_share.json` | Descriptive |
+| Median wait to full funding by posting year, days (slide 4) | 2016 1.72; 2017 1.11; 2018 1.10; 2019 1.72; 2020 4.57; 2021 5.14; 2022 4.66; 2023 5.35; 2024 4.49; 2025 2.56 | `reports/period_trend/yearly_same_day_share.json` (`src/period_trend.py`) | Descriptive |
+| Share and number of loans waiting over two weeks (14 days) by posting year (slide 4) | 2016 23.0% (29,827); 2017 18.9% (30,670); 2018 20.1% (30,894); 2019 19.2% (27,620); 2020 35.8% (48,504); 2021 34.0% (55,408); 2022 32.5% (46,530); 2023 33.6% (48,102); 2024 31.3% (44,379); 2025 23.3% (31,913); 2025 may be incomplete | same | Descriptive |
+| Largest one-year fall in same-day share | 2019 → 2020: 42.5% → 32.3%, 10.2 percentage points | derived from the yearly same-day row | Descriptive |
 | Overall same-day share | 36.6% | `association_summary.txt` | August |
 | Illustrative listing values (slide 4) | median loan US$325; median term 12 months; median borrowers 1; most common sector Agriculture (461,563); most common country Philippines (521,586) | `reports/text_benchmark_private/features.pkl`, eligible records (2026-11-08) | Descriptive |
 | Framing families measured | 8 rates per 100 words | `src/features.py` `FRAMING_PATTERNS` | Descriptive |

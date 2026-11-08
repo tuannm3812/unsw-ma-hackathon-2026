@@ -25,9 +25,9 @@
         "reference": "Photos (Unsplash Licence): cover, Richard Nyoni (woman harvesting greens); Muhammad-Taha Ibrahim (banana seller); David Geneugelijk (tailor)."
       },
       "names": "Mike Nguyen and Sophia Nguyen",
-      "team": "Team Cultural Blend",
+      "team": "Team Cultural Blend - University of Technology Sydney",
       "label": "UNSW Marketing Analytics Hackathon 2026",
-      "kicker": "UNSW Marketing Analytics Hackathon 2026 · Finalist"
+      "kicker": "UNSW Marketing Analytics Hackathon 2026"
     },
     {
       "n": 2,
@@ -181,24 +181,6 @@
         "script": "Four parts: the problem, what drives the wait, our solution, and how to take it forward safely."
       },
       "hide_label": true,
-      "teasers": [
-        {
-          "value": "2.85 days",
-          "label": "median wait"
-        },
-        {
-          "value": "±5%",
-          "label": "framing links stay small"
-        },
-        {
-          "value": "2.6–4.0×",
-          "label": "better than chance at flagging slow loans"
-        },
-        {
-          "value": "4",
-          "label": "guardrails, then a roadmap"
-        }
-      ],
       "icons": [
         "account_balance-navy.png",
         "query_stats-violet.png",
@@ -212,8 +194,8 @@
       "section": "Problem",
       "sublabel": "Who waits",
       "layout": "content+takeaways",
-      "title": "A quarter of loans wait over two weeks to fund, and fast funding is rarer",
-      "subtitle": "Descriptive: platform funding time from listing to full funding, 1,453,840 completed loans",
+      "title": "Waits got longer after 2019: a third of loans now wait over two weeks",
+      "subtitle": "Descriptive: platform funding time from listing to full funding, 1,453,840 completed loans, by posting year",
       "figure": "Figure 1.",
       "exhibit": {
         "cards": [
@@ -241,19 +223,133 @@
           ]
         ],
         "period_title": "Share funded within 24 hours",
-        "caption": "Funding-time quartiles and same-day share by period, 1,453,840 completed loans, 2016–2025.",
+        "caption": "Same-day share and share waiting over two weeks by posting year (open markers: 2025 may be incomplete); funding-time quartiles.",
         "quartiles": {
           "q1": 0.39,
           "median": 2.85,
           "q3": 15.95
         },
-        "strip_title": "Days from listing to full funding (log scale)"
+        "strip_title": "Days to full funding, all years (log scale)",
+        "trend": [
+          {
+            "year": 2016,
+            "records": 129660,
+            "funded_within_24h": 56169,
+            "share_within_24h": 0.43320222119389173,
+            "median_days": 1.7228124999999999,
+            "share_over_14_days": 0.23004010488971155,
+            "records_over_14_days": 29827
+          },
+          {
+            "year": 2017,
+            "records": 162622,
+            "funded_within_24h": 79137,
+            "share_within_24h": 0.4866315750636445,
+            "median_days": 1.111556712962963,
+            "share_over_14_days": 0.1885968688123378,
+            "records_over_14_days": 30670
+          },
+          {
+            "year": 2018,
+            "records": 153492,
+            "funded_within_24h": 74899,
+            "share_within_24h": 0.4879667995726162,
+            "median_days": 1.0988078703703703,
+            "share_over_14_days": 0.20127433351575327,
+            "records_over_14_days": 30894
+          },
+          {
+            "year": 2019,
+            "records": 144043,
+            "funded_within_24h": 61276,
+            "share_within_24h": 0.42540074838763425,
+            "median_days": 1.7241782407407407,
+            "share_over_14_days": 0.19174829738342022,
+            "records_over_14_days": 27620
+          },
+          {
+            "year": 2020,
+            "records": 135383,
+            "funded_within_24h": 43709,
+            "share_within_24h": 0.32285442042206186,
+            "median_days": 4.5709375,
+            "share_over_14_days": 0.35827245665999424,
+            "records_over_14_days": 48504
+          },
+          {
+            "year": 2021,
+            "records": 163166,
+            "funded_within_24h": 46814,
+            "share_within_24h": 0.2869102631675717,
+            "median_days": 5.144994212962963,
+            "share_over_14_days": 0.33958054986945807,
+            "records_over_14_days": 55408
+          },
+          {
+            "year": 2022,
+            "records": 143354,
+            "funded_within_24h": 42811,
+            "share_within_24h": 0.2986383358678516,
+            "median_days": 4.658240740740741,
+            "share_over_14_days": 0.32458110691016645,
+            "records_over_14_days": 46530
+          },
+          {
+            "year": 2023,
+            "records": 143233,
+            "funded_within_24h": 39334,
+            "share_within_24h": 0.2746154866546117,
+            "median_days": 5.348831018518519,
+            "share_over_14_days": 0.3358304301383061,
+            "records_over_14_days": 48102
+          },
+          {
+            "year": 2024,
+            "records": 141725,
+            "funded_within_24h": 38964,
+            "share_within_24h": 0.27492679484917976,
+            "median_days": 4.485,
+            "share_over_14_days": 0.31313459163873697,
+            "records_over_14_days": 44379
+          },
+          {
+            "year": 2025,
+            "records": 137162,
+            "funded_within_24h": 48502,
+            "share_within_24h": 0.35361105845642377,
+            "median_days": 2.5550347222222225,
+            "share_over_14_days": 0.232666481970225,
+            "records_over_14_days": 31913
+          }
+        ],
+        "trend_legend": [
+          "Funded within 24 hours",
+          "Waiting over two weeks"
+        ],
+        "periods_band": [
+          [
+            "Pre-pandemic",
+            2016,
+            2019
+          ],
+          [
+            "Pandemic",
+            2020,
+            2021
+          ],
+          [
+            "Post-pandemic",
+            2022,
+            2025
+          ]
+        ],
+        "drop_label": "−10.2 points in one year"
       },
       "takeaways": [
         {
           "marker": 1,
           "heading": "Most loans fund within days",
-          "text": "Half are fully funded within **2.85 days**, and a quarter within **0.39 days**."
+          "text": "Half are fully funded within **2.85 days**, a quarter within **0.39 days**."
         },
         {
           "marker": 2,
@@ -262,16 +358,22 @@
         },
         {
           "marker": 3,
-          "heading": "Same-day funding became rarer",
-          "text": "It fell from **46.0% to 30.3%** after the pandemic began and stayed near **30.0%**."
+          "heading": "Same-day funding fell in one year",
+          "text": "From **42.5% in 2019 to 32.3% in 2020**, a fall of 10.2 points."
+        },
+        {
+          "marker": 4,
+          "heading": "Long waits became common",
+          "text": "Loans waiting over two weeks rose from **19.2% to 35.8%**; in 2021 that was **55,408 loans**."
         }
       ],
       "notes": {
         "purpose": "Define the problem in lender-time terms.",
-        "script": "The middle loan is fully funded in 2.85 days, and a quarter fund within 0.39 days, about nine hours. But the slowest quarter wait more than 15.95 days, a long tail on a log scale. Same-day funding also fell, from 46.0 percent before the pandemic to 30.3 percent during it, and stayed near 30.0 percent afterwards. Only completed loans are in the data, so loans that never funded are not counted.",
-        "reference": "Funding duration and period shares: claims register (features.pkl; notebooks/1_full_dataset_eda.py period trend). Photo: Ali Mkumbwa (shop owner) on Unsplash (Unsplash Licence)."
+        "script": "Two views of the wait. The yearly chart: same-day funding fell from 42.5 percent in 2019 to 32.3 percent in 2020, a fall of 10.2 points in one year, and stayed near 28 to 30 percent. At the same time the share of loans waiting more than two weeks rose from 19.2 to 35.8 percent; in 2021 that was 55,408 loans. The median wait rose from 1.72 days in 2019 to 4.57 days in 2020 and stayed between 4.49 and 5.35 days through 2024. 2025 may be incomplete, because loans still unfunded at extraction are missing. The strip shows all years together: the median loan is funded in 2.85 days and a quarter within 0.39 days, but a quarter wait more than 15.95 days. That long, predictable tail is why an early-warning flag matters.",
+        "reference": "Funding duration and period shares: claims register (features.pkl; notebooks/1_full_dataset_eda.py period trend). Photo: Ali Mkumbwa (shop owner) on Unsplash (Unsplash Licence). Yearly measures: reports/period_trend/yearly_same_day_share.json (src/period_trend.py); chart: scripts/build_trend_chart.py."
       },
-      "photo": "unsplash-shop-ali-mkumbwa.jpg"
+      "photo": "unsplash-shop-ali-mkumbwa.jpg",
+      "solution_link": "→ Why early warning matters"
     },
     {
       "n": 5,

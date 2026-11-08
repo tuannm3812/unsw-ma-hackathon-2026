@@ -7,61 +7,91 @@
       "year": 2016,
       "records": 129660,
       "funded_within_24h": 56169,
-      "share_within_24h": 0.43320222119389173
+      "share_within_24h": 0.43320222119389173,
+      "median_days": 1.7228124999999999,
+      "share_over_14_days": 0.23004010488971155,
+      "records_over_14_days": 29827
     },
     {
       "year": 2017,
       "records": 162622,
       "funded_within_24h": 79137,
-      "share_within_24h": 0.4866315750636445
+      "share_within_24h": 0.4866315750636445,
+      "median_days": 1.111556712962963,
+      "share_over_14_days": 0.1885968688123378,
+      "records_over_14_days": 30670
     },
     {
       "year": 2018,
       "records": 153492,
       "funded_within_24h": 74899,
-      "share_within_24h": 0.4879667995726162
+      "share_within_24h": 0.4879667995726162,
+      "median_days": 1.0988078703703703,
+      "share_over_14_days": 0.20127433351575327,
+      "records_over_14_days": 30894
     },
     {
       "year": 2019,
       "records": 144043,
       "funded_within_24h": 61276,
-      "share_within_24h": 0.42540074838763425
+      "share_within_24h": 0.42540074838763425,
+      "median_days": 1.7241782407407407,
+      "share_over_14_days": 0.19174829738342022,
+      "records_over_14_days": 27620
     },
     {
       "year": 2020,
       "records": 135383,
       "funded_within_24h": 43709,
-      "share_within_24h": 0.32285442042206186
+      "share_within_24h": 0.32285442042206186,
+      "median_days": 4.5709375,
+      "share_over_14_days": 0.35827245665999424,
+      "records_over_14_days": 48504
     },
     {
       "year": 2021,
       "records": 163166,
       "funded_within_24h": 46814,
-      "share_within_24h": 0.2869102631675717
+      "share_within_24h": 0.2869102631675717,
+      "median_days": 5.144994212962963,
+      "share_over_14_days": 0.33958054986945807,
+      "records_over_14_days": 55408
     },
     {
       "year": 2022,
       "records": 143354,
       "funded_within_24h": 42811,
-      "share_within_24h": 0.2986383358678516
+      "share_within_24h": 0.2986383358678516,
+      "median_days": 4.658240740740741,
+      "share_over_14_days": 0.32458110691016645,
+      "records_over_14_days": 46530
     },
     {
       "year": 2023,
       "records": 143233,
       "funded_within_24h": 39334,
-      "share_within_24h": 0.2746154866546117
+      "share_within_24h": 0.2746154866546117,
+      "median_days": 5.348831018518519,
+      "share_over_14_days": 0.3358304301383061,
+      "records_over_14_days": 48102
     },
     {
       "year": 2024,
       "records": 141725,
       "funded_within_24h": 38964,
-      "share_within_24h": 0.27492679484917976
+      "share_within_24h": 0.27492679484917976,
+      "median_days": 4.485,
+      "share_over_14_days": 0.31313459163873697,
+      "records_over_14_days": 44379
     },
     {
       "year": 2025,
       "records": 137162,
       "funded_within_24h": 48502,
-      "share_within_24h": 0.35361105845642377
+      "share_within_24h": 0.35361105845642377,
+      "median_days": 2.5550347222222225,
+      "share_over_14_days": 0.232666481970225,
+      "records_over_14_days": 31913
     }
   ]
 }

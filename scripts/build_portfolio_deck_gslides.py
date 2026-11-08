@@ -313,18 +313,22 @@ def wait_scale(x, w, lo=0.1, hi=100):
     return lambda days: x + (math.log10(days) - math.log10(lo)) / (math.log10(hi) - math.log10(lo)) * w
 
 
+MINI_BASE = 62  # every summary mini chart puts its axis line at y + MINI_BASE and labels 3 pt below
+
+
 def waits_mini(page, x, y, w, slide):
     """Funding-time quartiles on a log scale: the middle half as a band, the median as a bar."""
     q = slide_by_id('problem')['exhibit']['quartiles']
     px = wait_scale(x, w)
-    base = y + 46
-    page.line(x, base, x + w, base, RULE, .75)
-    page.rect(px(q['q1']), base - 22, px(q['q3']) - px(q['q1']), 22, '#E2DCF0')
-    page.rect(px(q['median']) - 1.5, base - 30, 3, 30, NAVY)
-    page.text(f"{q['median']} days", px(q['median']) - 30, base - 44, 60, 12, size=8, bold=True, align='center')
-    page.text(f"{q['q3']} days", px(q['q3']) - 30, base + 4, 60, 12, size=8, color=VIOLET, bold=True, align='center')
+    base = y + MINI_BASE
+    page.line(x, base, x + w, base, NAVY, .75)
+    page.rect(px(q['q1']), base - 24, px(q['q3']) - px(q['q1']), 24, '#E2DCF0')
+    page.rect(px(q['median']) - 1.5, base - 34, 3, 34, NAVY)
+    page.text(f"{q['median']} days", px(q['median']) - 30, base - 48, 60, 12, size=8, bold=True, align='center')
+    page.text(f"over {q['q3']} days", px(q['q3']) - 36, base - 38, 72, 12, size=8, color=VIOLET, bold=True,
+              align='center')
     for days, name in [(0.1, '0.1'), (1, '1'), (10, '10'), (100, '100 days')]:
-        page.text(name, px(days) - 22, base + 18, 44, 12, size=8, color=GREY, align='center')
+        page.text(name, px(days) - 22, base + 3, 44, 12, size=8, color=GREY, align='center')
 
 
 def period_mini(page, x, y, w, slide):
@@ -341,17 +345,17 @@ def period_mini(page, x, y, w, slide):
 
 
 def lift_mini(page, x, y, w, slide):
-    """Triage lift by test year against random (1x)."""
+    """Triage lift by test year against random (1x), on the shared summary baseline."""
     lift = slide_by_id('triage')['exhibit']['lift']
-    bar, step, base, per = 30, 50, y + 72, 15
+    bar, step, base, per = 30, 50, y + MINI_BASE, 11
     page.line(x, base - per, x + w, base - per, RULE, .75)
     page.ops[-1]['dash_style'] = 'DASH'
     for i, (year, value) in enumerate(lift):
         bx = x + 4 + i * step
         page.rect(bx, base - value * per, bar, value * per, NAVY)
-        page.text(f'{value:.2f}', bx - 8, base - value * per - 14, bar + 16, 12, size=8, color=NAVY, bold=True,
+        page.text(f'{value:.2f}', bx - 8, base - value * per - 13, bar + 16, 12, size=8, color=NAVY, bold=True,
                   align='center')
-        page.text(str(year), bx - 8, base + 2, bar + 16, 12, size=8, color=GREY, align='center')
+        page.text(str(year), bx - 8, base + 3, bar + 16, 12, size=8, color=GREY, align='center')
     page.line(x, base, x + w, base, NAVY, .75)
 
 
@@ -364,18 +368,22 @@ def waffle_mini(page, x, y, w, slide):
 
 
 def bound_mini(page, x, y, w, slide):
-    """Five bounded framings and urgency against the ±0.05 band; values from the equivalence test."""
-    rows = {r['term']: r for r in [s for s in slide_by_id('equivalence')['exhibit']['rows']]}
+    """Five bounded framings and urgency against the ±5% band, on the shared summary baseline."""
+    rows = {r['term']: r for r in slide_by_id('equivalence')['exhibit']['rows']}
     lo, hi = -.15, .15
     px = lambda value: x + (value - lo) * w / (hi - lo)
-    page.rect(px(-.05), y - 2, px(.05) - px(-.05), 76, TINT)
-    page.line(px(0), y - 2, px(0), y + 74, NAVY, .75)
+    base = y + MINI_BASE
+    page.rect(px(-.05), y, px(.05) - px(-.05), MINI_BASE, TINT)
+    page.line(px(0), y, px(0), base, NAVY, .75)
     for i, term in enumerate(['family', 'basic needs', 'business', 'agency', 'third person', 'urgency']):
-        r, cy = rows[term], y + 6 + i * 12.5
+        r, cy = rows[term], y + 6 + i * 10
         colour = VIOLET if term == 'urgency' else NAVY
         page.line(px(r['ci90_low']), cy, px(r['ci90_high']), cy, colour, 1.5)
         page.rect(px(r['estimate']) - 2.5, cy - 2.5, 5, 5, colour, 'ELLIPSE')
-    page.text('urgency', px(.0295) + 4, y + 6 + 5 * 12.5 - 7, 60, 12, size=8, color=VIOLET, bold=True)
+    page.text('urgency', px(.0295) + 4, y + 6 + 5 * 10 - 7, 60, 12, size=8, color=VIOLET, bold=True)
+    page.line(x, base, x + w, base, NAVY, .75)
+    for value, name in [(-.05, '−5%'), (0, '0'), (.05, '+5%')]:
+        page.text(name, px(value) - 20, base + 3, 40, 12, size=8, color=GREY, align='center')
 
 
 def gain_mini(page, x, y, w, slide):
@@ -417,7 +425,7 @@ def agenda(page, slide, urls):
         page.text(part['name'], x, 176, 200, 24, size=16, bold=True)
         page.text(part['question'], x, 204, 196, 36, size=12, color=GREY, spacing=110)
         page.line(x, 252, x + 200, 252, RULE, .75)
-        pitch = min(24, 128 / len(part['items']))
+        pitch = 24
         for j, (label, number) in enumerate(part['items']):
             y = 262 + j * pitch
             page.text(label, x, y + 1, 168, 16, size=10)
@@ -719,6 +727,7 @@ def map_frame(cy: float) -> tuple:
     return (L + 10, cy + 42, 250, 250 * 86 / 270)
 
 MAP_PNG = ASSETS / 'maps/country_share_map.png'
+TREND_EXTENT = (2015.6, 2025.4, 0.0, 0.6)  # must equal scripts/build_trend_chart.py EXTENT
 _MAP_SPEC = importlib.util.spec_from_file_location('build_country_map', ROOT / 'scripts/build_country_map.py')
 COUNTRY_MAP = importlib.util.module_from_spec(_MAP_SPEC)
 _MAP_SPEC.loader.exec_module(COUNTRY_MAP)
@@ -1273,48 +1282,59 @@ def chip_link(page, label, x, y, fill, urls, ink=WHITE):
                      'link': urls[label], 'color': ink, 'underline': False})
 
 
+TREND_FRAME = (L + 34, TOP + 34, 560, 168)  # matches scripts/build_trend_chart.py's 8 x 2.4 in figure
+TREND_PNG = ASSETS / 'charts/yearly_trend.png'
+
+
 def problem(page, slide, pos):
-    """Hero: funding-time quartiles on a log scale; below, same-day share by period beside a framed photo."""
+    """Hero: yearly same-day share and long waits (PNG, native labels); below, the funding-time strip."""
     page.chrome(slide)
     ex = slide['exhibit']
+    fx, fy, fw, fh = TREND_FRAME
+    x0, x1, y0, y1 = TREND_EXTENT
+    X = lambda year: fx + (year - x0) / (x1 - x0) * fw
+    Y = lambda share: fy + fh - (share - y0) / (y1 - y0) * fh
+    # Legend, period bands and gridlines sit behind the transparent chart image.
+    page.rect(L, TOP + 4, 16, 8, '#C4BBDF')
+    page.text(ex['trend_legend'][0], L + 20, TOP + 1, 130, 12, size=8, color=GREY)
+    page.line(L + 150, TOP + 8, L + 166, TOP + 8, NAVY, 2)
+    page.text(ex['trend_legend'][1], L + 170, TOP + 1, 130, 12, size=8, color=GREY)
+    for name, start, end in ex['periods_band']:
+        if name == 'Pandemic':
+            page.rect(X(start - .5), fy, X(end + .5) - X(start - .5), fh, '#EEEBF5')
+        page.text(name, X(start - .5), fy - 14, X(end + .5) - X(start - .5), 12, size=8, color=VIOLET if name == 'Pandemic' else GREY,
+                  bold=True, align='center')
+    for share in (0, .2, .4, .6):
+        page.line(fx, Y(share), fx + fw, Y(share), HAIR, .5)
+        page.text(f'{share * 100:.0f}%', L - 4, Y(share) - 6, 34, 12, size=8, color=GREY, align='right')
+    for row in ex['trend']:
+        page.text(str(row['year']), X(row['year']) - 18, fy + fh + 3, 36, 12, size=8, color=GREY, align='center')
+    page.text(ex['drop_label'], X(2018.5), Y(.53), 130, 12, size=9, color=VIOLET, bold=True)
+    page.marker(3, X(2018.5) + 124, Y(.53))
+    page.marker(4, X(2021) + 10, Y(.34) - 20)
+    # Funding-time strip, all years.
     q = ex['quartiles']
-    pw = R - 6 - L
-    panel(page, L, TOP, pw, 132, ex['strip_title'], 'The violet band holds the middle half of loans; the navy bar is the median.')
-    x0, w = L + 24, pw - 48
-    px = wait_scale(x0, w)
-    base = TOP + 104
-    page.line(x0, base, x0 + w, base, NAVY, .75)
-    for days, name in [(0.1, '0.1'), (1, '1 day'), (10, '10'), (100, '100 days')]:
-        page.line(px(days), base, px(days), base + 3, RULE, .75)
-        page.text(name, px(days) - 26, base + 5, 52, 12, size=8, color=GREY, align='center')
-    page.rect(px(q['q1']), base - 34, px(q['q3']) - px(q['q1']), 34, '#E2DCF0')
-    page.rect(px(q['median']) - 2, base - 46, 4, 46, NAVY)
-    page.text(f"Median {q['median']} days", px(q['median']) - 60, base - 62, 120, 14, size=10, bold=True, align='center')
-    page.marker(1, px(q['median']) + 64, base - 62)
-    page.text(f"Quarter within {q['q1']} days", px(q['q1']) - 128, base - 24, 122, 12, size=8, color=GREY, align='right')
-    page.text(f"A quarter wait over {q['q3']} days", px(q['q3']) + 6, base - 24, 170, 12, size=9, color=VIOLET, bold=True)
-    page.line(px(q['q3']) + 6, base - 8, px(q['q3']) + 70, base - 8, VIOLET, .75)
-    page.ops[-1]['end_arrow'] = 'FILL_ARROW'
-    page.marker(2, px(q['q3']) + 6, base - 42)
-    # Same-day share by period, compact bars.
-    ty = TOP + 150
-    page.text(ex['period_title'], L, ty, 300, 13, size=9, bold=True)
-    bbase, per, bar, step = ty + 132, 2.2, 70, 110
-    for k, (name, value) in enumerate(ex['periods']):
-        bx = L + 10 + k * step
-        page.rect(bx, bbase - value * per, bar, value * per, SLATE if k == 0 else NAVY)
-        page.text(f'{value:.1f}%', bx, bbase - value * per - 16, bar, 13, size=10, bold=True, align='center')
-        page.text(name, bx - 15, bbase + 4, bar + 30, 12, size=8, color=GREY, align='center')
-        if k == 1:
-            page.marker(3, bx + bar + 4, bbase - value * per - 8)
-    page.line(L, bbase, L + 10 + 2 * step + bar + 10, bbase, NAVY, 1)
-    page.caption(slide['figure'], ex['caption'], bbase + 22, w=pw)
+    sy, sw = fy + fh + 22, 380
+    panel(page, L, sy, sw, 92, ex['strip_title'], 'Violet band: the middle half of loans; navy bar: the median.')
+    px = wait_scale(L + 16, sw - 104)
+    base = sy + 74
+    page.line(L + 16, base, L + sw - 88, base, NAVY, .75)
+    for days, name in [(0.1, '0.1'), (1, '1 day'), (10, '10'), (100, '100')]:
+        page.text(name, px(days) - 20, base + 2, 40, 11, size=8, color=GREY, align='center')
+    page.rect(px(q['q1']), base - 18, px(q['q3']) - px(q['q1']), 18, '#E2DCF0')
+    page.rect(px(q['median']) - 1.5, base - 26, 3, 26, NAVY)
+    page.text(f"Median {q['median']} days", px(q['median']) - 50, base - 40, 100, 12, size=8, bold=True, align='center')
+    page.marker(1, px(q['median']) + 44, base - 40)
+    page.text(f"A quarter wait\nover {q['q3']} days", L + sw - 84, base - 30, 82, 26, size=8, color=VIOLET, bold=True,
+              spacing=100)
+    page.marker(2, L + sw - 22, sy + 8)
+    page.caption(slide['figure'], ex['caption'], sy + 100, w=R - 6 - L)
     page.takeaways(slide['takeaways'], pos)
 
 
 INSIGHT_CARDS = [(L + i * 245, TOP, 233, 236) for i in range(3)]
 INSIGHT_PHOTO = (L + 735, TOP, FULL - L - 735, 236)
-PROBLEM_PHOTO = (L + 360, TOP + 150, R - 6 - L - 360, 140)
+PROBLEM_PHOTO = (L + 392, TOP + 34 + 168 + 22, R - 6 - L - 392, 92)
 PRIORITISE_PHOTO = (L + 600, TOP + 162, FULL - L - 600, 88)
 
 
@@ -1694,6 +1714,7 @@ def main() -> None:
         for sid, frame in [('problem', PROBLEM_PHOTO), ('insight', INSIGHT_PHOTO), ('prioritise', PRIORITISE_PHOTO)]:
             images.append((at[sid], framed_photo(Path(work), ASSETS / 'photos' / slide_by_id(sid)['photo'], frame,
                                                  f'{sid}.png', all_corners=True), frame))
+        images.append((at['problem'], TREND_PNG, TREND_FRAME))
         if 'where' in at:
             images.append((at['where'], MAP_PNG, map_frame(TOP)))
         images += [(at['cover'], framed_photo(Path(work), path, frame, f'small-{i}.png', all_corners=True), frame)
