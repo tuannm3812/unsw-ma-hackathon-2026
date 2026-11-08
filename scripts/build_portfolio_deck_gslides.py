@@ -425,7 +425,7 @@ def agenda(page, slide, urls):
         page.text(part['name'], x, 176, 200, 24, size=16, bold=True)
         page.text(part['question'], x, 204, 196, 36, size=12, color=GREY, spacing=110)
         page.line(x, 252, x + 200, 252, RULE, .75)
-        pitch = 24
+        pitch = 22
         for j, (label, number) in enumerate(part['items']):
             y = 262 + j * pitch
             page.text(label, x, y + 1, 168, 16, size=10)
@@ -446,7 +446,7 @@ def lever(page, slide, pos):
     x, y, w, h = L, TOP, R - 16 - L, 316
     page.rect(x, y, w, h, PAPER)
     page.rect(x, y, w, 2.5, YELLOW)
-    page.caption('Figure 1.', ex['caption'], y + h + 8, w=w)
+    page.caption(slide['figure'], ex['caption'], y + h + 8, w=w)
     y -= 16  # card content starts higher now that the label sits in the caption
     rx, rw = x + 202, w - 218
     page.text('FIXED AT LISTING', rx + 26, y + 32, 240, 14, size=10, color=SLATE, bold=True)
@@ -482,14 +482,13 @@ def lever(page, slide, pos):
             page.text(label, cx, y + 294, width, 18, size=10, align='center', middle=True,
                       spans=[(0, len(label), style)])
         cx += width + 8
-    page.marker(3, rx + rw - 14, y + 33)
-    page.marker(1, rx + rw - 14, y + 143)
-    page.marker(4, rx + rw - 14, y + 170)
+    page.marker(1, rx + rw - 14, y + 33)
+    page.marker(3, rx + rw - 14, y + 170)
     page.marker(2, rx + rw - 14, y + 277)
     page.takeaways(slide['takeaways'], pos)
 
 
-JOURNEY_X = [112, 256, 400, 544]  # icon centres for the four journey steps on slide 5
+JOURNEY_X = [100, 224, 348, 472, 596]  # icon centres for the five journey stages on the process slide
 JOURNEY_ICONS = ['payments-violet.png', 'storefront-navy.png', 'groups-navy.png', 'account_balance-violet.png']
 
 
@@ -498,17 +497,24 @@ def outcome(page, slide, pos):
     page.chrome(slide)
     ex = slide['exhibit']
     xs, line_y = JOURNEY_X, 186
+    actor_fill = {'violet': (VIOLET, WHITE), 'navy': (NAVY, WHITE), 'yellow': (YELLOW, NAVY), 'slate': (SLATE, WHITE)}
     for i, (label, note) in enumerate(ex['steps']):
-        if i < 3:
+        if i < len(ex['steps']) - 1:
             page.line(xs[i] + 18, line_y, xs[i + 1] - 18, line_y, HAIR if i != 1 else NAVY, 2 if i == 1 else 1.25)
-        page.sup(label, xs[i] - 64, 208, 128, 16, size=10, bold=True, align='center')
+            page.ops[-1]['end_arrow'] = 'FILL_ARROW'
+        page.sup(label, xs[i] - 54, 206, 108, 28, size=9, bold=True, align="center")
+        if ex.get('actors'):
+            name, colour = ex['actors'][i]
+            fill, ink = actor_fill[colour]
+            tw = 5.2 * len(name) + 14
+            page.badge(name, xs[i] - tw / 2, 240, (tw, 16), fill, ink, 8, 'ROUND_RECTANGLE')
     for (a, b), fill, text, mark in [((0, 1), SLATE, ex['before'], 3), ((1, 2), YELLOW, ex['measure'], 1)]:
         page.rect(xs[a], 158, xs[b] - xs[a], 3, fill)
         page.rect(xs[a], 158, 2, 10, fill)
         page.rect(xs[b] - 2, 158, 2, 10, fill)
-        page.sup(text, xs[a] - 6, 128, xs[b] - xs[a] + 12, 28, size=10, bold=True, align='center')
-    page.marker(1, xs[0] - 18, 157)
-    page.marker(3, xs[2] + 6, 157)
+        page.sup(text, xs[a] + 2, 128, xs[b] - xs[a] - 4, 28, size=9, bold=True, align='center')
+    page.marker(2, xs[0] - 18, 157)
+    page.marker(1, xs[2] + 6, 157)
     # 96.4% stacked bar
     top = 284
     page.text(ex['bar_title'], L, top, 280, 14, size=10, bold=True)
@@ -527,8 +533,8 @@ def outcome(page, slide, pos):
     page.rect(sx, top + 66, sw, 34, '#EEF0F3')
     page.text(ex['not_in_data'], sx + 36, top + 66, sw - 44, 34, size=10, color=GREY, middle=True,
               spans=[(0, ex['not_in_data'].index(':') + 1, {'bold': True})])
-    page.marker(2, sx + sw - 16, top + 77)
-    page.caption('Figure 2.', ex['caption'], 400)
+    page.marker(3, sx + sw - 16, top + 77)
+    page.caption(slide['figure'], ex['caption'], 400)
     page.caption('¹', ex['note'], 414)
     page.caption('²', ex['note2'], 428)
     page.caption('Scope:', slide['body'][0]['text'], 442)
@@ -1700,6 +1706,7 @@ def main() -> None:
     # Link targets accept a storyline number as int or text, including appendix labels such as 'A2'.
     urls.update({str(slide['n']): urls[i + 1] for i, slide in enumerate(story)})
     builders = {'summary': summary, 'problem': problem, 'text_adds': text_adds, 'where': where, 'subgroups': subgroups,
+                'lever': lever, 'outcome': outcome,
                 'clustering': clustering, 'equivalence': forest, 'regions': regions, 'a_screen': regions,
                 'persist': persist, 'forecast': forecast, 'gain_uncertainty': gains}
     linked = {'approach': approach, 'gates': gates, 'solution': gates, 'supports': supports,
@@ -1735,6 +1742,16 @@ def main() -> None:
             images.append((at[sid], framed_photo(Path(work), ASSETS / 'photos' / slide_by_id(sid)['photo'], frame,
                                                  f'{sid}.png', all_corners=True), frame))
         images.append((at['problem'], TREND_PNG, TREND_FRAME))
+        if 'lever' in at:
+            images.append((at['lever'], framed_photo(Path(work), ASSETS / 'photos' / slide_by_id('lever')['photo'],
+                                                     LEVER_PHOTO, 'lever.png', all_corners=True), LEVER_PHOTO))
+            images.append((at['lever'], ASSETS / 'icons/table_rows-slate.png', (L + 202, TOP - 2, 18, 18)))
+            images.append((at['lever'], ASSETS / 'icons/description-violet.png', (L + 202, TOP + 108, 18, 18)))
+        if 'outcome' in at:
+            for x, icon in zip(JOURNEY_X, slide_by_id('outcome')['exhibit']['icons']):
+                images.append((at['outcome'], ASSETS / 'icons' / icon, (x - 15, 171, 30, 30)))
+            images.append((at['outcome'], ASSETS / 'icons/check_circle-navy.png', (356 + 12, 284 + 31, 18, 18)))
+            images.append((at['outcome'], ASSETS / 'icons/block-slate.png', (356 + 12, 284 + 74, 18, 18)))
         if 'where' in at:
             images.append((at['where'], MAP_PNG, map_frame(TOP)))
         images += [(at['cover'], framed_photo(Path(work), path, frame, f'small-{i}.png', all_corners=True), frame)
@@ -1756,8 +1773,8 @@ def main() -> None:
             images.append((at['summary'], ASSETS / 'icons' / icon, (x, BAND[1] + BAND[3] / 2 - 10, 20, 20)))
         for item, (x, y, _, _) in zip(slide_by_id('insight')['cards'], INSIGHT_CARDS):
             images.append((at['insight'], ASSETS / 'icons' / item['icon'], (x + 16, y + 14, 22, 22)))
-        for lever, (x, y, _, _) in zip(slide_by_id('prioritise')['levers'], LEVER_BOXES):
-            images.append((at['prioritise'], ASSETS / 'icons' / lever['icon'], (x + 16, y + 15, 20, 20)))
+        for item, (x, y, _, _) in zip(slide_by_id('prioritise')['levers'], LEVER_BOXES):
+            images.append((at['prioritise'], ASSETS / 'icons' / item['icon'], (x + 16, y + 15, 20, 20)))
         for k in range(len(slide_by_id('triage')['exhibit']['support'])):
             images.append((at['triage'], ASSETS / 'icons/check_circle-navy.png', (L + 16, TOP + 182 + 24 * k, 16, 16)))
         for index, path, (x, y, w, h) in images:

@@ -15,6 +15,7 @@ None of these people are records in the project's dataset; the photos give conte
 | `unsplash-shop-ali-mkumbwa.jpg` | Businesswoman inside her small shop (problem slide) | Ali Mkumbwa | <https://unsplash.com/photos/a-woman-sitting-at-a-counter-in-a-store-EOkN2pRjFsg> | Unsplash Licence (free to use; credit given) |
 | `unsplash-shop-abuja-muhammad-taha-ibrahim.jpg` | Small business owner in his shop, Abuja (key insight slide) | Muhammad-Taha Ibrahim | <https://unsplash.com/photos/man-in-blue-shirt-standing-in-a-small-shop-iLv6fkrr6Jk> | Unsplash Licence (free to use; credit given) |
 | `unsplash-soybean-richard-nyoni.jpg` | Soybean farmer tending crops (Prioritise slide) | Richard Nyoni | <https://unsplash.com/photos/a-farmer-tends-to-his-crops-in-a-green-field-1AoGjqdyDLU> | Unsplash Licence (free to use; credit given) |
+| `unsplash-tomato-seller-tunde-buremo.jpg` | Tomato and pepper seller at Bodija Market, Ibadan (sample-loan slide) | Tunde Buremo | <https://unsplash.com/photos/a-group-of-people-standing-around-a-table-filled-with-tomatoes-cnVn4Gg4b00> | Unsplash Licence (free to use; credit given) |
 
 Each photo page showed "Download free", meaning it is not an Unsplash+ image. Files are the
 2000 px wide renditions from the Unsplash image CDN. The Unsplash Licence permits commercial
