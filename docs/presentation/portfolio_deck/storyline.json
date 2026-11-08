@@ -2692,8 +2692,8 @@
           "question": "Associations, not causes",
           "verdict": "Limit",
           "tone": "not_yet",
-          "evidence": "Every result is observational; no edit or lever has been tested.",
-          "so_what": "Pilot each lever and prompt against a control.",
+          "evidence": "Every result is **observational**; **no edit or lever** has been tested.",
+          "so_what": "**Pilot** each lever and prompt against a **control**.",
           "icon": "science-navy.png",
           "marker": 1
         },
@@ -2702,8 +2702,8 @@
           "question": "Funded loans only",
           "verdict": "Limit",
           "tone": "not_yet",
-          "evidence": "Listings that expired unfunded are not in the data, so reach is unknown.",
-          "so_what": "Add expired listings before judging reach.",
+          "evidence": "Listings that **expired unfunded** are not in the data, so **reach** is unknown.",
+          "so_what": "Add **expired listings** before judging reach.",
           "icon": "payments-navy.png",
           "marker": 2
         },
@@ -2712,8 +2712,8 @@
           "question": "Uneven across countries",
           "verdict": "Check",
           "tone": "unclear",
-          "evidence": "Flag precision varies widely within the largest countries, and probabilities drift in 2025.",
-          "so_what": "Recalibrate and validate the flag country by country.",
+          "evidence": "Flag precision **varies widely** within the largest countries, and probabilities **drift** in 2025.",
+          "so_what": "**Recalibrate and validate** the flag country by country.",
           "icon": "public-violet.png",
           "marker": 3
         },
@@ -2722,8 +2722,8 @@
           "question": "For whom and when",
           "verdict": "Checked",
           "tone": "yes",
-          "evidence": "Framings stay small across groups, and the one strict-test pass holds in one model only.",
-          "so_what": "Test urgency in Asia as a hypothesis.",
+          "evidence": "Framings stay **small across groups**, and the one strict-test pass holds in **one model only**.",
+          "so_what": "Test **urgency in Asia** as a hypothesis.",
           "icon": "groups-navy.png",
           "marker": 4
         }
@@ -2793,7 +2793,7 @@
       "id": "roadmap",
       "section": "Next steps",
       "sublabel": "Roadmap",
-      "layout": "roadmap",
+      "layout": "content+takeaways",
       "title": "Start with prediction and support now; earn writing advice later",
       "subtitle": "Proposed roadmap for Kiva and partners",
       "columns": [
@@ -2801,36 +2801,94 @@
           "stage": "Now",
           "colour": "navy",
           "items": [
-            "Pilot the slow-funding flag at listing",
-            "Route lender-side support to flagged loans",
-            "Stop investing in framing tweaks"
+            [
+              "Predict",
+              "target-navy.png",
+              "**Pilot the flag** at listing"
+            ],
+            [
+              "Prioritise",
+              "groups-navy.png",
+              "Route **lender-side support** to flagged loans"
+            ],
+            [
+              "Prioritise",
+              "groups-navy.png",
+              "Stop investing in **framing tweaks**"
+            ]
           ]
         },
         {
           "stage": "Next",
           "colour": "violet",
           "items": [
-            "Recalibrate and validate the flag by country",
-            "Validate the text measures with a codebook",
-            "Pilot one truthful clarity prompt against a control"
+            [
+              "Predict",
+              "target-navy.png",
+              "**Recalibrate and validate** the flag by country"
+            ],
+            [
+              "Test · Gate 1",
+              "science-navy.png",
+              "Validate the **text measures** with a codebook"
+            ],
+            [
+              "Test · Gate 2",
+              "science-navy.png",
+              "**Data partnership**: listing-time text, expired listings, partner identifiers"
+            ]
           ]
         },
         {
           "stage": "Later",
           "colour": "yellow",
           "items": [
-            "Data partnership: listing-time text, expired listings, partner identifiers",
-            "Answer for whom and when properly",
-            "Give writing advice only if the pilot shows it helps"
+            [
+              "Test · Gate 3",
+              "science-navy.png",
+              "Pilot **one truthful prompt** against a control"
+            ],
+            [
+              "Test",
+              "science-navy.png",
+              "Answer **for whom and when** properly"
+            ],
+            [
+              "Test",
+              "science-navy.png",
+              "Give **writing advice** only if the pilot shows it helps"
+            ]
           ]
         }
       ],
-      "stop": "If a step fails, stop there: report the uncertainty and give no writing advice.",
       "notes": {
         "purpose": "A clear path from now to later.",
-        "script": "Now: pilot the flag, route lender-side support to flagged loans, and stop investing in framing tweaks. Next: recalibrate and validate the flag by country, validate the text measures, and pilot one truthful clarity prompt. Later: a data partnership with listing-time text, expired listings and partner identifiers, so we can answer for whom and when, and only then consider writing advice.",
+        "script": "[Point: Start where no rewrite is needed] Now: pilot the flag, route lender-side support to flagged loans, and stop investing in framing tweaks. [Point: Prove the flag before scaling] Next: recalibrate and validate the flag by country before any wider use. [Point: Data comes before a writing test] Also next: validate the text measures with a codebook, which is gate 1, and agree a data partnership for listing-time text, expired listings and partner identifiers, which is gate 2. [Point: Writing advice is the last step] Later: pilot one truthful clarity prompt against a control, which is gate 3, answer for whom and when properly, and only then consider writing advice. If a step fails, stop there and report the uncertainty.",
         "reference": "Gates and guardrails slides."
-      }
+      },
+      "takeaways": [
+        {
+          "marker": 1,
+          "heading": "Start where no rewrite is needed",
+          "text": "The flag and lender support can be piloted **without changing a story**."
+        },
+        {
+          "marker": 2,
+          "heading": "Prove the flag before scaling",
+          "text": "Country checks come **before any wider use**."
+        },
+        {
+          "marker": 3,
+          "heading": "Data comes before a writing test",
+          "text": "Measures and missing data come **before a prompt is piloted**."
+        },
+        {
+          "marker": 4,
+          "heading": "Writing advice is the last step",
+          "text": "It follows **only if the pilot shows it helps**."
+        }
+      ],
+      "solution_link": "→ Why our ask starts with the flag"
     },
     {
       "n": 22,

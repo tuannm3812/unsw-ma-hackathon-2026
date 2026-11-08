@@ -3031,3 +3031,9 @@ unseen exact template, which cannot exclude near-duplicates.
 ## 2026-11-09: slide 20 limit-to-action rows
 
 - Live deck re-read first: no owner edits to mirror. Slide 20's cards are now four rows reading limit, what we cannot show, what we do, with status icons, plus a strip showing where each limit gets addressed. Country validation sits with the flag rollout rather than a gate, because no gate covers it. Verified: pyflakes, deck QA, word-box overlap check, rendered slide, full offline pytest. Nothing pushed.
+
+## 2026-11-09: slide 20 key terms; slide 21 rework
+
+- Live deck re-read first: no owner edits to mirror. Slide 20's rows have bold-navy key terms. Slide 21 now uses the solution card grid, tags each item with its step and gate, and has takeaways.
+- Slide 21 had an ordering conflict with slide 19: it piloted the prompt before the data partnership. The data partnership (gate 2) now comes Next and the prompt pilot (gate 3) Later.
+- Verified: pyflakes, deck QA, rendered slides, full offline pytest. Slides 20 and 21 only were rebuilt; nothing pushed.

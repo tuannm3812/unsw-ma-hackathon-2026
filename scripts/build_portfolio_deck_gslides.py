@@ -65,6 +65,15 @@ LEGEND_MID = 4.9  # x-height centre of 8 pt text below its box top, measured at 
 NARROW, WIDE = set("iljt.,:;’'()¹ "), set('mwW')
 
 
+def emphasis(text: str) -> tuple[str, list]:
+    """Strip **key term** marks and return the plain text with bold navy spans for them."""
+    spans = []
+    for m in re.finditer(r'\*\*(.+?)\*\*', text):
+        start = len(text[:m.start()].replace('**', ''))
+        spans.append((start, start + len(m.group(1)), {'bold': True, 'color': NAVY}))
+    return text.replace('**', ''), spans
+
+
 def label_width(text: str, size: float = 8) -> float:
     """Approximate Google Sans width in points, close enough to space legend items evenly."""
     width = sum(2.4 if c in NARROW else 6.6 if c in WIDE else 5.5 if c.isupper() else 4.5 for c in text)
@@ -1346,11 +1355,13 @@ def supports(page, slide, pos):
         page.marker(block['marker'], L + limit_w - 20, y + 12)
         EXTRA_IMAGES.append(('supports', ASSETS / 'icons' / status_icon, (L + 36, y + 35, 11, 11)))
         page.text(block['verdict'], L + 50, y + 35, 80, 12, size=8, bold=True, color=colour)
-        page.text(block['evidence'], why_x, y + 2, why_w, row_h - 4, size=10, color=GREY, spacing=100, middle=True)
+        plain, spans = emphasis(block['evidence'])
+        page.text(plain, why_x, y + 2, why_w, row_h - 4, size=10, color=GREY, spacing=100, middle=True, spans=spans)
         page.line(arrow_x, y + row_h / 2, act_x - 3, y + row_h / 2, SLATE, .75)
         page.ops[-1]['end_arrow'] = 'FILL_ARROW'
         page.rect(act_x, y, act_w, row_h, '#EFEBF6')
-        page.text(block['so_what'], act_x + 10, y + 2, act_w - 20, row_h - 4, size=10, bold=True, spacing=100, middle=True)
+        plain, spans = emphasis(block['so_what'])
+        page.text(plain, act_x + 10, y + 2, act_w - 20, row_h - 4, size=10, color=GREY, spacing=100, middle=True, spans=spans)
     stages = slide['stages']
     sy = first + 4 * row_h + 3 * gap + 7
     page.text(stages['title'], L, sy, 300, 12, size=9, bold=True, color=VIOLET)
@@ -1371,7 +1382,6 @@ def supports(page, slide, pos):
     page.takeaways(slide['takeaways'], pos)
 
 
-GATE_X = [L + i * 306 for i in range(3)]
 
 
 GATE_ICONS = ['fact_check-navy.png', 'table_rows-navy.png', 'science-navy.png']
@@ -1440,10 +1450,7 @@ def gates(page, slide, pos):
         for name, value, offset, bold in rows:
             EXTRA_IMAGES.append(('gates', ASSETS / 'icons' / GATE_ROW_ICONS[name], (x + 12, top + offset + LEGEND_MID - 5.5, 11, 11)))
             page.text(name, x + 26, top + offset, 120, 11, size=8, color=GREY, bold=True)
-            plain, spans = re.sub(r'\*\*', '', value), []
-            for m in re.finditer(r'\*\*(.+?)\*\*', value):
-                start = len(re.sub(r'\*\*', '', value[:m.start()]))
-                spans.append((start, start + len(m.group(1)), {'bold': True, 'color': NAVY}))
+            plain, spans = emphasis(value)
             page.text(plain, x + 12, top + offset + 11, SOLUTION_W - 24, 40, size=9, color=NAVY if bold else GREY, bold=bold, spacing=100, spans=spans)
         if i < 2:
             page.line(x + SOLUTION_W + 3, top + h / 2, x + SOLUTION_W + SOLUTION_GAP - 3, top + h / 2, SLATE, .75)
@@ -1761,25 +1768,34 @@ def text_adds(page, slide, pos):
     page.takeaways(slide['takeaways'], pos)
 
 
-def roadmap(page, slide):
-    """Now, next and later as three columns joined by thin arrows, then the stop rule."""
+def roadmap(page, slide, pos):
+    """Now, next and later on the solution card grid; each item names its step and, where it has one, its gate."""
     page.chrome(slide)
     fills = {'navy': (NAVY, WHITE), 'violet': (VIOLET, WHITE), 'yellow': (YELLOW, NAVY)}
-    width, top, h = 262, TOP + 6, 250
-    for i, (column, x) in enumerate(zip(slide['columns'], GATE_X)):
+    top, h, head, pitch = TOP, 316, 28, 94
+    markers = {(1, 0): 2, (1, 2): 3, (2, 2): 4}
+    for i, column in enumerate(slide['columns']):
+        x = L + i * (SOLUTION_W + SOLUTION_GAP)
         fill, ink = fills[column['colour']]
-        page.rect(x, top, width, h, PAPER)
-        page.badge(column['stage'], x, top, (width, 34), fill, ink, 13, 'RECTANGLE')
-        for j, item in enumerate(column['items']):
-            y = top + 50 + j * 64
+        page.rect(x, top, SOLUTION_W, h, PAPER)
+        page.rect(x, top, SOLUTION_W, head, fill)
+        page.text(column['stage'], x + 12, top, SOLUTION_W - 24, head, size=12, bold=True, color=ink, middle=True)
+        if i == 0:
+            page.marker(1, x + SOLUTION_W - 22, top + 8)
+        for j, (step, icon, text) in enumerate(column['items']):
+            y = top + head + 10 + j * pitch
             if j:
-                page.line(x + 14, y - 8, x + width - 14, y - 8, HAIR, .75)
-            page.badge(str(j + 1), x + 14, y + 2, (18, 18), fill, ink, 8)
-            page.text(item, x + 42, y, width - 56, 52, size=11, spacing=115)
+                page.line(x + 12, y - 9, x + SOLUTION_W - 12, y - 9, HAIR, .75)
+            EXTRA_IMAGES.append(('roadmap', ASSETS / 'icons' / icon, (x + 12, y, 13, 13)))
+            page.text(step, x + 29, y + 1, 110, 12, size=8, color=GREY, bold=True)
+            plain, spans = emphasis(text)
+            page.text(plain, x + 12, y + 18, SOLUTION_W - 24, 60, size=10, color=GREY, spacing=105, spans=spans)
+            if (i, j) in markers:
+                page.marker(markers[(i, j)], x + SOLUTION_W - 22, y)
         if i < 2:
-            page.line(x + width + 8, top + h / 2, x + width + 36, top + h / 2, SLATE, .75)
+            page.line(x + SOLUTION_W + 3, top + h / 2, x + SOLUTION_W + SOLUTION_GAP - 3, top + h / 2, SLATE, .75)
             page.ops[-1]['end_arrow'] = 'FILL_ARROW'
-    page.text(slide['stop'], L, top + h + 18, FULL - L, 14, size=11, color=SLATE, bold=True)
+    page.takeaways(slide['takeaways'], pos)
 
 
 def a_table(page, slide):
@@ -1986,10 +2002,9 @@ def main() -> None:
     builders = {'summary': summary, 'problem': problem, 'text_adds': text_adds, 'where': where, 'subgroups': subgroups,
                 'lever': lever, 'outcome': outcome,
                 'clustering': clustering, 'equivalence': forest, 'regions': regions, 'a_screen': regions,
-                'persist': persist, 'forecast': forecast, 'gain_uncertainty': gains, 'approach': approach, 'solution': solution, 'triage': triage, 'prioritise': prioritise, 'gates': gates, 'supports': supports}
+                'persist': persist, 'forecast': forecast, 'gain_uncertainty': gains, 'approach': approach, 'solution': solution, 'triage': triage, 'prioritise': prioritise, 'gates': gates, 'supports': supports, 'roadmap': roadmap}
     linked = {'agenda': agenda}
-    plain = {'roadmap': roadmap,
-             'a_asof': a_table, 'a_text_methods': a_table, 'a_primary': a_metrics, 'a_topics': a_topics, 'cover': cover, 'close': close}
+    plain = {'a_asof': a_table, 'a_text_methods': a_table, 'a_primary': a_metrics, 'a_topics': a_topics, 'cover': cover, 'close': close}
     for index, (slide, item) in enumerate(zip(story, slides)):
         if only is not None and index not in only:
             continue
