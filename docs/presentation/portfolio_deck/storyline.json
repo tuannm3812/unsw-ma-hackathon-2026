@@ -471,39 +471,258 @@
       "layout": "content+takeaways",
       "title": "Large row counts did not remove country-level uncertainty",
       "subtitle": "Explanatory models: HC3 versus 48-country clustered errors",
-      "key_figures": [
-        {
-          "value": "64 of 120",
-          "label": "significant terms lost significance under country clustering"
-        },
-        {
-          "value": "p = 0.49",
-          "label": "urgency, duration model, clustered (was p < 0.001 under HC3)"
-        }
-      ],
       "takeaways": [
         {
           "marker": 1,
-          "heading": "Countries share context",
-          "text": "Loans in one country share context, so 1.45 million rows behave like **far fewer independent observations**."
+          "heading": "Text terms are hit hardest",
+          "text": "**42 of 56 text terms** lost significance, against 22 of 64 control terms."
         },
         {
           "marker": 2,
-          "heading": "Weak evidence is not no effect",
-          "text": "**Losing significance is not evidence of no effect**; the next slide tests that directly."
+          "heading": "Urgency no longer passes",
+          "text": "Its p-value rose from below 0.001 to **0.49** for funding time and 0.22 for same-day funding."
         },
         {
           "marker": 3,
-          "heading": "48 countries act like 5.7",
-          "text": "Ten countries hold 80% of records, so the 48 countries weigh like about **5.7 equal-sized ones** (an exploratory index)."
+          "heading": "Few countries dominate",
+          "text": "Ten countries hold **81% of loans**, so the 48 weigh like about 5.7 equal-sized ones."
+        },
+        {
+          "marker": 4,
+          "heading": "Weak evidence is not no effect",
+          "text": "**Losing significance is not evidence of no effect**; the next slide tests that directly."
         }
       ],
       "notes": {
         "purpose": "Show why we distrust headline significance.",
-        "script": "With 1.45 million rows almost everything looks significant. When we let errors correlate within each of 48 countries, 64 of the 120 significant terms fell away, including urgency. [Point: Weak evidence is not no effect] That tells us the evidence is weak, not that the effect is zero.",
-        "reference": "Explanatory models, primary saved run 2026-08-31. association_summary.txt sensitivity blocks; recount recorded in claims_register.md."
+        "script": "With 1.45 million rows almost everything looks significant. When we let errors correlate within each of 48 countries, 64 of the 120 significant terms fell away. [Point: Text terms are hit hardest] Most of those are text terms: 42 of 56, against 22 of 64 controls. [Point: Urgency no longer passes] Urgency is the clearest case. [Point: Few countries dominate] The reason is concentration: ten countries hold 81 percent of loans. [Point: Weak evidence is not no effect] That tells us the evidence is weak, not that the effect is zero.",
+        "reference": "Explanatory models, primary saved run 2026-08-31: association_summary.txt; split by src/clustering_split.py (reports/evidence_sources/clustering_split.json); shares by src/country_shares.py."
       },
-      "sublabel": "Explanatory models"
+      "sublabel": "Explanatory models",
+      "exhibit": {
+        "type": "clustering",
+        "headline_value": "64 of 120",
+        "headline_label": "significant terms lost significance once errors were clustered by country",
+        "groups": [
+          {
+            "name": "Text terms",
+            "lost": 42,
+            "significant": 56
+          },
+          {
+            "name": "Control terms",
+            "lost": 22,
+            "significant": 64
+          }
+        ],
+        "urgency": [
+          {
+            "model": "Funding time model",
+            "clustered": 0.4943
+          },
+          {
+            "model": "Same-day funding model",
+            "clustered": 0.2233
+          }
+        ],
+        "country_shares": [
+          {
+            "country": "PH",
+            "share": 0.3588
+          },
+          {
+            "country": "KE",
+            "share": 0.1834
+          },
+          {
+            "country": "UG",
+            "share": 0.0479
+          },
+          {
+            "country": "TJ",
+            "share": 0.0474
+          },
+          {
+            "country": "KH",
+            "share": 0.0399
+          },
+          {
+            "country": "MG",
+            "share": 0.0383
+          },
+          {
+            "country": "PK",
+            "share": 0.0294
+          },
+          {
+            "country": "NI",
+            "share": 0.0265
+          },
+          {
+            "country": "LR",
+            "share": 0.0198
+          },
+          {
+            "country": "TG",
+            "share": 0.0189
+          },
+          {
+            "country": "SN",
+            "share": 0.0147
+          },
+          {
+            "country": "HN",
+            "share": 0.0144
+          },
+          {
+            "country": "KG",
+            "share": 0.0141
+          },
+          {
+            "country": "IN",
+            "share": 0.014
+          },
+          {
+            "country": "SL",
+            "share": 0.0133
+          },
+          {
+            "country": "RW",
+            "share": 0.0127
+          },
+          {
+            "country": "PS",
+            "share": 0.01
+          },
+          {
+            "country": "NG",
+            "share": 0.0098
+          },
+          {
+            "country": "GH",
+            "share": 0.0098
+          },
+          {
+            "country": "CD",
+            "share": 0.0077
+          },
+          {
+            "country": "BF",
+            "share": 0.0073
+          },
+          {
+            "country": "TZ",
+            "share": 0.0073
+          },
+          {
+            "country": "TL",
+            "share": 0.0072
+          },
+          {
+            "country": "MZ",
+            "share": 0.0055
+          },
+          {
+            "country": "SB",
+            "share": 0.0055
+          },
+          {
+            "country": "HT",
+            "share": 0.0052
+          },
+          {
+            "country": "EG",
+            "share": 0.0051
+          },
+          {
+            "country": "ZW",
+            "share": 0.0044
+          },
+          {
+            "country": "LS",
+            "share": 0.0034
+          },
+          {
+            "country": "ML",
+            "share": 0.0029
+          },
+          {
+            "country": "VU",
+            "share": 0.0028
+          },
+          {
+            "country": "CM",
+            "share": 0.0025
+          },
+          {
+            "country": "MW",
+            "share": 0.0023
+          },
+          {
+            "country": "ZM",
+            "share": 0.0022
+          },
+          {
+            "country": "MM",
+            "share": 0.0022
+          },
+          {
+            "country": "NP",
+            "share": 0.0009
+          },
+          {
+            "country": "LA",
+            "share": 0.0008
+          },
+          {
+            "country": "PG",
+            "share": 0.0007
+          },
+          {
+            "country": "CI",
+            "share": 0.0004
+          },
+          {
+            "country": "YE",
+            "share": 0.0003
+          },
+          {
+            "country": "UZ",
+            "share": 0.0003
+          },
+          {
+            "country": "BI",
+            "share": 0.0001
+          },
+          {
+            "country": "BD",
+            "share": 0.0
+          },
+          {
+            "country": "SO",
+            "share": 0.0
+          },
+          {
+            "country": "BJ",
+            "share": 0.0
+          },
+          {
+            "country": "SS",
+            "share": 0.0
+          },
+          {
+            "country": "AF",
+            "share": 0.0
+          },
+          {
+            "country": "NE",
+            "share": 0.0
+          }
+        ],
+        "top10_label": "10 countries hold 81% of loans",
+        "caption": "(a) Terms significant under HC3 in the two explanatory models; each square is one term. (b) Urgency before and after clustering. (c) Loans by country.",
+        "note": "Printed as 0.0000 in the saved run. Text terms include interactions of a text measure with a control."
+      }
     },
     {
       "n": 9,

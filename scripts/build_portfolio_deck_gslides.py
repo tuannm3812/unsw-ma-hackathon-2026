@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import re
 import shutil
@@ -640,23 +641,71 @@ def pipe_x(i):
 
 
 def clustering(page, slide, pos):
+    """(a) lost significance by term type, (b) urgency p-values before and after clustering,
+    (c) how concentrated loans are across the 48 countries."""
     page.chrome(slide)
-    first, second = slide['key_figures']
-    key_card(page, first, L, TOP, 296, 100, YELLOW)
-    key_card(page, second, 353.5, TOP, 296.5, 100, VIOLET)
-    page.marker(2, 353.5 + 296.5 - 22, TOP + 10)
-    cell, gap, x0, y0 = 20, 5, L, 250
-    for i in range(120):
-        row, col = divmod(i, 20)
-        page.rect(x0 + col * (cell + gap), y0 + row * (cell + gap), cell, cell, YELLOW if i < 64 else NAVY)
-    page.marker(1, x0 + 20 * (cell + gap) + 6, y0)
-    legend = y0 + 6 * (cell + gap) + 6
-    page.rect(L, legend + 2, 11, 11, YELLOW)
-    page.text('Lost significance under country clustering', L + 17, legend, 260, 14, size=10)
-    page.rect(320, legend + 2, 11, 11, NAVY)
-    page.text('Kept significance', 337, legend, 200, 14, size=10)
-    page.marker(3, L + 296 - 22, TOP + 10)
-    page.caption('Figure 4.', 'Terms significant under HC3 in the two explanatory models; each square is one term.', legend + 22)
+    ex = slide['exhibit']
+    page.text(ex['headline_value'], L, TOP, 150, 32, size=26, bold=True)
+    page.text(ex['headline_label'], L + 148, TOP + 9, 450, 14, size=10, color=GREY)
+    # (a) two waffles, rows 172-300
+    cell, gap, top = 9.5, 2.3, 188
+    for g, group in enumerate(ex['groups']):
+        x0 = L + g * 142
+        prefix = '(a) ' if g == 0 else ''
+        page.text(f"{prefix}{group['name']}: {group['lost']} of {group['significant']} lost", x0, 172, 140, 12,
+                  size=8, bold=True)
+        for i in range(group['significant']):
+            row, col = divmod(i, 8)
+            page.rect(x0 + col * (cell + gap), top + row * (cell + gap), cell, cell,
+                      YELLOW if i < group['lost'] else NAVY)
+    page.rect(L + 246, 194, 8, 8, YELLOW)
+    page.text('lost', L + 258, 192, 40, 12, size=8, color=GREY)
+    page.rect(L + 246, 210, 8, 8, NAVY)
+    page.text('kept', L + 258, 208, 40, 12, size=8, color=GREY)
+    # (b) urgency p-values on a log scale, x 340-640
+    bx0, bx1 = 352, 628
+    px = lambda p_value: bx0 + (math.log10(p_value) + 4) / 4 * (bx1 - bx0)  # 0.0001 .. 1
+    page.text('(b) Urgency p-value, log scale', 340, 172, 260, 12, size=8, color=GREY, bold=True)
+    page.line(px(.05), 190, px(.05), 268, VIOLET, .75)
+    page.ops[-1]['dash_style'] = 'DASH'
+    page.text('0.05', px(.05) - 14, 270, 28, 12, size=8, color=VIOLET, bold=True, align='center')
+    for value, name in [(0.001, '0.001'), (0.01, '0.01'), (1, '1')]:
+        page.text(name, px(value) - 16, 270, 32, 12, size=8, color=GREY, align='center')
+    for r, row in enumerate(ex['urgency']):
+        y = 210 + r * 36
+        page.text(row['model'], 340, y - 18, 200, 12, size=8, bold=True)
+        page.line(px(.0004) + 4, y, px(row['clustered']) - 5, y, SLATE, .75)
+        page.ops[-1]['end_arrow'] = 'FILL_ARROW'
+        page.rect(px(.0004) - 4, y - 4, 8, 8, NAVY, 'ELLIPSE')
+        page.rect(px(row['clustered']) - 4, y - 4, 8, 8, VIOLET, 'ELLIPSE')
+        page.sup('<0.001¹', px(.0004) - 24, y + 5, 48, 12, size=8, align='center')
+        page.text(f"{row['clustered']:.2f}", px(row['clustered']) - 20, y + 5, 40, 12, size=8, bold=True,
+                  color=VIOLET, align='center')
+    page.rect(340, 288, 8, 8, NAVY, 'ELLIPSE')
+    page.text('HC3', 352, 286, 40, 12, size=8, color=GREY)
+    page.rect(392, 288, 8, 8, VIOLET, 'ELLIPSE')
+    page.text('country-clustered', 404, 286, 120, 12, size=8, color=GREY)
+    # (c) country shares, rows 312-420
+    shares = ex['country_shares']
+    base, per, bar, step = 420, 2.2, 9.4, 12.6
+    page.text('(c) Share of eligible loans by country, sorted', L, 312, 300, 12, size=8, color=GREY, bold=True)
+    for i, item in enumerate(shares):
+        h = max(item['share'] * 100 * per, .6)
+        page.rect(L + i * step, base - h, bar, h, NAVY if i < 10 else '#B9C1CC')
+    for i in (0, 1):
+        item = shares[i]
+        top_y = base - item['share'] * 100 * per
+        page.text(f"{item['country']} {item['share'] * 100:.1f}%", L + i * step + bar + 3, top_y - 2,
+                  70, 12, size=8, bold=True)
+    page.line(L, 334, L + 10 * step - 3, 334, NAVY, .75)
+    page.text(ex['top10_label'], L + 10 * step + 6, 327, 260, 14, size=10, bold=True)
+    page.line(L, base, L + 48 * step, base, NAVY, .75)
+    page.marker(1, L + 246, 228)
+    page.marker(2, bx1 - 4, 170)
+    page.marker(4, px(.05) + 10, 188)
+    page.marker(3, L + 10 * step + 6 + 196, 328)
+    page.caption('Figure 4.', ex['caption'], 428, w=R - 16 - L)
+    page.caption('¹', ex['note'], 442)
     page.takeaways(slide['takeaways'], pos)
 
 

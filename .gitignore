@@ -261,3 +261,5 @@ docs/presentation/research_refresh/.build/
 !reports/evidence_sources/README.md
 !reports/evidence_sources/evidence_sources.json
 !reports/period_trend/yearly_same_day_share.json
+!reports/evidence_sources/clustering_split.json
+!reports/evidence_sources/country_shares.json

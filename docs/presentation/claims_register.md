@@ -40,6 +40,8 @@ benchmark. **Equivalence** = exploratory screen of October coefficients (2026-11
 | Claim | Value | Source | Layer |
 | --- | --- | --- | --- |
 | Terms significant under HC3 that lose significance under country clustering | 64 of 120 (across both models, 128 terms tested) | `association_summary.txt`, sensitivity blocks (recounted 2026-11-08) | August |
+| Lost significance by term type | text terms 42 of 56; control terms 22 of 64 (text includes interactions with a text measure) | `reports/evidence_sources/clustering_split.json` (`src/clustering_split.py`) | August |
+| Country concentration | top 10 countries 81.0% of eligible loans; Philippines 35.9%; Kenya 18.3%; 48 countries | `reports/evidence_sources/country_shares.json` (`src/country_shares.py`) | Descriptive |
 | Urgency, clustered p | duration 0.4943; 24-hour 0.2233 | `association_summary.txt` | August |
 | Middle East family slope | −0.0729, 2 countries, 14,946 loans, heuristic interval [−0.2502, 0.1043] | `docs/2_evidence_and_corrections.md` | August |
 | Central America family slope | −0.0742, 2 countries, 59,391 loans, heuristic interval [−0.1629, 0.0145] | same | August |

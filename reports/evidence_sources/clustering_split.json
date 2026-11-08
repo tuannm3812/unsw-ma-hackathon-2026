@@ -1,0 +1,41 @@
+{
+  "rule": "text term = any term containing a description-derived feature, including interactions",
+  "models": {
+    "Duration model (log funding speed)": {
+      "text": {
+        "tested": 31,
+        "significant": 28,
+        "lost": 19
+      },
+      "control": {
+        "tested": 33,
+        "significant": 32,
+        "lost": 11
+      }
+    },
+    "24-hour funding model (log-odds)": {
+      "text": {
+        "tested": 31,
+        "significant": 28,
+        "lost": 23
+      },
+      "control": {
+        "tested": 33,
+        "significant": 32,
+        "lost": 11
+      }
+    }
+  },
+  "total": {
+    "text": {
+      "tested": 62,
+      "significant": 56,
+      "lost": 42
+    },
+    "control": {
+      "tested": 66,
+      "significant": 64,
+      "lost": 22
+    }
+  }
+}
