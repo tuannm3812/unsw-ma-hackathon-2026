@@ -878,48 +878,56 @@ TERM_LABELS = {'third_person': 'Third person', 'basic_needs': 'Basic needs', 'fi
 
 
 def subgroups(page, slide, pos):
-    """Heat grid: framing x subgroup equivalence verdicts, with counts and flagged hypotheses."""
+    """Heat grid of equivalence verdicts by framing and subgroup, with counts for each model and outcome."""
     page.chrome(slide)
     ex = slide['exhibit']
-    x0, cw, ch, gap, top = L + 92, 40, 20, 10, TOP + 34
+    x0, cw, ch, gap, top = L + 92, 32, 20, 10, TOP + 34
+    small, unknown = TINT_BAND, STAGE_FILLS[0]
     xs, k = [], 0
     for g, (group, levels) in enumerate(ex['groups']):
         gx = x0 + k * cw + g * gap
         page.text(group, gx, TOP + 2, cw * len(levels), 12, size=8, color=GREY, bold=True, align='center')
         page.line(gx + 2, TOP + 15, gx + cw * len(levels) - 4, TOP + 15, HAIR, .75)
         for level in levels:
-            page.text(level, x0 + k * cw + g * gap - 4, TOP + 18, cw + 8, 12, size=8, color=GREY, align='center')
+            page.text(level, x0 + k * cw + g * gap - 6, TOP + 18, cw + 12, 12, size=8, color=GREY, align='center')
             xs.append(x0 + k * cw + g * gap)
             k += 1
-    count_x = xs[-1] + cw + 14
-    page.text('Small in', count_x - 4, TOP + 6, 56, 12, size=8, color=GREY, bold=True)
-    page.text('10 groups', count_x - 4, TOP + 18, 56, 12, size=8, color=GREY, bold=True)
-    page.marker(1, count_x + 46, TOP + 6)
+    count_x, count_w = xs[-1] + cw + 12, 50
+    page.text('Small in, of 10', count_x, TOP + 2, count_w * 3, 12, size=8, color=GREY, bold=True, align='center')
+    page.line(count_x + 2, TOP + 15, count_x + count_w * 3 - 4, TOP + 15, HAIR, .75)
+    for c, label in enumerate(ex['count_columns']):
+        page.text(label, count_x + c * count_w, TOP + 18, count_w, 12, size=8, color=GREY, align='center')
+    page.marker(4, count_x + count_w * 3 - 22, TOP + 1)
     hyp = {(t, c) for t, c in ex['hypotheses']}
     for r, row in enumerate(sorted(ex['rows'], key=lambda row: MEASURE_ORDER.index(measure_key(row['term'])))):
         y = top + r * (ch + 6)
         page.text(TERM_LABELS.get(row['term'], row['term'].capitalize()), L + 16, y + 3, 76, 14, size=9)
         EXTRA_IMAGES.append(('subgroups', measure_icon(row['term']), (L, y + 3.5, 12, 12)))
         for c, (cx, ok) in enumerate(zip(xs, row['cells'])):
-            page.rect(cx + 1, y, cw - 2, ch, NAVY if ok else '#E2DCF0')
+            page.rect(cx + 1, y, cw - 2, ch, small if ok else unknown)
             if (row['term'], c) in hyp:
-                page.rect(cx + cw / 2 - 4, y + ch / 2 - 4, 8, 8, YELLOW, 'ELLIPSE')
-        full = row['count'] == len(xs)
-        page.text(f"{row['count']} of 10", count_x, y + 3, 50, 14, size=9, bold=full, color=NAVY if full else VIOLET)
+                page.rect(cx + cw / 2 - 3.5, y + ch / 2 - 3.5, 7, 7, NAVY, 'ELLIPSE')
+        for c, value in enumerate((row['count'], row['expanded'], row['same_day'])):
+            full = value == len(xs)
+            page.text(str(value), count_x + c * count_w, y + 3, count_w, 14, size=9, bold=full,
+                      color=NAVY if full else VIOLET, align='center')
         if row['term'] == 'urgency':
             page.marker(2, L + 62, y + 4)
     ly = top + len(ex['rows']) * (ch + 6) + 6
     lx = x0
-    for (label, fill, shape) in zip(ex['legend'], [NAVY, '#E2DCF0', YELLOW], ['RECTANGLE', 'RECTANGLE', 'ELLIPSE']):
+    for n, (label, fill, shape) in enumerate(zip(ex['legend'], [small, unknown, NAVY], ['RECTANGLE', 'RECTANGLE', 'ELLIPSE'])):
         if shape == 'ELLIPSE':
-            page.rect(lx + 2, ly + 2.5, 8, 8, fill, shape)
+            page.rect(lx + 3, ly + 2.5, 7, 7, fill, shape)
         else:
             page.rect(lx, ly + 1.5, 14, 10, fill)
         page.sup(label, lx + 18, ly, 4.4 * len(label) + 10, 12, size=8, color=GREY)
         lx += 18 + 4.4 * len(label) + 22
+        if n == 0:
+            page.marker(1, lx - 18, ly + 0.5)
+            lx += 8
     page.marker(3, lx - 14, ly + 0.5)
-    page.caption(slide['figure'], ex['caption'], ly + 18)
-    page.caption('¹', ex['note_sup'], ly + 31)
+    page.caption(slide['figure'], ex['caption'], ly + 18, w=R - L)
+    page.caption('¹', ex['note_sup'], ly + 31, w=R - L)
     page.takeaways(slide['takeaways'], pos)
 
 

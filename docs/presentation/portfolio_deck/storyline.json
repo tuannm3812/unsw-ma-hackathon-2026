@@ -1697,7 +1697,9 @@
               true,
               true
             ],
-            "count": 10
+            "count": 10,
+            "expanded": 10,
+            "same_day": 9
           },
           {
             "term": "business",
@@ -1713,7 +1715,9 @@
               true,
               true
             ],
-            "count": 10
+            "count": 10,
+            "expanded": 10,
+            "same_day": 10
           },
           {
             "term": "agency",
@@ -1729,7 +1733,9 @@
               true,
               true
             ],
-            "count": 10
+            "count": 10,
+            "expanded": 10,
+            "same_day": 9
           },
           {
             "term": "third_person",
@@ -1745,7 +1751,9 @@
               true,
               true
             ],
-            "count": 10
+            "count": 10,
+            "expanded": 10,
+            "same_day": 10
           },
           {
             "term": "basic_needs",
@@ -1761,7 +1769,9 @@
               true,
               true
             ],
-            "count": 10
+            "count": 10,
+            "expanded": 5,
+            "same_day": 6
           },
           {
             "term": "gratitude",
@@ -1777,7 +1787,9 @@
               true,
               true
             ],
-            "count": 10
+            "count": 10,
+            "expanded": 1,
+            "same_day": 1
           },
           {
             "term": "sentiment",
@@ -1793,7 +1805,9 @@
               true,
               true
             ],
-            "count": 9
+            "count": 9,
+            "expanded": 2,
+            "same_day": 2
           },
           {
             "term": "first_person",
@@ -1809,7 +1823,9 @@
               false,
               true
             ],
-            "count": 5
+            "count": 5,
+            "expanded": 0,
+            "same_day": 0
           },
           {
             "term": "urgency",
@@ -1825,7 +1841,9 @@
               false,
               false
             ],
-            "count": 1
+            "count": 1,
+            "expanded": 0,
+            "same_day": 0
           }
         ],
         "hypotheses": [
@@ -1847,14 +1865,19 @@
           "Can’t tell yet",
           "Unadjusted pattern to test¹"
         ],
-        "caption": "Equivalence verdict per framing and subgroup for funding time; programme-adjusted model, 1,453,840 loans.",
-        "note_sup": "Unadjusted p-values among about 180 subgroup tests; hypotheses for the Test step, not findings."
+        "caption": "Funding-time verdict by framing and subgroup, programme-adjusted model, 1,453,840 loans. Expanded: funding time. Same-day: ±1 pp.",
+        "note_sup": "Unadjusted p-values among about 180 subgroup tests; hypotheses for the Test step, not findings.",
+        "count_columns": [
+          "Grid",
+          "Expanded",
+          "Same-day"
+        ]
       },
       "takeaways": [
         {
           "marker": 1,
           "heading": "Small everywhere, not just on average",
-          "text": "Six framings stay within ±5% in **all 10 subgroups**; no period or loan-size interaction survives country clustering."
+          "text": "Six framings stay within ±5% in **all 10 subgroups**; no family interaction with period or loan size survives clustering."
         },
         {
           "marker": 2,
@@ -1865,12 +1888,17 @@
           "marker": 3,
           "heading": "Two patterns to test, not to act on",
           "text": "Urgency in Asia and agency by gender stand out among about **180** unadjusted tests."
+        },
+        {
+          "marker": 4,
+          "heading": "The count depends on the model",
+          "text": "In the expanded model **4** framings stay small in all 10; for same-day funding, **2**."
         }
       ],
-      "solution_link": "→ Why one approach serves every group",
+      "solution_link": "→ Why one playbook serves every group",
       "notes": {
         "purpose": "Answer for whom and when.",
-        "script": "For whom and when: we refitted the programme-adjusted model separately in ten subgroups: three periods, three loan sizes, female and male borrowers, and Asia and Africa, and applied the same five percent equivalence test. Family, business, agency, third person, basic needs and gratitude stay small in all ten; sentiment in nine. So the small result is not an average hiding a large effect in one group, and no period or loan-size interaction survives country clustering. Rare words stay unresolved: urgency is small in one subgroup, first person in five. Among about 180 unadjusted tests, urgency in Asia and agency by gender stand out; they are hypotheses for the Test step, not findings. For same-day funding the pattern is weaker: business and third person are small in all ten, family and agency in nine. In the expanded model, family, business, agency and third person stay small in all ten. The bounds were set after the estimates, so this is exploratory.",
+        "script": "For whom and when: we refitted the programme-adjusted model separately in ten subgroups: three periods, three loan sizes, female and male borrowers, and Asia and Africa, and applied the same five percent equivalence test. Family, business, agency, third person, basic needs and gratitude stay small in all ten; sentiment in nine. So the small result is not an average hiding a large effect in one group, and no family-framing interaction with period or loan size survives country clustering. [Point: Rare words stay unresolved] Urgency is small in one subgroup, first person in five. [Point: Two patterns to test, not to act on] Among about 180 unadjusted tests, urgency in Asia and agency by gender stand out; they are hypotheses for the Test step, not findings. [Point: The count depends on the model] For same-day funding the pattern is weaker: business and third person are small in all ten, family and agency in nine. In the expanded model, family, business, agency and third person stay small in all ten. The bounds were set after the estimates, so this is exploratory. So the solution can use one playbook rather than group-specific story advice.",
         "reference": "reports/evidence_sources/robustness_summary.json (src/robustness_summary.py, src/subgroup_inference.py); primary interactions: src/primary_interactions.py."
       },
       "figure": "Figure 8."

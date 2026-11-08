@@ -2910,3 +2910,10 @@ unseen exact template, which cannot exclude near-duplicates.
 - Slide 14 says text works "mainly" through TF-IDF, supported by the stage split; the placebo did not separate which text features carry the loan-specific part, so that stronger wording was not used.
 - Slide 12: chart kept. Added an axis title, the sentiment unit in the caption, and corrected "6–14% either way" to "reach 6–14%", because the ranges do not span both directions equally.
 - Verified: pyflakes, deck QA, rendered slides, full offline pytest. Nothing pushed.
+
+## 2026-11-08: slide 13 (for whom and when) rework
+
+- Live deck re-read first: no owner edits to mirror.
+- Grid recoloured to match slide 12 (yellow within ±5%, violet can't tell yet) so the exceptions stand out; counts added for the expanded model and same-day funding, read from the robustness summary and matching the register.
+- Wording: the clustering claim now says family interactions with period or loan size, which is what the register row covers. Fourth takeaway states that the count depends on the model.
+- Verified: pyflakes, deck QA, rendered slide 13, full offline pytest. Slide 13 only was rebuilt; nothing pushed.
