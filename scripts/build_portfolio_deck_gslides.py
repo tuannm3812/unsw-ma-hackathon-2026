@@ -652,6 +652,16 @@ _MAP_SPEC.loader.exec_module(COUNTRY_MAP)
 NO_LOANS = COUNTRY_MAP.NO_LOANS
 
 
+# Same-day cells: yellow tints by level, navy text, no legend (values are printed). Yellow keeps this
+# column apart from the violet loan-share scale the shared legend explains.
+SAME_DAY_FILLS = [(0.20, '#FFF7D1'), (0.35, '#FFEE94'), (0.50, '#FFE557'), (1.01, YELLOW)]
+
+
+def same_day_fill(share: float) -> str:
+    """Yellow step for a same-day share: under 20%, 20-35%, 35-50%, 50% or more."""
+    return next(fill for limit, fill in SAME_DAY_FILLS if share < limit)
+
+
 def share_style(share: float) -> tuple[str, str]:
     """Share-cell fill (the map's bin) and its text colour: white on the two dark steps."""
     fill = COUNTRY_MAP.share_colour(share)
@@ -732,7 +742,7 @@ def clustering(page, slide, pos):
     rows = ex['country_shares'][:10]
     tx = cx + 376
     for label, off, w, align in [('Country', 12, 62, None), ('Loans', 74, 40, 'right'), ('Share', 122, 34, 'center'),
-                                 ('Same-day', 162, 42, 'right')]:
+                                 ('Same-day', 166, 42, 'center')]:
         page.text(label, tx + off, my, w, 12, size=8, color=GREY, bold=True, align=align)
     for k, item in enumerate(rows):
         y = my + 12 + k * 9
@@ -743,7 +753,8 @@ def clustering(page, slide, pos):
         page.rect(tx + 122, y + 1.2, 34, 8, fill)
         page.text(f"{item['share'] * 100:.1f}%", tx + 122, y + 0.4, 34, 12, size=8, color=ink,
                   bold=ink == WHITE, align='center')
-        page.text(f"{item['same_day_share'] * 100:.0f}%", tx + 162, y, 42, 12, size=8, align='right')
+        page.rect(tx + 170, y + 1.2, 34, 8, same_day_fill(item['same_day_share']))
+        page.text(f"{item['same_day_share'] * 100:.0f}%", tx + 170, y + 0.4, 34, 12, size=8, align='center')
     page.marker(1, ax + aw - 22, ay + 8)
     page.marker(2, ax + 210, ay + 46)
     page.marker(3, bx + bw - 22, by + 8)
