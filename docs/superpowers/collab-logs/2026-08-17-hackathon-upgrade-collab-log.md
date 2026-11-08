@@ -2837,3 +2837,10 @@ unseen exact template, which cannot exclude near-duplicates.
     - Slide 7 adds "Some measures are rare" (urgency 1.3%, first person 1.0%, 11.3% never mention family).
   - One image-insert call failed transiently during a rebuild; rerunning restored the images.
   - QA reports no automated problems; full suite passes; previews, PDF and preview page refreshed; not pushed.
+- **2026-11-08, slide 8 (key insight) redesign (Mike):** no new owner edits; slide 8 was rebuilt alone.
+  - **Audit:** the numbers were correct, but the first card's chip pointed to the guardrails slide rather than slide 4, the cards showed no evidence, and nothing tied each finding to a solution step.
+  - **New layout:** three rows, each with a finding, its key figure, a small proof glyph (the 96.4% bar, lift by year, framings against the ±5% band), link chips to the proof slides, and a thin arrow to the step it leads to (Prioritise, Predict, Test first).
+  - **Takeaways:** a four-point column: act on the lender side, predict slow loans early, don't chase framing tweaks, it holds in every group (all 10 subgroups); then "→ The evidence behind each insight follows".
+  - **Wording correction:** the wait ties up partner capital; lenders are not the ones waiting.
+  - **Photo:** the Abuja shop photo no longer fits this layout and is marked unplaced in PROVENANCE.md; no photo repeats.
+  - QA reports no automated problems; full suite passes; previews, PDF and preview page refreshed; not pushed.

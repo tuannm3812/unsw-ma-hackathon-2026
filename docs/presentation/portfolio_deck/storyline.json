@@ -1042,40 +1042,88 @@
       "id": "insight",
       "section": "Evidence",
       "sublabel": "Key insight",
-      "layout": "three_cards",
+      "layout": "content+takeaways",
       "title": "Slow funding is a lender-side delay that loan details predict, not wording",
-      "subtitle": "Key insight across the outcome audit, the triage check and the equivalence test",
+      "subtitle": "Three findings across the outcome audit, the early-warning check and the equivalence test, each leading to a step of the solution",
       "cards": [
         {
           "icon": "account_balance-navy.png",
-          "heading": "Lenders, not borrowers, wait",
+          "heading": "The wait is on the lender side",
           "figure": "96.4%",
-          "text": "of loans reach the borrower before listing, a median 24.2 days earlier; listing time replenishes partner capital.",
-          "slide": 20
+          "text": "of loans reach the borrower before listing",
+          "glyph": "share",
+          "slides": [
+            4
+          ],
+          "step": {
+            "label": "Prioritise",
+            "sub": "Leads to",
+            "slide": 18,
+            "colour": "violet"
+          }
         },
         {
           "icon": "target-navy.png",
           "heading": "Loan details predict who waits",
           "figure": "2.6–4.0×",
-          "text": "better than chance: a boosted tree on loan structure flags the slowest fifth of loans.",
-          "slide": 17
+          "text": "better than chance at flagging the slowest fifth",
+          "glyph": "lift",
+          "slides": [
+            17
+          ],
+          "step": {
+            "label": "Predict",
+            "sub": "Leads to",
+            "slide": 17,
+            "colour": "navy"
+          }
         },
         {
           "icon": "description-violet.png",
-          "heading": "Wording barely moves it",
+          "heading": "Wording makes little difference",
           "figure": "±5%",
-          "text": "five framings stay within ±5% of funding time, and text adds little to the flag.",
-          "slide": 12
+          "text": "five framings stay within this share of funding time",
+          "glyph": "bound",
+          "slides": [
+            12,
+            13
+          ],
+          "step": {
+            "label": "Test first",
+            "sub": "Leads to",
+            "slide": 19,
+            "colour": "yellow"
+          }
         }
       ],
-      "band": "So the lever is helping slow loans find lenders, not rewriting their stories.",
-      "pending": "For whom and when: no period, loan size, gender or region shows a large framing effect; a few rare-word patterns are hypotheses to test.",
       "notes": {
-        "purpose": "The insight that turns analysis into a solution.",
-        "script": "Three findings point the same way. First, borrowers usually already have the money: 96.4 percent of loans are disbursed before listing, a median 24.2 days earlier, so platform time is about replenishing partner capital. Second, loan details predict which loans will be slow: a boosted tree on structure flags the slowest fifth 2.6 to 4.0 times better than chance. Third, wording barely moves funding time. So the lever is lender-side support for loans likely to be slow. For whom and when is still open, with subgroup results pending.",
-        "reference": "docs/1_data_dictionary.md (disbursalDate); reports/evidence_sources/triage_summary.json; equivalence screen. Photo: Muhammad-Taha Ibrahim (shop owner, Abuja) on Unsplash (Unsplash Licence)."
+        "purpose": "Bridge from the problem to the evidence and the solution.",
+        "script": "Three findings point the same way, and each leads to a step of the solution. First, the wait is on the lender side: 96.4 percent of loans reach the borrower before listing, a median 24.2 days earlier, so the lever is helping slow loans find lenders. Second, loan details predict who waits: a boosted tree on structure flags the slowest fifth 2.6 to 4.0 times better than chance. Third, wording makes little difference: five framings stay within five percent of funding time, and text adds little to the flag. That holds across every period, loan size, gender and region we checked, while a few rare-word patterns remain hypotheses to test. So the lever is helping slow loans find lenders, not rewriting their stories. The next slides show the evidence behind each insight.",
+        "reference": "docs/1_data_dictionary.md (disbursalDate); reports/evidence_sources/triage_summary.json; equivalence screen; reports/evidence_sources/robustness_summary.json."
       },
-      "photo": "unsplash-shop-abuja-muhammad-taha-ibrahim.jpg"
+      "takeaways": [
+        {
+          "marker": 1,
+          "heading": "Act on the lender side",
+          "text": "**96.4%** of loans reach the borrower before listing, so the wait ties up partner capital, not the borrower."
+        },
+        {
+          "marker": 2,
+          "heading": "Predict slow loans early",
+          "text": "A boosted tree on loan structure flags the slowest fifth **2.6–4.0× better than chance**."
+        },
+        {
+          "marker": 3,
+          "heading": "Don’t chase framing tweaks",
+          "text": "Five framings stay **within ±5%** of funding time, and text adds little to the flag."
+        },
+        {
+          "marker": 4,
+          "heading": "It holds in every group",
+          "text": "Six framings stay small in **all 10 subgroups** of period, loan size, gender and region."
+        }
+      ],
+      "solution_link": "→ The evidence behind each insight follows"
     },
     {
       "n": 9,

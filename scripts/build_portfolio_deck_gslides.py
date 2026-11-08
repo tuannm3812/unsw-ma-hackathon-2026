@@ -1367,21 +1367,68 @@ PROBLEM_PHOTO = (L + 392, TOP + 34 + 168 + 22, R - 6 - L - 392, 92)
 PRIORITISE_PHOTO = (L + 600, TOP + 162, FULL - L - 600, 88)
 
 
-def insight(page, slide, urls):
-    """Three insight cards (icon, heading, key figure, one line, link), then the 'so' band."""
+INSIGHT_ROWS = [(L, TOP + k * 106, 440, 100) for k in range(3)]
+STEP_FILLS = {'navy': (NAVY, WHITE), 'violet': (VIOLET, WHITE), 'yellow': (YELLOW, NAVY)}
+
+
+def insight_glyph(page, kind, x, y, w):
+    """Tiny preview of the proof: the disbursal bar, lift by year, or framings against the ±5% band."""
+    if kind == 'share':
+        page.rect(x, y + 24, w * .964, 20, VIOLET)
+        page.rect(x + w * .964, y + 24, w * .036, 20, HAIR)
+        page.text('before listing', x, y + 48, 100, 12, size=8, color=GREY)
+        page.text('3.6% after', x + w - 60, y + 48, 60, 12, size=8, color=GREY, align='right')
+    elif kind == 'lift':
+        lift = slide_by_id('triage')['exhibit']['lift']
+        base, per, bar, step = y + 62, 13, 20, (w - 20) / 4
+        page.line(x, base - per, x + w, base - per, RULE, .75)
+        page.ops[-1]['dash_style'] = 'DASH'
+        page.text('chance', x + w + 3, base - per - 6, 34, 11, size=8, color=GREY)
+        page.text('by test year, 2021–2025', x, base + 2, w, 11, size=8, color=GREY)
+        for k, (year, value) in enumerate(lift):
+            bx = x + k * step
+            page.rect(bx, base - value * per, bar, value * per, NAVY)
+        page.line(x, base, x + w, base, NAVY, .75)
+    else:
+        rows = {r['term']: r for r in slide_by_id('equivalence')['exhibit']['rows']}
+        lo, hi = -.15, .15
+        px = lambda value: x + (value - lo) * w / (hi - lo)
+        page.rect(px(-.05), y + 4, px(.05) - px(-.05), 60, TINT_BAND)
+        page.line(px(0), y + 4, px(0), y + 64, NAVY, .75)
+        for k, term in enumerate(['family', 'basic needs', 'business', 'agency', 'third person', 'urgency']):
+            r, cy = rows[term], y + 10 + k * 9.6
+            colour = VIOLET if term == 'urgency' else NAVY
+            page.line(px(r['ci90_low']), cy, px(r['ci90_high']), cy, colour, 1.5)
+            page.rect(px(r['estimate']) - 2.5, cy - 2.5, 5, 5, colour, 'ELLIPSE')
+
+
+def insight(page, slide, urls, pos):
+    """Three rows: finding and key figure, a tiny proof glyph, then an arrow to the solution step."""
     page.chrome(slide)
-    for (x, y, w, h), item, bar in zip(INSIGHT_CARDS, slide['cards'], [NAVY, SLATE, VIOLET]):
-        card(page, x, y, w, h, bar)
-        page.text(item['heading'], x + 46, y + 18, w - 62, 16, size=12, bold=True)
-        page.text(item['figure'], x + 16, y + 54, w - 32, 44, size=36, bold=True)
-        page.text(item['text'], x + 16, y + 112, w - 32, 80, size=11, color=GREY, spacing=115)
-        chip_link(page, item['slide'], x + w - 44, y + h - 28, bar, urls)
-    bx, by, bw, bh = L, 384, FULL - L - .5, 56
-    page.rect(bx, by, bw, bh, NAVY)
-    page.rect(bx, by, 6, bh, YELLOW)
-    page.text(slide['band'], bx + 22, by, bw - 40, bh, size=14, color=WHITE, bold=True, middle=True)
-    if slide.get('pending'):
-        page.text(slide['pending'], L, by + bh + 8, FULL - L, 12, size=8, color=GREY)
+    for k, ((x, y, w, h), item) in enumerate(zip(INSIGHT_ROWS, slide['cards'])):
+        page.rect(x, y, w, h, PAPER)
+        page.rect(x, y, w, 2.5, [NAVY, SLATE, VIOLET][k])
+        page.text(item['heading'], x + 36, y + 11, 200, 16, size=11, bold=True)
+        page.text(item['figure'], x + 12, y + 34, 190, 36, size=28, bold=True)
+        page.text(item['text'], x + 12, y + 72, 190, 24, size=9, color=GREY, spacing=105)
+        insight_glyph(page, item['glyph'], x + 216, y + 16, 170)
+        page.marker(k + 1, x + w - 22, y + 8)
+        cx = x + w - 34
+        for label in reversed(item['slides']):
+            chip_link(page, label, cx, y + h - 22, [NAVY, SLATE, VIOLET][k], urls)
+            cx -= 32
+        if k == 2:
+            page.marker(4, cx - 8, y + h - 24)
+        step = item['step']
+        fill, ink = STEP_FILLS[step['colour']]
+        page.line(x + w + 4, y + h / 2, x + w + 30, y + h / 2, SLATE, .75)
+        page.ops[-1]['end_arrow'] = 'FILL_ARROW'
+        bx, bw = x + w + 34, R - 6 - (x + w + 34)
+        page.rect(bx, y + 20, bw, 60, fill)
+        page.text(step['sub'], bx, y + 26, bw, 12, size=8, color=ink, align='center')
+        page.text(step['label'], bx, y + 40, bw, 22, size=12, color=ink, bold=True, align='center',
+                  spans=[(0, len(step['label']), {'link': urls[step['slide']], 'color': ink})])
+    page.takeaways(slide['takeaways'], pos)
 
 
 def triage(page, slide):
@@ -1713,7 +1760,7 @@ def main() -> None:
                 'clustering': clustering, 'equivalence': forest, 'regions': regions, 'a_screen': regions,
                 'persist': persist, 'forecast': forecast, 'gain_uncertainty': gains}
     linked = {'approach': approach, 'gates': gates, 'solution': gates, 'supports': supports,
-              'insight': insight, 'prioritise': prioritise, 'agenda': agenda}
+              'prioritise': prioritise, 'agenda': agenda}
     plain = {'triage': triage, 'roadmap': roadmap,
              'a_asof': a_table, 'a_primary': a_metrics, 'a_topics': a_topics, 'cover': cover, 'close': close}
     for index, (slide, item) in enumerate(zip(story, slides)):
@@ -1725,6 +1772,8 @@ def main() -> None:
                 page.ops.append({'op': 'update-shape', 'element': element['objectId'], 'content_alignment': 'TOP'})
         if slide['id'] in builders:
             builders[slide['id']](page, slide, marker_positions(slide, layout))
+        elif slide['id'] == 'insight':
+            insight(page, slide, urls, marker_positions(slide, layout))
         elif slide['id'] in linked:
             linked[slide['id']](page, slide, urls)
         else:
@@ -1741,7 +1790,7 @@ def main() -> None:
         at = {slide['id']: k for k, slide in enumerate(story)}
         images = [(at['cover'], framed_photo(Path(work), HARVEST, COVER_FRAME, 'cover.png'), COVER_FRAME),
                   (at['close'], framed_photo(Path(work), VENDOR, CLOSE_FRAME, 'close.png'), CLOSE_FRAME)]
-        for sid, frame in [('problem', PROBLEM_PHOTO), ('insight', INSIGHT_PHOTO), ('prioritise', PRIORITISE_PHOTO)]:
+        for sid, frame in [('problem', PROBLEM_PHOTO), ('prioritise', PRIORITISE_PHOTO)]:
             images.append((at[sid], framed_photo(Path(work), ASSETS / 'photos' / slide_by_id(sid)['photo'], frame,
                                                  f'{sid}.png', all_corners=True), frame))
         images.append((at['problem'], TREND_PNG, TREND_FRAME))
@@ -1774,8 +1823,8 @@ def main() -> None:
             images.append((at['summary'], ASSETS / 'icons' / icon, (x + 16, y + 14, 22, 22)))
         for icon, x in zip(STEP_ICONS, STEP_X):
             images.append((at['summary'], ASSETS / 'icons' / icon, (x, BAND[1] + BAND[3] / 2 - 10, 20, 20)))
-        for item, (x, y, _, _) in zip(slide_by_id('insight')['cards'], INSIGHT_CARDS):
-            images.append((at['insight'], ASSETS / 'icons' / item['icon'], (x + 16, y + 14, 22, 22)))
+        for item, (x, y, _, _) in zip(slide_by_id('insight')['cards'], INSIGHT_ROWS):
+            images.append((at['insight'], ASSETS / 'icons' / item['icon'], (x + 12, y + 10, 18, 18)))
         for item, (x, y, _, _) in zip(slide_by_id('prioritise')['levers'], LEVER_BOXES):
             images.append((at['prioritise'], ASSETS / 'icons' / item['icon'], (x + 16, y + 15, 20, 20)))
         for k in range(len(slide_by_id('triage')['exhibit']['support'])):
