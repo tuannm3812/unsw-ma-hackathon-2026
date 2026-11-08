@@ -3048,3 +3048,9 @@ unseen exact template, which cannot exclude near-duplicates.
 - Live deck re-read first: no owner edits to mirror. Slide 21 has an Our ask strip under the columns. Slide 22 drops the step row and adds quiet background shapes.
 - Appendix: A3 groups the holdout scores by model with plain meanings and a warning not to compare them with the forecast benchmark; A4 shows the two themes on one scale. A1, A2, A5 and A6 audited, no change needed; no retired wording found.
 - Verified: pyflakes, deck QA, rendered slides, full offline pytest. Slides 21, 22, A3 and A4 only were rebuilt; nothing pushed.
+
+## 2026-11-09: appendix numbering and takeaways; slide 13 row lines
+
+- Live deck re-read first: no owner edits to mirror. Appendix slides are labelled A1–A6. A2, A3, A4 and A6 now have takeaway columns and match the main layout; A2's table became bars, and A6's table became aligned rows. Main-slide pointers added on slides 7, 9, 10, 14, 15 and 17. Slide 13 has row guide lines. The cover was checked and left as it is.
+- The note and register line about independent review on the loan-detail comparison now record the one code review.
+- Verified: pyflakes, deck QA, word-box overlap check, rendered slides, full offline pytest. Slides 7, 9, 10, 13, 14, 15, 17 and A1–A6 rebuilt; nothing pushed.

@@ -178,6 +178,8 @@ class Page:
 
     def chrome(self, slide):
         section = (slide['section'] or '').upper()
+        if section == 'APPENDIX':
+            section = f"{section} {slide['n']}"
         sub = (slide.get('sublabel') or '').upper()
         label = f'{section}  |  {sub}' if sub else section
         spans = [(len(section), len(section) + 5, {'color': RULE}),
@@ -682,6 +684,7 @@ def approach(page, slide, pos):
             page.line(x + width + 1, top + 13, x + width + 10.5, top + 13, SLATE, .75)
             page.ops[-1]['end_arrow'] = 'FILL_ARROW'
     timeline(page, ex['timeline'], top + h + 22)
+    page.text(ex['pointer'], L, 463, pw, 12, size=8, color=SLATE)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -943,6 +946,8 @@ def subgroups(page, slide, pos):
     hyp = {(t, c) for t, c in ex['hypotheses']}
     for r, row in enumerate(sorted(ex['rows'], key=lambda row: MEASURE_ORDER.index(measure_key(row['term'])))):
         y = top + r * (ch + 6)
+        if r:
+            page.line(L, y - 3, R, y - 3, HAIR, .75)
         page.text(TERM_LABELS.get(row['term'], row['term'].capitalize()), L + 16, y + 3, 76, 14, size=9)
         EXTRA_IMAGES.append(('subgroups', measure_icon(row['term']), (L, y + 3.5, 12, 12)))
         for c, (cx, ok) in enumerate(zip(xs, row['cells'])):
@@ -1811,71 +1816,109 @@ def roadmap(page, slide, pos):
     page.takeaways(slide['takeaways'], pos)
 
 
-def a_table(page, slide):
+def a_asof(page, slide, pos):
+    """Training and evaluation rows per test year as bars, with the late finishers left out of training."""
     page.chrome(slide)
-    exhibit = slide['exhibit']
-    row = 40 if len(exhibit['rows']) < 3 else 42
-    table(page, exhibit['columns'], exhibit['rows'], L, TOP, FULL - L, row, exhibit.get('font', 10))
-    y = TOP + row * (len(exhibit['rows']) + 1) + 8
-    page.caption(exhibit['figure'], exhibit['caption'], y, w=FULL - L)
-    if slide.get('note'):
-        page.caption('¹', slide['note'], y + 14, w=FULL - L)
-    for i, body in enumerate(slide.get('body', [])):
-        page.block(body['heading'], body['text'], L + i * 450, y + 40, 425, 90)
+    rows, pw, h = slide['exhibit']['rows'], R - L, 276
+    panel(page, L, TOP, pw, h, 'Training and evaluation rows by test year', '')
+    x0, scale = L + 56, 300 / 1312417
+    number = lambda value: int(value.rstrip('¹').replace(',', ''))
+    page.text('Finished later', L + pw - 110, TOP + 26, 100, 12, size=8, color=GREY, bold=True, align='right')
+    page.marker(3, L + pw - 22, TOP + 8)
+    page.marker(1, L + 240, TOP + 8)
+    for k, (year, later, train, test) in enumerate(rows):
+        y = TOP + 46 + k * 45
+        if k:
+            page.line(L + 10, y - 8, L + pw - 10, y - 8, HAIR, .75)
+        page.text(year, L + 10, y + 3, 40, 18, size=9, color=GREY, middle=True)
+        for r, (value, fill) in enumerate(((train, SLATE), (test, NAVY))):
+            cy = y + r * 15
+            page.rect(x0, cy, number(value) * scale, 11, fill)
+            page.text(value, x0 + number(value) * scale + 5, cy - .5, 60, 12, size=8, bold=True)
+        page.sup(later, L + pw - 60, y + 3, 50, 18, size=9, align='right')
+    page.legend([('Eligible as-of training', SLATE, 'RECTANGLE', 2), ('Evaluation rows', NAVY)], TOP + h + 6, L, gap=18)
+    ex = slide['exhibit']
+    page.caption(ex['figure'], ex['caption'], TOP + h + 24, w=pw)
+    page.caption('¹', slide['note'], TOP + h + 37, w=pw)
+    page.takeaways(slide['takeaways'], pos)
 
 
-def a_metrics(page, slide):
-    """Holdout scores grouped by model, each with a plain meaning, and why they stand apart from the benchmark."""
+def a_text(page, slide, pos):
+    """Every text feature as a row: what it captures, its settings, where it is used and its limit."""
     page.chrome(slide)
-    gap, width = 10, (FULL - L - 40) / 5
-    figures, y = iter(slide['key_figures']), TOP + 20
-    x = L
-    for name, count in slide['groups']:
-        span = count * width + (count - 1) * gap
-        page.text(name, x, TOP, span, 13, size=9, bold=True, color=VIOLET)
-        page.line(x, TOP + 15, x + span, TOP + 15, HAIR, .75)
-        for _ in range(count):
-            figure = next(figures)
-            card(page, x, y, width, 112, NAVY)
-            page.text(figure['value'], x + 12, y + 14, width - 20, 28, size=20, bold=True)
-            page.text(figure['label'], x + 12, y + 52, width - 20, 14, size=10, bold=True)
-            page.text(figure['meaning'], x + 12, y + 70, width - 20, 28, size=9, color=GREY, spacing=100)
-            x += width + gap
-    sy = y + 124
-    page.rect(L, sy, FULL - L, 26, PAPER)
-    page.rect(L, sy, 4, 26, YELLOW)
-    plain, spans = emphasis(slide['compare_note'])
-    page.text(plain, L + 14, sy, FULL - L - 28, 26, size=10, color=GREY, middle=True, spans=spans)
-    page.text(slide['note'], L, sy + 34, FULL - L, 12, size=8, color=GREY, spans=[(0, len('Scope:'), {'bold': True})])
+    ex = slide['exhibit']
+    columns = ((L + 10, 148), (L + 164, 182), (L + 352, 112), (L + 470, R - L - 478))
+    for (x, w), label in zip(columns, ('Technique', 'Settings', 'Where used', 'Limit')):
+        page.text(label, x, TOP, w, 12, size=8, color=GREY, bold=True)
+    first, pitch = TOP + 15, 49
+    for k, (name, captures, settings, used, limit) in enumerate(ex['rows']):
+        y = first + k * pitch
+        page.rect(L, y, R - L, pitch - 4, PAPER)
+        page.rect(L, y, 3, pitch - 4, VIOLET if k in (3, 4) else NAVY)
+        page.text(f'{name}\n{captures}', columns[0][0], y, columns[0][1], pitch - 4, size=8, color=GREY, spacing=100, middle=True,
+                  spans=[(0, len(name), {'bold': True, 'color': NAVY, 'font_size': 9})])
+        for (x, w), value in zip(columns[1:], (settings, used, limit)):
+            page.text(value, x, y, w, pitch - 4, size=8, color=GREY, spacing=100, middle=True)
+    page.marker(1, L + 136, first + 4)
+    page.marker(3, L + 136, first + pitch + 4)
+    page.marker(2, L + 136, first + 3 * pitch + 4)
+    page.caption(ex['figure'], ex['caption'], first + 6 * pitch + 2, w=R - L)
+    page.takeaways(slide['takeaways'], pos)
 
 
-def a_topics(page, slide):
-    """The fastest and slowest themes on one scale, with how to read them."""
+def a_metrics(page, slide, pos):
+    """Holdout scores grouped by model, each with a plain meaning."""
+    page.chrome(slide)
+    figures, gap, pw, y = iter(slide['key_figures']), 10, R - L, TOP
+    for m, (name, count) in enumerate(slide['groups']):
+        page.text(name, L, y, pw - 30, 13, size=9, bold=True, color=VIOLET)
+        page.marker(m + 1, R - 16, y)
+        page.line(L, y + 15, R, y + 15, HAIR, .75)
+        width = (pw - (count - 1) * gap) / count
+        for c in range(count):
+            figure, x = next(figures), L + c * (width + gap)
+            card(page, x, y + 20, width, 104, NAVY)
+            page.text(figure['value'], x + 12, y + 32, width - 20, 28, size=20, bold=True)
+            page.text(figure['label'], x + 12, y + 68, width - 20, 14, size=10, bold=True)
+            page.text(figure['meaning'], x + 12, y + 84, width - 20, 28, size=9, color=GREY, spacing=100)
+        y += 140
+    page.caption(slide['figure'], slide['note'], y + 4, w=pw)
+    page.marker(3, R - 16, y + 3)
+    page.takeaways(slide['takeaways'], pos)
+
+
+def a_topics(page, slide, pos):
+    """The fastest and slowest themes on one scale, with the method facts below."""
     page.chrome(slide)
     scale = slide['theme_scale']
-    pw, h = FULL - L, 136
+    pw, h = R - L, 170
     panel(page, L, TOP, pw, h, scale['title'], '')
-    x0, x1 = L + 40, L + pw - 40
+    x0, x1 = L + 50, L + pw - 56
     px = lambda days: x0 + days / 15 * (x1 - x0)
-    axis = TOP + 100
+    axis = TOP + 126
     page.line(x0, axis, x1, axis, SLATE, .75)
     for value in (0, 5, 10, 15):
         page.line(px(value), axis, px(value), axis + 3, SLATE, .75)
         page.text(str(value), px(value) - 16, axis + 4, 32, 11, size=8, color=GREY, align='center')
-    page.text('days', x1 + 6, axis + 4, 30, 11, size=8, color=GREY)
-    colours = (VIOLET, NAVY)
+    page.text('days', x1 + 18, axis + 4, 30, 11, size=8, color=GREY)
     low, high = scale['points']
-    page.line(px(low[0]), axis - 18, px(high[0]), axis - 18, SLATE, .75)
-    for (days, name, label), colour in zip(scale['points'], colours):
-        page.rect(px(days) - 5, axis - 23, 10, 10, colour, 'ELLIPSE')
-        page.text(label, px(days) - 60, axis - 58, 120, 18, size=14, bold=True, color=colour, align='center')
-        page.text(name, px(days) - 80, axis - 40, 160, 12, size=9, color=GREY, align='center')
-    for i, body in enumerate(slide['body']):
-        x = L + i * 449
-        plain, spans = emphasis(body['text'])
-        page.text(body['heading'], x, TOP + h + 16, 426, 16, size=12, bold=True)
-        page.text(plain, x, TOP + h + 36, 426, 50, size=10, color=GREY, spacing=110, spans=spans)
-    page.caption(slide['figure'], 'Exploratory NMF themes from a 20,000-loan sample; not full-data evidence.', TOP + h + 96, w=pw)
+    page.line(px(low[0]), axis - 20, px(high[0]), axis - 20, SLATE, .75)
+    for (days, name, label), colour in zip(scale['points'], (VIOLET, NAVY)):
+        page.rect(px(days) - 5, axis - 25, 10, 10, colour, 'ELLIPSE')
+        page.text(label, px(days) - 60, axis - 68, 120, 18, size=14, bold=True, color=colour, align='center')
+        page.text(name, px(days) - 80, axis - 48, 160, 12, size=9, color=GREY, align='center')
+    page.marker(2, L + pw - 22, TOP + 8)
+    width, y = (pw - 20) / 3, TOP + h + 10
+    for k, (icon, label, value) in enumerate(slide['facts']):
+        x = L + k * (width + 10)
+        card(page, x, y, width, 74, NAVY)
+        EXTRA_IMAGES.append(('a_topics', ASSETS / 'icons' / icon, (x + 12, y + 14, 16, 16)))
+        page.text(label, x + 34, y + 14, width - 44, 14, size=9, color=GREY, bold=True, middle=True)
+        page.text(value, x + 12, y + 38, width - 24, 24, size=14, bold=True)
+    page.marker(1, L + width + 10 + width - 22, y + 14)
+    page.marker(3, L + 2 * (width + 10) + width - 22, y + 14)
+    page.caption(slide['figure'], 'Exploratory NMF themes; unadjusted means.', y + 82, w=pw)
+    page.takeaways(slide['takeaways'], pos)
 
 
 def notes_text(slide):
@@ -2050,9 +2093,10 @@ def main() -> None:
     builders = {'summary': summary, 'problem': problem, 'text_adds': text_adds, 'where': where, 'subgroups': subgroups,
                 'lever': lever, 'outcome': outcome,
                 'clustering': clustering, 'equivalence': forest, 'regions': regions, 'a_screen': regions,
-                'persist': persist, 'forecast': forecast, 'gain_uncertainty': gains, 'approach': approach, 'solution': solution, 'triage': triage, 'prioritise': prioritise, 'gates': gates, 'supports': supports, 'roadmap': roadmap}
+                'persist': persist, 'forecast': forecast, 'gain_uncertainty': gains, 'approach': approach, 'solution': solution, 'triage': triage, 'prioritise': prioritise, 'gates': gates, 'supports': supports, 'roadmap': roadmap, 'a_asof': a_asof, 'a_text_methods': a_text,
+                'a_primary': a_metrics, 'a_topics': a_topics}
     linked = {'agenda': agenda}
-    plain = {'a_asof': a_table, 'a_text_methods': a_table, 'a_primary': a_metrics, 'a_topics': a_topics, 'cover': cover, 'close': close}
+    plain = { 'cover': cover, 'close': close}
     for index, (slide, item) in enumerate(zip(story, slides)):
         if only is not None and index not in only:
             continue

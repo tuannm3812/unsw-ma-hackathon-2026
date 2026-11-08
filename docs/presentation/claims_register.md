@@ -183,7 +183,7 @@ Chosen after results were known. `reports/evidence_sources/README.md`; `reports/
 
 ## Loan details against framing (slide 11)
 
-Programme-adjusted model; change in (1 + days), not days; country-clustered 95% intervals, t(47). Associations among completed loans, not effects of changing a loan. Exploratory, not yet independently reviewed. No ratio or ranking.
+Programme-adjusted model; change in (1 + days), not days; country-clustered 95% intervals, t(47). Associations among completed loans, not effects of changing a loan. Exploratory; one independent code review (2026-11-08), recorded in `reports/experiments_2026_11_08/README.md`. No ratio or ranking.
 
 | Claim | Value | Source | Layer |
 | --- | --- | --- | --- |
