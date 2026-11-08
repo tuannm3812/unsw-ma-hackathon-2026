@@ -80,3 +80,41 @@ def test_bootstrap_t_matches_full_model_refit_with_shared_controls():
     np.testing.assert_allclose(se[0] / stats.scale, want, rtol=1e-6)
     no_adj = stats.fit(stats.cluster_xt(fitted)[None] + w[..., None] * stats.cluster_xt(resid)[None])[1]
     assert not np.allclose(no_adj, se, rtol=1e-3)
+
+
+def test_adjustment_matches_full_refit_with_rank_deficient_nested_controls():
+    """Programme dummies nested in countries make Z rank deficient, as in the real fit."""
+    import scipy.sparse as sp
+    from src.feature_sensitivity import _residualize
+    rng = np.random.default_rng(11)
+    g, n = 12, 3000
+    codes = rng.integers(0, g, n)
+    programme = codes * 3 + rng.choice([0, 1, 2], n, p=[0.8, 0.19, 0.01])  # some rare levels
+    shared_programme = rng.choice(5, n)                                    # crosses countries
+    country = np.eye(g)[codes]
+    prog = np.eye(programme.max() + 1)[programme]
+    shared = np.eye(5)[shared_programme]
+    amount = rng.normal(size=n) + 0.3 * codes
+    Z_dense = np.column_stack([np.ones(n), country, prog, shared, amount])
+    Z_dense = Z_dense[:, np.linalg.norm(Z_dense, axis=0) > 0]
+    Z_scaled = Z_dense / np.linalg.norm(Z_dense, axis=0)
+    Z = sp.csr_matrix(Z_scaled)
+    assert np.linalg.matrix_rank(Z_scaled) < Z_scaled.shape[1]
+    raw = rng.normal(size=(n, 2)) + amount[:, None] + shared_programme[:, None] * 0.2
+    y = 0.1 * raw[:, 0] + amount + rng.normal(size=g)[codes] + rng.normal(size=n)
+    y_r, x_r = _residualize(Z, y).ravel(), _residualize(Z, raw)
+    stats = ClusterStats(y_r, x_r, codes, g, n_params=np.linalg.matrix_rank(Z_scaled) + 2, controls=Z)
+    xo = stats.xs[:, [1]]
+    fitted = xo @ np.linalg.solve(xo.T @ xo, xo.T @ stats.y)
+    resid = stats.y - fitted
+    w = np.random.default_rng(5).choice([-1.0, 1.0], size=(3, g))
+    adj = stats.control_adjustment(resid, w)
+    np.testing.assert_allclose(adj.sum(axis=1), 0.0, atol=1e-6)
+    _, se = stats.fit(stats.cluster_xt(fitted)[None] + w[..., None] * stats.cluster_xt(resid)[None], adj)
+    full = np.column_stack([x_r, Z_scaled])
+    bread = np.linalg.inv(x_r.T @ x_r)
+    for b in range(3):
+        ystar = fitted + w[b][codes] * resid
+        e = ystar - full @ (np.linalg.pinv(full) @ ystar)
+        meat = sum(np.outer(x_r[codes == h].T @ e[codes == h], x_r[codes == h].T @ e[codes == h]) for h in range(g))
+        np.testing.assert_allclose(se[b] / stats.scale, np.sqrt(np.diag(stats.corr * bread @ meat @ bread)), rtol=1e-5)

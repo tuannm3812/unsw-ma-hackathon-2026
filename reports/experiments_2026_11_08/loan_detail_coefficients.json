@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-08T09:58:31.478692+00:00",
+ "generated_at": "2026-11-08T13:56:12.834439+00:00",
  "specification": "October programme-adjusted, loan details moved to the reported block",
  "absorbed": [
   "country_iso",
@@ -164,18 +164,19 @@
    "numeric": [
     {
      "term": "log_loan_amount",
-     "unit": "per doubling of loan amount, within loan-size band",
-     "estimate": 0.36987614284890524,
-     "cr1_se": 0.0442921911943499,
+     "unit": "per doubling from the median loan amount, within loan-size band",
+     "median_amount_usd": 325.0,
+     "estimate": 0.36905708132657616,
+     "cr1_se": 0.04419410963313455,
      "ci95": [
-      0.2807717473813668,
-      0.4589805383164437
+      0.2801500005093845,
+      0.45796416214376784
      ],
-     "p_t47": 7.667162490783399e-11,
-     "pct_change_in_1_plus_days": 44.7555313482507,
+     "p_t47": 7.667162490783455e-11,
+     "pct_change_in_1_plus_days": 44.63701620460163,
      "pct_ci95": [
-      32.41513284308011,
-      58.2459905148933
+      32.332829736932524,
+      58.08523476870615
      ]
     },
     {
@@ -394,7 +395,7 @@
      "term": "log_loan_amount",
      "unit": "per 1 SD of this column",
      "sd": 0.84259900218815,
-     "edit_scale_for_reference": 0.6931471805599453,
+     "edit_scale_for_reference": 0.6916122608418616,
      "estimate": 0.44962639629569434,
      "cr1_se": 0.05384218121602589,
      "ci95": [
@@ -4478,18 +4479,19 @@
    "numeric": [
     {
      "term": "log_loan_amount",
-     "unit": "per doubling of loan amount, within loan-size band",
-     "estimate": -0.14785678892858994,
-     "cr1_se": 0.021110771631139884,
+     "unit": "per doubling from the median loan amount, within loan-size band",
+     "median_amount_usd": 325.0,
+     "estimate": -0.14752937174051783,
+     "cr1_se": 0.02106402349373215,
      "ci95": [
-      -0.19032618349505104,
-      -0.10538739436212884
+      -0.1899047211850144,
+      -0.10515402229602128
      ],
      "p_t47": 8.064209339687144e-09,
-     "pp_change_24h": -14.785678892858995,
+     "pp_change_24h": -14.752937174051784,
      "pp_ci95": [
-      -19.032618349505103,
-      -10.538739436212884
+      -18.99047211850144,
+      -10.515402229602127
      ]
     },
     {
@@ -4708,7 +4710,7 @@
      "term": "log_loan_amount",
      "unit": "per 1 SD of this column",
      "sd": 0.84259900218815,
-     "edit_scale_for_reference": 0.6931471805599453,
+     "edit_scale_for_reference": 0.6916122608418616,
      "estimate": -0.1797366941856866,
      "cr1_se": 0.025662536919577098,
      "ci95": [
