@@ -3054,3 +3054,10 @@ unseen exact template, which cannot exclude near-duplicates.
 - Live deck re-read first: no owner edits to mirror. Appendix slides are labelled A1–A6. A2, A3, A4 and A6 now have takeaway columns and match the main layout; A2's table became bars, and A6's table became aligned rows. Main-slide pointers added on slides 7, 9, 10, 14, 15 and 17. Slide 13 has row guide lines. The cover was checked and left as it is.
 - The note and register line about independent review on the loan-detail comparison now record the one code review.
 - Verified: pyflakes, deck QA, word-box overlap check, rendered slides, full offline pytest. Slides 7, 9, 10, 13, 14, 15, 17 and A1–A6 rebuilt; nothing pushed.
+
+## 2026-11-09: detailed appendix
+
+- Live deck re-read first: no owner edits to mirror. `src/appendix_summary.py` (tested) reads the forecaster comparison and loan-purpose contrasts; register section added.
+- A3 compares every forecaster by test year with settings, use and a metric glossary. A4 shows 19 sectors, the fastest and slowest activities, and the sanitation check: fast in raw means, modestly faster by sector, and not distinct from farming as an activity. A5's cards explain what each number means. A6 has an edge-colour legend. New A7 shows the whole modelling flow and notes that loan photos were not analysed.
+- No model was tuned, which A3 states. Time-split tuning, theme-level n and ranges, and photo analysis remain open.
+- Verified: pyflakes, deck QA, word-box overlap check, rendered slides, full offline pytest. Slides 21, A3–A7 rebuilt; nothing pushed.

@@ -2864,7 +2864,7 @@
       ],
       "notes": {
         "purpose": "A clear path from now to later.",
-        "script": "[Point: Start where no rewrite is needed] Now: pilot the flag, route lender-side support to flagged loans, and stop investing in framing tweaks. [Point: Prove the flag before scaling] Next: recalibrate and validate the flag by country before any wider use. [Point: Data comes before a writing test] Also next: validate the text measures with a codebook, which is gate 1, and agree a data partnership for listing-time text, expired listings and partner identifiers, which is gate 2. [Point: Writing advice is the last step] Later: pilot one truthful clarity prompt against a control, which is gate 3, answer for whom and when properly, and only then consider writing advice. If a step fails, stop there and report the uncertainty.",
+        "script": "[Point: Start where no rewrite is needed] Now: pilot the flag, route lender-side support to flagged loans, and stop investing in framing tweaks. [Point: Prove the flag before scaling] Next: recalibrate and validate the flag by country before any wider use. [Point: Data comes before a writing test] Also next: validate the text measures with a codebook, which is gate 1, and agree a data partnership for listing-time text, expired listings and partner identifiers, which is gate 2. [Point: Writing advice is the last step] Later: pilot one truthful clarity prompt against a control, which is gate 3, answer for whom and when properly, and only then consider writing advice. If a step fails, stop there and report the uncertainty. Loan photos were not analysed; fetching them at scale needs Kiva’s permission.",
         "reference": "Gates and guardrails slides."
       },
       "takeaways": [
@@ -3134,147 +3134,468 @@
       "n": "A3",
       "id": "a_primary",
       "section": "Appendix",
-      "title": "The primary models hold up on later, completed loans",
+      "title": "Boosted trees forecast best, and no model was tuned",
       "content": "Boosted tree duration MAE 5.2031 days, R² 0.5420; classifier ROC AUC 0.8997, AP 0.8301, Brier 0.1156; 1,174,953 train, 278,887 holdout; completed loans only.",
-      "subtitle": "Explanatory models: chronological holdout, completed loans only",
-      "key_figures": [
-        {
-          "value": "5.2031 days",
-          "label": "Mean absolute error",
-          "meaning": "average miss on later loans"
-        },
-        {
-          "value": "0.5420",
-          "label": "R²",
-          "meaning": "share of variation explained"
-        },
-        {
-          "value": "0.8997",
-          "label": "ROC AUC",
-          "meaning": "how well it ranks loans"
-        },
-        {
-          "value": "0.8301",
-          "label": "Average precision",
-          "meaning": "precision across cut-offs"
-        },
-        {
-          "value": "0.1156",
-          "label": "Brier score",
-          "meaning": "probability error; lower is better"
-        }
-      ],
-      "note": "Scope: 1,174,953 training and 278,887 holdout loans (2024–2025). Retrospective, completed loans only, not deployment estimates.",
+      "subtitle": "Every forecaster on the same loans and test years; the August models are a separate holdout",
+      "note": "Median, lookup, linear and benchmark tree: November benchmark. Larger tree: Experiment F. August: 1,174,953 training and 278,887 holdout loans.",
       "notes": {
-        "purpose": "Record the holdout scores of the explanatory run.",
-        "script": "These are the holdout scores from the explanatory analysis. They come from a different model and split from the forecast benchmark, so the two sets of numbers should not be compared directly.",
+        "purpose": "Compare every model in one place and state what each score means.",
+        "script": "This slide puts every forecaster on one scale. Lower is better. The median and lookup models are simple baselines. A linear model on loan details beats the lookup in every year, and a boosted tree beats the linear model. The larger tree is better in four of five years but worse in 2021. None of these was tuned: the settings were fixed in advance, which keeps the text comparison matched, and a tuned model could score better. The August models are a separate chronological holdout with library defaults, so do not compare those numbers with the benchmark.",
         "reference": "Primary saved run 2026-08-31: association_summary.txt; analysis_summary.json."
       },
-      "sublabel": "Explanatory models",
+      "sublabel": "Models",
       "figure": "Figure A3.",
-      "groups": [
-        [
-          "Funding time, boosted tree",
-          2
-        ],
-        [
-          "Same-day funding, boosted tree",
-          3
-        ]
-      ],
       "layout": "content+takeaways",
       "takeaways": [
         {
           "marker": 1,
-          "heading": "Scored on later loans",
-          "text": "Models trained on earlier loans were tested on **278,887 later ones**."
+          "heading": "Loan details do the most work",
+          "text": "Moving from a lookup to a model on loan details cuts error in **every year**."
         },
         {
           "marker": 2,
-          "heading": "Same-day ranking is strong",
-          "text": "ROC AUC reaches **0.8997** on the held-out loans."
+          "heading": "Bigger is not always better",
+          "text": "The larger tree beats the benchmark tree in 4 of 5 years, but **not in 2021**."
         },
         {
           "marker": 3,
-          "heading": "Do not mix with the benchmark",
-          "text": "A **different model and split**, so the two sets of scores should not be compared."
+          "heading": "No model was tuned",
+          "text": "Settings were **fixed in advance, not tuned**, which keeps the text comparison matched."
         }
-      ]
+      ],
+      "exhibit": {
+        "chart_title": "Forecast error (MAE, days) by test year",
+        "models": [
+          {
+            "name": "Median only",
+            "mae": {
+              "2021": 10.508728576194956,
+              "2022": 10.442130633037925,
+              "2023": 10.674497445450188,
+              "2024": 10.039968792792838,
+              "2025": 7.375428099653181
+            },
+            "auc_range": [
+              0.5,
+              0.5
+            ],
+            "tuning": "No settings",
+            "used": "A3"
+          },
+          {
+            "name": "Historical lookup",
+            "mae": {
+              "2021": 9.61611072373245,
+              "2022": 9.562051829179742,
+              "2023": 9.476220934864303,
+              "2024": 9.080796250050263,
+              "2025": 6.861657766254814
+            },
+            "auc_range": [
+              0.6518513147147692,
+              0.7373669205580062
+            ],
+            "tuning": "No settings",
+            "used": "Slide 17"
+          },
+          {
+            "name": "Linear, loan details",
+            "mae": {
+              "2021": 8.250034585396918,
+              "2022": 8.569701452516403,
+              "2023": 8.184983812648497,
+              "2024": 7.515064391712846,
+              "2025": 6.40625710634115
+            },
+            "auc_range": [
+              0.8244678389075077,
+              0.8930514414195333
+            ],
+            "tuning": "Fixed, α 10",
+            "used": "Slides 14–15"
+          },
+          {
+            "name": "Linear, with text",
+            "mae": {
+              "2021": 7.957401664067373,
+              "2022": 8.197201827544616,
+              "2023": 7.925509466155371,
+              "2024": 7.126233318339922,
+              "2025": 6.146542457617257
+            },
+            "auc_range": [
+              0.8406844876442775,
+              0.8885863282593183
+            ],
+            "tuning": "Fixed, α 10",
+            "used": "Slides 14–15"
+          },
+          {
+            "name": "Boosted tree, loan details",
+            "mae": {
+              "2021": 7.500170088639784,
+              "2022": 6.96487427968053,
+              "2023": 6.71640177127232,
+              "2024": 5.701826019123084,
+              "2025": 4.874594657236679
+            },
+            "auc_range": [
+              0.8701810654100988,
+              0.9090825429437339
+            ],
+            "tuning": "Fixed in advance",
+            "used": "Slides 15, 17"
+          },
+          {
+            "name": "Larger boosted tree",
+            "mae": {
+              "2021": 8.045793369062702,
+              "2022": 6.609492992902725,
+              "2023": 6.525928248194395,
+              "2024": 5.3404224579105755,
+              "2025": 4.798497226617555
+            },
+            "auc_range": [
+              0.84812151185974,
+              0.9058427333812052
+            ],
+            "tuning": "Fixed in advance",
+            "used": "Slides 14–15"
+          }
+        ],
+        "august": {
+          "name": "August boosted trees",
+          "text": "5.2031 days on the 2024–25 holdout; R² 0.5420",
+          "auc": "0.8997",
+          "tuning": "Library defaults",
+          "used": "A3"
+        },
+        "glossary": [
+          "**MAE**: average miss in days; lower is better.",
+          "**R²**: share of variation explained; below 0 is worse than the mean.",
+          "**ROC AUC**: ranks same-day loans; 0.5 is random, 1 is perfect.",
+          "**Brier** 0.1156: same-day probability error; lower is better."
+        ]
+      }
     },
     {
       "n": "A4",
       "id": "a_topics",
       "section": "Appendix",
-      "title": "Story themes track loan purpose more than writing style",
+      "title": "Loan purpose tracks funding speed; sanitation’s edge is mostly context",
       "content": "NMF themes from the 20,000-loan exploratory sample, labelled as such; not full-data evidence.",
-      "subtitle": "Exploratory NMF themes from a 20,000-loan sample; descriptive, not full-data evidence",
-      "key_figures": [
-        {
-          "value": "1.5 days",
-          "label": "mean funding time, fastest theme (sanitation)"
-        },
-        {
-          "value": "13.5 days",
-          "label": "mean funding time, slowest theme (group solar and farm plots)"
-        }
-      ],
+      "subtitle": "Programme-adjusted model on all completed loans; associations, not effects of changing a loan",
       "notes": {
-        "purpose": "Keep the themes in proportion.",
-        "script": "Topic modelling gave coherent themes, but on a 20,000-loan sample and without adjustment. Topics mostly describe what the loan is for, so they are context rather than evidence about writing.",
+        "purpose": "Show what loan content relates to funding speed, in detail.",
+        "script": "This uses the full programme-adjusted model rather than the 20,000-loan topic sample. Education, health and manufacturing loans fund much faster than the average loan, while food, retail and clothing fund slower. Toilets and sanitation look very fast in raw means, 0.9 days, and in the sample topic model. But once country, time and programme are controlled, the activity is not distinguishable from farming, and the sanitation sector is only modestly faster than average. So much of that speed is context. These are associations among completed loans, not levers.",
         "reference": "notebooks/1_full_dataset_eda.py topic section; docs/4_research_review.md P2."
       },
-      "sublabel": "Exploratory sample",
+      "sublabel": "Loan content",
       "figure": "Figure A4.",
-      "theme_scale": {
-        "title": "Mean funding time by theme, unadjusted",
-        "points": [
-          [
-            1.5,
-            "Sanitation",
-            "1.5 days"
-          ],
-          [
-            13.5,
-            "Group solar and farm plots",
-            "13.5 days"
-          ]
-        ]
-      },
       "layout": "content+takeaways",
       "takeaways": [
         {
           "marker": 1,
-          "heading": "Themes follow loan purpose",
-          "text": "**8 themes**, including sanitation, clean water, livestock, smallholder farming and retail."
+          "heading": "Purpose tracks funding speed",
+          "text": "Education runs **−68.7%** and clothing **+30.2%** against the average loan."
         },
         {
           "marker": 2,
-          "heading": "A wide gap in raw means",
-          "text": "Mean funding time runs from **1.5 to 13.5 days**, unadjusted."
+          "heading": "Sanitation is fast mostly through context",
+          "text": "Fast in raw means; with controls the sector is **modestly faster** and the activity is **not distinct from farming**."
         },
         {
           "marker": 3,
-          "heading": "Context, not a tested effect",
-          "text": "From a **20,000-loan sample**, so it is not full-data evidence."
+          "heading": "These are not levers",
+          "text": "Associations among completed loans; a loan’s **purpose is not something to change**."
         }
       ],
-      "facts": [
-        [
-          "description-violet.png",
-          "Method",
-          "NMF on TF-IDF"
+      "exhibit": {
+        "sectors": [
+          {
+            "sector": "Education",
+            "records": 40302,
+            "pct": -68.74178545816622,
+            "ci95": [
+              -76.79735510057986,
+              -57.88945697446211
+            ]
+          },
+          {
+            "sector": "Health",
+            "records": 17570,
+            "pct": -55.990851656951214,
+            "ci95": [
+              -58.12863891246474,
+              -53.743917379914265
+            ]
+          },
+          {
+            "sector": "Manufacturing",
+            "records": 9024,
+            "pct": -52.29262043068103,
+            "ci95": [
+              -60.18174978778272,
+              -42.84042987221126
+            ]
+          },
+          {
+            "sector": "Arts",
+            "records": 18328,
+            "pct": -46.81862868139967,
+            "ci95": [
+              -52.8105416052062,
+              -40.06588862145376
+            ]
+          },
+          {
+            "sector": "Entertainment",
+            "records": 535,
+            "pct": -41.81425333719122,
+            "ci95": [
+              -51.38162631521417,
+              -30.364163625489304
+            ]
+          },
+          {
+            "sector": "Water",
+            "records": 1466,
+            "pct": -38.28199456621347,
+            "ci95": [
+              -45.7894324213185,
+              -29.73487707546433
+            ]
+          },
+          {
+            "sector": "Construction",
+            "records": 10769,
+            "pct": -21.05808669514577,
+            "ci95": [
+              -30.963851205126012,
+              -9.73097739348634
+            ]
+          },
+          {
+            "sector": "Wholesale",
+            "records": 989,
+            "pct": -16.811666330689313,
+            "ci95": [
+              -29.66687279791521,
+              -1.6068368637611075
+            ]
+          },
+          {
+            "sector": "Clean Energy",
+            "records": 35342,
+            "pct": -14.208737466514343,
+            "ci95": [
+              -26.13860833067967,
+              -0.3519895747289725
+            ]
+          },
+          {
+            "sector": "Sanitation & Hygiene",
+            "records": 6905,
+            "pct": -13.400930766591944,
+            "ci95": [
+              -23.594730696346023,
+              -1.8470995463927609
+            ]
+          },
+          {
+            "sector": "Services",
+            "records": 63205,
+            "pct": -6.014290784375609,
+            "ci95": [
+              -9.658092724233125,
+              -2.2235216951930203
+            ]
+          },
+          {
+            "sector": "Personal Use",
+            "records": 46323,
+            "pct": -5.63954883930049,
+            "ci95": [
+              -20.985085199330733,
+              12.686253800470348
+            ]
+          },
+          {
+            "sector": "Agriculture",
+            "records": 461563,
+            "pct": -5.5904072144724815,
+            "ci95": [
+              -9.99410592207104,
+              -0.971249702692567
+            ]
+          },
+          {
+            "sector": "Transportation",
+            "records": 19577,
+            "pct": 0.8306570359829735,
+            "ci95": [
+              -11.50926847674002,
+              14.891370240686165
+            ]
+          },
+          {
+            "sector": "Housing",
+            "records": 81853,
+            "pct": 1.0436180050591215,
+            "ci95": [
+              -16.504567252846957,
+              22.27989488323756
+            ]
+          },
+          {
+            "sector": "Reuse & Recycle",
+            "records": 17133,
+            "pct": 1.2625096384971002,
+            "ci95": [
+              -2.2519376764079557,
+              4.903315876900383
+            ]
+          },
+          {
+            "sector": "Food",
+            "records": 304913,
+            "pct": 15.735615925070334,
+            "ci95": [
+              12.07857882771095,
+              19.511979306464955
+            ]
+          },
+          {
+            "sector": "Retail",
+            "records": 276710,
+            "pct": 26.99856789784183,
+            "ci95": [
+              22.589713011079084,
+              31.5659842245092
+            ]
+          },
+          {
+            "sector": "Clothing",
+            "records": 41333,
+            "pct": 30.2245714271395,
+            "ci95": [
+              25.266344366326045,
+              35.37905244356203
+            ]
+          }
         ],
-        [
-          "table_rows-navy.png",
-          "Themes",
-          "8"
+        "fastest": [
+          {
+            "level": "Education provider",
+            "records": 6095,
+            "pct": -72.96979317363818,
+            "ci95": [
+              -81.63713144075639,
+              -60.21144089123768
+            ],
+            "p_t47": 1.60377889908537e-08
+          },
+          {
+            "level": "Higher education costs",
+            "records": 17561,
+            "pct": -68.74509417810964,
+            "ci95": [
+              -78.58141946690793,
+              -54.391508978573185
+            ],
+            "p_t47": 1.38311221304041e-07
+          },
+          {
+            "level": "Primary/secondary school costs",
+            "records": 16034,
+            "pct": -60.661375060820454,
+            "ci95": [
+              -71.95702647016363,
+              -44.81585875838226
+            ],
+            "p_t47": 1.3040007390110849e-06
+          },
+          {
+            "level": "Metal Shop",
+            "records": 1209,
+            "pct": -54.18305484356405,
+            "ci95": [
+              -65.53147632094542,
+              -39.09827751794685
+            ],
+            "p_t47": 1.4369950924662677e-06
+          },
+          {
+            "level": "Pharmacy",
+            "records": 2222,
+            "pct": -53.45302299741038,
+            "ci95": [
+              -63.15630927381351,
+              -41.194244513085906
+            ],
+            "p_t47": 3.541480750330417e-08
+          }
         ],
-        [
-          "groups-navy.png",
-          "Sample",
-          "20,000 loans"
-        ]
-      ]
+        "slowest": [
+          {
+            "level": "Cosmetics Sales",
+            "records": 5276,
+            "pct": 61.47830362277495,
+            "ci95": [
+              47.07913854234624,
+              77.28715845980874
+            ],
+            "p_t47": 1.1419733755564525e-13
+          },
+          {
+            "level": "Pub",
+            "records": 1695,
+            "pct": 49.497832987685,
+            "ci95": [
+              37.886996691050115,
+              62.08636495354472
+            ],
+            "p_t47": 3.1430782445508756e-13
+          },
+          {
+            "level": "Plastics Sales",
+            "records": 1155,
+            "pct": 43.51906862011572,
+            "ci95": [
+              30.79851188658813,
+              57.47673853847222
+            ],
+            "p_t47": 4.550805112962028e-10
+          },
+          {
+            "level": "Beauty Salon",
+            "records": 10896,
+            "pct": 42.414179276325534,
+            "ci95": [
+              29.189093322755213,
+              56.99311712234907
+            ],
+            "p_t47": 2.8907171969073314e-09
+          },
+          {
+            "level": "Charcoal Sales",
+            "records": 13565,
+            "pct": 41.74544160144531,
+            "ci95": [
+              31.91988595780646,
+              52.30281673541577
+            ],
+            "p_t47": 6.760672055754203e-13
+          }
+        ],
+        "sanitation": [
+          "Raw mean **0.9 days** among activities with 1,000+ loans.",
+          "Activity against farming: **−5.7%** [−19.7%, +10.7%], n 6,715; range includes zero.",
+          "Sector against the average loan: **−13.4%** [−23.6%, −1.8%]; same-day **+8.8 pp** [+6.3, +11.2], n 6,905.",
+          "Sample NMF themes: 1.5 days (sanitation) to 13.5 days, unadjusted."
+        ],
+        "caption": "Change in (1 + days), country-clustered 95% ranges. Sector: against the average loan. Activity: against Farming, with 1,000+ loans."
+      }
     },
     {
       "n": "A5",
@@ -3388,7 +3709,8 @@
       "key_figures": [
         {
           "value": "0.29 days",
-          "label": "median annual error reduction"
+          "label": "Median annual error reduction",
+          "why": "About 7 hours on the linear model; about half is context."
         }
       ],
       "takeaways": [
@@ -3484,7 +3806,12 @@
           ]
         ],
         "figure": "Figure A6.",
-        "caption": "Methods as implemented in src/ and the exploratory notebook. No large language model or pretrained embeddings were used."
+        "caption": "Methods as implemented in src/ and the exploratory notebook. No large language model or pretrained embeddings were used.",
+        "legend": [
+          "Fixed rules",
+          "Fitted on training years only",
+          "Exploratory, sample only"
+        ]
       },
       "notes": {
         "purpose": "Show the text methods in one place.",
@@ -3509,6 +3836,120 @@
           "text": "No large language model; the **word lists still need validating**."
         }
       ]
+    },
+    {
+      "n": "A7",
+      "id": "a_pipeline",
+      "section": "Appendix",
+      "layout": "content+takeaways",
+      "title": "Every result follows one path from raw loans to tested claims",
+      "subtitle": "The whole modelling flow, step by step, with where each part appears in the deck",
+      "sublabel": "Modelling flow",
+      "figure": "Figure A7.",
+      "stages": [
+        {
+          "name": "Raw data",
+          "items": [
+            "1,453,846 loan records",
+            "Kiva listings, 2016–2025",
+            "Completed durations only"
+          ],
+          "used": "Slides 4–6"
+        },
+        {
+          "name": "Cleaning",
+          "items": [
+            "6 negative durations removed",
+            "1,453,840 eligible loans",
+            "HTML and extra spaces stripped"
+          ],
+          "used": "Slide 9"
+        },
+        {
+          "name": "Features",
+          "items": [
+            [
+              "Loan details",
+              "navy"
+            ],
+            [
+              "Description form",
+              "navy"
+            ],
+            [
+              "Word lists",
+              "navy"
+            ],
+            [
+              "VADER sentiment",
+              "navy"
+            ],
+            [
+              "TF-IDF",
+              "violet"
+            ],
+            [
+              "Compressed TF-IDF",
+              "violet"
+            ],
+            [
+              "NMF topics",
+              "slate"
+            ]
+          ],
+          "used": "Slide 7, A6"
+        },
+        {
+          "name": "Models",
+          "items": [
+            "Explanatory regressions",
+            "Linear forecasts",
+            "Boosted trees",
+            "Historical lookup"
+          ],
+          "used": "Slides 10–17, A3"
+        },
+        {
+          "name": "Tests",
+          "items": [
+            "HC3 and country-clustered errors",
+            "Wild cluster bootstrap",
+            "±5% equivalence test",
+            "Month and country resampling",
+            "Text placebo"
+          ],
+          "used": "Slides 10–15"
+        }
+      ],
+      "legend": [
+        "Fixed rules",
+        "Fitted on training years only",
+        "Exploratory, sample only"
+      ],
+      "caption": "Later checks use the same eligible loans unless their slide says otherwise. Models trained on earlier years are tested on later ones.",
+      "takeaways": [
+        {
+          "marker": 1,
+          "heading": "One population throughout",
+          "text": "The analyses use **the same 1,453,840 eligible loans**, unless a slide says otherwise."
+        },
+        {
+          "marker": 2,
+          "heading": "Nothing learned from the future",
+          "text": "Learned text features are **fitted on training years only**."
+        },
+        {
+          "marker": 3,
+          "heading": "Tests are layered",
+          "text": "Each claim passes **several checks**, from clustered errors to a text placebo."
+        }
+      ],
+      "notes": {
+        "purpose": "Show the whole flow so nothing is missed.",
+        "script": "Reading left to right: raw Kiva listings, cleaning, features, models and tests, with the slides that use each step. Loan details, form, word lists and VADER are fixed rules. TF-IDF and its compressed form are fitted on training years only. NMF topics are exploratory on a sample.",
+        "reference": "src/features.py; src/benchmark_models.py; src/strong_forecaster.py; src/modeling.py."
+      },
+      "photo_note": "Loan photos were not analysed: fetching them at scale needs Kiva’s permission."
     }
   ]
 }
