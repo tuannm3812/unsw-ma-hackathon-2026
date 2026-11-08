@@ -820,7 +820,8 @@ def gates(page, slide):
         page.text(step['name'], x + 14, 224, width - 28, 18, size=12, bold=True)
         page.text(step['text'], x + 14, 246, width - 28, 70, size=10, color=GREY, spacing=115)
         if i < 2:
-            page.rect(x + width + 12, 238, 20, 20, SLATE, 'RIGHT_ARROW')
+            page.line(x + width + 8, 248, x + width + 36, 248, SLATE, .75)
+            page.ops[-1]['end_arrow'] = 'FILL_ARROW'
 
 
 def a_table(page, slide):

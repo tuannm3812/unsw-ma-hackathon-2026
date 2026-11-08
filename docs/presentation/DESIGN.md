@@ -74,6 +74,7 @@ only in speaker-note Reference blocks and the claims register.
 
 ## Charts and illustrations
 
+- Arrows and connectors are thin slate lines (0.75 pt) with a small filled arrowhead, never block-arrow shapes, so every slide matches.
 - Native shapes only. Bars start at zero, with direct labels. Value labels may sit inside bar tops in white when a reference line would otherwise cross them.
 - Native lines cannot be flipped or rotated through the CLI, so rising lines draw backwards. Use bars, dots or level segments instead of sloped line charts.
 - Illustrative examples, such as slide 4's listing, are labelled "Illustrative composite, not a real borrower". Every highlighted word must match the `src/features.py` lexicons.
