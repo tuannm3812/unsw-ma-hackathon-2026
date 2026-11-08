@@ -1166,7 +1166,7 @@ def persist(page, slide, pos):
     scale = ex['scale']
     panel(page, L, top, aw, h, scale['title'], '')
     rows = scale['loan'] + scale['framing']
-    x0, x1, lo = L + 136, L + aw - 44, -12
+    x0, x1, lo = L + 172, L + aw - 12, -12
     hi = max(r['ci'][1] for r in rows) * 1.02
     px = lambda value: x0 + (value - lo) / (hi - lo) * (x1 - x0)
     first, pitch, split = top + 38, 10.4, 5
@@ -1179,17 +1179,17 @@ def persist(page, slide, pos):
     for value, name in [(0, '0'), (20, '+20'), (40, '+40'), (60, '+60')]:
         page.line(px(value), axis, px(value), axis + 3, SLATE, .75)
         page.text(name, px(value) - 16, axis + 3, 32, 11, size=8, color=GREY, align='center')
-    page.text('% change in (1 + days)', L + 10, axis + 3, x0 - L - 16, 11, size=8, color=GREY)
+    page.text('% change in (1 + days)', L + 10, axis + 3, 130, 11, size=8, color=GREY)
     for k, row in enumerate(rows):
         loan = k < len(scale['loan'])
         y = first + k * pitch + (0 if loan else split)
         colour = NAVY if loan else VIOLET
         if not loan:
             EXTRA_IMAGES.append(('persist', measure_icon(row['key']), (L + 10, y - .5, 9.5, 9.5)))
-        page.text(row['label'], L + 23 if not loan else L + 10, y - 1.5, x0 - L - 26, 11, size=8, bold=loan, color=NAVY if loan else GREY)
+        page.text(row['label'], L + 23 if not loan else L + 10, y - 1.5, 112, 11, size=8, bold=loan, color=NAVY if loan else GREY)
         page.line(px(row['ci'][0]), y + 4, px(row['ci'][1]), y + 4, colour, 1.25)
         page.rect(px(row['pct']) - 2.5, y + 1.5, 5, 5, colour, 'ELLIPSE')
-        page.text(f"{row['pct']:+.1f}%".replace('-', '−'), L + aw - 42, y - 1.5, 36, 11, size=8, bold=loan, color=colour, align='right')
+        page.text(f"{row['pct']:+.1f}%".replace('-', '−'), L + 130, y - 1.5, 36, 11, size=8, bold=loan, color=colour, align='right')
     divider = first + pitch * len(scale['loan']) + split / 2 - 1.5
     page.line(L + 10, divider, L + aw - 8, divider, HAIR, .5)
     page.marker(3, L + aw - 22, top + 8)
@@ -1326,26 +1326,24 @@ def gains(page, slide, pos):
 
 VERDICT_FILLS = {'yes': NAVY, 'unclear': SLATE, 'not_yet': VIOLET}
 
-def supports(page, slide):
-    """2x2 board: per block a question, verdict tag, key figure, evidence and a 'so what' line; then a strip."""
+def supports(page, slide, pos):
+    """Four limits as a 2x2 grid: what the evidence cannot show, its status, and the action it requires."""
     page.chrome(slide)
-    gap, bw, bh = 16, (FULL - L - 16) / 2, 142
+    gap, w, h = 10, (R - L - 10) / 2, 160
     for k, block in enumerate(slide['blocks']):
-        x, y = L + (k % 2) * (bw + gap), TOP + (k // 2) * (bh + gap)
+        x, y = L + (k % 2) * (w + gap), TOP + (k // 2) * (h + gap)
         fill = VERDICT_FILLS[block['tone']]
-        page.rect(x, y, bw, bh, PAPER)
-        page.rect(x, y, bw, 3, fill)
-        tag_w = 6.2 * len(block['verdict']) + 20
-        page.text(block['question'], x + 18, y + 16, bw - 54 - tag_w, 16, size=11, color=GREY, bold=True)
-        page.badge(block['verdict'], x + bw - 18 - tag_w, y + 14, (tag_w, 20), fill, WHITE, 9, 'ROUND_RECTANGLE')
-        page.text(block['figure'], x + 18, y + 38, bw - 36, 36, size=28, bold=True)
-        page.text(block['evidence'], x + 18, y + 78, bw - 36, 30, size=10, color=GREY, spacing=110)
-        if block.get('so_what'):
-            page.text(block['so_what'], x + 18, y + bh - 26, bw - 36, 16, size=10, bold=True, color=fill)
-    sy = TOP + 2 * bh + gap + 12
-    page.rect(L, sy, 2 * bw + gap, 28, PAPER)
-    page.rect(L, sy, 4, 28, YELLOW)
-    page.text(slide['next']['text'], L + 16, sy, 2 * bw + gap - 32, 28, size=11, bold=True, middle=True)
+        card(page, x, y, w, h, fill)
+        EXTRA_IMAGES.append(('supports', ASSETS / 'icons' / block['icon'], (x + 12, y + 13, 18, 18)))
+        page.text(block['question'], x + 36, y + 13, w - 140, 18, size=12, bold=True, middle=True)
+        tag_w = 6.2 * len(block['verdict']) + 16
+        page.badge(block['verdict'], x + w - 12 - tag_w, y + 13, (tag_w, 18), fill, WHITE, 8, 'ROUND_RECTANGLE')
+        page.marker(block['marker'], x + w - 12 - tag_w - 18, y + 16)
+        page.text(block['evidence'], x + 12, y + 44, w - 24, 44, size=10, color=GREY, spacing=108)
+        page.line(x + 12, y + 104, x + w - 12, y + 104, HAIR, .75)
+        page.text('Action', x + 12, y + 112, 60, 11, size=8, color=GREY, bold=True)
+        page.text(block['so_what'], x + 12, y + 124, w - 24, 28, size=10, bold=True, color=fill, spacing=105)
+    page.takeaways(slide['takeaways'], pos)
 
 
 GATE_X = [L + i * 306 for i in range(3)]
@@ -1963,9 +1961,9 @@ def main() -> None:
     builders = {'summary': summary, 'problem': problem, 'text_adds': text_adds, 'where': where, 'subgroups': subgroups,
                 'lever': lever, 'outcome': outcome,
                 'clustering': clustering, 'equivalence': forest, 'regions': regions, 'a_screen': regions,
-                'persist': persist, 'forecast': forecast, 'gain_uncertainty': gains, 'approach': approach, 'solution': solution, 'triage': triage, 'prioritise': prioritise, 'gates': gates}
+                'persist': persist, 'forecast': forecast, 'gain_uncertainty': gains, 'approach': approach, 'solution': solution, 'triage': triage, 'prioritise': prioritise, 'gates': gates, 'supports': supports}
     linked = {'agenda': agenda}
-    plain = {'supports': supports, 'roadmap': roadmap,
+    plain = {'roadmap': roadmap,
              'a_asof': a_table, 'a_text_methods': a_table, 'a_primary': a_metrics, 'a_topics': a_topics, 'cover': cover, 'close': close}
     for index, (slide, item) in enumerate(zip(story, slides)):
         if only is not None and index not in only:

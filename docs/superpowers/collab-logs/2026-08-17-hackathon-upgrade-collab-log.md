@@ -3022,3 +3022,8 @@ unseen exact template, which cannot exclude near-duplicates.
 - An independent code review fixed the wild cluster bootstrap, the triage interval and the per-doubling calculation (`reports/experiments_2026_11_08/README.md`). `src/robustness_summary.py` now reads the corrected rerun and reports the test that passes; summaries regenerated; register updated first and the old values retired.
 - The funnel is 36, 5, 4, 1. The one that passes is third person, expanded, funding time (−0.9%, bootstrap p 0.0009, BH p 0.008); with programme controls it does not pass (p 0.128, BH 0.426). Equivalence counts (35 of 36, 22 of 23) are unchanged, so slides 12 and 13 are unchanged.
 - Slides changed: 9 (headline, preview, takeaway), 11 (title, funnel, takeaways, loan amount, notes), 17 (notes only). Live deck re-read first: no owner edits to mirror. Verified: pyflakes, deck QA, stale-number scan, rendered slides, full offline pytest. Nothing pushed.
+
+## 2026-11-09: slide 11 value column; slide 20 rework
+
+- Live deck re-read first: no owner edits to mirror. Slide 11's values now sit beside the row names. Slide 20 has a conclusion title, takeaways and action rows; its big figures, which repeated earlier slides, are gone. It reflects the corrected one-of-36 result, and the stale "subgroup results are pending" note is fixed.
+- Verified: pyflakes, deck QA, word-box overlap check, rendered slides, full offline pytest. Slides 11 and 20 only were rebuilt; nothing pushed.

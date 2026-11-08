@@ -2677,13 +2677,13 @@
       "n": 20,
       "id": "supports",
       "section": "Next steps",
-      "layout": "two_column",
-      "title": "Four guardrails keep the solution honest",
+      "layout": "content+takeaways",
+      "title": "Four limits decide what the solution can claim today",
       "subtitle": "What this evidence cannot show, and what to do about it",
       "notes": {
         "purpose": "Limits, each with an action.",
-        "script": "Four guardrails. One: every result is an association; nothing has been tested by editing a description or applying a lever, so each needs a controlled pilot. Two: only funded loans are in the data, so we cannot say whether a lever helps loans that would otherwise expire. Three: the flag is uneven across countries, with precision from 0.18 to 0.90 within the ten largest, and its probabilities drift in 2025, so it must be recalibrated and validated by country. Four: for whom and when is still open; regional patterns rest on two countries each, and subgroup results are pending. Funding time is also a platform measure: 96.4 percent of loans reach the borrower before listing.",
-        "reference": "claims register; reports/evidence_sources/triage_summary.json; appendix A6."
+        "script": "Four guardrails. [Point: Claims stay at association level] One: every result is an association; nothing has been tested by editing a description or applying a lever, so each needs a controlled pilot. [Point: Reach stays an open question] Two: only funded loans are in the data, so we cannot say whether a lever helps loans that would otherwise expire. [Point: The flag is validated by country] Three: the flag is uneven across countries, with precision from 0.18 to 0.90 within the ten largest, and its probabilities drift in 2025, so it must be recalibrated and validated by country. [Point: One passing signal is not a rule] Four: for whom and when: framings stay small across periods, loan sizes, genders and regions, regional patterns rest on two countries each, and the one framing link that passes the strictest test does so in one model only, so no writing rule follows. Funding time is also a platform measure: 96.4 percent of loans reach the borrower before listing.",
+        "reference": "claims register; reports/evidence_sources/triage_summary.json; reports/evidence_sources/robustness_summary.json; appendix A6."
       },
       "sublabel": "Guardrails",
       "blocks": [
@@ -2692,41 +2692,65 @@
           "question": "Associations, not causes",
           "verdict": "Limit",
           "tone": "not_yet",
-          "figure": "0 tested edits",
           "evidence": "Every result is observational; no edit or lever has been tested.",
-          "so_what": "Pilot each lever and prompt against a control."
+          "so_what": "Pilot each lever and prompt against a control.",
+          "icon": "science-navy.png",
+          "marker": 1
         },
         {
           "id": "funded",
           "question": "Funded loans only",
           "verdict": "Limit",
           "tone": "not_yet",
-          "figure": "Unfunded: missing",
           "evidence": "Listings that expired unfunded are not in the data, so reach is unknown.",
-          "so_what": "Add expired listings before judging reach."
+          "so_what": "Add expired listings before judging reach.",
+          "icon": "payments-navy.png",
+          "marker": 2
         },
         {
           "id": "countries",
           "question": "Uneven across countries",
           "verdict": "Check",
           "tone": "unclear",
-          "figure": "0.18–0.90",
-          "evidence": "Flag precision within the 10 largest countries; probabilities drift in 2025.",
-          "so_what": "Recalibrate and validate the flag country by country."
+          "evidence": "Flag precision varies widely within the largest countries, and probabilities drift in 2025.",
+          "so_what": "Recalibrate and validate the flag country by country.",
+          "icon": "public-violet.png",
+          "marker": 3
         },
         {
           "id": "for_whom",
           "question": "For whom and when",
           "verdict": "Checked",
           "tone": "yes",
-          "figure": "10 of 10",
-          "evidence": "Six framings stay small in every period, loan size, gender and region; rare words stay open.",
-          "so_what": "Test urgency in Asia as a hypothesis."
+          "evidence": "Framings stay small across groups, and the one strict-test pass holds in one model only.",
+          "so_what": "Test urgency in Asia as a hypothesis.",
+          "icon": "groups-navy.png",
+          "marker": 4
         }
       ],
-      "next": {
-        "text": "Next: the roadmap from pilot to proof"
-      }
+      "takeaways": [
+        {
+          "marker": 1,
+          "heading": "Claims stay at association level",
+          "text": "We say **linked with**, not caused by, until a pilot has run."
+        },
+        {
+          "marker": 2,
+          "heading": "Reach stays an open question",
+          "text": "We cannot yet say a lever helps **loans that would otherwise expire**."
+        },
+        {
+          "marker": 3,
+          "heading": "The flag is validated by country",
+          "text": "No country gets a flag **until it is recalibrated** on local data."
+        },
+        {
+          "marker": 4,
+          "heading": "One passing signal is not a rule",
+          "text": "It holds in one model only, so **no writing rule follows**."
+        }
+      ],
+      "solution_link": "→ Why the roadmap starts with a pilot"
     },
     {
       "n": 21,
