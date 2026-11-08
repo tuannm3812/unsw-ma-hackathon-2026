@@ -1355,6 +1355,7 @@ SOLUTION_ICONS = ['target-navy.png', 'groups-navy.png', 'science-navy.png']
 
 
 SOLUTION_W, SOLUTION_GAP = 187, 22.75
+SOLUTION_WHO = ['language-navy.png', 'handshake-navy.png', 'manage_search-navy.png']
 
 
 def solution(page, slide, pos):
@@ -1372,8 +1373,13 @@ def solution(page, slide, pos):
         page.text(step['action'], x + 12, top + 84, SOLUTION_W - 24, 44, size=10, bold=True, spacing=105)
         for k, (label, value, colour) in enumerate((('Who', step['who'], GREY), ('When', step['when'], GREY), ('Status', step['status'], VIOLET))):
             y = top + 134 + k * pitch
-            page.text(label, x + 12, y, 120, 12, size=8, color=GREY, bold=True)
-            page.text(value, x + 12, y + 12, SOLUTION_W - 24, 28, size=10, color=colour, bold=label == 'Status', spacing=105)
+            page.text(label, x + 32, y, 120, 12, size=8, color=GREY, bold=True)
+            page.text(value, x + 32, y + 12, SOLUTION_W - 44, 28, size=10, color=colour, bold=label == 'Status', spacing=105)
+            if label == 'Status':
+                page.rect(x + 16, y + 11, 8, 8, VIOLET, 'ELLIPSE')
+            else:
+                icon = SOLUTION_WHO[i] if label == 'Who' else 'schedule-navy.png'
+                EXTRA_IMAGES.append(('solution', ASSETS / 'icons' / icon, (x + 12, y + 7, 16, 16)))
         page.line(x + 12, top + h - 30, x + SOLUTION_W - 12, top + h - 30, HAIR, .75)
         page.text(f"Evidence: {step['evidence']}", x + 12, top + h - 25, SOLUTION_W - 24, 12, size=8, color=GREY)
         if i == 0:

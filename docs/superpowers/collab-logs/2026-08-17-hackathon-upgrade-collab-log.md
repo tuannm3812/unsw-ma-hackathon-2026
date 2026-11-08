@@ -2975,3 +2975,7 @@ unseen exact template, which cannot exclude near-duplicates.
 
 - Live deck re-read first: no owner edits to mirror. Big proof numbers were rejected as duplicates of slides 12, 17 and 20. Slide 16's cards now show what, who, when, status and evidence slide, on one grid, with a fourth takeaway that nothing is deployed yet. Slide 15 gains a fourth takeaway on the capped-forecast diagnostic, using the registered ranges, with a footnote.
 - Verified: pyflakes, deck QA, word-box overlap check, rendered slides, full offline pytest. Slides 15 and 16 only were rebuilt; nothing pushed.
+
+## 2026-11-08: slide 16 row icons
+
+- Mike suggested the Kiva logo and partner pictures; icons chosen instead, so the slide does not imply Kiva endorses the proposal. Who and When rows have deck-style icons; Status has a violet dot. Live deck re-read first: no owner edits to mirror. Verified: deck QA, rendered slide 16, full offline pytest. Nothing pushed.
