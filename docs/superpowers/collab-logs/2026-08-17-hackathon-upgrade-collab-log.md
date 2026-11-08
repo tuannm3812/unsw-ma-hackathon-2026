@@ -2948,3 +2948,9 @@ unseen exact template, which cannot exclude near-duplicates.
 - `src/loan_detail_summary.py` (tested) reads Experiment I into `reports/evidence_sources/loan_detail_summary.json`; register section added. Slide 11 now shows framings against four loan details on one scale, labelled per row, with size-band rows left out and no ratio or ranking. The programme-controls panel moved to the speaker notes; the shrink figures stay in the register.
 - A failed first build left slide 11 blank in the live deck for a few minutes (an empty guide string); fixed and rebuilt.
 - Exploratory and not independently reviewed. Verified: pyflakes, deck QA, rendered slide 11, full offline pytest. Nothing pushed.
+
+## 2026-11-08: slide 15 merged into one chart; slide 14 totals
+
+- Mike chose the two-range design. Live deck re-read first: no owner edits to mirror. Slide 15's three panels are now one chart with linear and larger-tree rows, thick month ranges and thin country ranges; the capped-forecast check stays in the speaker notes. `Page.legend` gained bar and rule marks. 0.75 added to QA's allowed axis ticks.
+- Slide 14 keeps its design and now shows each year's total at the bar end, which matches the benchmark at two decimals.
+- Verified: pyflakes, deck QA, rendered slides, full offline pytest. Slides 14 and 15 only were rebuilt; nothing pushed.

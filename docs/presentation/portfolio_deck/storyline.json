@@ -2140,65 +2140,17 @@
             ]
           }
         },
-        "linear_capped": {
-          "2021": {
-            "gain": 0.32356618133299264,
-            "country": [
-              0.08531658018782637,
-              0.5403811265296464
-            ]
-          },
-          "2022": {
-            "gain": 0.37718326963726767,
-            "country": [
-              0.11562061212331301,
-              0.8104719703520783
-            ]
-          },
-          "2023": {
-            "gain": 0.27683338341675334,
-            "country": [
-              0.02748383795761598,
-              0.738359185838867
-            ]
-          },
-          "2024": {
-            "gain": 0.4052254769276393,
-            "country": [
-              0.0813201428287683,
-              0.862212390456923
-            ]
-          },
-          "2025": {
-            "gain": 0.2646634506657257,
-            "country": [
-              -0.12281227660473693,
-              0.5798062126194135
-            ]
-          }
-        },
-        "panels": [
-          {
-            "title": "(a) Across months, the linear gain holds",
-            "guide": "Month-resampled ranges for the linear model; right of 0 means lower error."
-          },
-          {
-            "title": "(b) On a stronger tree, it shrinks",
-            "guide": "Navy: linear model. Violet: larger boosted tree with full text."
-          },
-          {
-            "title": "(c) Across countries it is fragile",
-            "guide": "Violet: resampling countries. Slate: the same with extreme forecasts capped¹."
-          }
-        ],
         "caption": "Annual MAE gain in days from adding text, identical rows. Text = form, word-list counts, VADER sentiment and TF-IDF word patterns.",
-        "note_sup": "Forecasts capped at the longest training wait (173.4 days); a diagnostic, not the reported model.",
         "large_tree": {
           "2021": {
             "gain": 0.15408871457897744,
             "month": [
               0.09712977909536014,
               0.2116457130981483
+            ],
+            "country": [
+              0.07066604036241232,
+              0.26600163991100134
             ]
           },
           "2022": {
@@ -2206,6 +2158,10 @@
             "month": [
               0.010627490621161789,
               0.10035790734023858
+            ],
+            "country": [
+              -0.0223288551617298,
+              0.1531167750276388
             ]
           },
           "2023": {
@@ -2213,6 +2169,10 @@
             "month": [
               -0.04098775244479611,
               0.066979379143005
+            ],
+            "country": [
+              -0.06704150174509158,
+              0.07067188268577826
             ]
           },
           "2024": {
@@ -2220,6 +2180,10 @@
             "month": [
               -0.06393837747290172,
               0.03682997619543137
+            ],
+            "country": [
+              -0.08973873883965176,
+              0.03474237280463516
             ]
           },
           "2025": {
@@ -2227,9 +2191,21 @@
             "month": [
               0.02244705499107863,
               0.10577935283920753
+            ],
+            "country": [
+              -0.0063203064396865636,
+              0.158698246659859
             ]
           }
-        }
+        },
+        "title": "The text gain by year: two models, two ranges",
+        "guide": "MAE gain in days from adding text to loan details; right of 0 means lower error. The dot is the gain.",
+        "legend": [
+          "Linear model",
+          "Thick: month range",
+          "Larger boosted tree",
+          "Thin: country range"
+        ]
       },
       "takeaways": [
         {
@@ -2250,7 +2226,7 @@
       ],
       "notes": {
         "purpose": "Keep the gain in proportion: it depends on the model and on which countries are in the sample.",
-        "script": "Answer first: the linear gain holds across months, but it is fragile across countries and shrinks on a stronger model. Three panels, read in order. [Point: Stable across months, linear only] Panel a resamples calendar months: all five ranges sit right of zero, and the median gain is 0.293 days, about seven hours. [Point: A stronger tree gains little] Panel b sets the linear model against a larger boosted tree with full text: the tree's ranges exclude zero in three of five years, and by country in only one, and its largest gain is about 0.15 days. [Point: Across countries it is fragile] Panel c resamples countries instead: four of five ranges include zero. Capping forecasts at the longest training wait, 173.4 days, a diagnostic rather than the reported model, leaves only 2025 including zero, so much of the fragility comes from a few extreme forecasts. The loan-specific part of the gain, after removing what shuffled text keeps, clears zero in four of five years by month and two of five by country. Metrics also disagree at the margin: in 2025 text improved error and calibration, but AUC for same-day funding fell from 0.893 to 0.888. Each range uses 1,000 resamples; these are fixed-model resampling ranges, not retraining or causal uncertainty.",
+        "script": "Answer first: the linear gain holds across months, but it is fragile across countries and shrinks on a stronger model. One chart: each year has two rows, the linear model and the larger boosted tree. The thick bar is the 95 percent range when we resample calendar months, and the thin line is the range when we resample countries. [Point: Stable across months, linear only] For the linear model, all five thick bars sit right of zero, and the median gain is 0.293 days, about seven hours. [Point: A stronger tree gains little] The violet rows are a larger boosted tree with full text: its ranges exclude zero in three of five years, and by country in only one, and its largest gain is about 0.15 days. [Point: Across countries it is fragile] The thin lines resample countries instead: four of the five linear ranges include zero. Capping forecasts at the longest training wait, 173.4 days, a diagnostic rather than the reported model, leaves only 2025 including zero, so much of the fragility comes from a few extreme forecasts. The loan-specific part of the gain, after removing what shuffled text keeps, clears zero in four of five years by month and two of five by country. Metrics also disagree at the margin: in 2025 text improved error and calibration, but AUC for same-day funding fell from 0.893 to 0.888. Each range uses 1,000 resamples; these are fixed-model resampling ranges, not retraining or causal uncertainty.",
         "reference": "docs/6_matched_text_results.md; reports/loss_alignment_2025/README.md; ranges from src/gain_intervals.py (reports/evidence_sources/gain_intervals.json). Larger tree and placebo: reports/evidence_sources/forecast_experiments.json."
       },
       "sublabel": "Forecast benchmark",

@@ -228,8 +228,8 @@ class Page:
         lx = x + (span - sum(widths) - gap * (len(items) - 1)) / 2 if span else x
         for item, width in zip(items, widths):
             label, fill, shape, marker, swatch = parts(item)
-            tall = swatch if shape == 'ELLIPSE' else 8 * scale
-            self.swatch(lx, y, swatch, tall, fill, shape, size)
+            tall = swatch if shape == 'ELLIPSE' else {'BAR': 3.5, 'RULE': .75}.get(shape, 8 * scale)
+            self.swatch(lx, y, swatch, tall, fill, 'RECTANGLE' if shape in ('BAR', 'RULE') else shape, size)
             self.sup(label, lx + swatch + 4, y, label_width(label, size) + 10, 12 * scale, size=size, color=GREY)
             if marker:
                 self.marker(marker, lx + width - 12, y + mid - 6)
@@ -1260,70 +1260,41 @@ def forecast(page, slide, pos):
 
 
 def gains(page, slide, pos):
-    """Three panels: (a) month ranges every year, (b) linear versus larger tree, (c) country versus capped ranges."""
+    """One chart: per year, the linear model and the larger tree, each with month (thick) and country (thin) ranges."""
     page.chrome(slide)
     ex = slide['exhibit']
-    years = sorted(ex['linear'])
-
-    def axis(px, y, values):
-        for value in values:
-            page.line(px(value), y, px(value), y + 3, RULE, .75)
-            page.text(f'{value:.2f}'.rstrip('0').rstrip('.') if value else '0', px(value) - 16, y + 3, 32, 11,
-                      size=8, color=GREY, align='center')
-
-    def rng(px, low, high, gain, y, colour, weight, dot):
-        page.line(px(low), y, px(high), y, colour, weight)
-        page.rect(px(gain) - dot / 2, y - dot / 2, dot, dot, colour, 'ELLIPSE')
-
-    # Top row: (a) and (b), each 296 wide; bottom row: (c) full width.
-    top_h, bottom_h, gap = 142, 150, 8
-    pw = (R - L - 6 - gap) / 2
-    boxes = [(L, TOP, pw, top_h), (L + pw + gap, TOP, pw, top_h), (L, TOP + top_h + gap, R - L - 6, bottom_h)]
-    for (x, y, w, h), meta, number in zip(boxes, ex['panels'], (1, 2, 3)):
-        panel(page, x, y, w, h, meta['title'], meta['guide'])
-        page.marker(number, x + w - 22, y + 8)
-    # (a) month ranges, linear model
-    x, y, w, h = boxes[0]
-    lo, hi = -.1, .6
-    px = lambda v, x=x, w=w: x + 44 + (v - lo) * (w - 58) / (hi - lo)
-    page.line(px(0), y + 42, px(0), y + 42 + 5 * 16, NAVY, .75)
+    years, pw, h = sorted(ex['linear']), R - L, 306
+    panel(page, L, TOP, pw, h, ex['title'], ex['guide'])
+    x0, x1, lo, hi = L + 50, L + pw - 58, -.22, 1.0
+    px = lambda value: x0 + (value - lo) / (hi - lo) * (x1 - x0)
+    first, pitch, tier = TOP + 56, 50, 16
+    axis = first + pitch * 5 - 12
+    page.line(px(0), TOP + 44, px(0), axis, NAVY, .75)
+    page.line(x0, axis, x1, axis, SLATE, .75)
+    for value, name in [(0, '0'), (.25, '0.25'), (.5, '0.5'), (.75, '0.75')]:
+        page.line(px(value), axis, px(value), axis + 3, SLATE, .75)
+        page.text(name, px(value) - 16, axis + 3, 32, 11, size=8, color=GREY, align='center')
+    page.text('days of MAE gain', x1 - 90, axis + 3, 90, 11, size=8, color=GREY, align='right')
     for k, year in enumerate(years):
-        ry = y + 50 + 16 * k
-        page.text(year, x + 10, ry - 6, 32, 12, size=8, color=GREY)
-        v = ex['linear'][year]
-        rng(px, *v['month'], v['gain'], ry, NAVY, 2.5, 6)
-    axis(px, y + 42 + 5 * 16, [0, .25, .5])
-    # (b) linear versus tree, month ranges
-    x, y, w, h = boxes[1]
-    px = lambda v, x=x, w=w: x + 44 + (v - lo) * (w - 58) / (hi - lo)
-    page.line(px(0), y + 42, px(0), y + 42 + 5 * 16, NAVY, .75)
-    for k, year in enumerate(years):
-        ry = y + 47 + 16 * k
-        page.text(year, x + 10, ry - 3, 32, 12, size=8, color=GREY)
-        v, t = ex['linear'][year], ex['large_tree'][year]
-        rng(px, *v['month'], v['gain'], ry, NAVY, 2, 5)
-        rng(px, *t['month'], t['gain'], ry + 6, VIOLET, 2, 5)
-    axis(px, y + 42 + 5 * 16, [0, .25, .5])
-    # (c) country versus capped country ranges, linear model
-    x, y, w, h = boxes[2]
-    lo2, hi2 = -.2, .9
-    px = lambda v, x=x, w=w: x + 44 + (v - lo2) * (w - 70) / (hi2 - lo2)
-    page.line(px(0), y + 42, px(0), y + 42 + 5 * 18, NAVY, .75)
-    for k, year in enumerate(years):
-        ry = y + 49 + 18 * k
-        page.text(year, x + 10, ry - 3, 32, 12, size=8, color=GREY)
-        v, c = ex['linear'][year], ex['linear_capped'][year]
-        rng(px, *v['country'], v['gain'], ry, VIOLET, 2, 5)
-        rng(px, *c['country'], c['gain'], ry + 6, SLATE, 2, 5)
-    axis(px, y + 42 + 5 * 18, [0, .25, .5])
-    page.text('days of MAE gain', px(.9) - 80, y + 42 + 5 * 18 + 3, 80, 11, size=8, color=GREY, align='right')
-    page.caption(slide['figure'], ex['caption'], TOP + top_h + gap + bottom_h + 8)
-    page.caption('¹', ex['note_sup'], TOP + top_h + gap + bottom_h + 21)
+        y = first + k * pitch
+        page.text(year, L + 10, y + tier / 2 - 7, 36, 14, size=9, color=GREY, middle=True)
+        if k:
+            page.line(L + 10, y - 15, L + pw - 10, y - 15, HAIR, .5)
+        for row, colour, source in ((0, NAVY, ex['linear'][year]), (1, VIOLET, ex['large_tree'][year])):
+            cy = y + row * tier
+            page.line(px(source['country'][0]), cy, px(source['country'][1]), cy, colour, .75)
+            page.line(px(source['month'][0]), cy, px(source['month'][1]), cy, colour, 3.5)
+            page.rect(px(source['gain']) - 3.5, cy - 3.5, 7, 7, colour, 'ELLIPSE')
+            page.rect(px(source['gain']) - 2, cy - 2, 4, 4, WHITE, 'ELLIPSE')
+            page.text(f"{source['gain']:.3f}".replace('-', '−'), x1 + 8, cy - 6, 40, 12, size=8, bold=True, color=colour, align='right')
+    names = ex['legend']
+    page.legend([(names[0], NAVY), (names[1], SLATE, 'BAR', 1), (names[2], VIOLET, 'RECTANGLE', 2), (names[3], SLATE, 'RULE', 3)],
+                TOP + h + 6, L, span=pw, gap=22)
+    page.caption(slide['figure'], ex['caption'], TOP + h + 24, w=pw)
     page.takeaways(slide['takeaways'], pos)
 
 
 VERDICT_FILLS = {'yes': NAVY, 'unclear': SLATE, 'not_yet': VIOLET}
-
 
 def supports(page, slide):
     """2x2 board: per block a question, verdict tag, key figure, evidence and a 'so what' line; then a strip."""
@@ -1623,6 +1594,7 @@ def text_adds(page, slide, pos):
         page.rect(split, y, end - split, 15, VIOLET)
         page.text(f"{row['loan_specific']:.3f}", split, y, end - split, 15, size=8, bold=True, color=WHITE,
                   align='center', middle=True)
+        page.text(f"{row['context'] + row['loan_specific']:.2f}", end + 5, y, 34, 15, size=9, bold=True, middle=True)
         tree, dot = row['tree'], y + 23
         page.line(px(0), dot, px(tree), dot, SLATE, .75)
         page.rect(px(tree) - 3.5, dot - 3.5, 7, 7, NAVY, 'ELLIPSE')
