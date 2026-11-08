@@ -348,7 +348,7 @@ def agenda(page, slide, urls):
     colours = [(NAVY, WHITE), (VIOLET, WHITE), (SLATE, WHITE), (YELLOW, NAVY)]
     contents = [[('Editable fields', 4), ('The outcome', 5), ('A slower market', 6)],
                 [('Four analyses', 7)],
-                [('Country uncertainty', 8), ('Small or unknown', 9), ('Programme controls', 10),
+                [('Country uncertainty', 8), ('Programme controls', 9), ('Small or unknown', 10),
                  ('Forecast gain', 11), ('Limits of the gain', 12)],
                 [('What is supported', 13), ('Three gates', 14)]]
     for i, part in enumerate(slide['parts']):
@@ -835,7 +835,7 @@ def forest(page, slide, pos):
     page.marker(1, *header['bounded'])
     page.marker(3, *header['unresolved'])
     page.marker(4, rx + 3.3 * len(ex['t4_tag']) + 8, header['bounded'][1] + 0.5)
-    page.caption('Figure 5.', ex['caption'], ly + 16)
+    page.caption('Figure 6.', ex['caption'], ly + 16)
     page.caption('¹', ex['note_sup'], ly + 29)
     page.takeaways(slide['takeaways'], pos)
 
@@ -914,7 +914,7 @@ def persist(page, slide, pos):
     page.chrome(slide)
     exhibit = slide['exhibit']
     table(page, exhibit['columns'], exhibit['rows'], L, TOP, R - L - 6, 40)
-    page.caption('Figure 6.', exhibit['note'], TOP + 120 + 8)
+    page.caption('Figure 5.', exhibit['note'], TOP + 120 + 8)
     first, second = slide['key_figures']
     key_card(page, first, L, 286, 296, 110, VIOLET, 24)
     key_card(page, second, 353.5, 286, 296.5, 110, NAVY, 24)

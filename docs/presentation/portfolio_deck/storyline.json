@@ -400,7 +400,7 @@
             "method": "The same models with more text measures and a programme proxy; multiple-test adjusted.",
             "data": "1,453,840 loans; 642 programme categories",
             "headline": "Only small associations remain",
-            "slide": 10
+            "slide": 9
           },
           {
             "name": "Equivalence test",
@@ -409,7 +409,7 @@
             "method": "Is each 90% interval inside ±5% of funding time?",
             "data": "Robustness-check estimates for 9 terms",
             "headline": "Five framings small; urgency unresolved",
-            "slide": 9
+            "slide": 10
           },
           {
             "name": "Forecast benchmark",
@@ -495,7 +495,7 @@
       ],
       "notes": {
         "purpose": "Show why we distrust headline significance.",
-        "script": "With 1.45 million rows almost everything looks significant, because standard HC3 errors treat every loan as independent. When we let errors correlate within each of 48 countries, 64 of the 120 significant terms fell away. [Point: Text terms are hit hardest] Most of those are text terms. [Point: Few text terms survive] Only sentiment and some family interactions remain. [Point: Urgency no longer passes] Urgency is the clearest case. [Point: Few countries dominate] The reason is concentration: ten countries hold 81 percent of loans and behave very differently. Regional family-framing patterns rest on two countries each, so they support no regional writing rules; the appendix shows the check. Losing significance is weak evidence, not evidence of no effect; the next slide tests that.",
+        "script": "With 1.45 million rows almost everything looks significant, because standard HC3 errors treat every loan as independent. When we let errors correlate within each of 48 countries, 64 of the 120 significant terms fell away. [Point: Text terms are hit hardest] Most of those are text terms. [Point: Few text terms survive] Only sentiment and some family interactions remain. [Point: Urgency no longer passes] Urgency is the clearest case. [Point: Few countries dominate] The reason is concentration: ten countries hold 81 percent of loans and behave very differently. Regional family-framing patterns rest on two countries each, so they support no regional writing rules; the appendix shows the check. Losing significance is weak evidence, not evidence of no effect; the next two slides ask what survives programme controls and how small the remaining links are.",
         "reference": "Explanatory models, primary saved run 2026-08-31: association_summary.txt; split by src/clustering_split.py (reports/evidence_sources/clustering_split.json); shares by src/country_shares.py; map by scripts/build_country_map.py from Natural Earth 1:110m admin-0 countries (public domain)."
       },
       "sublabel": "Explanatory models",
@@ -896,6 +896,68 @@
     },
     {
       "n": 9,
+      "id": "persist",
+      "section": "Evidence",
+      "layout": "content+takeaways",
+      "title": "Few narrative associations remain after programme controls",
+      "subtitle": "Robustness checks: country-clustered, BH-adjusted within specification",
+      "exhibit": {
+        "type": "table",
+        "columns": [
+          "Term and outcome",
+          "Expanded",
+          "Programme-adjusted"
+        ],
+        "rows": [
+          [
+            "Third person, log(1 + days)",
+            "−0.0090, BH p 0.012",
+            "−0.0081, BH p 0.061"
+          ],
+          [
+            "Business, 24-hour (pp)",
+            "not significant after BH",
+            "−0.258 pp, BH p 0.006"
+          ]
+        ],
+        "note": "Per extra mention per 100 words; BH-adjusted within each specification."
+      },
+      "takeaways": [
+        {
+          "marker": 1,
+          "heading": "Only small associations remain",
+          "text": "Third-person framing keeps its size but rises to **BH p 0.061**; business framing is **the one term below BH 0.05**."
+        },
+        {
+          "marker": 2,
+          "heading": "These are still associations",
+          "text": "Programme text is an **unvalidated proxy**; neither result shows what editing would do."
+        },
+        {
+          "marker": 3,
+          "heading": "Pronouns may reflect the writer",
+          "text": "Descriptions are usually written by partners, so the **third-person link may reflect who writes**, not a borrower's choice."
+        }
+      ],
+      "notes": {
+        "purpose": "Show that not everything disappears.",
+        "script": "Few results remain under richer controls. Third-person framing keeps about the same size, but its adjusted p-value rises just above 0.05. Business framing is the one term that passes after programme controls, with a slightly lower same-day rate. Both are small and observational. [Point: Pronouns may reflect the writer] Descriptions are usually written by partner staff, so the third-person link may say more about who writes than about the borrower. The next slide asks how small the remaining links really are.",
+        "reference": "Robustness checks: reviewed expanded-feature sensitivity, reports/expanded_feature_sensitivity_reviewed. "
+      },
+      "key_figures": [
+        {
+          "value": "0.012 → 0.061",
+          "label": "third-person BH p, expanded to programme-adjusted"
+        },
+        {
+          "value": "−0.258 pp",
+          "label": "business framing, same-day rate, programme-adjusted"
+        }
+      ],
+      "sublabel": "Robustness checks"
+    },
+    {
+      "n": 10,
       "id": "equivalence",
       "section": "Evidence",
       "layout": "content+takeaways",
@@ -1038,68 +1100,6 @@
         "reference": "Equivalence test run 2026-11-08. reports/equivalence_screen_reviewed/README.md; src/equivalence.py. Bands, hours and no-mention shares: src/bound_ladder.py (reports/evidence_sources/bound_ladder.json), from equivalence_screen.csv and feature_distribution.json."
       },
       "sublabel": "Equivalence test"
-    },
-    {
-      "n": 10,
-      "id": "persist",
-      "section": "Evidence",
-      "layout": "content+takeaways",
-      "title": "Few narrative associations remain after programme controls",
-      "subtitle": "Robustness checks: country-clustered, BH-adjusted within specification",
-      "exhibit": {
-        "type": "table",
-        "columns": [
-          "Term and outcome",
-          "Expanded",
-          "Programme-adjusted"
-        ],
-        "rows": [
-          [
-            "Third person, log(1 + days)",
-            "−0.0090, BH p 0.012",
-            "−0.0081, BH p 0.061"
-          ],
-          [
-            "Business, 24-hour (pp)",
-            "not significant after BH",
-            "−0.258 pp, BH p 0.006"
-          ]
-        ],
-        "note": "Per extra mention per 100 words; BH-adjusted within each specification."
-      },
-      "takeaways": [
-        {
-          "marker": 1,
-          "heading": "Only small associations remain",
-          "text": "Third-person framing keeps its size but rises to **BH p 0.061**; business framing is **the one term below BH 0.05**."
-        },
-        {
-          "marker": 2,
-          "heading": "These are still associations",
-          "text": "Programme text is an **unvalidated proxy**; neither result shows what editing would do."
-        },
-        {
-          "marker": 3,
-          "heading": "Pronouns may reflect the writer",
-          "text": "Descriptions are usually written by partners, so the **third-person link may reflect who writes**, not a borrower's choice."
-        }
-      ],
-      "notes": {
-        "purpose": "Show that not everything disappears.",
-        "script": "Few results remain under richer controls. Third-person framing keeps about the same size, but its adjusted p-value rises just above 0.05. Business framing is the one term that passes after programme controls, with a slightly lower same-day rate. Both are small and observational. [Point: Pronouns may reflect the writer] Descriptions are usually written by partner staff, so the third-person link may say more about who writes than about the borrower.",
-        "reference": "Robustness checks: reviewed expanded-feature sensitivity, reports/expanded_feature_sensitivity_reviewed. "
-      },
-      "key_figures": [
-        {
-          "value": "0.012 → 0.061",
-          "label": "third-person BH p, expanded to programme-adjusted"
-        },
-        {
-          "value": "−0.258 pp",
-          "label": "business framing, same-day rate, programme-adjusted"
-        }
-      ],
-      "sublabel": "Robustness checks"
     },
     {
       "n": 11,
