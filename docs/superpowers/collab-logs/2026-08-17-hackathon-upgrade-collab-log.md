@@ -3065,3 +3065,11 @@ unseen exact template, which cannot exclude near-duplicates.
 ## 2026-11-09: A3 text-only and programme-text rows
 
 - Live deck re-read first: no owner edits to mirror. A3 now also lists the text-only and programme-text models from the November benchmark; register row added. Slide 11's speaker notes carry one association line on sanitation. Kaggle runs are with the experiments thread. Verified: pyflakes, deck QA, word-box overlap check, full offline pytest. Slides 11 and A3 only were rebuilt; nothing pushed.
+
+## 2026-11-09: tuned trees, XGBoost, flag ranges and themes from Kaggle
+
+- Live deck re-read first: no owner edits to mirror. Kernel `kiva-hackathon-experiments-appendix` finished (commit 587d2d2, published from a dirty tree); only its aggregate JSON and provenance were copied to `reports/experiments_2026_11_08/`. No new runs.
+- `src/appendix_summary.py` (tested) now reads tuned rows, text gains, the flag's margin over the lookup and the eight themes; new register section.
+- A3 adds the larger tree with text and four tuned rows, labelled exploratory; the title no longer says nothing was tuned. A4 adds the theme chart with n, raw days and adjusted ranges, and shows three fastest and three slowest activities to make room.
+- Slide 14: "at most about 0.15 days" still holds for the fixed larger tree, but tuned trees reach 0.16–0.22 in 2021, so the takeaway now says so. Slide 17: lift and precision unchanged; adds that the gap's 95% range is above zero in every year. For the larger and tuned trees the 2021 country-block range includes zero (notes and register).
+- Verified: pyflakes, deck QA, word-box overlap check, rendered slides, full offline pytest (248 passed). Slides 14, 17, A3, A4 rebuilt; nothing pushed.

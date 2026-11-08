@@ -1,6 +1,7 @@
 import pytest
 
-from src.appendix_summary import model_rows, purpose_contrasts, sector_same_day
+from src.appendix_summary import (flag_margin, larger_tree_with_text, model_rows, purpose_contrasts, sector_same_day,
+                                  theme_rows, tuned_summary)
 
 
 def _m(year, family, arm, mae, auc):
@@ -44,3 +45,51 @@ def test_model_rows_appends_extra_models_after_the_larger_tree():
     large = {'windows': [{'year': 2021, 'arm': 'S', 'mae_days': 7.0, 'roc_auc': .8}]}
     rows = model_rows(bench, large, (('Median', 'baseline', 'B0'),), (('Text only', 'linear', 'T'),))
     assert [r['name'] for r in rows] == ['Median', 'Larger boosted tree', 'Text only']
+
+
+def _year(year, compact, large, hgb, xgb):
+    mae = {'compact_fixed_S': compact, 'large_fixed_S': large, 'hgb_tuned_S': hgb, 'xgb_tuned_S': xgb,
+           'hgb_tuned_S+M+L+D': hgb - .1, 'xgb_tuned_S+M+L+D': xgb - .2}
+    gains = [{'family': f, 'candidate': c, 'unit': u, 'gain': g, 'interval_95': [g - .1, g + .1]}
+             for f, g in (('hgb', .1), ('xgb', .2)) for c in ('S+M+L', 'S+M+L+D') for u in ('month', 'country')]
+    margin = {'compact_fixed_S': {'lift': [.2, 1.1], 'within': [.1, .3]}}
+    return {'year': year, 'mae': mae, 'text_gain': gains, 'test_rows': 10,
+            'tuning': {'hgb': {'params': {'a': 1}}, 'xgb': {'params': {'b': 2}}, 'hgb_trials': [{}, {}], 'xgb_trials': [{}, {}]},
+            'triage': {'models': {'compact_fixed_S': {'top_10': {'lift': 2.6, 'precision': .5},
+                                                      'within_country_median_precision_top_10': .52}},
+                       'minus_lookup_95': {'month_block': margin,
+                                           'country_block_lift_only': {'compact_fixed_S': {'lift': [.08, 1.2], 'within': [9, 9]}}}}}
+
+
+def test_tuned_summary_compares_best_fixed_with_best_tuned():
+    out = tuned_summary({'xgboost_version': '3', 'years': [_year(2021, 7.5, 8.0, 8.1, 8.2), _year(2022, 6.0, 6.1, 5.9, 5.8)]})
+    assert [r['name'] for r in out['rows']][0] == 'Tuned tree, loan details'
+    assert out['rows'][3]['mae'] == pytest.approx({'2021': 8.0, '2022': 5.6})
+    assert [v['tuned_lower_by'] for v in out['versus_fixed']] == pytest.approx([-.6, .2])
+    assert [v['xgb_below_tuned_tree'] for v in out['versus_fixed']] == [False, True]
+    assert len(out['text_gains']) == 4 and out['text_gains'][1]['family'] == 'xgb'
+    assert out['text_gains'][1]['country_95'] == pytest.approx([.1, .3])
+    assert out['trials_per_family'] == 2
+
+
+def test_flag_margin_keeps_month_and_country_ranges_apart():
+    row = flag_margin({'years': [_year(2021, 7.5, 8.0, 8.1, 8.2)]})[0]
+    assert row['lift'] == 2.6 and row['within'] == .52
+    assert row['lift_margin_month_95'] == [.2, 1.1] and row['lift_margin_country_95'] == [.08, 1.2]
+    assert 'within_margin_country_95' not in row
+
+
+def test_larger_tree_with_text_uses_full_text_arm():
+    row = larger_tree_with_text({'windows': [{'year': 2021, 'arm': 'S', 'mae_days': 8, 'roc_auc': .8},
+                                             {'year': 2021, 'arm': 'S+M+L+D', 'mae_days': 7.9, 'roc_auc': .85}]})
+    assert row['mae'] == {'2021': 7.9} and row['auc_range'] == [.85, .85]
+
+
+def test_theme_rows_label_and_sort_by_raw_speed():
+    def theme(words, days, pct):
+        adj = {'pct_change_in_1_plus_days': pct, 'pct_ci95': [pct - 1, pct + 1], 'p': .5}
+        return {'top_words': words, 'n': 5, 'mean_days': days, 'median_days': days, 'adjusted_loan_details': adj,
+                'adjusted_plus_activity': adj}
+    rows = theme_rows({'themes': [theme(['business', 'nwtf', 'philippines'], 8, 6), theme(['sanitary', 'toilet'], 1.5, -17)]})
+    assert [r['label'] for r in rows] == ['Sanitary and toilets', 'Philippines business']
+    assert rows[0]['adjusted']['ci95'] == [-18, -16]
