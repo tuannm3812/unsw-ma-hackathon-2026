@@ -197,16 +197,6 @@
       "layout": "content+takeaways",
       "title": "The outcome is platform funding time, not borrower waiting time",
       "subtitle": "Descriptive audit of all records",
-      "key_figures": [
-        {
-          "value": "1,453,840",
-          "label": "valid completed durations, 2016–2025"
-        },
-        {
-          "value": "96.4%",
-          "label": "disbursed to the borrower before listing (median 24.2 days earlier)"
-        }
-      ],
       "body": [
         {
           "text": "1,453,846 input records; 6 negative durations excluded; 1,637 refunded records included."
@@ -216,7 +206,7 @@
         {
           "marker": 1,
           "heading": "Partners wait, not borrowers",
-          "text": "For most loans the **partner has already paid the borrower**. Platform time plausibly reflects replenishing partner capital; it is not measured directly."
+          "text": "**96.4% of loans** reached the borrower a median 24.2 days before listing; platform time plausibly reflects replenishing partner capital."
         },
         {
           "marker": 2,
@@ -225,17 +215,45 @@
         },
         {
           "marker": 3,
-          "heading": "Results describe completed loans",
-          "text": "Findings describe **completed loans and platform timing**, not funding success or borrower welfare."
+          "heading": "We measure platform speed",
+          "text": "Our outcome runs from **listing to full funding**, median 2.85 days; it is not funding success or borrower welfare."
         }
       ],
       "notes": {
         "purpose": "Set the limits every later claim inherits.",
-        "script": "Our outcome is the time from listing to full funding. Two facts shape it. Almost all loans were paid out before they were listed, so a faster platform fill plausibly helps the partner replenish capital rather than a waiting borrower. We do not measure that directly. And the data only contain loans that funded.",
-        "reference": "association_summary.txt audit trail; docs/1_data_dictionary.md disbursalDate."
+        "script": "Our outcome is the time from listing to full funding, which takes a median of under three days. [Point: Partners wait, not borrowers] For almost all loans the partner paid the borrower about three weeks before the listing went live, so a faster platform fill plausibly helps the partner replenish capital rather than a waiting borrower. We do not observe that last step directly. [Point: Unfunded loans are missing] And the data only contain loans that funded.",
+        "reference": "96.4% and 24.2 days: docs/1_data_dictionary.md (disbursalDate audit). Median 2.85 days, IQR 0.39–15.95: feature cache, 1,453,840 eligible records (2026-11-08). Counts: association_summary.txt and features.metadata.json."
       },
       "sublabel": "Outcome",
-      "figure_caption": "Timing for a loan disbursed before listing."
+      "exhibit": {
+        "type": "journey",
+        "steps": [
+          [
+            "Partner pays the borrower",
+            "day 0"
+          ],
+          [
+            "Loan is listed on Kiva",
+            "median 24.2 days later"
+          ],
+          [
+            "Lenders fully fund it",
+            "median 2.85 days later"
+          ],
+          [
+            "Funds go to the partner¹",
+            "after full funding"
+          ]
+        ],
+        "before": "Borrower already has the money",
+        "measure": "What we measure: listing to full funding",
+        "before_share": 96.4,
+        "bar_title": "Loans disbursed to the borrower before listing",
+        "in_data": "In the data: 1,453,840 completed loans, including 1,637 refunded",
+        "not_in_data": "Not in the data: listings that expired or never funded",
+        "caption": "Journey of a typical pre-disbursed Kiva loan, not to scale; medians from the full-data audit.",
+        "note": "Typical field-partner flow; this step is not observed in the data."
+      }
     },
     {
       "n": 6,

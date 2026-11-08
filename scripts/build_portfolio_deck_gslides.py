@@ -412,28 +412,49 @@ def lever(page, slide, pos):
     page.takeaways(slide['takeaways'], pos)
 
 
+JOURNEY_X = [112, 256, 400, 544]  # icon centres for the four journey steps on slide 5
+JOURNEY_ICONS = ['payments-violet.png', 'storefront-navy.png', 'groups-navy.png', 'account_balance-violet.png']
+
+
 def outcome(page, slide, pos):
+    """A pre-disbursed loan's journey with what we measure bracketed, then who is in the data."""
     page.chrome(slide)
-    first, second = slide['key_figures']
-    key_card(page, first, L, TOP, 296, 96, NAVY)
-    key_card(page, second, 353.5, TOP, 296.5, 96, VIOLET)
-    page.marker(2, L + 296 - 22, TOP + 10)
-    y = 330
-    x1, x2, x3 = 105, 335, 585
-    page.text('Typical sequence for a loan disbursed before listing', L, 246, 500, 18, size=12, bold=True)
-    page.line(x1, y, x2, y, SLATE, 2)
-    page.line(x2, y, x3, y, NAVY, 4)
-    for x, fill in [(x1, SLATE), (x2, NAVY), (x3, NAVY)]:
-        page.rect(x - 7, y - 7, 14, 14, fill, 'ELLIPSE')
-    for x, label in [(x1, 'Partner disburses to the borrower'), (x2, 'Loan is listed on Kiva'),
-                     (x3, 'Loan is fully funded')]:
-        page.text(label, x - 60, y + 14, 120, 30, size=10, align='center', spacing=110)
-    page.text('median 24.2 days', (x1 + x2) / 2 - 60, y - 26, 120, 16, size=10, color=GREY, align='center')
-    page.text('our outcome: funding time', (x2 + x3) / 2 - 80, y - 26, 160, 16, size=10, bold=True, align='center')
-    page.marker(1, x1 - 6, y - 26)
-    page.marker(3, (x2 + x3) / 2 + 84, y - 26)
-    page.caption('Figure 2.', slide['figure_caption'], y + 52)
-    page.caption('Scope:', slide['body'][0]['text'], y + 66)
+    ex = slide['exhibit']
+    xs, line_y = JOURNEY_X, 186
+    for i, (label, note) in enumerate(ex['steps']):
+        if i < 3:
+            page.line(xs[i] + 18, line_y, xs[i + 1] - 18, line_y, HAIR if i != 1 else NAVY, 2 if i == 1 else 1.25)
+        page.sup(label, xs[i] - 64, 208, 128, 16, size=10, bold=True, align='center')
+        page.text(note, xs[i] - 64, 226, 128, 14, size=8, color=GREY, align='center')
+    for (a, b), fill, text, mark in [((0, 1), SLATE, ex['before'], 3), ((1, 2), YELLOW, ex['measure'], 1)]:
+        page.rect(xs[a], 158, xs[b] - xs[a], 3, fill)
+        page.rect(xs[a], 158, 2, 10, fill)
+        page.rect(xs[b] - 2, 158, 2, 10, fill)
+        page.text(text, xs[a] + 4, 130, xs[b] - xs[a] - 8, 26, size=10, bold=True, align='center', spacing=105)
+    page.marker(1, xs[0] - 18, 157)
+    page.marker(3, xs[2] + 6, 157)
+    # 96.4% stacked bar
+    top = 284
+    page.text(ex['bar_title'], L, top, 280, 14, size=10, bold=True)
+    width, share = 280, ex['before_share']
+    page.rect(L, top + 20, width * share / 100, 26, VIOLET)
+    page.rect(L + width * share / 100, top + 20, width * (100 - share) / 100, 26, HAIR)
+    page.text(f'{share:.1f}% before listing', L + 8, top + 20, 200, 26, size=10, color=WHITE, bold=True, middle=True)
+    page.text(f'{100 - share:.1f}% after', L + width - 60, top + 50, 60, 14, size=10, align='right')
+    # who is in the data
+    sx, sw = 356, 294
+    page.text('Who is in the data', sx, top, sw, 14, size=10, bold=True)
+    page.rect(sx, top + 20, sw, 40, PAPER)
+    page.rect(sx, top + 20, 4, 40, NAVY)
+    page.text(ex['in_data'], sx + 36, top + 20, sw - 44, 40, size=10, middle=True, spacing=105,
+              spans=[(0, ex['in_data'].index(':') + 1, {'bold': True})])
+    page.rect(sx, top + 66, sw, 34, '#EEF0F3')
+    page.text(ex['not_in_data'], sx + 36, top + 66, sw - 44, 34, size=10, color=GREY, middle=True,
+              spans=[(0, ex['not_in_data'].index(':') + 1, {'bold': True})])
+    page.marker(2, sx + sw - 16, top + 77)
+    page.caption('Figure 2.', ex['caption'], 400)
+    page.caption('¹', ex['note'], 414)
+    page.caption('Scope:', slide['body'][0]['text'], 428)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -943,6 +964,10 @@ def main() -> None:
             x = pipe_x(i)
             images.append((6, ASSETS / 'icons' / step['icon'], (x + 12, 188 + 9, 22, 22)))
         images.append((6, ASSETS / 'icons/table_rows-navy.png', (L + 16, TOP + 7, 20, 20)))
+        for x, icon in zip(JOURNEY_X, JOURNEY_ICONS):
+            images.append((4, ASSETS / 'icons' / icon, (x - 15, 171, 30, 30)))
+        images.append((4, ASSETS / 'icons/check_circle-navy.png', (356 + 12, 284 + 31, 18, 18)))
+        images.append((4, ASSETS / 'icons/block-slate.png', (356 + 12, 284 + 74, 18, 18)))
         for icon, (x, y, _, _) in zip(SUMMARY_ICONS, SUMMARY_CARDS):
             images.append((1, ASSETS / 'icons' / icon, (x + 16, y + 14, 22, 22)))
         for icon, x in zip(STEP_ICONS, STEP_X):

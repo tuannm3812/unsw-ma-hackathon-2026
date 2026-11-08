@@ -29,6 +29,9 @@ benchmark. **Equivalence** = exploratory screen of October coefficients (2026-11
 | Overall same-day share | 36.6% | `association_summary.txt` | August |
 | Illustrative listing values (slide 4) | median loan US$325; median term 12 months; median borrowers 1; most common sector Agriculture (461,563); most common country Philippines (521,586) | `reports/text_benchmark_private/features.pkl`, eligible records (2026-11-08) | Descriptive |
 | Framing families measured | 8 rates per 100 words | `src/features.py` `FRAMING_PATTERNS` | Descriptive |
+| Funding duration, eligible records | median 2.85 days; interquartile range 0.39–15.95 days | `reports/text_benchmark_private/features.pkl` (2026-11-08) | Descriptive |
+| Funded and refunded counts | 1,452,203 funded; 1,637 refunded | `features.metadata.json` audit | August |
+| Disbursed after listing | 3.6% (100% − 96.4%) | derived from the row below | Descriptive |
 | Pre-disbursal share | 96.4% (median 24.2 days before listing) | `docs/1_data_dictionary.md` (`disbursalDate`) | Descriptive |
 | Country clusters | 48 | `reports/expanded_feature_sensitivity_reviewed/README.md` | October |
 
