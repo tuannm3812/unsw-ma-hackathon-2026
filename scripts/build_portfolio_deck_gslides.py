@@ -786,7 +786,8 @@ def panel(page, x, y, w, h, title, guide):
     page.rect(x, y, w, h, PAPER)
     page.rect(x, y, w, 2, HAIR)
     page.text(title, x + 10, y + 8, w - 20, 14, size=10, bold=True)
-    page.text(guide, x + 10, y + 23, w - 20, 22, size=8, color=GREY, spacing=105)
+    if guide:
+        page.text(guide, x + 10, y + 23, w - 20, 22, size=8, color=GREY, spacing=105)
 
 
 def clustering(page, slide, pos):
@@ -1137,65 +1138,74 @@ def regions(page, slide, pos):
 
 
 def persist(page, slide, pos):
-    """Tests passing at each stage, then the two remaining links in real units and under programme controls."""
+    """Tests passing at each stage, framings against loan details on one scale, and two real-unit cards."""
     page.chrome(slide)
     ex = slide['exhibit']
     pw, fun = R - L, ex['funnel']
-    panel(page, L, TOP, pw, 116, fun['title'], fun['guide'])
-    cell, gap, cols = 10, 2.5, 12
+    panel(page, L, TOP, pw, 94, fun['title'], fun['guide'])
+    cell, gap, cols = 8, 2, 12
     block_w = cols * cell + (cols - 1) * gap
-    step = (pw - 24 - block_w) / 2
+    step = (pw - 24 - block_w - 64) / 2
     for s, stage in enumerate(fun['stages']):
-        x = L + 12 + s * step
-        y = TOP + 56
-        page.text(stage['label'], x, y - 15, block_w + 20, 12, size=9, bold=True)
+        x, y = L + 12 + s * step, TOP + 56
+        page.text(stage['label'], x, y - 15, step - 8, 12, size=9, bold=True)
         for i in range(fun['tests']):
             row, col = divmod(i, cols)
             page.rect(x + col * (cell + gap), y + row * (cell + gap), cell, cell,
                       VIOLET if i < stage['passes'] else HAIR)
-        page.text(f"{stage['passes']} of {fun['tests']} pass", x, y + 39, block_w, 13, size=10, bold=True, color=VIOLET)
+        page.text(f"{stage['passes']} of {fun['tests']} pass", x + block_w + 8, y - 1, 56, 13, size=9, bold=True, color=VIOLET)
         if s < 2:
-            page.line(x + block_w + 12, y + 17, x + step - 12, y + 17, SLATE, .75)
+            page.line(x + block_w + 8, y + 22, x + step - 8, y + 22, SLATE, .75)
             page.ops[-1]['end_arrow'] = 'FILL_ARROW'
     page.marker(1, L + pw - 22, TOP + 8)
+    # Framings against loan details
+    top, h, aw = TOP + 102, 200, 396
+    scale = ex['scale']
+    panel(page, L, top, aw, h, scale['title'], '')
+    rows = scale['loan'] + scale['framing']
+    x0, x1, lo = L + 136, L + aw - 44, -12
+    hi = max(r['ci'][1] for r in rows) * 1.02
+    px = lambda value: x0 + (value - lo) / (hi - lo) * (x1 - x0)
+    first, pitch, split = top + 38, 10.4, 5
+    axis = first + pitch * len(rows) + split
+    page.rect(px(-5), first - 3, px(5) - px(-5), axis - first + 3, TINT_BAND)
+    page.line(px(0), first - 3, px(0), axis, NAVY, .75)
+    page.line(x0, axis, x1, axis, SLATE, .75)
+    page.text('Faster', px(0) - 34, top + 24, 30, 11, size=8, color=SLATE, bold=True, align='right')
+    page.text('Slower', px(0) + 4, top + 24, 40, 11, size=8, color=SLATE, bold=True)
+    for value, name in [(0, '0'), (20, '+20'), (40, '+40'), (60, '+60')]:
+        page.line(px(value), axis, px(value), axis + 3, SLATE, .75)
+        page.text(name, px(value) - 16, axis + 3, 32, 11, size=8, color=GREY, align='center')
+    page.text('% change in (1 + days)', L + 10, axis + 3, x0 - L - 16, 11, size=8, color=GREY)
+    for k, row in enumerate(rows):
+        loan = k < len(scale['loan'])
+        y = first + k * pitch + (0 if loan else split)
+        colour = NAVY if loan else VIOLET
+        if not loan:
+            EXTRA_IMAGES.append(('persist', measure_icon(row['key']), (L + 10, y - .5, 9.5, 9.5)))
+        page.text(row['label'], L + 23 if not loan else L + 10, y - 1.5, x0 - L - 26, 11, size=8, bold=loan, color=NAVY if loan else GREY)
+        page.line(px(row['ci'][0]), y + 4, px(row['ci'][1]), y + 4, colour, 1.25)
+        page.rect(px(row['pct']) - 2.5, y + 1.5, 5, 5, colour, 'ELLIPSE')
+        page.text(f"{row['pct']:+.1f}%".replace('-', '−'), L + aw - 42, y - 1.5, 36, 11, size=8, bold=loan, color=colour, align='right')
+    divider = first + pitch * len(scale['loan']) + split / 2 - 1.5
+    page.line(L + 10, divider, L + aw - 8, divider, HAIR, .5)
+    page.marker(3, L + aw - 22, top + 8)
     # Real-unit cards
-    top, h, cw, gutter = TOP + 124, 176, 186, 10
+    cx, cw, card_h = L + aw + 10, pw - aw - 10, 96
     for k, item in enumerate(ex['cards']):
-        x = L + k * (cw + gutter)
-        page.rect(x, top, cw, h, PAPER)
-        page.rect(x, top, cw, 2, [NAVY, VIOLET][k])
-        page.text(item['name'], x + 10, top + 9, cw - 40, 14, size=10, bold=True)
-        page.text(item['value'], x + 10, top + 28, cw - 20, 30, size=22, bold=True)
-        page.text(item['label'], x + 10, top + 62, cw - 20, 26, size=9, color=GREY, spacing=105)
-        page.rect(x + 10, top + 98, cw - 20, 7, HAIR)
-        page.rect(x + 10, top + 98, (cw - 20) * item['share'], 7, NAVY)
-        page.text(item['share_label'], x + 10, top + 108, cw - 20, 12, size=9, color=GREY)
-        page.text(item['so_what'], x + 10, top + 134, cw - 20, 30, size=10, bold=True, color=VIOLET, spacing=105)
-    page.marker(2, L + cw - 22, top + 8)
-    page.marker(3, L + cw + gutter + cw - 22, top + 8)
-    # Programme control
-    ax, aw = L + 2 * (cw + gutter), pw - 2 * (cw + gutter)
-    absorb = ex['absorb']
-    panel(page, ax, top, aw, h, absorb['title'], absorb['guide'])
-    x0, x1 = ax + 12, ax + aw - 14
-    for r, row in enumerate(absorb['rows']):
-        y = top + 42 + r * 56
-        page.text(row['name'], ax + 10, y, aw - 20, 12, size=8, bold=True)
-        page.text(row['text'], ax + 10, y + 11, aw - 20, 12, size=8, color=GREY)
-        px = lambda value: x0 + (value - row['min']) / -row['min'] * (x1 - x0)
-        dot, axis = y + 30, y + 37
-        page.line(x0, axis, x1, axis, SLATE, .75)
-        for value, name in [(row['min'], row['min_label']), (0, '0')]:
-            page.line(px(value), axis, px(value), axis + 3, SLATE, .75)
-            page.text(name, px(value) - 16, axis + 4, 32, 11, size=8, color=GREY, align='center')
-        before, after = row['values']
-        page.line(px(before) + 4, dot, px(after) - 4, dot, SLATE, .75)
-        page.ops[-1]['end_arrow'] = 'FILL_ARROW'
-        page.rect(px(before) - 3.5, dot - 3.5, 7, 7, NAVY, 'ELLIPSE')
-        page.rect(px(after) - 3.5, dot - 3.5, 7, 7, VIOLET, 'ELLIPSE')
-    page.legend([(absorb['legend'][0], NAVY, 'ELLIPSE'), (absorb['legend'][1], VIOLET, 'ELLIPSE')], top + h - 16, ax + 10, gap=12)
-    page.marker(4, ax + aw - 22, top + 8)
+        y = top + k * (card_h + 8)
+        page.rect(cx, y, cw, card_h, PAPER)
+        page.rect(cx, y, cw, 2, [NAVY, VIOLET][k])
+        page.text(item['name'], cx + 10, y + 8, cw - 50, 13, size=10, bold=True)
+        page.text(item['value'], cx + 10, y + 24, cw - 20, 24, size=18, bold=True)
+        page.text(item['label'], cx + 10, y + 50, cw - 20, 22, size=8, color=GREY, spacing=100)
+        page.rect(cx + 10, y + 74, cw - 20, 4, HAIR)
+        page.rect(cx + 10, y + 74, (cw - 20) * item['share'], 4, NAVY)
+        page.text(item['share_label'], cx + 10, y + 80, cw - 20, 11, size=8, color=GREY)
+    page.marker(2, cx + cw - 22, top + 8)
+    page.marker(4, cx + cw - 38, top + 8)
     page.caption(slide['figure'], ex['note'], top + h + 8, w=pw)
+    page.caption('Scale.', ex['note2'], top + h + 21, w=pw)
     page.takeaways(slide['takeaways'], pos)
 
 

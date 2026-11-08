@@ -2941,3 +2941,10 @@ unseen exact template, which cannot exclude near-duplicates.
 
 - Live deck re-read first: no owner edits to mirror. Slide 13's subtitle now refers back to slide 12's bound; slide 15 no longer repeats slide 14's seven hours; slide 14 ends on loan details first. Word-box overlap check on slides 12–14 is clean.
 - The slide 6 map legend now uses `Page.swatch`, so all legends share one alignment rule. Nothing pushed.
+
+## 2026-11-08: slide 11 loan-details panel (Experiment I)
+
+- Live deck re-read first: no owner edits to mirror.
+- `src/loan_detail_summary.py` (tested) reads Experiment I into `reports/evidence_sources/loan_detail_summary.json`; register section added. Slide 11 now shows framings against four loan details on one scale, labelled per row, with size-band rows left out and no ratio or ranking. The programme-controls panel moved to the speaker notes; the shrink figures stay in the register.
+- A failed first build left slide 11 blank in the live deck for a few minutes (an empty guide string); fixed and rebuilt.
+- Exploratory and not independently reviewed. Verified: pyflakes, deck QA, rendered slide 11, full offline pytest. Nothing pushed.

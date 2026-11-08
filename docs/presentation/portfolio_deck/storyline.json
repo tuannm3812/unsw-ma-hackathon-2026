@@ -1419,49 +1419,138 @@
             "value": "45–50 min",
             "label": "shorter funding time per extra mention on a typical 2.85-day loan",
             "share": 0.973,
-            "share_label": "97.3% of loans already use it",
-            "so_what": "May reflect who writes the description"
+            "share_label": "97.3% of loans already use it"
           },
           {
             "name": "Business",
             "value": "0.26–0.36 pp",
             "label": "lower same-day funding per extra mention",
             "share": 0.85,
-            "share_label": "85.0% of loans already use it",
-            "so_what": "Too small and too common to be a tip"
+            "share_label": "85.0% of loans already use it"
           }
         ],
-        "absorb": {
-          "title": "What programme controls absorb",
-          "guide": "Estimate before and after programme controls.",
-          "rows": [
+        "note": "Per extra mention per 100 words; BH-adjusted wild cluster bootstrap p across nine terms (Webb weights, 9,999 draws). Typical loan: the 2.85-day median.",
+        "scale": {
+          "title": "Framings against loan details, on one scale",
+          "loan": [
             {
-              "name": "Third person, log(1 + days)",
-              "values": [
-                -0.009,
-                -0.0081
-              ],
-              "text": "−0.0090 → −0.0081, 10% smaller",
-              "min": -0.01,
-              "min_label": "−0.01"
+              "label": "Amount, per doubling",
+              "pct": 44.7555313482507,
+              "ci": [
+                32.41513284308011,
+                58.2459905148933
+              ]
             },
             {
-              "name": "Business, same-day (pp)",
-              "values": [
-                -0.357,
-                -0.258
-              ],
-              "text": "−0.357 → −0.258, 28% smaller",
-              "min": -0.4,
-              "min_label": "−0.4"
+              "label": "Term, per +1 month",
+              "pct": 8.597278338860814,
+              "ci": [
+                2.0820402823234607,
+                15.528342007973684
+              ]
+            },
+            {
+              "label": "Male vs female",
+              "pct": 61.03594764412681,
+              "ci": [
+                47.24340369308586,
+                76.1204630103214
+              ]
+            },
+            {
+              "label": "Borrowers, per +1",
+              "pct": -1.0420609404842573,
+              "ci": [
+                -2.686828353131687,
+                0.6305059960706405
+              ]
             }
           ],
-          "legend": [
-            "Expanded model",
-            "Programme-adjusted"
+          "framing": [
+            {
+              "key": "family",
+              "label": "Family, +1 mention",
+              "pct": 0.9479615119871942,
+              "ci": [
+                -0.16514509315024295,
+                2.0734786756971824
+              ]
+            },
+            {
+              "key": "business",
+              "label": "Business, +1 mention",
+              "pct": 0.5439104298608166,
+              "ci": [
+                -0.14482954197199138,
+                1.2374009093200744
+              ]
+            },
+            {
+              "key": "basic_needs",
+              "label": "Basic needs, +1 mention",
+              "pct": -0.7000947263696822,
+              "ci": [
+                -1.9907686244411193,
+                0.6075759289233096
+              ]
+            },
+            {
+              "key": "agency",
+              "label": "Agency, +1 mention",
+              "pct": 0.5790316512594984,
+              "ci": [
+                -0.29078306678567145,
+                1.456434209897517
+              ]
+            },
+            {
+              "key": "gratitude",
+              "label": "Gratitude, +1 mention",
+              "pct": 1.4774899951436327,
+              "ci": [
+                -0.9145930957689341,
+                3.9273218675630384
+              ]
+            },
+            {
+              "key": "urgency",
+              "label": "Urgency, +1 mention",
+              "pct": -0.3922508333478403,
+              "ci": [
+                -7.464895027546447,
+                7.220969782227504
+              ]
+            },
+            {
+              "key": "first_person",
+              "label": "First person, +1 mention",
+              "pct": 0.9822168080912297,
+              "ci": [
+                -7.464791094471335,
+                10.200303561070623
+              ]
+            },
+            {
+              "key": "third_person",
+              "label": "Third person, +1 mention",
+              "pct": -0.8055144142025461,
+              "ci": [
+                -1.312358015835613,
+                -0.2960677466602113
+              ]
+            },
+            {
+              "key": "sentiment",
+              "label": "Sentiment, +0.5 score",
+              "pct": 1.3456049136260084,
+              "ci": [
+                -0.20470912543664177,
+                2.9200029911102376
+              ]
+            }
           ]
         },
-        "note": "Per extra mention per 100 words; BH-adjusted wild cluster bootstrap p across nine terms (Webb weights, 9,999 draws). Typical loan: the 2.85-day median."
+        "note2": "Change in (1 + days), not days, with 95% country-clustered ranges; programme-adjusted model. Amount is within a loan-size band. Associations only."
       },
       "takeaways": [
         {
@@ -1476,19 +1565,19 @@
         },
         {
           "marker": 3,
-          "heading": "These words are already common",
-          "text": "Third person is in **97.3%** of loans, business in 85.0%: no ready writing tip."
+          "heading": "Loan details are on another scale",
+          "text": "A doubled amount goes with **+44.8%** and a month of term **+8.6%** in (1 + days); framings stay near ±1.5%."
         },
         {
           "marker": 4,
           "heading": "Pronouns may reflect the writer",
-          "text": "Programme controls shrink the links **10%** and **28%**; partners usually write the text."
+          "text": "Third person is in **97.3%** of loans, and partners usually write the text."
         }
       ],
       "notes": {
         "purpose": "Show that the remaining framing links are tiny and fail a stricter test.",
-        "script": "We tested nine framing measures on two outcomes in two models, so 36 tests. Five pass the usual country-clustered test. With 48 countries that test can be too generous, so we re-ran every term with a wild cluster bootstrap, 9,999 draws with Webb weights: four pass. After adjusting for testing nine measures, none passes, and the lowest p-value is 0.136. [Point: What remains is tiny] In real units, one extra third-person mention per 100 words goes with about 45 to 50 minutes shorter funding time on a typical 2.85-day loan, and one extra business mention with 0.26 to 0.36 points lower same-day funding. These are associations, not effects of an edit. [Point: These words are already common] Third person appears in 97.3 percent of loans and business in 85 percent, so neither is an obvious writing lever. [Point: Pronouns may reflect the writer] Adding programme controls moves third person only 10 percent towards zero and business 28 percent. Descriptions are usually written by partner staff, so the third-person link may say more about who writes than about the borrower. The next slide asks how small the remaining links really are.",
-        "reference": "Robustness checks: reports/expanded_feature_sensitivity_reviewed; bootstrap: reports/evidence_sources/robustness_summary.json (src/robustness_summary.py, src/wild_cluster.py)."
+        "script": "We tested nine framing measures on two outcomes in two models, so 36 tests. Five pass the usual country-clustered test. With 48 countries that test can be too generous, so we re-ran every term with a wild cluster bootstrap, 9,999 draws with Webb weights: four pass. After adjusting for testing nine measures, none passes, and the lowest p-value is 0.136. [Point: What remains is tiny] In real units, one extra third-person mention per 100 words goes with about 45 to 50 minutes shorter funding time on a typical 2.85-day loan, and one extra business mention with 0.26 to 0.36 points lower same-day funding. These are associations, not effects of an edit. [Point: Loan details are on another scale] On one scale, in the programme-adjusted model, a doubled loan amount within its size band goes with 44.8 percent more on one plus days, a further month of term 8.6 percent, and male rather than female borrowers 61 percent; the framings stay within about 1.5 percent per extra mention. These are associations among completed loans, not levers, and the scale is change in one plus days, not days. That is why Predict starts with loan details. This loan-detail comparison has not yet been independently reviewed. [Point: Pronouns may reflect the writer] Third person appears in 97.3 percent of loans and business in 85 percent, so neither is an obvious writing lever. Adding programme controls moves third person only 10 percent towards zero and business 28 percent. Descriptions are usually written by partner staff, so the third-person link may say more about who writes than about the borrower. The next slide asks how small the remaining links really are.",
+        "reference": "Robustness checks: reports/expanded_feature_sensitivity_reviewed; bootstrap: reports/evidence_sources/robustness_summary.json (src/robustness_summary.py, src/wild_cluster.py). Loan details: reports/evidence_sources/loan_detail_summary.json (src/loan_detail_summary.py)."
       },
       "sublabel": "Robustness checks",
       "figure": "Figure 6.",

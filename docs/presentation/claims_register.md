@@ -179,6 +179,15 @@ Chosen after results were known. `reports/evidence_sources/README.md`; `reports/
 | Described rows with unseen exact template | at least 99.2% each year (96.0% of all rows in 2021) | November extension |
 | Leave-one-country-out gain | positive in every year; lowest 0.155 days | November extension |
 
+## Loan details against framing (slide 11)
+
+Programme-adjusted model; change in (1 + days), not days; country-clustered 95% intervals, t(47). Associations among completed loans, not effects of changing a loan. Exploratory, not yet independently reviewed. No ratio or ranking.
+
+| Claim | Value | Source | Layer |
+| --- | --- | --- | --- |
+| Loan details | loan amount, per doubling within loan-size band +44.8% [+32.4%, +58.2%]; repayment term, per +1 month +8.6% [+2.1%, +15.5%]; male vs female +61.0% [+47.2%, +76.1%]; borrowers, per +1, holding group loan −1.0% [−2.7%, +0.6%] | `reports/evidence_sources/loan_detail_summary.json` (`src/loan_detail_summary.py`), from `reports/experiments_2026_11_08/loan_detail_coefficients.json` | Experiment I, exploratory |
+| Framings per +1 mention per 100 words, unless labelled | family +0.9% [−0.2%, +2.1%]; business +0.5% [−0.1%, +1.2%]; basic needs −0.7% [−2.0%, +0.6%]; agency +0.6% [−0.3%, +1.5%]; gratitude +1.5% [−0.9%, +3.9%]; urgency −0.4% [−7.5%, +7.2%]; first person +1.0% [−7.5%, +10.2%]; third person −0.8% [−1.3%, −0.3%]; sentiment per +0.5 score +1.3% [−0.2%, +2.9%]; mention-rate point estimates within about ±1.5% | same | Experiment I, exploratory |
+
 ## Text methods
 
 | Claim | Value | Source | Layer |

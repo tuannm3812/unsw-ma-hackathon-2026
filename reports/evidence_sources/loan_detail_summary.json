@@ -1,0 +1,124 @@
+{
+  "loan_details": [
+    {
+      "term": "log_loan_amount",
+      "unit": "per doubling of loan amount, within loan-size band",
+      "pct": 44.7555313482507,
+      "ci95": [
+        32.41513284308011,
+        58.2459905148933
+      ]
+    },
+    {
+      "term": "lenderRepaymentTerm",
+      "unit": "per additional month of repayment term",
+      "pct": 8.597278338860814,
+      "ci95": [
+        2.0820402823234607,
+        15.528342007973684
+      ]
+    },
+    {
+      "term": "gender_classification__male",
+      "unit": "male vs female",
+      "pct": 61.03594764412681,
+      "ci95": [
+        47.24340369308586,
+        76.1204630103214
+      ]
+    },
+    {
+      "term": "borrowerCount",
+      "unit": "per additional borrower, holding the group-loan indicator",
+      "pct": -1.0420609404842573,
+      "ci95": [
+        -2.686828353131687,
+        0.6305059960706405
+      ]
+    }
+  ],
+  "framing": [
+    {
+      "term": "family_mentions_per_100_words",
+      "unit": "per +1 mention per 100 words",
+      "pct": 0.9479615119871942,
+      "ci95": [
+        -0.16514509315024295,
+        2.0734786756971824
+      ]
+    },
+    {
+      "term": "business_mentions_per_100_words",
+      "unit": "per +1 mention per 100 words",
+      "pct": 0.5439104298608166,
+      "ci95": [
+        -0.14482954197199138,
+        1.2374009093200744
+      ]
+    },
+    {
+      "term": "basic_needs_mentions_per_100_words",
+      "unit": "per +1 mention per 100 words",
+      "pct": -0.7000947263696822,
+      "ci95": [
+        -1.9907686244411193,
+        0.6075759289233096
+      ]
+    },
+    {
+      "term": "agency_mentions_per_100_words",
+      "unit": "per +1 mention per 100 words",
+      "pct": 0.5790316512594984,
+      "ci95": [
+        -0.29078306678567145,
+        1.456434209897517
+      ]
+    },
+    {
+      "term": "gratitude_mentions_per_100_words",
+      "unit": "per +1 mention per 100 words",
+      "pct": 1.4774899951436327,
+      "ci95": [
+        -0.9145930957689341,
+        3.9273218675630384
+      ]
+    },
+    {
+      "term": "urgency_mentions_per_100_words",
+      "unit": "per +1 mention per 100 words",
+      "pct": -0.3922508333478403,
+      "ci95": [
+        -7.464895027546447,
+        7.220969782227504
+      ]
+    },
+    {
+      "term": "first_person_mentions_per_100_words",
+      "unit": "per +1 mention per 100 words",
+      "pct": 0.9822168080912297,
+      "ci95": [
+        -7.464791094471335,
+        10.200303561070623
+      ]
+    },
+    {
+      "term": "third_person_mentions_per_100_words",
+      "unit": "per +1 mention per 100 words",
+      "pct": -0.8055144142025461,
+      "ci95": [
+        -1.312358015835613,
+        -0.2960677466602113
+      ]
+    },
+    {
+      "term": "desc_sentiment_compound",
+      "unit": "per +0.5 VADER compound",
+      "pct": 1.3456049136260084,
+      "ci95": [
+        -0.20470912543664177,
+        2.9200029911102376
+      ]
+    }
+  ],
+  "largest_mention_rate_estimate": 1.4774899951436327
+}
