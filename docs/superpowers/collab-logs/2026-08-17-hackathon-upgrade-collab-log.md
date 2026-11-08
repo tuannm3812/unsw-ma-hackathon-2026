@@ -2871,3 +2871,7 @@ unseen exact template, which cannot exclude near-duplicates.
 - Title now states the result. Slide 10 now shows why clustering widens the errors (illustrative dots), then the terms lost and the urgency example with direct labels. The implications list moved to the speaker notes; unused map and table data removed from this slide's source.
 - Takeaways reordered to follow the story; the 14 surviving text terms come from the register.
 - Verified: pyflakes, deck QA, rendered slide 10, full offline pytest. Slide 10 only was rebuilt; nothing pushed.
+
+## 2026-11-08: slide 10 urgency axis
+
+- Mike asked whether the urgency chart needs an axis. Added an axis line, tick marks and the title "p-value (log scale)". Live deck re-read first: no owner edits to mirror. Deck QA and pytest pass; nothing pushed.

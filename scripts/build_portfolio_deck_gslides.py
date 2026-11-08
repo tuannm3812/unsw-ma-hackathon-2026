@@ -808,15 +808,19 @@ def clustering(page, slide, pos):
     panel(page, bx, by, bw, bh, ex['urgency_panel']['title'], ex['urgency_panel']['guide'])
     x0, x1 = bx + 20, bx + bw - 24
     px = lambda p_value: x0 + (math.log10(p_value) + 4) / 4 * (x1 - x0)  # 0.0001 .. 1
-    page.line(px(.05), by + 56, px(.05), by + 158, VIOLET, .75)
+    axis = by + 150
+    page.line(x0, axis, x1, axis, SLATE, .75)
+    page.line(px(.05), by + 56, px(.05), axis, VIOLET, .75)
     page.ops[-1]['dash_style'] = 'DASH'
     page.text('significant', px(.05) - 74, by + 46, 70, 12, size=8, color=GREY, align='right')
     page.text('not significant', px(.05) + 4, by + 46, 74, 12, size=8, color=GREY)
     for value, name in [(0.001, '0.001'), (0.01, '0.01'), (.05, '0.05'), (1, '1')]:
-        page.text(name, px(value) - 16, by + 160, 32, 12, size=8, color=VIOLET if value == .05 else GREY,
+        page.line(px(value), axis, px(value), axis + 3, SLATE, .75)
+        page.text(name, px(value) - 16, axis + 3, 32, 12, size=8, color=VIOLET if value == .05 else GREY,
                   bold=value == .05, align='center')
+    page.text('p-value (log scale)', x0, axis + 15, x1 - x0, 12, size=8, color=GREY, align='center')
     for r, row in enumerate(ex['urgency']):
-        y = by + 84 + r * 44
+        y = by + 80 + r * 42
         page.text(row['model'], bx + 10, y - 19, 150, 12, size=9, bold=True)
         page.line(px(.0004) + 4, y, px(row['clustered']) - 5, y, SLATE, .75)
         page.ops[-1]['end_arrow'] = 'FILL_ARROW'
