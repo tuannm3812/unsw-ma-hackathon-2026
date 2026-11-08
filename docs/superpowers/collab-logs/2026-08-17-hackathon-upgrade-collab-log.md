@@ -3027,3 +3027,7 @@ unseen exact template, which cannot exclude near-duplicates.
 
 - Live deck re-read first: no owner edits to mirror. Slide 11's values now sit beside the row names. Slide 20 has a conclusion title, takeaways and action rows; its big figures, which repeated earlier slides, are gone. It reflects the corrected one-of-36 result, and the stale "subgroup results are pending" note is fixed.
 - Verified: pyflakes, deck QA, word-box overlap check, rendered slides, full offline pytest. Slides 11 and 20 only were rebuilt; nothing pushed.
+
+## 2026-11-09: slide 20 limit-to-action rows
+
+- Live deck re-read first: no owner edits to mirror. Slide 20's cards are now four rows reading limit, what we cannot show, what we do, with status icons, plus a strip showing where each limit gets addressed. Country validation sits with the flag rollout rather than a gate, because no gate covers it. Verified: pyflakes, deck QA, word-box overlap check, rendered slide, full offline pytest. Nothing pushed.

@@ -1326,23 +1326,48 @@ def gains(page, slide, pos):
 
 VERDICT_FILLS = {'yes': NAVY, 'unclear': SLATE, 'not_yet': VIOLET}
 
+STATUS_STYLE = {'not_yet': (SLATE, 'lock-slate.png'), 'unclear': (VIOLET, 'search-violet.png'), 'yes': (NAVY, 'check_circle-navy.png')}
+
+
 def supports(page, slide, pos):
-    """Four limits as a 2x2 grid: what the evidence cannot show, its status, and the action it requires."""
+    """Four limit-to-action rows, then a strip showing where each limit gets addressed."""
     page.chrome(slide)
-    gap, w, h = 10, (R - L - 10) / 2, 160
+    limit_w, why_x, why_w, arrow_x, act_x = 190, L + 200, 186, L + 392, L + 412
+    act_w, row_h, gap, first = R - act_x, 62, 5, TOP + 14
+    for x, label in ((L + 12, 'Limit'), (why_x, 'What we cannot show'), (act_x + 10, 'What we do about it')):
+        page.text(label, x, TOP, 180, 12, size=8, color=GREY, bold=True)
     for k, block in enumerate(slide['blocks']):
-        x, y = L + (k % 2) * (w + gap), TOP + (k // 2) * (h + gap)
-        fill = VERDICT_FILLS[block['tone']]
-        card(page, x, y, w, h, fill)
-        EXTRA_IMAGES.append(('supports', ASSETS / 'icons' / block['icon'], (x + 12, y + 13, 18, 18)))
-        page.text(block['question'], x + 36, y + 13, w - 140, 18, size=12, bold=True, middle=True)
-        tag_w = 6.2 * len(block['verdict']) + 16
-        page.badge(block['verdict'], x + w - 12 - tag_w, y + 13, (tag_w, 18), fill, WHITE, 8, 'ROUND_RECTANGLE')
-        page.marker(block['marker'], x + w - 12 - tag_w - 18, y + 16)
-        page.text(block['evidence'], x + 12, y + 44, w - 24, 44, size=10, color=GREY, spacing=108)
-        page.line(x + 12, y + 104, x + w - 12, y + 104, HAIR, .75)
-        page.text('Action', x + 12, y + 112, 60, 11, size=8, color=GREY, bold=True)
-        page.text(block['so_what'], x + 12, y + 124, w - 24, 28, size=10, bold=True, color=fill, spacing=105)
+        y = first + k * (row_h + gap)
+        colour, status_icon = STATUS_STYLE[block['tone']]
+        page.rect(L, y, act_x - L - 26, row_h, PAPER)
+        page.rect(L, y, 3, row_h, colour)
+        EXTRA_IMAGES.append(('supports', ASSETS / 'icons' / block['icon'], (L + 12, y + 9, 18, 18)))
+        page.text(block['question'], L + 36, y + 9, limit_w - 58, 18, size=11, bold=True, middle=True)
+        page.marker(block['marker'], L + limit_w - 20, y + 12)
+        EXTRA_IMAGES.append(('supports', ASSETS / 'icons' / status_icon, (L + 36, y + 35, 11, 11)))
+        page.text(block['verdict'], L + 50, y + 35, 80, 12, size=8, bold=True, color=colour)
+        page.text(block['evidence'], why_x, y + 2, why_w, row_h - 4, size=10, color=GREY, spacing=100, middle=True)
+        page.line(arrow_x, y + row_h / 2, act_x - 3, y + row_h / 2, SLATE, .75)
+        page.ops[-1]['end_arrow'] = 'FILL_ARROW'
+        page.rect(act_x, y, act_w, row_h, '#EFEBF6')
+        page.text(block['so_what'], act_x + 10, y + 2, act_w - 20, row_h - 4, size=10, bold=True, spacing=100, middle=True)
+    stages = slide['stages']
+    sy = first + 4 * row_h + 3 * gap + 7
+    page.text(stages['title'], L, sy, 300, 12, size=9, bold=True, color=VIOLET)
+    step_gap, chip_y = 14, sy + 14
+    chip_w = (R - L - 3 * step_gap) / 4
+    bars = {'slate': SLATE, 'navy': NAVY, 'violet': VIOLET, 'yellow': YELLOW}
+    for i, (name, detail, markers, bar) in enumerate(stages['steps']):
+        x = L + i * (chip_w + step_gap)
+        page.rect(x, chip_y, chip_w, 30, PAPER)
+        page.rect(x, chip_y, 3, 30, bars[bar])
+        page.text(f'{name}\n{detail}', x + 9, chip_y, chip_w - 44, 30, size=8, color=GREY, spacing=100, middle=True,
+                  spans=[(0, len(name), {'bold': True, 'color': NAVY})])
+        for m, number in enumerate(markers):
+            page.marker(number, x + chip_w - 16 - (len(markers) - 1 - m) * 15, chip_y + 9)
+        if i < 3:
+            page.line(x + chip_w + 2, chip_y + 15, x + chip_w + step_gap - 2, chip_y + 15, SLATE, .75)
+            page.ops[-1]['end_arrow'] = 'FILL_ARROW'
     page.takeaways(slide['takeaways'], pos)
 
 

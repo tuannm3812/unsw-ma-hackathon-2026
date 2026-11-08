@@ -2682,7 +2682,7 @@
       "subtitle": "What this evidence cannot show, and what to do about it",
       "notes": {
         "purpose": "Limits, each with an action.",
-        "script": "Four guardrails. [Point: Claims stay at association level] One: every result is an association; nothing has been tested by editing a description or applying a lever, so each needs a controlled pilot. [Point: Reach stays an open question] Two: only funded loans are in the data, so we cannot say whether a lever helps loans that would otherwise expire. [Point: The flag is validated by country] Three: the flag is uneven across countries, with precision from 0.18 to 0.90 within the ten largest, and its probabilities drift in 2025, so it must be recalibrated and validated by country. [Point: One passing signal is not a rule] Four: for whom and when: framings stay small across periods, loan sizes, genders and regions, regional patterns rest on two countries each, and the one framing link that passes the strictest test does so in one model only, so no writing rule follows. Funding time is also a platform measure: 96.4 percent of loans reach the borrower before listing.",
+        "script": "Four guardrails. [Point: Claims stay at association level] One: every result is an association; nothing has been tested by editing a description or applying a lever, so each needs a controlled pilot. [Point: Reach stays an open question] Two: only funded loans are in the data, so we cannot say whether a lever helps loans that would otherwise expire. [Point: The flag is validated by country] Three: the flag is uneven across countries, with precision from 0.18 to 0.90 within the ten largest, and its probabilities drift in 2025, so it must be recalibrated and validated by country. [Point: One passing signal is not a rule] Four: for whom and when: framings stay small across periods, loan sizes, genders and regions, regional patterns rest on two countries each, and the one framing link that passes the strictest test does so in one model only, so no writing rule follows. The strip under the rows shows where each limit gets addressed: country validation comes with the flag rollout, the data gap at gate 2, and the causal and writing questions at the gate 3 pilot. Funding time is also a platform measure: 96.4 percent of loans reach the borrower before listing.",
         "reference": "claims register; reports/evidence_sources/triage_summary.json; reports/evidence_sources/robustness_summary.json; appendix A6."
       },
       "sublabel": "Guardrails",
@@ -2750,7 +2750,43 @@
           "text": "It holds in one model only, so **no writing rule follows**."
         }
       ],
-      "solution_link": "→ Why the roadmap starts with a pilot"
+      "solution_link": "→ Why the roadmap starts with a pilot",
+      "stages": {
+        "title": "Where each limit gets addressed",
+        "steps": [
+          [
+            "Flag rollout",
+            "validated by country",
+            [
+              3
+            ],
+            "slate"
+          ],
+          [
+            "Gate 1",
+            "measures checked",
+            [],
+            "navy"
+          ],
+          [
+            "Gate 2",
+            "missing data added",
+            [
+              2
+            ],
+            "violet"
+          ],
+          [
+            "Gate 3",
+            "one pilot run",
+            [
+              1,
+              4
+            ],
+            "yellow"
+          ]
+        ]
+      }
     },
     {
       "n": 21,
