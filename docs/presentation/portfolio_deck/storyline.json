@@ -2506,44 +2506,74 @@
       "id": "prioritise",
       "section": "Solution",
       "sublabel": "Step 2: Prioritise",
-      "layout": "levers",
+      "layout": "content+takeaways",
       "title": "Send lender-side support to flagged loans, not story edits",
       "subtitle": "Proposed levers for Kiva and partners; their effect on speed is to be tested, not yet measured",
       "levers": [
         {
           "icon": "storefront-navy.png",
           "name": "Feature it",
-          "text": "Show flagged loans to lenders early on the lending page."
+          "text": "Show flagged loans to lenders early on the lending page.",
+          "who": "Kiva",
+          "watch": "crowding out other loans"
         },
         {
           "icon": "payments-navy.png",
           "name": "Match it",
-          "text": "Offer matching funds where a loan is likely to stall."
+          "text": "Offer matching funds where a loan is likely to stall.",
+          "who": "Kiva and funders",
+          "watch": "the cost of matching funds"
         },
         {
           "icon": "groups-navy.png",
           "name": "Alert lenders",
-          "text": "Notify lenders who follow the loan’s sector or country."
+          "text": "Notify lenders who follow the loan’s sector or country.",
+          "who": "Kiva",
+          "watch": "lender fatigue"
         },
         {
           "icon": "fact_check-navy.png",
           "name": "Follow up",
-          "text": "Ask the field partner to check the listing is complete and clear."
+          "text": "Ask the field partner to check the listing is complete and clear.",
+          "who": "Field partners",
+          "watch": "extra partner workload"
         }
       ],
       "dont": {
         "heading": "Don’t chase framing tweaks",
-        "figure": "±5%",
-        "text": "Five framings stay within ±5% of funding time, about 4.5–4.7 hours on a typical loan, and text adds little to the flag."
+        "text": "The evidence points away from wording, so effort goes to the loan rather than its story."
       },
-      "note": "Scope: the levers are proposals; our data do not measure their effect, so each needs a controlled pilot.",
+      "note": "Scope: the levers are proposals; our data do not measure their effect.",
       "notes": {
         "purpose": "What to do with a flag.",
         "script": "A flag only helps if something happens next. We propose four lender-side levers: feature flagged loans early, offer matching funds where a loan is likely to stall, alert lenders who follow the sector or country, and ask the partner to check the listing is complete. Our data do not measure what these levers do, so each needs a pilot. What we can say is where not to spend effort: framing tweaks, because five framings stay within five percent of funding time, about four and a half hours on a typical loan.",
         "reference": "Equivalence screen; reports/evidence_sources/bound_ladder.json. Photo: Richard Nyoni (soybean farmer) on Unsplash (Unsplash Licence). Photo: Muhammad-Taha Ibrahim (shop owner, Abuja) on Unsplash (Unsplash Licence)."
       },
       "photo": "unsplash-soybean-richard-nyoni.jpg",
-      "photo2": "unsplash-shop-abuja-muhammad-taha-ibrahim.jpg"
+      "photo2": "unsplash-shop-abuja-muhammad-taha-ibrahim.jpg",
+      "takeaways": [
+        {
+          "marker": 1,
+          "heading": "Four levers act on lenders",
+          "text": "Each changes **who sees a flagged loan** or what support it gets, not the story."
+        },
+        {
+          "marker": 2,
+          "heading": "Each has a cost to watch",
+          "text": "Featuring can crowd out other loans; matching uses money; alerts can **tire lenders**."
+        },
+        {
+          "marker": 3,
+          "heading": "Their effect is unmeasured",
+          "text": "Our data cannot say what these levers do, so **each needs a controlled pilot**."
+        },
+        {
+          "marker": 4,
+          "heading": "Wording is not the lever",
+          "text": "The evidence so far gives **no reason to rewrite stories** to speed funding."
+        }
+      ],
+      "solution_link": "→ Why writing advice must pass gates first"
     },
     {
       "n": 19,

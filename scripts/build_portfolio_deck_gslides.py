@@ -308,7 +308,7 @@ def close(page, slide):
               spans=[(0, len(first), {'bold': True}), (start, len(text), {'link': slide['link'], 'color': VIOLET})])
 
 
-SUMMARY_ICONS = ['account_balance-violet.png', 'target-violet.png', 'description-violet.png']
+SUMMARY_ICONS = [None, 'target-violet.png', 'description-violet.png']  # Mike removed the first icon in the live deck
 STEP_ICONS = ['query_stats-white.png', 'trending_up-white.png', 'science-white.png']
 SUMMARY_CARDS = [(L + i * 298, TOP, 279, 244) for i in range(3)]
 BAND = (L, 390, FULL - L - .5, 66)
@@ -1355,6 +1355,7 @@ SOLUTION_ICONS = ['target-navy.png', 'groups-navy.png', 'science-navy.png']
 
 
 SOLUTION_W, SOLUTION_GAP = 187, 22.75
+SOLUTION_WHEN = ['post_add-navy.png', 'hourglass_top-navy.png', 'science-navy.png']
 SOLUTION_WHO = ['desktop_windows-navy.png', 'handshake-navy.png', 'manage_search-navy.png']
 
 
@@ -1378,7 +1379,7 @@ def solution(page, slide, pos):
             if label == 'Status':
                 page.rect(x + 16, y + 14, 8, 8, VIOLET, 'ELLIPSE')
             else:
-                icon = SOLUTION_WHO[i] if label == 'Who' else 'schedule-navy.png'
+                icon = SOLUTION_WHO[i] if label == 'Who' else SOLUTION_WHEN[i]
                 EXTRA_IMAGES.append(('solution', ASSETS / 'icons' / icon, (x + 12, y + 10, 16, 16)))
         page.line(x + 12, top + h - 30, x + SOLUTION_W - 12, top + h - 30, HAIR, .75)
         page.text(f"Evidence: {step['evidence']}", x + 12, top + h - 25, SOLUTION_W - 24, 12, size=8, color=GREY)
@@ -1503,8 +1504,8 @@ def problem(page, slide, pos):
 INSIGHT_CARDS = [(L + i * 245, TOP, 233, 236) for i in range(3)]
 INSIGHT_PHOTO = (L + 735, TOP, FULL - L - 735, 236)
 PROBLEM_PHOTO = (L + 392, TOP + 20 + 168 + 36, R - 6 - L - 392, 92)
-PRIORITISE_PHOTO = (L + 600, TOP + 162, 133, 88)
-PRIORITISE_PHOTO2 = (L + 742.5, TOP + 162, 133, 88)
+PRIORITISE_PHOTO = (L + 400, TOP + 178, 98, 124)
+PRIORITISE_PHOTO2 = (L + 508.5, TOP + 178, 98, 124)
 
 
 INSIGHT_ROWS = [(L, TOP + k * 106, 440, 100) for k in range(3)]
@@ -1621,24 +1622,33 @@ def triage(page, slide, pos):
     page.takeaways(slide['takeaways'], pos)
 
 
-LEVER_BOXES = [(L + (k % 2) * 292, TOP + (k // 2) * 130, 282, 120) for k in range(4)]
+LEVER_BOXES = [(L + (k % 2) * 195, TOP + (k // 2) * 156, 185, 146) for k in range(4)]
 
 
-def prioritise(page, slide):
-    """Four lender-side levers to pilot, and one card on where not to spend effort."""
+def prioritise(page, slide, pos):
+    """Four lender-side levers to pilot, who acts and what to watch, and where not to spend effort."""
     page.chrome(slide)
-    for (x, y, w, h), lever in zip(LEVER_BOXES, slide['levers']):
+    for k, ((x, y, w, h), lever) in enumerate(zip(LEVER_BOXES, slide['levers'])):
         card(page, x, y, w, h, NAVY)
-        page.text(lever['name'], x + 44, y + 16, w - 60, 18, size=14, bold=True)
-        page.text(lever['text'], x + 16, y + 50, w - 32, 50, size=11, color=GREY, spacing=115)
-    dx, dy, dw, dh = L + 600, TOP, FULL - L - 600, 152
+        page.text(lever['name'], x + 36, y + 12, w - 50, 16, size=12, bold=True)
+        page.text(lever['text'], x + 12, y + 38, w - 24, 44, size=10, color=GREY, spacing=105)
+        for r, (label, value) in enumerate((('Who', lever['who']), ('Watch for', lever['watch']))):
+            text = f'{label}: {value}'
+            page.text(text, x + 12, y + 96 + r * 18, w - 24, 14, size=9, color=GREY, spans=[(0, len(label) + 1, {'bold': True, 'color': NAVY})])
+    page.marker(1, L + 185 - 22, TOP + 12)
+    page.marker(2, L + 185 - 22, TOP + 112)
+    dx, dw, dh = L + 400, R - (L + 400), 168
     dont = slide['dont']
-    card(page, dx, dy, dw, dh, VIOLET)
-    page.text(dont['heading'], dx + 16, dy + 16, dw - 32, 18, size=13, color=VIOLET, bold=True)
-    page.text(dont['figure'], dx + 16, dy + 46, dw - 32, 44, size=36, bold=True)
-    page.text(dont['text'], dx + 16, dy + 92, dw - 60, 56, size=10, color=GREY, spacing=110)
-    page.text(slide['note'], L, TOP + 268, FULL - L, 14, size=10, color=SLATE, bold=True,
-              spans=[(0, len('Scope:'), {'bold': True})])
+    card(page, dx, TOP, dw, dh, VIOLET)
+    page.text(dont['heading'], dx + 12, TOP + 14, dw - 44, 34, size=12, color=VIOLET, bold=True, spacing=105)
+    page.text(dont['text'], dx + 12, TOP + 44, dw - 24, 100, size=10, color=GREY, spacing=110)
+    page.marker(4, dx + dw - 22, TOP + 14)
+    sy = TOP + 312
+    page.rect(L, sy, R - L, 24, PAPER)
+    page.rect(L, sy, 4, 24, YELLOW)
+    page.text(slide['note'], L + 14, sy, R - L - 50, 24, size=10, bold=True, middle=True, spans=[(0, len('Scope:'), {'bold': True})])
+    page.marker(3, R - 22, sy + 6)
+    page.takeaways(slide['takeaways'], pos)
 
 
 def text_adds(page, slide, pos):
@@ -1913,9 +1923,9 @@ def main() -> None:
     builders = {'summary': summary, 'problem': problem, 'text_adds': text_adds, 'where': where, 'subgroups': subgroups,
                 'lever': lever, 'outcome': outcome,
                 'clustering': clustering, 'equivalence': forest, 'regions': regions, 'a_screen': regions,
-                'persist': persist, 'forecast': forecast, 'gain_uncertainty': gains, 'approach': approach, 'solution': solution, 'triage': triage}
+                'persist': persist, 'forecast': forecast, 'gain_uncertainty': gains, 'approach': approach, 'solution': solution, 'triage': triage, 'prioritise': prioritise}
     linked = {'agenda': agenda}
-    plain = {'gates': gates, 'supports': supports, 'prioritise': prioritise, 'roadmap': roadmap,
+    plain = {'gates': gates, 'supports': supports, 'roadmap': roadmap,
              'a_asof': a_table, 'a_text_methods': a_table, 'a_primary': a_metrics, 'a_topics': a_topics, 'cover': cover, 'close': close}
     for index, (slide, item) in enumerate(zip(story, slides)):
         if only is not None and index not in only:
@@ -1978,13 +1988,14 @@ def main() -> None:
         for icon, x in zip(slide_by_id('agenda').get('icons', []), [43.5, 267.5, 491.5, 715.5]):
             images.append((at['agenda'], ASSETS / 'icons' / icon, (x + 178, 177, 20, 20)))
         for icon, (x, y, _, _) in zip(SUMMARY_ICONS, SUMMARY_CARDS):
-            images.append((at['summary'], ASSETS / 'icons' / icon, (x + 16, y + 14, 22, 22)))
+            if icon:
+                images.append((at['summary'], ASSETS / 'icons' / icon, (x + 16, y + 14, 22, 22)))
         for icon, x in zip(STEP_ICONS, STEP_X):
             images.append((at['summary'], ASSETS / 'icons' / icon, (x, BAND[1] + BAND[3] / 2 - 10, 20, 20)))
         for item, (x, y, _, _) in zip(slide_by_id('insight')['cards'], INSIGHT_ROWS):
             images.append((at['insight'], ASSETS / 'icons' / item['icon'], (x + 12, y + 10, 18, 18)))
         for item, (x, y, _, _) in zip(slide_by_id('prioritise')['levers'], LEVER_BOXES):
-            images.append((at['prioritise'], ASSETS / 'icons' / item['icon'], (x + 16, y + 15, 20, 20)))
+            images.append((at['prioritise'], ASSETS / 'icons' / item['icon'], (x + 12, y + 12, 18, 18)))
         for k in range(len(slide_by_id('triage')['exhibit']['support'])):
             images.append((at['triage'], ASSETS / 'icons/check_circle-navy.png', (L + 14, TOP + 190 + 25 * k, 15, 15)))
         for index, path, (x, y, w, h) in images:
