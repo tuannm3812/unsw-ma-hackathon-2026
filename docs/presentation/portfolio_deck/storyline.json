@@ -2208,7 +2208,7 @@
         ],
         "scorecard": {
           "title": "How often the gain clears zero",
-          "guide": "Years out of 5 where the 95% range excludes 0.",
+          "guide": "Years out of 5 where the 95% range excludes 0. More years means a steadier gain.",
           "columns": [
             "By month",
             "By country"
@@ -2217,18 +2217,67 @@
             [
               "Linear model",
               5,
-              1
+              1,
+              "Holds over time, not across countries",
+              [
+                true,
+                true,
+                true,
+                true,
+                true
+              ],
+              [
+                false,
+                true,
+                false,
+                false,
+                false
+              ]
             ],
             [
               "Larger boosted tree",
               3,
-              1
+              1,
+              "Less consistent even over time",
+              [
+                true,
+                true,
+                false,
+                false,
+                true
+              ],
+              [
+                true,
+                false,
+                false,
+                false,
+                false
+              ]
             ],
             [
               "Loan-specific part of the text gain",
               4,
-              2
+              2,
+              "The loan’s own words; still uneven",
+              [
+                true,
+                true,
+                false,
+                true,
+                true
+              ],
+              [
+                false,
+                true,
+                false,
+                false,
+                true
+              ]
             ]
+          ],
+          "reading": [
+            "Range excludes zero",
+            "Includes zero"
           ]
         }
       },
@@ -2251,7 +2300,7 @@
       ],
       "notes": {
         "purpose": "Keep the gain in proportion: it depends on the model and on which countries are in the sample.",
-        "script": "Answer first: the linear gain holds across months, but it is fragile across countries and shrinks on a stronger model. One chart: each year has two rows, the linear model and the larger boosted tree. The thick bar is the 95 percent range when we resample calendar months, and the thin line is the range when we resample countries. [Point: Stable across months, linear only] For the linear model, all five thick bars sit right of zero, and the median gain is 0.293 days, about seven hours. [Point: A stronger tree gains little] The violet rows are a larger boosted tree with full text: its ranges exclude zero in three of five years, and by country in only one, and its largest gain is about 0.15 days. [Point: Across countries it is fragile] The thin lines resample countries instead: four of the five linear ranges include zero. The scorecard counts the years whose range excludes zero: for the linear model five by month and one by country, for the larger tree three and one, and for the loan-specific part of the gain four and two. Capping forecasts at the longest training wait, 173.4 days, a diagnostic rather than the reported model, leaves only 2025 including zero, so much of the fragility comes from a few extreme forecasts. The loan-specific part of the gain, after removing what shuffled text keeps, clears zero in four of five years by month and two of five by country. Metrics also disagree at the margin: in 2025 text improved error and calibration, but AUC for same-day funding fell from 0.893 to 0.888. Each range uses 1,000 resamples; these are fixed-model resampling ranges, not retraining or causal uncertainty.",
+        "script": "Answer first: the linear gain holds across months, but it is fragile across countries and shrinks on a stronger model. One chart: each year has two rows, the linear model and the larger boosted tree. The thick bar is the 95 percent range when we resample calendar months, and the thin line is the range when we resample countries. [Point: Stable across months, linear only] For the linear model, all five thick bars sit right of zero, and the median gain is 0.293 days, about seven hours. [Point: A stronger tree gains little] The violet rows are a larger boosted tree with full text: its ranges exclude zero in three of five years, and by country in only one, and its largest gain is about 0.15 days. [Point: Across countries it is fragile] The thin lines resample countries instead: four of the five linear ranges include zero. The scorecard has one dot per test year, 2021 to 2025, filled where the range excludes zero: for the linear model five by month and one by country, for the larger tree three and one, and for the loan-specific part of the gain four and two. Capping forecasts at the longest training wait, 173.4 days, a diagnostic rather than the reported model, leaves only 2025 including zero, so much of the fragility comes from a few extreme forecasts. The loan-specific part of the gain, after removing what shuffled text keeps, clears zero in four of five years by month and two of five by country. Metrics also disagree at the margin: in 2025 text improved error and calibration, but AUC for same-day funding fell from 0.893 to 0.888. Each range uses 1,000 resamples; these are fixed-model resampling ranges, not retraining or causal uncertainty.",
         "reference": "docs/6_matched_text_results.md; reports/loss_alignment_2025/README.md; ranges from src/gain_intervals.py (reports/evidence_sources/gain_intervals.json). Larger tree and placebo: reports/evidence_sources/forecast_experiments.json."
       },
       "sublabel": "Forecast benchmark",

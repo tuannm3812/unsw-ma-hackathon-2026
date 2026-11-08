@@ -2959,3 +2959,8 @@ unseen exact template, which cannot exclude near-duplicates.
 
 - Mike asked for a narrower chart with more on the right. Live deck re-read first: no owner edits to mirror. The chart now takes two-thirds of the width beside a scorecard of years clearing zero by month and by country (linear 5 and 1, larger tree 3 and 1, loan-specific 4 and 2), checked against the saved summaries at edit time. Takeaways shortened.
 - Verified: pyflakes, deck QA, word-box overlap check, rendered slide 15, full offline pytest. Slide 15 only was rebuilt; nothing pushed.
+
+## 2026-11-08: slide 15 scorecard dots and icons
+
+- Live deck re-read first: no owner edits to mirror. Each scorecard cell now has the count and five dots, one per test year in order, filled where the 95% range excludes zero; flags are checked against the counts at edit time. Calendar and globe icons added to the column headers, a plain line under each row name, and a reading key at the foot of the box.
+- Verified: pyflakes, deck QA, zoomed render, word-box overlap check, full offline pytest. Slide 15 only was rebuilt; nothing pushed.

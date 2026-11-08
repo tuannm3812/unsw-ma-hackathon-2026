@@ -13,7 +13,9 @@ ICONS = {'payments': ['violet', 'navy'], 'storefront': ['violet', 'navy'], 'grou
          'account_balance': ['violet', 'navy'], 'check_circle': ['navy'], 'block': ['slate'],
          # framing-measure key (slide 7) and the slides that reuse it
          'family_restroom': ['navy'], 'water_drop': ['navy'], 'bolt': ['navy'], 'favorite': ['navy'],
-         'schedule': ['navy'], 'person': ['navy'], 'record_voice_over': ['navy'], 'sentiment_satisfied': ['navy']}
+         'schedule': ['navy'], 'person': ['navy'], 'record_voice_over': ['navy'], 'sentiment_satisfied': ['navy'],
+         # slide 15 scorecard columns
+         'calendar_month': ['navy'], 'public': ['violet']}
 COLOURS = {'violet': '#5B4B8A', 'navy': '#1C2333', 'slate': '#46576C', 'white': '#FFFFFF'}
 FONT = ('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD'
         '@24,400,0,0')

@@ -223,13 +223,15 @@ class Page:
         mid, scale = LEGEND_MID * size / 8, size / 8
         def parts(item):
             label, fill, shape, marker = (*item, 'RECTANGLE', None)[:4] if len(item) == 2 else (*item, None)[:4]
-            return label, fill, shape, marker, (7 * scale if shape == 'ELLIPSE' else 12 * scale)
+            return label, fill, shape, marker, (7 * scale if shape in ('ELLIPSE', 'HOLLOW') else 12 * scale)
         widths = [p[4] + 4 + label_width(p[0], size) + (16 if p[3] else 0) for p in map(parts, items)]
         lx = x + (span - sum(widths) - gap * (len(items) - 1)) / 2 if span else x
         for item, width in zip(items, widths):
             label, fill, shape, marker, swatch = parts(item)
-            tall = swatch if shape == 'ELLIPSE' else {'BAR': 3.5, 'RULE': .75}.get(shape, 8 * scale)
-            self.swatch(lx, y, swatch, tall, fill, 'RECTANGLE' if shape in ('BAR', 'RULE') else shape, size)
+            tall = swatch if shape in ('ELLIPSE', 'HOLLOW') else {'BAR': 3.5, 'RULE': .75}.get(shape, 8 * scale)
+            self.swatch(lx, y, swatch, tall, fill, {'BAR': 'RECTANGLE', 'RULE': 'RECTANGLE', 'HOLLOW': 'ELLIPSE'}.get(shape, shape), size)
+            if shape == 'HOLLOW':
+                self.swatch(lx + 1.25, y, swatch - 2.5, tall - 2.5, PAPER, 'ELLIPSE', size)
             self.sup(label, lx + swatch + 4, y, label_width(label, size) + 10, 12 * scale, size=size, color=GREY)
             if marker:
                 self.marker(marker, lx + width - 12, y + mid - 6)
@@ -1294,16 +1296,27 @@ def gains(page, slide, pos):
     cx, cw = L + aw + 10, pw - aw - 10
     panel(page, cx, TOP, cw, h, card['title'], card['guide'])
     left, right = cx + 12, cx + cw / 2 + 12
-    for c, label in zip((left, right), card['columns']):
-        page.text(label, c, TOP + 50, 80, 12, size=8, color=GREY, bold=True)
-    for r, (name, month, country) in enumerate(card['rows']):
-        y = TOP + 68 + r * 79
+    icons = ('calendar_month-navy.png', 'public-violet.png')
+    for c, label, icon in zip((left, right), card['columns'], icons):
+        EXTRA_IMAGES.append(('gain_uncertainty', ASSETS / 'icons' / icon, (c, TOP + 49, 12, 12)))
+        page.text(label, c + 15, TOP + 50, 70, 12, size=8, color=GREY, bold=True)
+    dot, step = 6.5, 9
+    for r, (name, month, country, meaning, month_years, country_years) in enumerate(card['rows']):
+        y, colour = TOP + 68 + r * 76, VIOLET if r == 1 else NAVY
         page.line(cx + 10, y - 3, cx + cw - 10, y - 3, HAIR, .5)
-        page.text(name, cx + 12, y + 1, cw - 22, 24, size=9, bold=True, spacing=100)
-        page.text(str(month), left, y + 28, 50, 34, size=26, bold=True)
-        page.text(str(country), right, y + 28, 50, 34, size=26, bold=True, color=VIOLET)
-        page.line(left + 30, y + 46, right - 6, y + 46, SLATE, .75)
+        page.text(name, cx + 12, y + 1, cw - 22, 12, size=9, bold=True)
+        page.text(meaning, cx + 12, y + 14, cw - 22, 12, size=8, color=GREY)
+        mid = y + 44
+        for c, count, flags in ((left, month, month_years), (right, country, country_years)):
+            page.text(str(count), c, mid - 10, 13, 20, size=14, bold=True, color=colour, middle=True)
+            for n, cleared in enumerate(flags):
+                dx = c + 16 + n * step
+                page.rect(dx, mid - dot / 2, dot, dot, colour if cleared else SLATE, 'ELLIPSE')
+                if not cleared:
+                    page.rect(dx + 1.25, mid - dot / 2 + 1.25, dot - 2.5, dot - 2.5, PAPER, 'ELLIPSE')
+        page.line(left + 66, mid, right - 6, mid, SLATE, .75)
         page.ops[-1]['end_arrow'] = 'FILL_ARROW'
+    page.legend([(card['reading'][0], SLATE, 'ELLIPSE'), (card['reading'][1], SLATE, 'HOLLOW')], TOP + h - 17, cx + 12, gap=10)
     page.caption(slide['figure'], ex['caption'], TOP + h + 24, w=pw)
     page.takeaways(slide['takeaways'], pos)
 
