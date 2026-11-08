@@ -8,6 +8,8 @@ slides, Problem → Approach → Evidence → Next steps.
 - Numbers: [`../claims_register.md`](../claims_register.md); no slide may quote anything else
 - **Live deck:** [`1Q7n_sOn_4HL68_Mk-GogDOtS9P_pfPVXLNUeinV7pFM`](https://docs.google.com/presentation/d/1Q7n_sOn_4HL68_Mk-GogDOtS9P_pfPVXLNUeinV7pFM/edit),
   created 2026-11-08. It is authoritative; preserve owner edits and do not rerun the builder over it.
+- **Backup before the solution-led restructure:** [`1w0g9cZsPe7PBNzv2ZB47NjGEd08fgp4S5IVTIdtGeo0`](https://docs.google.com/presentation/d/1w0g9cZsPe7PBNzv2ZB47NjGEd08fgp4S5IVTIdtGeo0/edit),
+  "Cultural Blend deck, pre-restructure backup 2026-11-08" (19 slides, evidence-led order). Do not edit it.
 - Builder: `scripts/build_portfolio_deck_gslides.py --base BASE_ID` copies a blank base into a
   new deck. Base: `1Gu1vP6zpvrWWqp6V2STTbVzj_HtFyNxD-nCfyAzqxZA` (keep blank)
 - Base: `scripts/build_portfolio_deck_base.py` writes a 960 x 540 pt .pptx, because
