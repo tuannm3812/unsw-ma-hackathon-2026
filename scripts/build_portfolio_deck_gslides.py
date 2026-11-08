@@ -1116,44 +1116,67 @@ def regions(page, slide, pos):
 
 
 def persist(page, slide, pos):
-    """Bootstrap p-values for the two framing terms in both models, with each estimate alongside."""
+    """Tests passing at each stage, then the two remaining links in real units and under programme controls."""
     page.chrome(slide)
     ex = slide['exhibit']
-    pw, top, h = R - L, TOP, 296
-    panel(page, L, top, pw, h, ex['title'], ex['guide'])
-    x0, x1 = L + 160, L + 440
-    px = lambda value: x0 + value / .4 * (x1 - x0)
-    axis = top + 248
-    page.line(x0, axis, x1, axis, SLATE, .75)
-    page.line(x0, top + 58, x0, axis, SLATE, .75)
-    page.line(px(.05), top + 56, px(.05), axis, VIOLET, .75)
-    page.ops[-1]['dash_style'] = 'DASH'
-    page.text('significant', px(.05) - 74, top + 44, 70, 12, size=8, color=GREY, align='right')
-    page.text('not significant', px(.05) + 4, top + 44, 74, 12, size=8, color=GREY)
-    for value, name in [(0, '0'), (.05, '0.05'), (.1, '0.1'), (.2, '0.2'), (.3, '0.3'), (.4, '0.4')]:
-        page.line(px(value), axis, px(value), axis + 3, SLATE, .75)
-        page.text(name, px(value) - 16, axis + 3, 32, 12, size=8, color=VIOLET if value == .05 else GREY,
-                  bold=value == .05, align='center')
-    page.text('Bootstrap p-value (BH-adjusted)', x0, axis + 15, x1 - x0, 12, size=8, color=GREY, align='center')
-    ex_x = L + 456
-    page.text(ex['estimate_header'], ex_x, top + 44, 112, 12, size=8, color=GREY, bold=True)
-    page.marker(2, ex_x + 118, top + 43)
-    y = top + 66
-    for g, group in enumerate(ex['groups']):
-        page.text(group['name'], L + 12, y, 132, 12, size=9, bold=True)
-        page.text(group['unit'], ex_x, y, pw - 466, 12, size=8, color=GREY)
-        if g == 0:
-            page.marker(3, L + 141, y - 1)
-        for r, row in enumerate(group['rows']):
-            cy = y + 28 + r * 30
-            page.text(row['spec'], L + 20, cy - 6, 130, 12, size=9, color=GREY, middle=True)
-            page.line(px(.05), cy, px(row['p']) - 4, cy, SLATE, .75)
-            page.rect(px(row['p']) - 4, cy - 4, 8, 8, VIOLET, 'ELLIPSE')
-            page.text(f"{row['p']:.3f}", px(row['p']) + 7, cy - 6, 34, 12, size=9, bold=True, color=VIOLET, middle=True)
-            page.text(row['estimate'], ex_x, cy - 6, pw - 466, 12, size=9, bold=True, middle=True)
-            if row['p'] == .136:
-                page.marker(1, px(row['p']) + 41, cy - 6)
-        y += 92
+    pw, fun = R - L, ex['funnel']
+    panel(page, L, TOP, pw, 116, fun['title'], fun['guide'])
+    cell, gap, cols = 10, 2.5, 12
+    block_w = cols * cell + (cols - 1) * gap
+    step = (pw - 24 - block_w) / 2
+    for s, stage in enumerate(fun['stages']):
+        x = L + 12 + s * step
+        y = TOP + 56
+        page.text(stage['label'], x, y - 15, block_w + 20, 12, size=9, bold=True)
+        for i in range(fun['tests']):
+            row, col = divmod(i, cols)
+            page.rect(x + col * (cell + gap), y + row * (cell + gap), cell, cell,
+                      VIOLET if i < stage['passes'] else HAIR)
+        page.text(f"{stage['passes']} of {fun['tests']} pass", x, y + 39, block_w, 13, size=10, bold=True, color=VIOLET)
+        if s < 2:
+            page.line(x + block_w + 12, y + 17, x + step - 12, y + 17, SLATE, .75)
+            page.ops[-1]['end_arrow'] = 'FILL_ARROW'
+    page.marker(1, L + pw - 22, TOP + 8)
+    # Real-unit cards
+    top, h, cw, gutter = TOP + 124, 176, 186, 10
+    for k, item in enumerate(ex['cards']):
+        x = L + k * (cw + gutter)
+        page.rect(x, top, cw, h, PAPER)
+        page.rect(x, top, cw, 2, [NAVY, VIOLET][k])
+        page.text(item['name'], x + 10, top + 9, cw - 40, 14, size=10, bold=True)
+        page.text(item['value'], x + 10, top + 28, cw - 20, 30, size=22, bold=True)
+        page.text(item['label'], x + 10, top + 62, cw - 20, 26, size=9, color=GREY, spacing=105)
+        page.rect(x + 10, top + 98, cw - 20, 7, HAIR)
+        page.rect(x + 10, top + 98, (cw - 20) * item['share'], 7, NAVY)
+        page.text(item['share_label'], x + 10, top + 108, cw - 20, 12, size=9, color=GREY)
+        page.text(item['so_what'], x + 10, top + 134, cw - 20, 30, size=10, bold=True, color=VIOLET, spacing=105)
+    page.marker(2, L + cw - 22, top + 8)
+    page.marker(3, L + cw + gutter + cw - 22, top + 8)
+    # Programme control
+    ax, aw = L + 2 * (cw + gutter), pw - 2 * (cw + gutter)
+    absorb = ex['absorb']
+    panel(page, ax, top, aw, h, absorb['title'], absorb['guide'])
+    x0, x1 = ax + 12, ax + aw - 14
+    for r, row in enumerate(absorb['rows']):
+        y = top + 42 + r * 56
+        page.text(row['name'], ax + 10, y, aw - 20, 12, size=8, bold=True)
+        page.text(row['text'], ax + 10, y + 11, aw - 20, 12, size=8, color=GREY)
+        px = lambda value: x0 + (value - row['min']) / -row['min'] * (x1 - x0)
+        dot, axis = y + 30, y + 37
+        page.line(x0, axis, x1, axis, SLATE, .75)
+        for value, name in [(row['min'], row['min_label']), (0, '0')]:
+            page.line(px(value), axis, px(value), axis + 3, SLATE, .75)
+            page.text(name, px(value) - 16, axis + 4, 32, 11, size=8, color=GREY, align='center')
+        before, after = row['values']
+        page.line(px(before) + 4, dot, px(after) - 4, dot, SLATE, .75)
+        page.ops[-1]['end_arrow'] = 'FILL_ARROW'
+        page.rect(px(before) - 3.5, dot - 3.5, 7, 7, NAVY, 'ELLIPSE')
+        page.rect(px(after) - 3.5, dot - 3.5, 7, 7, VIOLET, 'ELLIPSE')
+    page.rect(ax + 10, top + h - 14, 7, 7, NAVY, 'ELLIPSE')
+    page.text(absorb['legend'][0], ax + 20, top + h - 16, 66, 12, size=8, color=GREY)
+    page.rect(ax + 88, top + h - 14, 7, 7, VIOLET, 'ELLIPSE')
+    page.text(absorb['legend'][1], ax + 98, top + h - 16, 90, 12, size=8, color=GREY)
+    page.marker(4, ax + aw - 22, top + 8)
     page.caption(slide['figure'], ex['note'], top + h + 8, w=pw)
     page.takeaways(slide['takeaways'], pos)
 

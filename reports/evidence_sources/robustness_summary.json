@@ -18,6 +18,29 @@
     "clusters": 48,
     "weights": "Webb six-point"
   },
+  "evidence_funnel": {
+    "tests": 36,
+    "clustered": 5,
+    "bootstrap": 4,
+    "adjusted": 0
+  },
+  "framing_real_units": {
+    "median_days": 2.85,
+    "third_person": {
+      "estimate_expanded": -0.009008127991169148,
+      "estimate_programme_adjusted": -0.008087762095232612,
+      "minutes_expanded": 49.71679774996977,
+      "minutes_programme_adjusted": 44.65771912340331,
+      "shrink_share": 0.10217060601700922,
+      "share_with_mention": 0.9728243823254278
+    },
+    "business": {
+      "pp_expanded": -0.35741430564555854,
+      "pp_programme_adjusted": -0.25788141231129846,
+      "shrink_share": 0.2784804406597119,
+      "share_with_mention": 0.8502586254333352
+    }
+  },
   "subgroups": {
     "programme_adjusted": {
       "log_funding_speed": {

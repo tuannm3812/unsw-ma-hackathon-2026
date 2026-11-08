@@ -1390,69 +1390,104 @@
       "id": "persist",
       "section": "Evidence",
       "layout": "content+takeaways",
-      "title": "The only remaining signals are tiny and fail a stricter test",
+      "title": "No framing signal survives stricter tests, and what remains is tiny",
       "subtitle": "Robustness checks: programme controls, then a wild cluster bootstrap across 48 countries",
       "exhibit": {
-        "type": "p_values",
-        "title": "Bootstrap p-value: third person and business framing",
-        "guide": "BH-adjusted p across nine terms; points right of the 0.05 line do not pass.",
-        "note": "Per extra mention per 100 words; BH-adjusted wild cluster bootstrap p across nine terms (Webb weights, 9,999 draws).",
-        "estimate_header": "Estimate per extra mention",
-        "groups": [
+        "type": "evidence_funnel",
+        "funnel": {
+          "title": "The evidence shrinks with each test",
+          "guide": "Each square is one test: nine framing measures, two outcomes, two models. Lit squares pass at 0.05.",
+          "tests": 36,
+          "stages": [
+            {
+              "label": "Usual country test",
+              "passes": 5
+            },
+            {
+              "label": "Stricter bootstrap",
+              "passes": 4
+            },
+            {
+              "label": "After adjusting for nine measures",
+              "passes": 0
+            }
+          ]
+        },
+        "cards": [
           {
-            "name": "Third person · funding time",
-            "unit": "on log(1 + days)",
-            "rows": [
-              {
-                "spec": "Expanded",
-                "p": 0.136,
-                "estimate": "−0.0090"
-              },
-              {
-                "spec": "Programme-adjusted",
-                "p": 0.261,
-                "estimate": "−0.0081"
-              }
-            ]
+            "name": "Third person",
+            "value": "45–50 min",
+            "label": "shorter funding time per extra mention on a typical 2.85-day loan",
+            "share": 0.973,
+            "share_label": "97.3% of loans already use it",
+            "so_what": "May reflect who writes the description"
           },
           {
-            "name": "Business · same-day funding",
-            "unit": "on the same-day rate",
-            "rows": [
-              {
-                "spec": "Expanded",
-                "p": 0.337,
-                "estimate": "−0.357 pp"
-              },
-              {
-                "spec": "Programme-adjusted",
-                "p": 0.275,
-                "estimate": "−0.258 pp"
-              }
-            ]
+            "name": "Business",
+            "value": "0.26–0.36 pp",
+            "label": "lower same-day funding per extra mention",
+            "share": 0.85,
+            "share_label": "85.0% of loans already use it",
+            "so_what": "Too small and too common to be a tip"
           }
-        ]
+        ],
+        "absorb": {
+          "title": "What programme controls absorb",
+          "guide": "Estimate before and after programme controls.",
+          "rows": [
+            {
+              "name": "Third person, log(1 + days)",
+              "values": [
+                -0.009,
+                -0.0081
+              ],
+              "text": "−0.0090 → −0.0081, 10% smaller",
+              "min": -0.01,
+              "min_label": "−0.01"
+            },
+            {
+              "name": "Business, same-day (pp)",
+              "values": [
+                -0.357,
+                -0.258
+              ],
+              "text": "−0.357 → −0.258, 28% smaller",
+              "min": -0.4,
+              "min_label": "−0.4"
+            }
+          ],
+          "legend": [
+            "Expanded model",
+            "Programme-adjusted"
+          ]
+        },
+        "note": "Per extra mention per 100 words; BH-adjusted wild cluster bootstrap p across nine terms (Webb weights, 9,999 draws). Typical loan: the 2.85-day median."
       },
       "takeaways": [
         {
           "marker": 1,
-          "heading": "No signal survives a stricter test",
-          "text": "After BH, the lowest **bootstrap p is 0.136**, so neither term passes 0.05 in either model."
+          "heading": "The evidence shrinks with each test",
+          "text": "**5 of 36** tests pass the usual country test, 4 the bootstrap, **none** after adjustment (lowest p 0.136)."
         },
         {
           "marker": 2,
           "heading": "What remains is tiny",
-          "text": "Per extra mention, business framing is linked to **−0.258 to −0.357 pp** in same-day funding."
+          "text": "**45–50 minutes** shorter funding per third-person mention; **0.26–0.36 pp** lower same-day per business mention."
         },
         {
           "marker": 3,
+          "heading": "These words are already common",
+          "text": "Third person is in **97.3%** of loans, business in 85.0%: no ready writing tip."
+        },
+        {
+          "marker": 4,
           "heading": "Pronouns may reflect the writer",
-          "text": "Descriptions are usually written by partners, so the **third-person link may reflect who writes**, not a borrower’s choice."
+          "text": "Programme controls shrink the links **10%** and **28%**; partners usually write the text."
         }
       ],
       "notes": {
         "purpose": "Show that the remaining framing links are tiny and fail a stricter test.",
-        "script": "Under richer programme controls, only two terms looked like signals: third-person framing for funding time and business framing for same-day funding. With 48 countries, the usual clustered test can be too generous, so we re-ran every term with a wild cluster bootstrap, 9,999 draws with Webb weights. After adjusting for nine terms, the lowest p-value is 0.136, so neither survives. What remains is tiny: business framing is linked to about a quarter of a percentage point in same-day funding per extra mention. [Point: Pronouns may reflect the writer] Descriptions are usually written by partner staff, so the third-person link may say more about who writes than about the borrower. The next slide asks how small the remaining links really are.",
+        "script": "We tested nine framing measures on two outcomes in two models, so 36 tests. Five pass the usual country-clustered test. With 48 countries that test can be too generous, so we re-ran every term with a wild cluster bootstrap, 9,999 draws with Webb weights: four pass. After adjusting for testing nine measures, none passes, and the lowest p-value is 0.136. [Point: What remains is tiny] In real units, one extra third-person mention per 100 words goes with about 45 to 50 minutes shorter funding time on a typical 2.85-day loan, and one extra business mention with 0.26 to 0.36 points lower same-day funding. These are associations, not effects of an edit. [Point: These words are already common] Third person appears in 97.3 percent of loans and business in 85 percent, so neither is an obvious writing lever. [Point: Pronouns may reflect the writer] Adding programme controls moves third person only 10 percent towards zero and business 28 percent. Descriptions are usually written by partner staff, so the third-person link may say more about who writes than about the borrower. The next slide asks how small the remaining links really are.",
         "reference": "Robustness checks: reports/expanded_feature_sensitivity_reviewed; bootstrap: reports/evidence_sources/robustness_summary.json (src/robustness_summary.py, src/wild_cluster.py)."
       },
       "sublabel": "Robustness checks",

@@ -7,7 +7,9 @@ equivalence screen, and writes `reports/evidence_sources/robustness_summary.json
   smallest BH-adjusted bootstrap p for a nonzero association;
 - subgroups: per specification and outcome, the equivalence verdict for each framing in each of
   the ten subgroups, the count of subgroups where each framing is bounded, the number of tests,
-  and unadjusted p < 0.05 cells (exploratory hypotheses, not findings).
+  and unadjusted p < 0.05 cells (exploratory hypotheses, not findings);
+- evidence funnel: tests passing the clustered t(47), the bootstrap and the BH-adjusted bootstrap;
+- third-person and business estimates in real units, with the shrink under programme controls.
 
 Exploratory: bounds were set after the estimates. Aggregates only.
 """
@@ -16,12 +18,17 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import math
 from pathlib import Path
+
+from src.bound_ladder import MEDIAN_DAYS
 
 ROOT = Path(__file__).resolve().parents[1]
 KAGGLE = ROOT / 'reports/kaggle_experiments/inference/reports'
 SCREEN = ROOT / 'reports/equivalence_screen_reviewed/equivalence_screen.csv'
 OUTPUT = ROOT / 'reports/evidence_sources/robustness_summary.json'
+DISTRIBUTION = ROOT / 'reports/equivalence_screen_reviewed/feature_distribution.json'
+MINUTES_PER_DAY = 1440
 ORDER = [('analysis_period', 'pre_pandemic'), ('analysis_period', 'pandemic_disruption'),
          ('analysis_period', 'post_pandemic'), ('loan_size_band', 'small'), ('loan_size_band', 'medium'),
          ('loan_size_band', 'large'), ('gender_classification', 'female'), ('gender_classification', 'male'),
@@ -52,6 +59,39 @@ def bootstrap_summary(wild: dict, screen: dict[tuple, bool]) -> dict:
             'draws': first['draws'], 'clusters': first['n_clusters'], 'weights': first['weights']}
 
 
+def evidence_funnel(wild: dict, threshold: float = 0.05) -> dict:
+    """How many term-by-model tests pass at each stage: clustered t(47), bootstrap, BH-adjusted bootstrap."""
+    rows = [row for block in wild['results'].values() for row in block['rows']]
+    return {'tests': len(rows), 'clustered': sum(r['p_t47'] < threshold for r in rows),
+            'bootstrap': sum(r['wcr_p_zero'] < threshold for r in rows),
+            'adjusted': sum(r['wcr_p_zero_bh'] < threshold for r in rows)}
+
+
+def framing_in_real_units(wild: dict, distribution: dict, median_days: float = MEDIAN_DAYS) -> dict:
+    """Third-person and business estimates in real units, their shrink under programme controls, and how common each is.
+
+    Minutes are the change in funding time per extra mention per 100 words at the median loan;
+    the outcome is log(1 + days). Associations only: nothing here measures an edit.
+    """
+    def estimate(spec: str, outcome: str, feature: str) -> float:
+        return next(r['estimate'] for r in wild['results'][f'{spec}/{outcome}']['rows'] if r['feature'] == feature)
+
+    third, business = 'third_person_mentions_per_100_words', 'business_mentions_per_100_words'
+    minutes = lambda beta: (1 + median_days) * (1 - math.exp(beta)) * MINUTES_PER_DAY
+    t_expanded = estimate('expanded', 'log_funding_speed', third)
+    t_adjusted = estimate('programme_adjusted', 'log_funding_speed', third)
+    b_expanded = estimate('expanded', 'funded_within_24h', business)
+    b_adjusted = estimate('programme_adjusted', 'funded_within_24h', business)
+    return {'median_days': median_days,
+            'third_person': {'estimate_expanded': t_expanded, 'estimate_programme_adjusted': t_adjusted,
+                             'minutes_expanded': minutes(t_expanded), 'minutes_programme_adjusted': minutes(t_adjusted),
+                             'shrink_share': 1 - t_adjusted / t_expanded,
+                             'share_with_mention': 1 - distribution[third]['share_zero']},
+            'business': {'pp_expanded': b_expanded * 100, 'pp_programme_adjusted': b_adjusted * 100,
+                         'shrink_share': 1 - b_adjusted / b_expanded,
+                         'share_with_mention': 1 - distribution[business]['share_zero']}}
+
+
 def subgroup_summary(data: dict) -> dict:
     out: dict[str, dict] = {}
     for outcome in ('log_funding_speed', 'funded_within_24h'):
@@ -78,7 +118,9 @@ def build(kaggle: Path = KAGGLE, screen_path: Path = SCREEN) -> dict:
         screen = {(r['specification'], r['outcome'], r['feature']): r['equivalent'] == 'True'
                   for r in csv.DictReader(handle)}
     wild = json.loads((kaggle / 'wild_cluster_bootstrap/wild_cluster.json').read_text())
-    result = {'bootstrap': bootstrap_summary(wild, screen), 'subgroups': {}}
+    distribution = json.loads(DISTRIBUTION.read_text())['features']
+    result = {'bootstrap': bootstrap_summary(wild, screen), 'evidence_funnel': evidence_funnel(wild),
+              'framing_real_units': framing_in_real_units(wild, distribution), 'subgroups': {}}
     for spec in ('programme_adjusted', 'expanded'):
         data = json.loads((kaggle / f'subgroup_inference/subgroup_{spec}.json').read_text())
         result['subgroups'][spec] = subgroup_summary(data)

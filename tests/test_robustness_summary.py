@@ -1,6 +1,8 @@
-from src.robustness_summary import ORDER, bootstrap_summary, subgroup_summary
+import math
 
+import pytest
 
+from src.robustness_summary import ORDER, bootstrap_summary, evidence_funnel, framing_in_real_units, subgroup_summary
 def test_bootstrap_counts_changes_against_screen():
     wild = {'results': {'expanded/log_funding_speed': {'draws': 9999, 'n_clusters': 48, 'weights': 'Webb', 'rows': [
         {'feature': 'family_mentions_per_100_words', 'equivalent_wcr': True, 'wcr_p_zero_bh': 0.4},
@@ -28,3 +30,30 @@ def test_subgroup_grid_follows_fixed_order_and_flags_hypotheses():
     assert duration['bounded_count'] == {'urgency': 1}
     assert [h['level'] for h in duration['hypotheses_unadjusted']] == ['Asia']
     assert out['tests'] == 20
+
+
+def _row(feature, estimate, clustered, wild, adjusted):
+    return {'feature': feature, 'estimate': estimate, 'p_t47': clustered, 'wcr_p_zero': wild, 'wcr_p_zero_bh': adjusted}
+
+
+def test_evidence_funnel_counts_each_stage_below_the_threshold():
+    wild = {'results': {'a/log_funding_speed': {'rows': [_row('x', 0, .01, .02, .2), _row('y', 0, .03, .07, .3)]},
+                        'b/funded_within_24h': {'rows': [_row('x', 0, .5, .5, .9)]}}}
+    assert evidence_funnel(wild) == {'tests': 3, 'clustered': 2, 'bootstrap': 1, 'adjusted': 0}
+
+
+def test_framing_in_real_units_converts_and_measures_the_shrink():
+    third = 'third_person_mentions_per_100_words'
+    business = 'business_mentions_per_100_words'
+    wild = {'results': {'expanded/log_funding_speed': {'rows': [_row(third, -0.01, 0, 0, 0)]},
+                        'programme_adjusted/log_funding_speed': {'rows': [_row(third, -0.008, 0, 0, 0)]},
+                        'expanded/funded_within_24h': {'rows': [_row(business, -0.004, 0, 0, 0)]},
+                        'programme_adjusted/funded_within_24h': {'rows': [_row(business, -0.003, 0, 0, 0)]}}}
+    shares = {third: {'share_zero': 0.1}, business: {'share_zero': 0.25}}
+    out = framing_in_real_units(wild, shares, median_days=3.0)
+    assert out['third_person']['minutes_expanded'] == pytest.approx(4 * (1 - math.exp(-0.01)) * 1440)
+    assert out['third_person']['shrink_share'] == pytest.approx(0.2)
+    assert out['third_person']['share_with_mention'] == pytest.approx(0.9)
+    assert out['business']['pp_expanded'] == pytest.approx(-0.4)
+    assert out['business']['pp_programme_adjusted'] == pytest.approx(-0.3)
+    assert out['business']['shrink_share'] == pytest.approx(0.25)

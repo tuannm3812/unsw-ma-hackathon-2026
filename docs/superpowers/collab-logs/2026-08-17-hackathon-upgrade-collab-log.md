@@ -2886,3 +2886,11 @@ unseen exact template, which cannot exclude near-duplicates.
 - Re-read the live deck first: no owner edits to mirror.
 - Replaced the table and two key-figure cards with one chart: bootstrap BH-adjusted p for third person and business in both models, with a p-value axis, the 0.05 line and each estimate alongside. Removed the stray appendix figure label and unused key figures.
 - All values come from the register's bootstrap rows; no retired p-value appears. Points checked against a 300 dpi render, within 0.2 pt. Deck QA and full offline pytest pass; slide 11 only was rebuilt; nothing pushed.
+
+## 2026-11-08: slide 11 "shrinking evidence"
+
+- Mike found the p-value chart short on insight; direction A chosen with the coordinator. Live deck re-read first: no owner edits to mirror.
+- `src/robustness_summary.py` now also writes the evidence funnel (36 tests: 5 clustered, 4 bootstrap, 0 BH-adjusted) and the real-unit conversions (45–50 minutes at the 2.85-day median; 0.26–0.36 pp; shrink 10% and 28%), with tests. Register rows added.
+- Slide 11 now shows three blocks of 36 squares, two real-unit cards with how common each word is, and the shift under programme controls. Associations only; the conversions do not measure an edit.
+- The possible "framings vs loan details" panel is not built: the saved programme-adjusted run has no control coefficients, so it would need a rerun.
+- Verified: pyflakes, deck QA, rendered slide 11, full offline pytest. Slide 11 only was rebuilt; nothing pushed.
