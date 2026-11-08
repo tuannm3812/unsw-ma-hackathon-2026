@@ -337,7 +337,7 @@
           ]
         ],
         "period_title": "Share funded within 24 hours",
-        "caption": "Same-day share and share waiting over two weeks by posting year (open markers: 2025 may be incomplete); funding-time quartiles.",
+        "caption": "Same-day share and share waiting over two weeks by posting year; funding-time quartiles, all years.",
         "quartiles": {
           "q1": 0.39,
           "median": 2.85,
@@ -438,7 +438,8 @@
         ],
         "trend_legend": [
           "Funded within 24 hours",
-          "Waiting over two weeks"
+          "Waiting over two weeks",
+          "2025 may be incomplete"
         ],
         "periods_band": [
           [
@@ -1003,7 +1004,81 @@
           ]
         },
         "caption": "Illustrative composite listing, not a real borrower; values are dataset medians and most common categories.",
-        "legend_line": "Highlights mark 4 of the 8 framing measures in this example"
+        "key": [
+          {
+            "id": "family",
+            "name": "Family",
+            "definition": "Relatives and schooling",
+            "example": "children",
+            "icon": "family_restroom-navy.png",
+            "highlight": "family",
+            "mention": 88.7
+          },
+          {
+            "id": "business",
+            "name": "Business",
+            "definition": "Trade and stock words",
+            "example": "market",
+            "icon": "storefront-navy.png",
+            "highlight": "business",
+            "mention": 85.0
+          },
+          {
+            "id": "basic_needs",
+            "name": "Basic needs",
+            "definition": "Water, health, housing",
+            "example": "water",
+            "icon": "water_drop-navy.png",
+            "highlight": null,
+            "mention": 23.3
+          },
+          {
+            "id": "agency",
+            "name": "Agency",
+            "definition": "Planning and self-direction",
+            "example": "decided",
+            "icon": "bolt-navy.png",
+            "highlight": null,
+            "mention": 54.1
+          },
+          {
+            "id": "gratitude",
+            "name": "Gratitude",
+            "definition": "Thanks and blessings",
+            "example": "thankful",
+            "icon": "favorite-navy.png",
+            "highlight": "gratitude",
+            "mention": 19.6
+          },
+          {
+            "id": "urgency",
+            "name": "Urgency",
+            "definition": "Time-pressure words",
+            "example": "quickly",
+            "icon": "schedule-navy.png",
+            "highlight": "urgency",
+            "mention": 1.3
+          },
+          {
+            "id": "first_person",
+            "name": "First person",
+            "definition": "The borrower’s own voice",
+            "example": "my",
+            "icon": "person-navy.png",
+            "highlight": null,
+            "mention": 1.0
+          },
+          {
+            "id": "third_person",
+            "name": "Third person",
+            "definition": "Written about the borrower",
+            "example": "her",
+            "icon": "record_voice_over-navy.png",
+            "highlight": null,
+            "mention": 97.3
+          }
+        ],
+        "key_title": "The eight framing measures, counted per 100 words, with the share of loans using each (plus a sentiment score)"
       },
       "takeaways": [
         {
@@ -1029,7 +1104,7 @@
       ],
       "notes": {
         "purpose": "Show what we measure in each loan.",
-        "script": "This is an illustrative composite listing, not a real borrower, built from the dataset medians: a US$325 loan over 12 months in agriculture. Most of the listing is fixed. The description is the part a field partner writes, and we score it on eight framing rates per 100 words, such as family, business, urgency and gratitude, plus sentiment and text form. Third-person wording mostly reflects who writes the description, so we treat it as context rather than a lever. The next slides test whether these measures move funding time.",
+        "script": "This is an illustrative composite listing, not a real borrower, built from the dataset medians: a US$325 loan over 12 months in agriculture. Most of the listing is fixed. The description is the part a field partner writes, and we score it on eight framing rates per 100 words, family, business, basic needs, agency, gratitude, urgency, first person and third person, plus sentiment and text form. Each card shows a plain definition, one example word from its word list and how many descriptions use it at least once. Third-person wording mostly reflects who writes the description, so we treat it as context rather than a lever. The next slides test whether these measures move funding time.",
         "reference": "src/features.py lexicons; slide values: claims register (illustrative listing values). Photo: Tunde Buremo on Unsplash (Unsplash Licence)."
       },
       "sublabel": "What we read in each loan",
@@ -2660,9 +2735,10 @@
       "notes": {
         "purpose": "What to do with a flag.",
         "script": "A flag only helps if something happens next. We propose four lender-side levers: feature flagged loans early, offer matching funds where a loan is likely to stall, alert lenders who follow the sector or country, and ask the partner to check the listing is complete. Our data do not measure what these levers do, so each needs a pilot. What we can say is where not to spend effort: framing tweaks, because five framings stay within five percent of funding time, about four and a half hours on a typical loan.",
-        "reference": "Equivalence screen; reports/evidence_sources/bound_ladder.json. Photo: Richard Nyoni (soybean farmer) on Unsplash (Unsplash Licence)."
+        "reference": "Equivalence screen; reports/evidence_sources/bound_ladder.json. Photo: Richard Nyoni (soybean farmer) on Unsplash (Unsplash Licence). Photo: Muhammad-Taha Ibrahim (shop owner, Abuja) on Unsplash (Unsplash Licence)."
       },
-      "photo": "unsplash-soybean-richard-nyoni.jpg"
+      "photo": "unsplash-soybean-richard-nyoni.jpg",
+      "photo2": "unsplash-shop-abuja-muhammad-taha-ibrahim.jpg"
     },
     {
       "n": 19,

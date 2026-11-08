@@ -2844,3 +2844,9 @@ unseen exact template, which cannot exclude near-duplicates.
   - **Wording correction:** the wait ties up partner capital; lenders are not the ones waiting.
   - **Photo:** the Abuja shop photo no longer fits this layout and is marked unplaced in PROVENANCE.md; no photo repeats.
   - QA reports no automated problems; full suite passes; previews, PDF and preview page refreshed; not pushed.
+- **2026-11-08, the eight measures, Abuja photo and slide 5 legend (Mike):** no new owner edits; slides 5, 7, 12, 13 and 18 were rebuilt.
+  - **Slide 7:** now introduces all eight framing measures in a key: icon, name, plain definition, one example word from its pattern in `src/features.py`, and the share of loans using it (new register row, the complement of the no-mention shares). The listing was compacted to make room, and the key's highlight colours match the sample.
+  - **Consistency:** slides 12 and 13 use the same names, order and icons (`MEASURE_ORDER`, `MEASURE_ICONS`); the measures are not re-defined there. Eight new Material icons were rendered with `scripts/build_deck_icons.py`, which now skips existing files.
+  - **Slide 18:** the Abuja shop photo sits beside the soybean farmer, and credits are in the notes and PROVENANCE.md.
+  - **Slide 5 legend:** the legend above the chart showed the area without its violet line and did not explain the open 2025 markers or the dashed last segment. It now sits under the plot with the chart's own symbols, and has a third entry, "2025 may be incomplete".
+  - QA reports no automated problems; full suite passes; previews, PDF and preview page refreshed; not pushed.

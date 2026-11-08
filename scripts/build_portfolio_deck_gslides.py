@@ -398,6 +398,9 @@ def gain_mini(page, x, y, w, slide):
     page.line(x, base, x + w, base, NAVY, .75)
 
 
+EXTRA_IMAGES: list = []  # (slide id, path, frame) appended by builders whose image positions depend on layout
+
+
 def slide_data():
     return {str(s['n']): s for s in json.loads((DECK / 'storyline.json').read_text())['slides']}
 
@@ -435,30 +438,32 @@ def agenda(page, slide, urls):
 
 
 # Slide 4 photo frame inside the 316 pt card (x, y, width, height); icons sit beside the two headings.
-LEVER_PHOTO = (L + 16, TOP + 14, 170, 288)
+LEVER_PHOTO = (L + 12, TOP + 12, 130, 162)
 HIGHLIGHT = {'family': '#FFF0A8', 'business': '#E2DCF0', 'urgency': '#D5DCE5'}
 
 
+LEVER_KEY_ROWS = 2
+
+
 def lever(page, slide, pos):
-    """An illustrative listing card: fixed fields above, the editable description highlighted by framing."""
+    """Illustrative listing (photo, fixed fields, highlighted description) above a key of all eight measures."""
     page.chrome(slide)
     ex = slide['exhibit']
     x, y, w, h = L, TOP, R - 16 - L, 316
     page.rect(x, y, w, h, PAPER)
     page.rect(x, y, w, 2.5, YELLOW)
     page.caption(slide['figure'], ex['caption'], y + h + 8, w=w)
-    y -= 16  # card content starts higher now that the label sits in the caption
-    rx, rw = x + 202, w - 218
-    page.text('FIXED AT LISTING', rx + 26, y + 32, 240, 14, size=10, color=SLATE, bold=True)
+    rx, rw = x + 154, w - 166
+    page.text('FIXED AT LISTING', rx + 24, y + 12, 200, 14, size=10, color=SLATE, bold=True)
     cw = rw / 3
     for i, (label, value) in enumerate(ex['fixed_fields']):
-        cx, cy = rx + (i % 3) * cw, y + 54 + (i // 3) * 36
-        page.text(label, cx, cy, cw - 8, 12, size=8, color=GREY)
-        page.text(value, cx, cy + 12, cw - 8, 14, size=10, bold=True)
-    page.line(rx, y + 132, rx + rw, y + 132, HAIR, .75)
-    page.text('EDITABLE DESCRIPTION', rx + 26, y + 142, 240, 14, size=10, color=VIOLET, bold=True)
-    page.rect(rx, y + 164, rw, 100, WHITE)
-    page.rect(rx, y + 164, 4, 100, YELLOW)
+        cx, cy = rx + (i % 3) * cw, y + 30 + (i // 3) * 27
+        page.text(label, cx, cy, cw - 8, 11, size=8, color=GREY)
+        page.text(value, cx, cy + 11, cw - 8, 13, size=9, bold=True)
+    page.line(rx, y + 86, rx + rw, y + 86, HAIR, .75)
+    page.text('EDITABLE DESCRIPTION', rx + 24, y + 92, 200, 14, size=10, color=VIOLET, bold=True)
+    page.rect(rx, y + 110, rw, 64, WHITE)
+    page.rect(rx, y + 110, 4, 64, YELLOW)
     text = ex['description']
     spans = []
     for kind, words in ex['highlights'].items():
@@ -468,25 +473,26 @@ def lever(page, slide, pos):
                     spans.append((m.start(), m.end(), {'background_color': HIGHLIGHT[kind]}))
                 elif kind == 'gratitude':
                     spans.append((m.start(), m.end(), {'underline': True, 'color': VIOLET, 'bold': True}))
-    page.text(text, rx + 16, y + 174, rw - 28, 92, size=12, color=NAVY, spacing=135, spans=spans)
-    page.text(ex.get('legend_line', 'Highlights mark framing terms counted per 100 words'), rx, y + 276, rw, 12, size=8,
-              color=GREY, bold=True)
-    chips = [('Family', 'family'), ('Business', 'business'), ('Urgency', 'urgency'), ('Gratitude', 'gratitude')]
-    cx = rx
-    for label, kind in chips:
-        width = 8 + len(label) * 5.6
-        if kind in HIGHLIGHT:
-            page.rect(cx, y + 294, width, 18, HIGHLIGHT[kind])
-            page.text(label, cx, y + 294, width, 18, size=10, align='center', middle=True)
-        else:
-            style = {'underline': True, 'color': VIOLET, 'bold': True} if kind == 'gratitude' else {'bold': True}
-            page.text(label, cx, y + 294, width, 18, size=10, align='center', middle=True,
-                      spans=[(0, len(label), style)])
-        cx += width + 8
-    page.marker(1, rx + rw - 14, y + 33)
-    page.marker(4, rx + rw - 14, y + 170)
-    page.marker(2, rx + rw - 14, y + 277)
-    page.marker(3, cx + 4, y + 297)
+    page.text(text, rx + 14, y + 115, rw - 34, 56, size=10, color=NAVY, spacing=120, spans=spans)
+    page.marker(1, rx + rw - 14, y + 12)
+    page.marker(4, rx + rw - 14, y + 92)
+    # Key of the eight measures: same names, order and icons as the evidence slides.
+    ky = y + 182
+    page.line(x + 12, ky - 3, x + w - 12, ky - 3, HAIR, .75)
+    page.text(ex['key_title'], x + 12, ky, w - 60, 12, size=8, color=GREY, bold=True)
+    page.marker(2, x + w - 24, ky - 1)
+    cell, row_h = (w - 24) / 4, 57
+    for k, item in enumerate(ex['key']):
+        cx, cy = x + 12 + (k % 4) * cell, ky + 16 + (k // 4) * row_h
+        if item['highlight'] in HIGHLIGHT:
+            page.rect(cx + 18, cy + 1, 8 + 5.2 * len(item['name']), 15, HIGHLIGHT[item['highlight']])
+        spans = [(0, len(item['name']), {'underline': True, 'color': VIOLET})] if item['highlight'] == 'gratitude' else None
+        page.text(item['name'], cx + 20, cy + 2, cell - 24, 13, size=9, bold=True, spans=spans)
+        page.text(item['definition'], cx + 20, cy + 16, cell - 24, 11, size=8, color=GREY)
+        page.text(f"e.g. {item['example']} · in {item['mention']}%", cx + 20, cy + 28, cell - 24, 11, size=8, color=GREY)
+        EXTRA_IMAGES.append(('lever', ASSETS / 'icons' / item['icon'], (cx + 2, cy + 1.5, 14, 14)))
+        if item['id'] == 'urgency':
+            page.marker(3, cx + cell - 22, cy + 2)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -889,9 +895,10 @@ def subgroups(page, slide, pos):
     page.text('10 groups', count_x - 4, TOP + 18, 56, 12, size=8, color=GREY, bold=True)
     page.marker(1, count_x + 46, TOP + 6)
     hyp = {(t, c) for t, c in ex['hypotheses']}
-    for r, row in enumerate(ex['rows']):
+    for r, row in enumerate(sorted(ex['rows'], key=lambda row: MEASURE_ORDER.index(measure_key(row['term'])))):
         y = top + r * (ch + 6)
-        page.text(TERM_LABELS.get(row['term'], row['term'].capitalize()), L, y + 3, 90, 14, size=9)
+        page.text(TERM_LABELS.get(row['term'], row['term'].capitalize()), L + 16, y + 3, 76, 14, size=9)
+        EXTRA_IMAGES.append(('subgroups', measure_icon(row['term']), (L, y + 3.5, 12, 12)))
         for c, (cx, ok) in enumerate(zip(xs, row['cells'])):
             page.rect(cx + 1, y, cw - 2, ch, NAVY if ok else '#E2DCF0')
             if (row['term'], c) in hyp:
@@ -899,7 +906,7 @@ def subgroups(page, slide, pos):
         full = row['count'] == len(xs)
         page.text(f"{row['count']} of 10", count_x, y + 3, 50, 14, size=9, bold=full, color=NAVY if full else VIOLET)
         if row['term'] == 'urgency':
-            page.marker(2, L + 50, y + 4)
+            page.marker(2, L + 62, y + 4)
     ly = top + len(ex['rows']) * (ch + 6) + 6
     lx = x0
     for (label, fill, shape) in zip(ex['legend'], [NAVY, '#E2DCF0', YELLOW], ['RECTANGLE', 'RECTANGLE', 'ELLIPSE']):
@@ -953,6 +960,21 @@ def where(page, slide, pos):
 
 
 STATUS_COLOURS = {'bounded': NAVY, 'mixed': SLATE, 'unresolved': VIOLET}
+# Slide 7's measure key sets the names, order and icons reused on every slide that lists the measures.
+MEASURE_ORDER = ['family', 'business', 'basic_needs', 'agency', 'gratitude', 'urgency', 'first_person', 'third_person',
+                 'sentiment']
+MEASURE_ICONS = {'family': 'family_restroom', 'business': 'storefront', 'basic_needs': 'water_drop', 'agency': 'bolt',
+                 'gratitude': 'favorite', 'urgency': 'schedule', 'first_person': 'person',
+                 'third_person': 'record_voice_over', 'sentiment': 'sentiment_satisfied'}
+
+
+def measure_key(term: str) -> str:
+    """Canonical measure id for a storyline term such as 'basic needs' or 'sentiment (+0.5 score)'."""
+    return 'sentiment' if term.startswith('sentiment') else term.replace(' ', '_')
+
+
+def measure_icon(term: str) -> Path:
+    return ASSETS / 'icons' / f'{MEASURE_ICONS[measure_key(term)]}-navy.png'
 
 
 def forest(page, slide, pos):
@@ -968,7 +990,8 @@ def forest(page, slide, pos):
     y = TOP + 20
     header = {}
     for group in ex['groups']:
-        rows = [row for row in ex['rows'] if row['status_both_specs'] == group['status']]
+        rows = sorted((row for row in ex['rows'] if row['status_both_specs'] == group['status']),
+                      key=lambda row: MEASURE_ORDER.index(measure_key(row['term'])))
         colour = STATUS_COLOURS[group['status']]
         page.line(L, y - 3, R - 6, y - 3, HAIR, .5)
         page.sup(group['label'], L, y, 330, 13, size=9, color=colour, bold=True)
@@ -984,7 +1007,8 @@ def forest(page, slide, pos):
             ry = top + 20 * k
             centre = ry + 7.5
             name = 'Sentiment' if row['term'].startswith('sentiment') else row['term'].capitalize()
-            page.text(name, L, ry + 1, 96, 14, size=9)
+            page.text(name, L + 16, ry + 1, 84, 14, size=9)
+            EXTRA_IMAGES.append(('equivalence', measure_icon(row['term']), (L, ry + 1.5, 12, 12)))
             page.line(px(row['ci90_low']), centre, px(row['ci90_high']), centre, colour, 2)
             page.rect(px(row['estimate']) - 3.5, centre - 3.5, 7, 7, colour, 'ELLIPSE')
             page.rect(rx, centre - 3.5, track, 7, '#ECEAE4')
@@ -1311,7 +1335,7 @@ def chip_link(page, label, x, y, fill, urls, ink=WHITE):
                      'link': urls[label], 'color': ink, 'underline': False})
 
 
-TREND_FRAME = (L + 34, TOP + 34, 560, 168)  # matches scripts/build_trend_chart.py's 8 x 2.4 in figure
+TREND_FRAME = (L + 34, TOP + 20, 560, 168)  # matches scripts/build_trend_chart.py's 8 x 2.4 in figure
 TREND_PNG = ASSETS / 'charts/yearly_trend.png'
 
 
@@ -1324,10 +1348,23 @@ def problem(page, slide, pos):
     X = lambda year: fx + (year - x0) / (x1 - x0) * fw
     Y = lambda share: fy + fh - (share - y0) / (y1 - y0) * fh
     # Legend, period bands and gridlines sit behind the transparent chart image.
-    page.rect(L, TOP + 4, 16, 8, '#C4BBDF')
-    page.text(ex['trend_legend'][0], L + 20, TOP + 1, 130, 12, size=8, color=GREY)
-    page.line(L + 150, TOP + 8, L + 166, TOP + 8, NAVY, 2)
-    page.text(ex['trend_legend'][1], L + 170, TOP + 1, 130, 12, size=8, color=GREY)
+    # Legend under the plot, drawn with the chart's own symbols and centred on the labels' x-height.
+    ly = fy + fh + 18
+    mid = ly + 5.1
+    lx = fx
+    page.rect(lx, mid - 4, 20, 8, '#C4BBDF')
+    page.line(lx, mid - 4, lx + 20, mid - 4, VIOLET, 2)
+    page.text(ex['trend_legend'][0], lx + 25, ly, 110, 12, size=8, color=GREY)
+    lx += 135
+    page.line(lx, mid, lx + 20, mid, NAVY, 2)
+    page.rect(lx + 7, mid - 3, 6, 6, NAVY, 'ELLIPSE')
+    page.text(ex['trend_legend'][1], lx + 25, ly, 110, 12, size=8, color=GREY)
+    lx += 135
+    page.line(lx, mid, lx + 20, mid, NAVY, 2)
+    page.ops[-1]['dash_style'] = 'DOT'
+    page.rect(lx + 7, mid - 3, 6, 6, NAVY, 'ELLIPSE')
+    page.rect(lx + 8.2, mid - 1.8, 3.6, 3.6, WHITE, 'ELLIPSE')
+    page.text(ex['trend_legend'][2], lx + 25, ly, 120, 12, size=8, color=GREY)
     for name, start, end in ex['periods_band']:
         if name == 'Pandemic':
             page.rect(X(start - .5), fy, X(end + .5) - X(start - .5), fh, '#EEEBF5')
@@ -1343,7 +1380,7 @@ def problem(page, slide, pos):
     page.marker(4, X(2021) + 10, Y(.34) - 20)
     # Funding-time strip, all years.
     q = ex['quartiles']
-    sy, sw = fy + fh + 22, 380
+    sy, sw = fy + fh + 36, 380
     panel(page, L, sy, sw, 92, ex['strip_title'], 'Violet band: the middle half of loans; navy bar: the median.')
     px = wait_scale(L + 16, sw - 104)
     base = sy + 74
@@ -1363,8 +1400,9 @@ def problem(page, slide, pos):
 
 INSIGHT_CARDS = [(L + i * 245, TOP, 233, 236) for i in range(3)]
 INSIGHT_PHOTO = (L + 735, TOP, FULL - L - 735, 236)
-PROBLEM_PHOTO = (L + 392, TOP + 34 + 168 + 22, R - 6 - L - 392, 92)
-PRIORITISE_PHOTO = (L + 600, TOP + 162, FULL - L - 600, 88)
+PROBLEM_PHOTO = (L + 392, TOP + 20 + 168 + 36, R - 6 - L - 392, 92)
+PRIORITISE_PHOTO = (L + 600, TOP + 162, 133, 88)
+PRIORITISE_PHOTO2 = (L + 742.5, TOP + 162, 133, 88)
 
 
 INSIGHT_ROWS = [(L, TOP + k * 106, 440, 100) for k in range(3)]
@@ -1794,11 +1832,15 @@ def main() -> None:
             images.append((at[sid], framed_photo(Path(work), ASSETS / 'photos' / slide_by_id(sid)['photo'], frame,
                                                  f'{sid}.png', all_corners=True), frame))
         images.append((at['problem'], TREND_PNG, TREND_FRAME))
+        images.append((at['prioritise'], framed_photo(Path(work), ASSETS / 'photos' / slide_by_id('prioritise')['photo2'],
+                                                      PRIORITISE_PHOTO2, 'prioritise2.png', all_corners=True),
+                       PRIORITISE_PHOTO2))
+        images += [(at[sid], path, frame) for sid, path, frame in EXTRA_IMAGES]
         if 'lever' in at:
             images.append((at['lever'], framed_photo(Path(work), ASSETS / 'photos' / slide_by_id('lever')['photo'],
                                                      LEVER_PHOTO, 'lever.png', all_corners=True), LEVER_PHOTO))
-            images.append((at['lever'], ASSETS / 'icons/table_rows-slate.png', (L + 202, TOP + 12.4, 18, 18)))
-            images.append((at['lever'], ASSETS / 'icons/description-violet.png', (L + 202, TOP + 122.4, 18, 18)))
+            images.append((at['lever'], ASSETS / 'icons/table_rows-slate.png', (L + 154, TOP + 9.4, 18, 18)))
+            images.append((at['lever'], ASSETS / 'icons/description-violet.png', (L + 154, TOP + 89.4, 18, 18)))
         if 'outcome' in at:
             for x, icon in zip(JOURNEY_X, slide_by_id('outcome')['exhibit']['icons']):
                 images.append((at['outcome'], ASSETS / 'icons' / icon, (x - 15, 171, 30, 30)))
