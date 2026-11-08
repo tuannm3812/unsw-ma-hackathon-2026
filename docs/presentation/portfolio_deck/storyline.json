@@ -1152,7 +1152,62 @@
               6.147
             ]
           }
-        ]
+        ],
+        "breakdown": [
+          {
+            "year": 2021,
+            "stages": [
+              0.025,
+              0.0096,
+              0.258
+            ],
+            "total": 0.293
+          },
+          {
+            "year": 2022,
+            "stages": [
+              0.0182,
+              0.018,
+              0.3363
+            ],
+            "total": 0.372
+          },
+          {
+            "year": 2023,
+            "stages": [
+              0.1156,
+              0.0549,
+              0.089
+            ],
+            "total": 0.259
+          },
+          {
+            "year": 2024,
+            "stages": [
+              0.0628,
+              0.0136,
+              0.3124
+            ],
+            "total": 0.389
+          },
+          {
+            "year": 2025,
+            "stages": [
+              0.0326,
+              0.0027,
+              0.2244
+            ],
+            "total": 0.26
+          }
+        ],
+        "breakdown_title": "Where the gain comes from¹",
+        "stage_labels": [
+          "Text form",
+          "Lexicon and sentiment",
+          "Word patterns (TF-IDF)"
+        ],
+        "caption": "Linear-model MAE in days (top) and its reduction by text feature group (bottom), identical evaluation rows.",
+        "note_sup": "Groups added in order: form, then lexicon and sentiment, then TF-IDF; another order would split the gain differently."
       },
       "key_figures": [
         {
@@ -1175,12 +1230,17 @@
           "marker": 3,
           "heading": "No single country drives it",
           "text": "Removing any single country **leaves the gain positive** in every year (exploratory check)."
+        },
+        {
+          "marker": 4,
+          "heading": "Word patterns carry most of it",
+          "text": "TF-IDF gives the largest share in **4 of 5 years**; lexicon and sentiment add only **0.003–0.055 days**."
         }
       ],
       "notes": {
         "purpose": "Present the strongest new result.",
-        "script": "We trained on earlier years and tested on each of 2021 to 2025, comparing the same model with and without text on the same loans. Text reduced error every year.",
-        "reference": "Forecast benchmark, run 2026-11-02: docs/6_matched_text_results.md; reports/text_benchmark_reviewed."
+        "script": "We trained on earlier years and tested on each of 2021 to 2025, comparing the same model with and without text on the same loans. Text reduced error every year. [Point: Word patterns carry most of it] Splitting the gain by feature group, added in a fixed order, word patterns from TF-IDF give most of it in four of five years; 2023 is the exception, where description form leads. The lexicon, specificity and sentiment measures, the ones closest to framing, add only 0.003 to 0.055 days. Text alone forecasts worse than structure alone in every year, so text adds to context rather than replacing it.",
+        "reference": "Forecast benchmark, run 2026-11-02: docs/6_matched_text_results.md; reports/text_benchmark_reviewed. Stage split: src/gain_breakdown.py from reports/text_benchmark_reviewed/benchmark.json."
       },
       "sublabel": "Forecast benchmark"
     },

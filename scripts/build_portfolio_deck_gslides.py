@@ -924,10 +924,14 @@ def persist(page, slide, pos):
     page.takeaways(slide['takeaways'], pos)
 
 
+STAGE_FILLS = ['#C4BBDF', VIOLET, NAVY]  # text form, lexicon and sentiment, TF-IDF
+
+
 def forecast(page, slide, pos):
+    """MAE pairs per year (top) and the gain split by text feature group (bottom)."""
     page.chrome(slide)
     exhibit = slide['exhibit']
-    base, per, x0, group, bar = 424, 26, L + 4, 90, 36
+    base, per, x0, group, bar = 300, 13, L + 4, 90, 36
     legend_y = TOP + 2
     page.rect(L, legend_y + 2, 11, 11, SLATE)
     page.text(exhibit['series'][0], L + 17, legend_y, 110, 14, size=10)
@@ -939,18 +943,38 @@ def forecast(page, slide, pos):
             h = value * per
             bx = x + j * (bar + 2)
             page.rect(bx, base - h, bar, h, fill)
-            page.text(f'{value:.3f}', bx - 5, base - h - 17 - j * 0, bar + 10, 14, size=10, color=GREY if j == 0 else NAVY,
+            page.text(f'{value:.3f}', bx - 5, base - h - 15, bar + 10, 13, size=9, color=GREY if j == 0 else NAVY,
                       bold=j == 1, align='center')
-        page.text(str(row['year']), x, base + 4, bar * 2 + 2, 14, size=10, align='center')
+        page.text(str(row['year']), x, base + 3, bar * 2 + 2, 13, size=9, align='center')
     page.line(L, base, L + 5 * group - 8, base, NAVY, 1)
+    # Gain by text feature group, one stacked bar per year, in nesting order.
+    ty = base + 22
+    page.sup(exhibit['breakdown_title'], L, ty, 200, 13, size=9, bold=True)
+    page.marker(4, L + 4.6 * len(exhibit['breakdown_title']) + 8, ty + 0.5)
+    scale, bx0 = 900, L + 40
+    for k, row in enumerate(exhibit['breakdown']):
+        y = ty + 17 + 15 * k
+        page.text(str(row['year']), L, y, 34, 12, size=8, color=GREY)
+        left = bx0
+        for value, fill in zip(row['stages'], STAGE_FILLS):
+            page.rect(left, y + 1.5, value * scale, 9, fill)
+            left += value * scale
+        page.text(f"{row['total']:.3f}", left + 4, y, 40, 12, size=8, color=NAVY, bold=True)
+    ly = ty + 17 + 15 * 5 + 2
+    lx = bx0
+    for label, fill in zip(exhibit['stage_labels'], STAGE_FILLS):
+        page.rect(lx, ly + 1.6, 9, 7, fill)
+        page.text(label, lx + 13, ly, 4.2 * len(label) + 6, 12, size=8, color=GREY)
+        lx += 13 + 4.2 * len(label) + 16
     figure = slide['key_figures'][0]
     key_card(page, figure, 498, TOP, 152, 104, YELLOW, 24)
     key_card(page, {'value': '5 of 5', 'label': 'years with lower error'}, 498, 246, 152, 92, VIOLET, 24)
     key_card(page, {'value': '728,640', 'label': 'evaluation records'}, 498, 350, 152, 92, SLATE, 24)
     page.marker(1, 498 + 152 - 22, TOP + 10)
     page.marker(2, 290, legend_y + 1)
-    page.marker(3, 452, 215)
-    page.caption('Figure 7.', 'Linear-model MAE in days on identical evaluation rows; lower is better.', 450)
+    page.marker(3, 498 + 152 - 22, 246 + 10)  # gain stays positive every year
+    page.caption('Figure 7.', exhibit['caption'], ly + 16)
+    page.caption('¹', exhibit['note_sup'], ly + 29)
     page.takeaways(slide['takeaways'], pos)
 
 

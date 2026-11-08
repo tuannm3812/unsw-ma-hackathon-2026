@@ -2650,3 +2650,15 @@ unseen exact template, which cannot exclude near-duplicates.
   - Builder fixes from the move: the cross-slide lookups now use stable slide ids (`slide_by_id`), and the close and gate image indices moved to 14 and 13. An intermediate rebuild had put the close photo on A1 before the index fix; rebuilding A1 removed it (the close slide has 1 image, A1 has 0).
   - QA reports no automated problems; full suite passes; previews, PDF and preview page refreshed; not pushed.
 - **2026-11-08, programme controls before the equivalence test (structure review, proposal 1):** no new owner edits. Programme controls (now slide 9) were moved ahead of the equivalence test (now slide 10) in the live deck with `reorder-slide`, because the equivalence test screens the robustness-check coefficients. The agenda, slide 7 link chips, storyline numbers, figures (5 and 6) and register references "(slide 10)" were updated. The speaker notes now carry the transition: slide 8 → what survives controls → how small the rest are. QA reports no automated problems; previews, PDF and preview page refreshed; not pushed.
+- **2026-11-08, slide 11 gain by feature group (experiment E) and register rows for experiment A:** no new owner edits; slide 11 was rebuilt alone.
+  - **Experiment E (feature groups):**
+    - The register rows are generated from `reports/gain_breakdown/gain_breakdown.json`, the experiments thread's `src/gain_breakdown.py` output from the committed `benchmark.json`.
+    - Rows recorded: the nested linear stage gains per year (S → +form → +lexicon/specificity/sentiment → +TF-IDF) and text-only versus structure-only MAE.
+    - Slide 11 changes:
+      - the MAE pairs are shorter;
+      - a "Where the gain comes from¹" stacked bar per year sits below them, with a three-swatch legend, and the ¹ note says the stage gains depend on the nesting order;
+      - a fourth takeaway, "Word patterns carry most of it": TF-IDF is the largest stage in 4 of 5 years (2023 is led by form), and lexicon and sentiment add 0.003–0.055 days.
+    - The L block is labelled "Lexicon and sentiment", not "eight framing measures", because it also holds the specificity and sentiment measures.
+    - Marker 3 now sits on the "5 of 5" card.
+  - **Experiment A (period and loan-size interactions):** the family × period and × loan-size contrasts (against the reference levels, not within-group slopes) and their country-clustered p-values are now in the register. None is below 0.11. No slide uses them yet.
+  - QA reports no automated problems; previews, PDF and preview page refreshed; not pushed.
