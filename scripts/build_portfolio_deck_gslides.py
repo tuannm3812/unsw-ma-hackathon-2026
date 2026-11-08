@@ -1263,9 +1263,9 @@ def gains(page, slide, pos):
     """One chart: per year, the linear model and the larger tree, each with month (thick) and country (thin) ranges."""
     page.chrome(slide)
     ex = slide['exhibit']
-    years, pw, h = sorted(ex['linear']), R - L, 306
-    panel(page, L, TOP, pw, h, ex['title'], ex['guide'])
-    x0, x1, lo, hi = L + 50, L + pw - 58, -.22, 1.0
+    years, pw, h, aw = sorted(ex['linear']), R - L, 306, 396
+    panel(page, L, TOP, aw, h, ex['title'], ex['guide'])
+    x0, x1, lo, hi = L + 46, L + aw - 48, -.22, 1.0
     px = lambda value: x0 + (value - lo) / (hi - lo) * (x1 - x0)
     first, pitch, tier = TOP + 56, 50, 16
     axis = first + pitch * 5 - 12
@@ -1274,22 +1274,36 @@ def gains(page, slide, pos):
     for value, name in [(0, '0'), (.25, '0.25'), (.5, '0.5'), (.75, '0.75')]:
         page.line(px(value), axis, px(value), axis + 3, SLATE, .75)
         page.text(name, px(value) - 16, axis + 3, 32, 11, size=8, color=GREY, align='center')
-    page.text('days of MAE gain', x1 - 90, axis + 3, 90, 11, size=8, color=GREY, align='right')
+    page.text('Days', L + 10, axis + 3, 34, 11, size=8, color=GREY)
     for k, year in enumerate(years):
         y = first + k * pitch
         page.text(year, L + 10, y + tier / 2 - 7, 36, 14, size=9, color=GREY, middle=True)
         if k:
-            page.line(L + 10, y - 15, L + pw - 10, y - 15, HAIR, .5)
+            page.line(L + 10, y - 15, L + aw - 10, y - 15, HAIR, .5)
         for row, colour, source in ((0, NAVY, ex['linear'][year]), (1, VIOLET, ex['large_tree'][year])):
             cy = y + row * tier
             page.line(px(source['country'][0]), cy, px(source['country'][1]), cy, colour, .75)
             page.line(px(source['month'][0]), cy, px(source['month'][1]), cy, colour, 3.5)
             page.rect(px(source['gain']) - 3.5, cy - 3.5, 7, 7, colour, 'ELLIPSE')
             page.rect(px(source['gain']) - 2, cy - 2, 4, 4, WHITE, 'ELLIPSE')
-            page.text(f"{source['gain']:.3f}".replace('-', '−'), x1 + 8, cy - 6, 40, 12, size=8, bold=True, color=colour, align='right')
+            page.text(f"{source['gain']:.3f}".replace('-', '−'), x1 + 2, cy - 6, 38, 12, size=8, bold=True, color=colour, align='right')
     names = ex['legend']
     page.legend([(names[0], NAVY), (names[1], SLATE, 'BAR', 1), (names[2], VIOLET, 'RECTANGLE', 2), (names[3], SLATE, 'RULE', 3)],
-                TOP + h + 6, L, span=pw, gap=22)
+                TOP + h + 6, L, gap=14)
+    card = ex['scorecard']
+    cx, cw = L + aw + 10, pw - aw - 10
+    panel(page, cx, TOP, cw, h, card['title'], card['guide'])
+    left, right = cx + 12, cx + cw / 2 + 12
+    for c, label in zip((left, right), card['columns']):
+        page.text(label, c, TOP + 50, 80, 12, size=8, color=GREY, bold=True)
+    for r, (name, month, country) in enumerate(card['rows']):
+        y = TOP + 68 + r * 79
+        page.line(cx + 10, y - 3, cx + cw - 10, y - 3, HAIR, .5)
+        page.text(name, cx + 12, y + 1, cw - 22, 24, size=9, bold=True, spacing=100)
+        page.text(str(month), left, y + 28, 50, 34, size=26, bold=True)
+        page.text(str(country), right, y + 28, 50, 34, size=26, bold=True, color=VIOLET)
+        page.line(left + 30, y + 46, right - 6, y + 46, SLATE, .75)
+        page.ops[-1]['end_arrow'] = 'FILL_ARROW'
     page.caption(slide['figure'], ex['caption'], TOP + h + 24, w=pw)
     page.takeaways(slide['takeaways'], pos)
 

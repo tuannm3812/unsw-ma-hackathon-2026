@@ -2954,3 +2954,8 @@ unseen exact template, which cannot exclude near-duplicates.
 - Mike chose the two-range design. Live deck re-read first: no owner edits to mirror. Slide 15's three panels are now one chart with linear and larger-tree rows, thick month ranges and thin country ranges; the capped-forecast check stays in the speaker notes. `Page.legend` gained bar and rule marks. 0.75 added to QA's allowed axis ticks.
 - Slide 14 keeps its design and now shows each year's total at the bar end, which matches the benchmark at two decimals.
 - Verified: pyflakes, deck QA, rendered slides, full offline pytest. Slides 14 and 15 only were rebuilt; nothing pushed.
+
+## 2026-11-08: slide 15 scorecard
+
+- Mike asked for a narrower chart with more on the right. Live deck re-read first: no owner edits to mirror. The chart now takes two-thirds of the width beside a scorecard of years clearing zero by month and by country (linear 5 and 1, larger tree 3 and 1, loan-specific 4 and 2), checked against the saved summaries at edit time. Takeaways shortened.
+- Verified: pyflakes, deck QA, word-box overlap check, rendered slide 15, full offline pytest. Slide 15 only was rebuilt; nothing pushed.
