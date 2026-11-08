@@ -43,6 +43,8 @@ LOGO = ROOT / 'docs/presentation/poster/assets/unsw-official-logo.png'
 ASSETS = DECK / 'assets'
 MARKET = ASSETS / 'photos/unsplash-market-muhammad-taha-ibrahim.jpg'
 TAILOR = ASSETS / 'photos/unsplash-tailor-david-geneugelijk.jpg'
+HARVEST = ASSETS / 'photos/unsplash-harvest-richard-nyoni.jpg'
+VENDOR = ASSETS / 'photos/unsplash-vendor-ali-mkumbwa.jpg'
 # Photo frames (x, y, width, height). The large frames bleed off the right and bottom edges
 # and round only their visible top-left corner; the small cover frames round all four.
 COVER_FRAME = (652, 96, 308, 444)
@@ -377,11 +379,6 @@ def slide_by_id(slide_id: str) -> dict:
 def agenda(page, slide, urls):
     page.chrome(slide)
     colours = [(NAVY, WHITE), (VIOLET, WHITE), (SLATE, WHITE), (YELLOW, NAVY)]
-    contents = [[('Editable fields', 4), ('The outcome', 5), ('A slower market', 6)],
-                [('Four analyses', 7)],
-                [('Country uncertainty', 8), ('Programme controls', 9), ('Small or unknown', 10),
-                 ('Forecast gain', 11), ('Limits of the gain', 12)],
-                [('What is supported', 13), ('Three gates', 14)]]
     for i, part in enumerate(slide['parts']):
         x = [43.5, 267.5, 491.5, 715.5][i]
         fill, ink = colours[i]
@@ -389,7 +386,7 @@ def agenda(page, slide, urls):
         page.text(part['name'], x, 176, 200, 24, size=16, bold=True)
         page.text(part['question'], x, 204, 196, 36, size=12, color=GREY, spacing=110)
         page.line(x, 252, x + 200, 252, RULE, .75)
-        for j, (label, number) in enumerate(contents[i]):
+        for j, (label, number) in enumerate(part['items']):
             y = 262 + j * 28
             page.text(label, x, y + 1, 168, 16, size=10)
             chip = page.badge(str(number), x + 176, y, (24, 18), fill, ink, 8, 'ROUND_RECTANGLE')
@@ -683,6 +680,12 @@ def pipe_x(i):
 # share cells reuse that script's bins so one legend explains both.
 MAP_PANEL = (L, TOP + 166, R - 16 - L, 148)
 MAP_FRAME = (L + 10, TOP + 166 + 42, 250, 250 * 86 / 270)
+
+
+def map_frame(cy: float) -> tuple:
+    """Map image frame inside a country panel whose top is at cy."""
+    return (L + 10, cy + 42, 250, 250 * 86 / 270)
+
 MAP_PNG = ASSETS / 'maps/country_share_map.png'
 _MAP_SPEC = importlib.util.spec_from_file_location('build_country_map', ROOT / 'scripts/build_country_map.py')
 COUNTRY_MAP = importlib.util.module_from_spec(_MAP_SPEC)
@@ -759,11 +762,29 @@ def clustering(page, slide, pos):
     page.text('HC3', bx + 22, by + 142, 40, 12, size=8, color=GREY)
     page.rect(bx + 54, by + 144, 8, 8, VIOLET, 'ELLIPSE')
     page.text('country-clustered', bx + 66, by + 142, 120, 12, size=8, color=GREY)
-    # (c) map on the left, top-10 table on the right
     cx, cy, cw, ch = MAP_PANEL
-    panel(page, cx, cy, cw, ch, ex['panels'][2]['title'], ex['panels'][2]['guide'])
+    if ex.get('implication'):
+        imp = ex['implication']
+        panel(page, cx, cy, cw, ch, imp['title'], imp['guide'])
+        for k, line in enumerate(imp['lines']):
+            page.badge(str(k + 1), cx + 12, cy + 50 + 26 * k, (16, 16), VIOLET, WHITE, 8)
+            page.text(line, cx + 36, cy + 50 + 26 * k, cw - 50, 16, size=11)
+    else:
+        country_panel(page, ex, cx, cy, cw, ch, ex['panels'][2]['title'], ex['panels'][2]['guide'])
+    page.marker(1, ax + aw - 22, ay + 8)
+    page.marker(2, ax + 210, ay + 46)
+    page.marker(3, bx + bw - 22, by + 8)
+    page.marker(4, cx + cw - 22, cy + 8)
+    page.caption(slide['figure'], ex['caption'], cy + ch + 8, w=cw)
+    page.caption('¹', ex['note'], cy + ch + 22, w=cw)
+    page.takeaways(slide['takeaways'], pos)
+
+
+def country_panel(page, ex, cx, cy, cw, ch, title, guide):
+    """Map (image inserted later at map_frame(cy)) with a vertical legend, then the top-10 table."""
+    panel(page, cx, cy, cw, ch, title, guide)
     # Map (image inserted later at MAP_FRAME) with a compact vertical legend to its right.
-    mx, my, mw, mh = MAP_FRAME
+    mx, my, mw, mh = map_frame(cy)
     lx = mx + mw + 10
     page.text('Loan share', lx, my, 56, 12, size=8, color=GREY, bold=True)
     legend = [(colour, label) for (_, colour), label in zip(COUNTRY_MAP.BINS, COUNTRY_MAP.BIN_LABELS)]
@@ -794,12 +815,22 @@ def clustering(page, slide, pos):
                   bold=ink == WHITE, align='center')
         page.rect(tx + 206, y + 1.2, 32, 8, same_day_fill(item['same_day_share']))
         page.text(f"{item['same_day_share'] * 100:.0f}%", tx + 206, y + 0.4, 32, 12, size=8, align='center')
-    page.marker(1, ax + aw - 22, ay + 8)
-    page.marker(2, ax + 210, ay + 46)
-    page.marker(3, bx + bw - 22, by + 8)
-    page.marker(4, cx + cw - 22, cy + 8)
-    page.caption(slide['figure'], ex['caption'], cy + ch + 8, w=cw)
-    page.caption('¹', ex['note'], cy + ch + 22, w=cw)
+
+
+def where(page, slide, pos):
+    """Where loans sit: the country panel, then three key figures."""
+    page.chrome(slide)
+    ex = slide['exhibit']
+    cx, cy, cw, ch = L, TOP, R - 16 - L, 148
+    country_panel(page, ex, cx, cy, cw, ch, ex['panel']['title'], ex['panel']['guide'])
+    page.marker(1, cx + cw - 22, cy + 8)
+    figures = [{'value': '81%', 'label': 'of loans in ten of 48 countries'},
+               {'value': '92.8%', 'label': 'of loans in Asia and Africa'},
+               {'value': '15–67%', 'label': 'same-day share across the ten largest countries'}]
+    for k, (figure, bar) in enumerate(zip(figures, [NAVY, NAVY, VIOLET])):
+        key_card(page, figure, L + k * 200, cy + ch + 16, 190, 100, bar, 26)
+    page.marker(2, L + 2 * 200 + 190 - 22, cy + ch + 26)
+    page.caption(slide['figure'], ex['caption'], cy + ch + 130, w=cw)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -1167,8 +1198,8 @@ def problem(page, slide, pos):
     page.chrome(slide)
     ex = slide['exhibit']
     for i, (figure, bar) in enumerate(zip(ex['cards'], [NAVY, VIOLET])):
-        key_card(page, figure, L + i * 306, TOP, 294, 92, bar, 26)
-        page.marker(i + 1, L + i * 306 + 294 - 22, TOP + 10)
+        key_card(page, figure, L + i * 208, TOP, 198, 92, bar, 26)
+        page.marker(i + 1, L + i * 208 + 198 - 22, TOP + 10)
     ty = TOP + 108
     page.text(ex['period_title'], L, ty, 400, 13, size=9, bold=True)
     base, per, bar, step = ty + 196, 3.6, 120, 196
@@ -1184,7 +1215,10 @@ def problem(page, slide, pos):
     page.takeaways(slide['takeaways'], pos)
 
 
-INSIGHT_CARDS = [(L + i * 298, TOP, 279, 236) for i in range(3)]
+INSIGHT_CARDS = [(L + i * 245, TOP, 233, 236) for i in range(3)]
+INSIGHT_PHOTO = (L + 735, TOP, FULL - L - 735, 236)
+PROBLEM_PHOTO = (L + 416, TOP, R - 6 - L - 416, 92)
+PRIORITISE_PHOTO = (L + 600, TOP + 162, FULL - L - 600, 88)
 
 
 def insight(page, slide, urls):
@@ -1256,12 +1290,12 @@ def prioritise(page, slide, urls):
         card(page, x, y, w, h, NAVY)
         page.text(lever['name'], x + 44, y + 16, w - 60, 18, size=14, bold=True)
         page.text(lever['text'], x + 16, y + 50, w - 32, 50, size=11, color=GREY, spacing=115)
-    dx, dy, dw, dh = L + 600, TOP, FULL - L - 600, 250
+    dx, dy, dw, dh = L + 600, TOP, FULL - L - 600, 152
     dont = slide['dont']
     card(page, dx, dy, dw, dh, VIOLET)
     page.text(dont['heading'], dx + 16, dy + 16, dw - 32, 18, size=13, color=VIOLET, bold=True)
     page.text(dont['figure'], dx + 16, dy + 46, dw - 32, 44, size=36, bold=True)
-    page.text(dont['text'], dx + 16, dy + 104, dw - 32, 100, size=11, color=GREY, spacing=115)
+    page.text(dont['text'], dx + 16, dy + 92, dw - 60, 56, size=10, color=GREY, spacing=110)
     chip_link(page, dont['slide'], dx + dw - 44, dy + dh - 28, VIOLET, urls)
     page.text(slide['note'], L, TOP + 268, FULL - L, 14, size=10, color=SLATE, bold=True,
               spans=[(0, len('Scope:'), {'bold': True})])
@@ -1293,22 +1327,14 @@ def text_adds(page, slide, pos):
         lx += 13 + 4.2 * len(label) + 16
     page.marker(2, lx - 10, ly + 0.5)
     y0 = TOP + ah + gap
-    lo, hi = -.2, .9
-    px = lambda v: L + 50 + (v - lo) * (pw - 80) / (hi - lo)
-    page.line(px(0), y0 + 40, px(0), y0 + 40 + 5 * 18, NAVY, .75)
-    for k, year in enumerate(sorted(ex['linear'])):
-        ry = y0 + 46 + 18 * k
-        page.text(year, L + 10, ry - 3, 34, 12, size=8, color=GREY)
-        v = ex['linear'][year]
-        for off, key, colour in [(0, 'month', NAVY), (6, 'country', VIOLET)]:
-            low, high = v[key]
-            page.line(px(low), ry + off, px(high), ry + off, colour, 2)
-            page.rect(px(v['gain']) - 2.5, ry + off - 2.5, 5, 5, colour, 'ELLIPSE')
-    for value in (0, .25, .5):
-        page.line(px(value), y0 + 40 + 5 * 18, px(value), y0 + 43 + 5 * 18, RULE, .75)
-        page.text(f'{value:.2f}'.rstrip('0').rstrip('.') if value else '0', px(value) - 16, y0 + 43 + 5 * 18, 32,
-                  11, size=8, color=GREY, align='center')
-    page.text('days of MAE gain', px(.9) - 80, y0 + 43 + 5 * 18, 80, 11, size=8, color=GREY, align='right')
+    # (b) extra error from text alone versus loan structure alone, per year
+    per = 330
+    for k, (year, worse) in enumerate(ex['text_only']):
+        ry = y0 + 44 + 18 * k
+        page.text(str(year), L + 10, ry, 34, 12, size=8, color=GREY)
+        page.rect(L + 50, ry + 1.5, worse * per, 9, VIOLET)
+        page.text(f'+{worse:.3f} days', L + 50 + worse * per + 4, ry, 70, 12, size=8, color=VIOLET, bold=True)
+    page.line(L + 50, y0 + 40, L + 50, y0 + 44 + 18 * 5, NAVY, .75)
     page.caption(slide['figure'], ex['caption'], TOP + ah + gap + bh + 8)
     page.caption('¹', ex['note_sup'], TOP + ah + gap + bh + 21)
     page.takeaways(slide['takeaways'], pos)
@@ -1536,11 +1562,11 @@ def main() -> None:
             for i, s in enumerate(slides)}
     # Link targets accept a storyline number as int or text, including appendix labels such as 'A2'.
     urls.update({str(slide['n']): urls[i + 1] for i, slide in enumerate(story)})
-    builders = {'summary': summary, 'problem': problem, 'text_adds': text_adds,
+    builders = {'summary': summary, 'problem': problem, 'text_adds': text_adds, 'where': where,
                 'clustering': clustering, 'equivalence': forest, 'regions': regions, 'a_screen': regions,
                 'persist': persist, 'forecast': forecast, 'gain_uncertainty': gains}
     linked = {'approach': approach, 'gates': gates, 'solution': gates, 'supports': supports,
-              'insight': insight, 'prioritise': prioritise}
+              'insight': insight, 'prioritise': prioritise, 'agenda': agenda}
     plain = {'triage': triage, 'roadmap': roadmap,
              'a_asof': a_table, 'a_primary': a_metrics, 'a_topics': a_topics, 'cover': cover, 'close': close}
     for index, (slide, item) in enumerate(zip(story, slides)):
@@ -1556,6 +1582,8 @@ def main() -> None:
             linked[slide['id']](page, slide, urls)
         else:
             plain[slide['id']](page, slide)
+        if slide.get('solution_link'):
+            page.text(slide['solution_link'], 684, 452, 235, 22, size=10, color=VIOLET, bold=True, spacing=105)
         notes_id = next(e['objectId'] for e in item['slideProperties']['notesPage']['pageElements']
                         if e.get('shape', {}).get('placeholder', {}).get('type') == 'BODY')
         add_notes(page, slide, notes_id)
@@ -1564,8 +1592,13 @@ def main() -> None:
     # Images last so they sit above the accent blocks.
     with tempfile.TemporaryDirectory() as work:
         at = {slide['id']: k for k, slide in enumerate(story)}
-        images = [(at['cover'], framed_photo(Path(work), PHOTO, COVER_FRAME, 'cover.png'), COVER_FRAME),
-                  (at['close'], framed_photo(Path(work), MARKET, CLOSE_FRAME, 'close.png'), CLOSE_FRAME)]
+        images = [(at['cover'], framed_photo(Path(work), HARVEST, COVER_FRAME, 'cover.png'), COVER_FRAME),
+                  (at['close'], framed_photo(Path(work), VENDOR, CLOSE_FRAME, 'close.png'), CLOSE_FRAME)]
+        for sid, frame in [('problem', PROBLEM_PHOTO), ('insight', INSIGHT_PHOTO), ('prioritise', PRIORITISE_PHOTO)]:
+            images.append((at[sid], framed_photo(Path(work), ASSETS / 'photos' / slide_by_id(sid)['photo'], frame,
+                                                 f'{sid}.png', all_corners=True), frame))
+        if 'where' in at:
+            images.append((at['where'], MAP_PNG, map_frame(TOP)))
         images += [(at['cover'], framed_photo(Path(work), path, frame, f'small-{i}.png', all_corners=True), frame)
                    for i, (path, frame) in enumerate(COVER_SMALL)]
         # Logo: UNSW host mark on white, 330 x 140 px source at its own proportions.
@@ -1573,7 +1606,6 @@ def main() -> None:
         for i, step in enumerate(slide_by_id('approach')['exhibit']['steps']):
             images.append((at['approach'], ASSETS / 'icons' / step['icon'], (pipe_x(i) + 8, 172 + 5, 20, 20)))
         images.append((at['approach'], ASSETS / 'icons/table_rows-navy.png', (L + 14, TOP + 5, 18, 18)))
-        images.append((at['clustering'], MAP_PNG, MAP_FRAME))
         for x, icon in zip(GATE_X, GATE_ICONS):
             images.append((at['gates'], ASSETS / 'icons' / icon, (x + 262 - 72, 136 + 18, 20, 20)))
         for x, icon in zip(GATE_X, SOLUTION_ICONS):

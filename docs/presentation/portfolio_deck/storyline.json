@@ -22,7 +22,7 @@
       "notes": {
         "purpose": "Introduce the question and who we are.",
         "script": "We are Cultural Blend, one of eight finalist teams in the UNSW Marketing Analytics Hackathon. We analysed 1.45 million Kiva loans to ask whether the way a borrower's story is written is linked to how fast the loan funds.",
-        "reference": "Portfolio edition, November 2026. Official results: unsw.edu.au MA-hackathon page (reviewed 2026-10-24). Photo: Kiva farmer photograph, credit Kiva, hosted on kiva.org; provenance in docs/presentation/poster/README.md. It gives context and does not identify a record in the dataset. Unsplash photos: Muhammad-Taha Ibrahim (market) and David Geneugelijk (tailor), Unsplash Licence; see docs/presentation/portfolio_deck/assets/photos/PROVENANCE.md."
+        "reference": "Photos (Unsplash Licence): cover, Richard Nyoni (woman harvesting greens); Muhammad-Taha Ibrahim (banana seller); David Geneugelijk (tailor)."
       },
       "names": "Mike Nguyen and Sophia Nguyen",
       "team": "Team Cultural Blend",
@@ -73,6 +73,112 @@
     },
     {
       "n": 3,
+      "id": "agenda",
+      "section": "Agenda",
+      "layout": "agenda",
+      "title": "Agenda",
+      "parts": [
+        {
+          "n": "01",
+          "name": "The problem",
+          "question": "Who waits, and where?",
+          "pages": "4–5",
+          "items": [
+            [
+              "The wait",
+              4
+            ],
+            [
+              "Where loans and delays sit",
+              5
+            ]
+          ]
+        },
+        {
+          "n": "02",
+          "name": "What drives the wait",
+          "question": "What does the evidence show?",
+          "pages": "6–12",
+          "items": [
+            [
+              "Key insight",
+              6
+            ],
+            [
+              "Four analyses",
+              7
+            ],
+            [
+              "Country uncertainty",
+              8
+            ],
+            [
+              "Programme controls",
+              9
+            ],
+            [
+              "Why not rewrite stories",
+              10
+            ],
+            [
+              "What text adds",
+              11
+            ],
+            [
+              "Fragile across countries",
+              12
+            ]
+          ]
+        },
+        {
+          "n": "03",
+          "name": "Our solution",
+          "question": "What can Kiva do now?",
+          "pages": "13–16",
+          "items": [
+            [
+              "Predict, prioritise, test",
+              13
+            ],
+            [
+              "Predict",
+              14
+            ],
+            [
+              "Prioritise",
+              15
+            ],
+            [
+              "Test",
+              16
+            ]
+          ]
+        },
+        {
+          "n": "04",
+          "name": "Safe next steps",
+          "question": "What keeps it honest, and what comes next?",
+          "pages": "17–18",
+          "items": [
+            [
+              "Guardrails",
+              17
+            ],
+            [
+              "Roadmap",
+              18
+            ]
+          ]
+        }
+      ],
+      "notes": {
+        "purpose": "Orient the reader.",
+        "script": "Four parts: the problem, what drives the wait, our solution, and how to take it forward safely."
+      },
+      "hide_label": true
+    },
+    {
+      "n": 4,
       "id": "problem",
       "section": "Problem",
       "sublabel": "Who waits",
@@ -128,13 +234,404 @@
       "notes": {
         "purpose": "Define the problem in lender-time terms.",
         "script": "The median completed loan is fully funded in 2.85 days, but the slowest quarter wait more than 15.95 days. Same-day funding fell from 46.0 percent before the pandemic to 30.3 percent during it, and stayed near 30.0 percent afterwards. Only completed loans are in the data, so loans that never funded are not counted.",
-        "reference": "Funding duration and period shares: claims register (features.pkl; notebooks/1_full_dataset_eda.py period trend)."
-      }
+        "reference": "Funding duration and period shares: claims register (features.pkl; notebooks/1_full_dataset_eda.py period trend). Photo: Ali Mkumbwa (shop owner) on Unsplash (Unsplash Licence)."
+      },
+      "photo": "unsplash-shop-ali-mkumbwa.jpg"
     },
     {
-      "n": 4,
-      "id": "insight",
+      "n": 5,
+      "id": "where",
       "section": "Problem",
+      "sublabel": "Where loans sit",
+      "layout": "content+takeaways",
+      "title": "Ten countries hold 81% of loans, and same-day funding varies widely",
+      "subtitle": "Descriptive: share of all loans and of loans funded within 24 hours, by country and Kiva region",
+      "exhibit": {
+        "country_names": {
+          "PH": "Philippines",
+          "KE": "Kenya",
+          "UG": "Uganda",
+          "TJ": "Tajikistan",
+          "KH": "Cambodia",
+          "MG": "Madagascar",
+          "PK": "Pakistan",
+          "NI": "Nicaragua",
+          "LR": "Liberia",
+          "TG": "Togo"
+        },
+        "country_shares": [
+          {
+            "country": "PH",
+            "loans": 521586,
+            "share": 0.3588,
+            "same_day_share": 0.4795,
+            "region": "Asia"
+          },
+          {
+            "country": "KE",
+            "loans": 266562,
+            "share": 0.1834,
+            "same_day_share": 0.2916,
+            "region": "Africa"
+          },
+          {
+            "country": "UG",
+            "loans": 69651,
+            "share": 0.0479,
+            "same_day_share": 0.3108,
+            "region": "Africa"
+          },
+          {
+            "country": "TJ",
+            "loans": 68865,
+            "share": 0.0474,
+            "same_day_share": 0.1814,
+            "region": "Asia"
+          },
+          {
+            "country": "KH",
+            "loans": 58074,
+            "share": 0.0399,
+            "same_day_share": 0.4853,
+            "region": "Asia"
+          },
+          {
+            "country": "MG",
+            "loans": 55670,
+            "share": 0.0383,
+            "same_day_share": 0.67,
+            "region": "Africa"
+          },
+          {
+            "country": "PK",
+            "loans": 42767,
+            "share": 0.0294,
+            "same_day_share": 0.1498,
+            "region": "Asia"
+          },
+          {
+            "country": "NI",
+            "loans": 38520,
+            "share": 0.0265,
+            "same_day_share": 0.1521,
+            "region": "Central America"
+          },
+          {
+            "country": "LR",
+            "loans": 28847,
+            "share": 0.0198,
+            "same_day_share": 0.2835,
+            "region": "Africa"
+          },
+          {
+            "country": "TG",
+            "loans": 27513,
+            "share": 0.0189,
+            "same_day_share": 0.3783,
+            "region": "Africa"
+          },
+          {
+            "country": "SN",
+            "loans": 21420,
+            "share": 0.0147,
+            "same_day_share": 0.0716,
+            "region": "Africa"
+          },
+          {
+            "country": "HN",
+            "loans": 20871,
+            "share": 0.0144,
+            "same_day_share": 0.1731,
+            "region": "Central America"
+          },
+          {
+            "country": "KG",
+            "loans": 20530,
+            "share": 0.0141,
+            "same_day_share": 0.1263,
+            "region": "Asia"
+          },
+          {
+            "country": "IN",
+            "loans": 20397,
+            "share": 0.014,
+            "same_day_share": 0.4414,
+            "region": "Asia"
+          },
+          {
+            "country": "SL",
+            "loans": 19408,
+            "share": 0.0133,
+            "same_day_share": 0.3436,
+            "region": "Africa"
+          },
+          {
+            "country": "RW",
+            "loans": 18395,
+            "share": 0.0127,
+            "same_day_share": 0.1859,
+            "region": "Africa"
+          },
+          {
+            "country": "PS",
+            "loans": 14500,
+            "share": 0.01,
+            "same_day_share": 0.1693,
+            "region": "Middle East"
+          },
+          {
+            "country": "NG",
+            "loans": 14320,
+            "share": 0.0098,
+            "same_day_share": 0.3359,
+            "region": "Africa"
+          },
+          {
+            "country": "GH",
+            "loans": 14193,
+            "share": 0.0098,
+            "same_day_share": 0.354,
+            "region": "Africa"
+          },
+          {
+            "country": "CD",
+            "loans": 11151,
+            "share": 0.0077,
+            "same_day_share": 0.2061,
+            "region": "Africa"
+          },
+          {
+            "country": "BF",
+            "loans": 10660,
+            "share": 0.0073,
+            "same_day_share": 0.2726,
+            "region": "Africa"
+          },
+          {
+            "country": "TZ",
+            "loans": 10621,
+            "share": 0.0073,
+            "same_day_share": 0.328,
+            "region": "Africa"
+          },
+          {
+            "country": "TL",
+            "loans": 10401,
+            "share": 0.0072,
+            "same_day_share": 0.1515,
+            "region": "Oceania"
+          },
+          {
+            "country": "MZ",
+            "loans": 8066,
+            "share": 0.0055,
+            "same_day_share": 0.1494,
+            "region": "Africa"
+          },
+          {
+            "country": "SB",
+            "loans": 7924,
+            "share": 0.0055,
+            "same_day_share": 0.1114,
+            "region": "Oceania"
+          },
+          {
+            "country": "HT",
+            "loans": 7559,
+            "share": 0.0052,
+            "same_day_share": 0.4702,
+            "region": "North America"
+          },
+          {
+            "country": "EG",
+            "loans": 7398,
+            "share": 0.0051,
+            "same_day_share": 0.1694,
+            "region": "Africa"
+          },
+          {
+            "country": "ZW",
+            "loans": 6380,
+            "share": 0.0044,
+            "same_day_share": 0.3044,
+            "region": "Africa"
+          },
+          {
+            "country": "LS",
+            "loans": 4910,
+            "share": 0.0034,
+            "same_day_share": 0.9222,
+            "region": "Africa"
+          },
+          {
+            "country": "ML",
+            "loans": 4281,
+            "share": 0.0029,
+            "same_day_share": 0.1972,
+            "region": "Africa"
+          },
+          {
+            "country": "VU",
+            "loans": 4018,
+            "share": 0.0028,
+            "same_day_share": 0.2093,
+            "region": "Oceania"
+          },
+          {
+            "country": "CM",
+            "loans": 3670,
+            "share": 0.0025,
+            "same_day_share": 0.2932,
+            "region": "Africa"
+          },
+          {
+            "country": "MW",
+            "loans": 3294,
+            "share": 0.0023,
+            "same_day_share": 0.5965,
+            "region": "Africa"
+          },
+          {
+            "country": "ZM",
+            "loans": 3157,
+            "share": 0.0022,
+            "same_day_share": 0.6484,
+            "region": "Africa"
+          },
+          {
+            "country": "MM",
+            "loans": 3146,
+            "share": 0.0022,
+            "same_day_share": 0.1144,
+            "region": "Asia"
+          },
+          {
+            "country": "NP",
+            "loans": 1276,
+            "share": 0.0009,
+            "same_day_share": 0.9882,
+            "region": "Asia"
+          },
+          {
+            "country": "LA",
+            "loans": 1121,
+            "share": 0.0008,
+            "same_day_share": 0.6646,
+            "region": "Asia"
+          },
+          {
+            "country": "PG",
+            "loans": 1042,
+            "share": 0.0007,
+            "same_day_share": 0.8925,
+            "region": "Oceania"
+          },
+          {
+            "country": "CI",
+            "loans": 595,
+            "share": 0.0004,
+            "same_day_share": 0.1008,
+            "region": "Africa"
+          },
+          {
+            "country": "YE",
+            "loans": 446,
+            "share": 0.0003,
+            "same_day_share": 0.6345,
+            "region": "Middle East"
+          },
+          {
+            "country": "UZ",
+            "loans": 389,
+            "share": 0.0003,
+            "same_day_share": 0.2314,
+            "region": "Asia"
+          },
+          {
+            "country": "BI",
+            "loans": 190,
+            "share": 0.0001,
+            "same_day_share": 0.0789,
+            "region": "Africa"
+          },
+          {
+            "country": "BD",
+            "loans": 39,
+            "share": 0.0,
+            "same_day_share": 0.6667,
+            "region": "Asia"
+          },
+          {
+            "country": "SO",
+            "loans": 10,
+            "share": 0.0,
+            "same_day_share": 0.2,
+            "region": "Africa"
+          },
+          {
+            "country": "BJ",
+            "loans": 3,
+            "share": 0.0,
+            "same_day_share": 0.0,
+            "region": "Africa"
+          },
+          {
+            "country": "SS",
+            "loans": 2,
+            "share": 0.0,
+            "same_day_share": 0.0,
+            "region": "Africa"
+          },
+          {
+            "country": "AF",
+            "loans": 1,
+            "share": 0.0,
+            "same_day_share": 1.0,
+            "region": "Asia"
+          },
+          {
+            "country": "NE",
+            "loans": 1,
+            "share": 0.0,
+            "same_day_share": 0.0,
+            "region": "Africa"
+          }
+        ],
+        "panel": {
+          "title": "Where the loans are",
+          "guide": "Ten of 48 countries hold 81% of loans (outlined on the map); table share cells use the map's colour scale."
+        },
+        "caption": "Share of all loans by country (map and table) and share funded within 24 hours (table); Kiva regions."
+      },
+      "takeaways": [
+        {
+          "marker": 1,
+          "heading": "A few countries dominate",
+          "text": "Ten of 48 countries hold **81% of loans**; Asia and Africa hold **92.8%**."
+        },
+        {
+          "marker": 2,
+          "heading": "Same-day funding differs by country",
+          "text": "It ranges from **15% in Pakistan to 67% in Madagascar** among the ten largest."
+        },
+        {
+          "marker": 3,
+          "heading": "So results must hold by country",
+          "text": "Any flag or advice has to be checked **country by country**, not only on average."
+        }
+      ],
+      "solution_link": "→ Why the flag is validated country by country",
+      "notes": {
+        "purpose": "Where the loans and the delays are.",
+        "script": "Ten of 48 countries hold 81 percent of loans, and Asia and Africa together hold 92.8 percent. Same-day funding differs widely, from 15 percent in Pakistan to 67 percent in Madagascar among the ten largest. That is why every result, and later the slow-funding flag, has to be checked country by country.",
+        "reference": "reports/evidence_sources/country_shares.json (src/country_shares.py); map: scripts/build_country_map.py."
+      },
+      "figure": "Figure 2."
+    },
+    {
+      "n": 6,
+      "id": "insight",
+      "section": "Evidence",
       "sublabel": "Key insight",
       "layout": "three_cards",
       "title": "Slow funding is a lender-side delay that loan details predict, not wording",
@@ -145,21 +642,21 @@
           "heading": "Lenders, not borrowers, wait",
           "figure": "96.4%",
           "text": "of loans reach the borrower before listing, a median 24.2 days earlier; listing time replenishes partner capital.",
-          "slide": 11
+          "slide": 17
         },
         {
           "icon": "target-navy.png",
           "heading": "Loan details predict who waits",
           "figure": "2.6–4.0×",
           "text": "better than chance: a boosted tree on loan structure flags the slowest fifth of loans.",
-          "slide": 6
+          "slide": 14
         },
         {
           "icon": "description-violet.png",
           "heading": "Wording barely moves it",
           "figure": "±5%",
           "text": "five framings stay within ±5% of funding time, and text adds little to the flag.",
-          "slide": 9
+          "slide": 10
         }
       ],
       "band": "So the lever is helping slow loans find lenders, not rewriting their stories.",
@@ -167,681 +664,14 @@
       "notes": {
         "purpose": "The insight that turns analysis into a solution.",
         "script": "Three findings point the same way. First, borrowers usually already have the money: 96.4 percent of loans are disbursed before listing, a median 24.2 days earlier, so platform time is about replenishing partner capital. Second, loan details predict which loans will be slow: a boosted tree on structure flags the slowest fifth 2.6 to 4.0 times better than chance. Third, wording barely moves funding time. So the lever is lender-side support for loans likely to be slow. For whom and when is still open, with subgroup results pending.",
-        "reference": "docs/1_data_dictionary.md (disbursalDate); reports/evidence_sources/triage_summary.json; equivalence screen."
-      }
-    },
-    {
-      "n": 5,
-      "id": "solution",
-      "section": "Solution",
-      "layout": "three_steps",
-      "title": "Our solution: predict slow loans, prioritise support, test before advising",
-      "subtitle": "A three-step framework for Kiva and partners, built only on what the evidence supports",
-      "steps": [
-        {
-          "n": "01",
-          "name": "Predict",
-          "slide": 6,
-          "rows": [
-            [
-              "What",
-              "Score each listing’s risk of slow funding when it is posted."
-            ],
-            [
-              "How",
-              "A boosted tree on loan structure; text adds little to this score."
-            ],
-            [
-              "Evidence",
-              "Flags the slowest fifth of loans 2.6–4.0× better than chance."
-            ]
-          ]
-        },
-        {
-          "n": "02",
-          "name": "Prioritise",
-          "slide": 7,
-          "rows": [
-            [
-              "What",
-              "Send lender-side support to flagged loans."
-            ],
-            [
-              "How",
-              "Featuring, matching funds, lender alerts and partner follow-up."
-            ],
-            [
-              "Evidence",
-              "Framing links stay within ±5%, so don’t chase framing tweaks."
-            ]
-          ]
-        },
-        {
-          "n": "03",
-          "name": "Test",
-          "slide": 8,
-          "rows": [
-            [
-              "What",
-              "Earn the right to give writing advice."
-            ],
-            [
-              "How",
-              "Pass three gates before any advice."
-            ],
-            [
-              "Evidence",
-              "No edit to a description has been tested yet."
-            ]
-          ]
-        }
-      ],
-      "notes": {
-        "purpose": "Turn the evidence into a framework Kiva can act on.",
-        "script": "Three steps. Predict: at posting time, score each listing’s risk of slow funding. In a retrospective check on the November benchmark, a boosted tree using loan structure flags the slowest fifth of loans 2.6 to 4.0 times better than chance; adding text barely changes it. Prioritise: send lender-side support, such as featuring, matching funds, lender alerts and partner follow-up, to the flagged loans, and do not chase framing tweaks, because framing links stay within five percent of funding time. Test: before any writing advice, pass three gates: validate the measures, close the data gaps, and pilot one truthful clarity prompt against a control. Later, a data partnership with listing-time text and unfunded listings would let us answer for whom and when properly. If a gate fails, stop there and report the uncertainty.",
-        "reference": "reports/evidence_sources/triage_summary.json (src/triage_summary.py, from reports/triage_value/triage_value.json); docs/6_matched_text_results.md."
+        "reference": "docs/1_data_dictionary.md (disbursalDate); reports/evidence_sources/triage_summary.json; equivalence screen. Photo: Muhammad-Taha Ibrahim (shop owner, Abuja) on Unsplash (Unsplash Licence)."
       },
-      "sublabel": "Overview",
-      "stop": "Writing advice waits until a tested pilot shows it helps."
-    },
-    {
-      "n": 6,
-      "id": "triage",
-      "section": "Solution",
-      "sublabel": "Step 1: Predict",
-      "layout": "concept",
-      "title": "A slow-funding flag at listing could direct support where it is needed",
-      "subtitle": "Concept to pilot: an early-warning card built on the forecast benchmark’s retrospective predictions",
-      "exhibit": {
-        "tag": "Concept to pilot",
-        "listing": "Agriculture · US$325 · 12-month term",
-        "listing_note": "Illustrative listing, not a real borrower",
-        "flag": "Flag: likely slow to fund",
-        "same_day": "Chance of same-day funding: low",
-        "support_title": "Suggested support",
-        "support": [
-          "Feature it to lenders",
-          "Offer matching funds",
-          "Alert lenders who follow the sector",
-          "Ask the partner to review it"
-        ],
-        "headline": "2.6–4.0×",
-        "headline_label": "better than chance at catching the slowest fifth of loans, flagging the top 10% of predicted-slow loans",
-        "lift": [
-          [
-            2021,
-            2.63
-          ],
-          [
-            2022,
-            3.36
-          ],
-          [
-            2023,
-            3.48
-          ],
-          [
-            2024,
-            4.04
-          ],
-          [
-            2025,
-            3.67
-          ]
-        ],
-        "text_line": "Text adds little: the tree’s precision changes by −0.003 to +0.005.",
-        "country_line": "Uneven across countries: within the 10 largest, precision ranges 0.18–0.90.",
-        "auc_line": "The primary 24-hour model ranks same-day funding with ROC AUC 0.8997 on later loans.",
-        "caption": "Lift when flagging the top 10% of predicted-slow loans, against the slowest 20% of each test year; boosted tree, loan structure only.",
-        "scope": "Scope: tested only on loans that eventually funded; a retrospective evaluation, not a deployment test; a flag shows a loan is likely slow, not why. Probabilities need recalibration before use as thresholds."
-      },
-      "notes": {
-        "purpose": "Show what acting on the evidence could look like, without overclaiming.",
-        "script": "This is a concept to pilot, not a product. When a loan is posted, a model scores its risk of slow funding from its structure: amount, term, sector, country and timing. Flagged loans get lender-side support. In a retrospective check on 2021 to 2025, flagging the top ten percent of predicted-slow loans caught the slowest fifth 2.6 to 4.0 times better than chance with a boosted tree; adding text barely changed it. Results are uneven across countries, the check only covers loans that eventually funded, and the predicted probabilities drift in 2025, so they need recalibrating before use as thresholds. A flag says a loan is likely slow, not why.",
-        "reference": "reports/evidence_sources/triage_summary.json (src/triage_summary.py); reports/triage_value/triage_value.json (src/triage_value.py); appendix A3 for the 24-hour AUC. Listing values: slide 4 illustrative composite."
-      },
-      "figure": "Figure 2."
+      "photo": "unsplash-shop-abuja-muhammad-taha-ibrahim.jpg"
     },
     {
       "n": 7,
-      "id": "prioritise",
-      "section": "Solution",
-      "sublabel": "Step 2: Prioritise",
-      "layout": "levers",
-      "title": "Send lender-side support to flagged loans, not story edits",
-      "subtitle": "Proposed levers for Kiva and partners; their effect on speed is to be tested, not yet measured",
-      "levers": [
-        {
-          "icon": "storefront-navy.png",
-          "name": "Feature it",
-          "text": "Show flagged loans to lenders early on the lending page."
-        },
-        {
-          "icon": "payments-navy.png",
-          "name": "Match it",
-          "text": "Offer matching funds where a loan is likely to stall."
-        },
-        {
-          "icon": "groups-navy.png",
-          "name": "Alert lenders",
-          "text": "Notify lenders who follow the loan’s sector or country."
-        },
-        {
-          "icon": "fact_check-navy.png",
-          "name": "Follow up",
-          "text": "Ask the field partner to check the listing is complete and clear."
-        }
-      ],
-      "dont": {
-        "heading": "Don’t chase framing tweaks",
-        "figure": "±5%",
-        "text": "Five framings stay within ±5% of funding time, about 4.5–4.7 hours on a typical loan, and text adds little to the flag.",
-        "slide": 9
-      },
-      "note": "Scope: the levers are proposals; our data do not measure their effect, so each needs a controlled pilot.",
-      "notes": {
-        "purpose": "What to do with a flag.",
-        "script": "A flag only helps if something happens next. We propose four lender-side levers: feature flagged loans early, offer matching funds where a loan is likely to stall, alert lenders who follow the sector or country, and ask the partner to check the listing is complete. Our data do not measure what these levers do, so each needs a pilot. What we can say is where not to spend effort: framing tweaks, because five framings stay within five percent of funding time, about four and a half hours on a typical loan.",
-        "reference": "Equivalence screen; reports/evidence_sources/bound_ladder.json."
-      }
-    },
-    {
-      "n": 8,
-      "id": "gates",
-      "section": "Solution",
-      "layout": "three_steps",
-      "title": "Test before advising: three gates before any writing advice",
-      "subtitle": "Proposed next research for Kiva and participating partners; each gate must pass before the next",
-      "steps": [
-        {
-          "n": "01",
-          "name": "Validate the measures",
-          "slide": 9,
-          "question": "Do our word counts capture clarity, need and agency?",
-          "do": "Build a small codebook; two people code the same narratives and resolve disagreements.",
-          "done": "Definitions are frozen before later periods are checked."
-        },
-        {
-          "n": "02",
-          "name": "Close the data gaps",
-          "slide": 11,
-          "question": "What did lenders see, and which listings never funded?",
-          "do": "Get original texts, partner identifiers, exposure data and expired listings.",
-          "done": "Unfunded listings and listing-time text are in the data."
-        },
-        {
-          "n": "03",
-          "name": "Pilot one prompt",
-          "slide": 12,
-          "question": "Does editing a description change funding speed?",
-          "do": "With partners, test one truthful clarity prompt against a control.",
-          "done": "Threshold, power and guardrails are agreed in advance."
-        }
-      ],
-      "notes": {
-        "purpose": "End on a decision path.",
-        "script": "Before anyone tells borrowers how to write, three things need to happen, in order. First, check that our word counts measure what we think. Second, get the data we are missing: what lenders saw and the listings that never funded. Third, test one truthful prompt with partners. [Point: Each gate unlocks a stronger claim] Each gate lets us say a little more, from associations today to a tested effect of editing. If a gate fails, we stop and report the uncertainty.",
-        "reference": "docs/6_matched_text_results.md, What to do next; docs/4_research_review.md."
-      },
-      "sublabel": "Step 3: Test",
-      "ladder": {
-        "title": "Each gate unlocks a stronger claim",
-        "steps": [
-          [
-            "Today",
-            "Associations and forecast information"
-          ],
-          [
-            "After gate 1",
-            "Measures that mean what we say"
-          ],
-          [
-            "After gate 2",
-            "Results for every listing, not only funded ones"
-          ],
-          [
-            "After gate 3",
-            "A tested effect of editing"
-          ]
-        ],
-        "stop": "If a gate fails, stop there: report the uncertainty and give no writing advice."
-      }
-    },
-    {
-      "n": 9,
-      "id": "equivalence",
-      "section": "Evidence",
-      "layout": "content+takeaways",
-      "title": "Five framings have small links to funding time; urgency remains unknown",
-      "subtitle": "Equivalence test of the robustness-check coefficients; exploratory, bound set after the estimates",
-      "exhibit": {
-        "type": "forest",
-        "unit": "change in log(1 + days) per extra mention per 100 words, 90% interval, expanded specification",
-        "bound_band": [
-          -0.05,
-          0.05
-        ],
-        "rows": [
-          {
-            "term": "agency",
-            "estimate": 0.0042,
-            "ci90_low": -0.0028,
-            "ci90_high": 0.0112,
-            "status_both_specs": "bounded",
-            "no_mention": 0.4587,
-            "tightest_bound": 0.02
-          },
-          {
-            "term": "basic needs",
-            "estimate": 0.0021,
-            "ci90_low": -0.019,
-            "ci90_high": 0.0233,
-            "status_both_specs": "bounded",
-            "no_mention": 0.767,
-            "tightest_bound": 0.05
-          },
-          {
-            "term": "business",
-            "estimate": 0.009,
-            "ci90_low": -0.0027,
-            "ci90_high": 0.0207,
-            "status_both_specs": "bounded",
-            "no_mention": 0.1497,
-            "tightest_bound": 0.05
-          },
-          {
-            "term": "family",
-            "estimate": 0.0096,
-            "ci90_low": -0.0005,
-            "ci90_high": 0.0197,
-            "status_both_specs": "bounded",
-            "no_mention": 0.1127,
-            "tightest_bound": 0.02
-          },
-          {
-            "term": "third person",
-            "estimate": -0.009,
-            "ci90_low": -0.013,
-            "ci90_high": -0.005,
-            "status_both_specs": "bounded",
-            "no_mention": 0.0272,
-            "tightest_bound": 0.02
-          },
-          {
-            "term": "gratitude",
-            "estimate": 0.0163,
-            "ci90_low": -0.0701,
-            "ci90_high": 0.1027,
-            "status_both_specs": "mixed",
-            "no_mention": 0.8042,
-            "tightest_bound": null
-          },
-          {
-            "term": "sentiment (+0.5 score)",
-            "estimate": 0.0272,
-            "ci90_low": 0.0026,
-            "ci90_high": 0.0519,
-            "status_both_specs": "mixed",
-            "no_mention": 0.0336,
-            "tightest_bound": 0.1
-          },
-          {
-            "term": "first person",
-            "estimate": -0.0723,
-            "ci90_low": -0.1431,
-            "ci90_high": -0.0016,
-            "status_both_specs": "unresolved",
-            "no_mention": 0.9898,
-            "tightest_bound": null
-          },
-          {
-            "term": "urgency",
-            "estimate": -0.0482,
-            "ci90_low": -0.1259,
-            "ci90_high": 0.0295,
-            "status_both_specs": "unresolved",
-            "no_mention": 0.987,
-            "tightest_bound": null
-          }
-        ],
-        "groups": [
-          {
-            "status": "bounded",
-            "label": "Too small to matter¹"
-          },
-          {
-            "status": "mixed",
-            "label": "Small in one model only"
-          },
-          {
-            "status": "unresolved",
-            "label": "Can't tell yet: rarely used words"
-          }
-        ],
-        "t4_tag": "All five hold under the stricter t(4)",
-        "rarity_header": "Records with no mention",
-        "caption": "Change in funding time per extra mention per 100 words, expanded model, 1,453,840 loans.",
-        "note_sup": "Within ±5% of funding time: ±0.05 on log(1 + days), BH-adjusted; bound set after the estimates."
-      },
-      "takeaways": [
-        {
-          "marker": 1,
-          "heading": "Five framings have small links",
-          "text": "Family, business, basic needs, agency and third person stay **within ±5%** in both models."
-        },
-        {
-          "marker": 2,
-          "heading": "Small means under five hours",
-          "text": "±5% is about **4.5–4.7 hours** on a typical 2.85-day loan."
-        },
-        {
-          "marker": 3,
-          "heading": "Urgency is too rare to judge",
-          "text": "Under **2% of descriptions** use urgency or first person; their ranges still allow **6–14%** either way."
-        },
-        {
-          "marker": 4,
-          "heading": "The verdicts hold under stricter tests",
-          "text": "All five pass a **stricter t(4) test**; three stay small even within **±2%**."
-        }
-      ],
-      "notes": {
-        "purpose": "Separate 'small' from 'unknown'.",
-        "script": "Answer first: five of the nine framings have small links to funding time; urgency and first person remain unknown. How to read the chart: each dot is the estimated change in funding time per extra mention per 100 words, and its line is the 90 percent range. Left of the centre line means faster funding, right means slower. The darker yellow area is within plus or minus five percent of funding time, which we treat as too small to matter; the lighter area runs from five to ten percent. A line that sits wholly inside the darker area means the link is small. [Point: Five framings have small links] Family, business, basic needs, agency and third person sit inside it in both model versions: the expanded model shown here and the programme-adjusted model. Gratitude and sentiment are small only in the programme-adjusted model. [Point: Small means under five hours] Five percent sounds abstract: on a typical loan, which takes 2.85 days to fund, it is about four and a half to four point seven hours. [Point: Urgency is too rare to judge] Urgency and first person appear in under two percent of descriptions, as the right-hand bars show, so their ranges stay wide: up to six to fourteen percent faster or slower. That is not evidence of an effect, or of none. [Point: The verdicts hold under stricter tests] Technically, the band is plus or minus 0.05 on log of one plus days, tested with two one-sided tests, BH-adjusted across nine terms, using a t reference with 47 degrees of freedom. With a stricter t(4) reference all five verdicts hold, and family, agency and third person stay small even at plus or minus two percent. We set the band after seeing the estimates, so this is exploratory.",
-        "reference": "Equivalence test run 2026-11-08. reports/equivalence_screen_reviewed/README.md; src/equivalence.py. Bands, hours and no-mention shares: src/bound_ladder.py (reports/evidence_sources/bound_ladder.json), from equivalence_screen.csv and feature_distribution.json."
-      },
-      "sublabel": "Why not rewrite stories?",
-      "figure": "Figure 3."
-    },
-    {
-      "n": 10,
-      "id": "text_adds",
-      "section": "Evidence",
-      "sublabel": "What text adds",
-      "layout": "content+takeaways",
-      "title": "Text adds a little forecast accuracy, mostly from word patterns",
-      "subtitle": "Forecast benchmark: linear model gain from adding text, five annual test years, identical rows",
-      "figure": "Figure 4.",
-      "exhibit": {
-        "breakdown": [
-          {
-            "year": 2021,
-            "stages": [
-              0.025,
-              0.0096,
-              0.258
-            ],
-            "total": 0.293
-          },
-          {
-            "year": 2022,
-            "stages": [
-              0.0182,
-              0.018,
-              0.3363
-            ],
-            "total": 0.372
-          },
-          {
-            "year": 2023,
-            "stages": [
-              0.1156,
-              0.0549,
-              0.089
-            ],
-            "total": 0.259
-          },
-          {
-            "year": 2024,
-            "stages": [
-              0.0628,
-              0.0136,
-              0.3124
-            ],
-            "total": 0.389
-          },
-          {
-            "year": 2025,
-            "stages": [
-              0.0326,
-              0.0027,
-              0.2244
-            ],
-            "total": 0.26
-          }
-        ],
-        "stage_labels": [
-          "Text form",
-          "Lexicon and sentiment",
-          "Word patterns (TF-IDF)"
-        ],
-        "linear": {
-          "2021": {
-            "gain": 0.29263292132954616,
-            "month": [
-              0.19821249028954413,
-              0.38379528837254334
-            ],
-            "country": [
-              -0.0415018778789983,
-              0.5426102587336304
-            ]
-          },
-          "2022": {
-            "gain": 0.37249962497178596,
-            "month": [
-              0.20825577440151818,
-              0.5179507474430224
-            ],
-            "country": [
-              0.10143137873640054,
-              0.8465709059507317
-            ]
-          },
-          "2023": {
-            "gain": 0.25947434649312545,
-            "month": [
-              0.08777876584363045,
-              0.40593479227433
-            ],
-            "country": [
-              -0.05559236755319213,
-              0.7255607721269023
-            ]
-          },
-          "2024": {
-            "gain": 0.38883107337292594,
-            "month": [
-              0.2871274486139258,
-              0.4995217826885441
-            ],
-            "country": [
-              -0.06148949300972169,
-              0.891502804256225
-            ]
-          },
-          "2025": {
-            "gain": 0.25971464872389366,
-            "month": [
-              0.13914941483208526,
-              0.3961788795569971
-            ],
-            "country": [
-              -0.18041335543455866,
-              0.5649489357293407
-            ]
-          }
-        },
-        "panels": [
-          {
-            "title": "(a) Where the gain comes from¹",
-            "guide": "MAE gain in days by text feature group, added in order."
-          },
-          {
-            "title": "(b) How solid it is",
-            "guide": "Navy: resampling months. Violet: resampling countries."
-          }
-        ],
-        "caption": "Annual MAE gain in days from adding text to loan structure, 95% ranges; linear model.",
-        "note_sup": "Groups added in order: form, then lexicon and sentiment, then TF-IDF; another order would split the gain differently."
-      },
-      "takeaways": [
-        {
-          "marker": 1,
-          "heading": "About seven hours less error",
-          "text": "Text lowered error in **5 of 5 years**, by 0.26–0.39 days, but adds little to the slow-funding flag."
-        },
-        {
-          "marker": 2,
-          "heading": "Word patterns carry most of it",
-          "text": "TF-IDF gives the largest share in **4 of 5 years**; lexicon and sentiment add **0.003–0.055 days**."
-        },
-        {
-          "marker": 3,
-          "heading": "It is fragile across countries",
-          "text": "Country resampling **includes zero in 4 of 5 years**."
-        }
-      ],
-      "notes": {
-        "purpose": "Keep text in proportion: it helps forecasts a little and does not drive triage.",
-        "script": "Text does carry forecast information: in the linear model it lowered error in every test year, by 0.26 to 0.39 days, about seven hours at the median. Most of that comes from word patterns, TF-IDF; the lexicon and sentiment measures closest to framing add 0.003 to 0.055 days. The gain is fragile across countries: resampling countries, four of five ranges include zero. And for the early-warning flag, adding text barely changes the boosted tree’s precision. The full breakdown and the capped diagnostic are in the appendix.",
-        "reference": "reports/evidence_sources/gain_intervals.json; reports/gain_breakdown/gain_breakdown.json; reports/evidence_sources/triage_summary.json."
-      }
-    },
-    {
-      "n": 11,
-      "id": "supports",
-      "section": "Next steps",
-      "layout": "two_column",
-      "title": "Four guardrails keep the solution honest",
-      "subtitle": "What this evidence cannot show, and what to do about it",
-      "notes": {
-        "purpose": "Limits, each with an action.",
-        "script": "Four guardrails. One: every result is an association; nothing has been tested by editing a description or applying a lever, so each needs a controlled pilot. Two: only funded loans are in the data, so we cannot say whether a lever helps loans that would otherwise expire. Three: the flag is uneven across countries, with precision from 0.18 to 0.90 within the ten largest, and its probabilities drift in 2025, so it must be recalibrated and validated by country. Four: for whom and when is still open; regional patterns rest on two countries each, and subgroup results are pending. Funding time is also a platform measure: 96.4 percent of loans reach the borrower before listing.",
-        "reference": "claims register; reports/evidence_sources/triage_summary.json; appendix A6."
-      },
-      "sublabel": "Guardrails",
-      "blocks": [
-        {
-          "id": "causes",
-          "question": "Associations, not causes",
-          "verdict": "Limit",
-          "tone": "not_yet",
-          "figure": "0 tested edits",
-          "evidence": "Every result is observational; no edit or lever has been tested.",
-          "so_what": "Pilot each lever and prompt against a control.",
-          "slides": [
-            "8"
-          ]
-        },
-        {
-          "id": "funded",
-          "question": "Funded loans only",
-          "verdict": "Limit",
-          "tone": "not_yet",
-          "figure": "Unfunded: missing",
-          "evidence": "Listings that expired unfunded are not in the data, so reach is unknown.",
-          "so_what": "Add expired listings before judging reach.",
-          "slides": [
-            "12"
-          ]
-        },
-        {
-          "id": "countries",
-          "question": "Uneven across countries",
-          "verdict": "Check",
-          "tone": "unclear",
-          "figure": "0.18–0.90",
-          "evidence": "Flag precision within the 10 largest countries; probabilities drift in 2025.",
-          "so_what": "Recalibrate and validate the flag country by country.",
-          "slides": [
-            "6"
-          ]
-        },
-        {
-          "id": "for_whom",
-          "question": "For whom and when",
-          "verdict": "Pending",
-          "tone": "unclear",
-          "figure": "2 countries",
-          "evidence": "Regional patterns rest on two countries each; subgroup results pending.",
-          "so_what": "Use one approach everywhere until tested.",
-          "slides": [
-            "A6"
-          ]
-        }
-      ],
-      "next": {
-        "text": "Next: the roadmap from pilot to proof",
-        "slide": "12"
-      }
-    },
-    {
-      "n": 12,
-      "id": "roadmap",
-      "section": "Next steps",
-      "sublabel": "Roadmap",
-      "layout": "roadmap",
-      "title": "Start with prediction and support now; earn writing advice later",
-      "subtitle": "Proposed roadmap for Kiva and partners",
-      "columns": [
-        {
-          "stage": "Now",
-          "colour": "navy",
-          "items": [
-            "Pilot the slow-funding flag at listing",
-            "Route lender-side support to flagged loans",
-            "Stop investing in framing tweaks"
-          ]
-        },
-        {
-          "stage": "Next",
-          "colour": "violet",
-          "items": [
-            "Recalibrate and validate the flag by country",
-            "Validate the text measures with a codebook",
-            "Pilot one truthful clarity prompt against a control"
-          ]
-        },
-        {
-          "stage": "Later",
-          "colour": "yellow",
-          "items": [
-            "Data partnership: listing-time text, expired listings, partner identifiers",
-            "Answer for whom and when properly",
-            "Give writing advice only if the pilot shows it helps"
-          ]
-        }
-      ],
-      "stop": "If a step fails, stop there: report the uncertainty and give no writing advice.",
-      "notes": {
-        "purpose": "A clear path from now to later.",
-        "script": "Now: pilot the flag, route lender-side support to flagged loans, and stop investing in framing tweaks. Next: recalibrate and validate the flag by country, validate the text measures, and pilot one truthful clarity prompt. Later: a data partnership with listing-time text, expired listings and partner identifiers, so we can answer for whom and when, and only then consider writing advice.",
-        "reference": "Gates and guardrails slides."
-      }
-    },
-    {
-      "n": 13,
-      "id": "close",
-      "section": null,
-      "layout": "close",
-      "title": "Thank you",
-      "lines": [
-        "Mike Nguyen and Sophia Nguyen, Cultural Blend",
-        "Code and evidence: github.com/tuannm3812/unsw-ma-hackathon-2026"
-      ],
-      "notes": {
-        "purpose": "Close.",
-        "script": "Thank you. The code, saved results and every number on these slides are in our repository.",
-        "reference": "Photo: Muhammad-Taha Ibrahim on Unsplash (Unsplash Licence)."
-      },
-      "link": "https://github.com/tuannm3812/unsw-ma-hackathon-2026",
-      "visual": "White ground; Unsplash market photo in a rounded frame with the yellow corner block"
-    },
-    {
-      "n": "A1",
       "id": "approach",
-      "section": "Appendix",
+      "section": "Evidence",
       "layout": "pipeline",
       "title": "Four analyses, each answering a different question",
       "subtitle": "One dataset; the equivalence test builds on the robustness checks, and the forecast benchmark asks a separate question",
@@ -856,7 +686,7 @@
             "method": "Regressions of funding time and same-day funding; errors clustered by country.",
             "data": "1,453,840 loans in 48 countries",
             "headline": "64 of 120 significant terms lost significance",
-            "slide": "A2"
+            "slide": 8
           },
           {
             "name": "Robustness checks",
@@ -865,7 +695,7 @@
             "method": "The same models with more text measures and a programme proxy; multiple-test adjusted.",
             "data": "1,453,840 loans; 642 programme categories",
             "headline": "Only small associations remain",
-            "slide": "A3"
+            "slide": 9
           },
           {
             "name": "Equivalence test",
@@ -874,7 +704,7 @@
             "method": "Is each 90% interval inside ±5% of funding time?",
             "data": "Robustness-check estimates for 9 terms",
             "headline": "Five framings small; urgency unresolved",
-            "slide": 9
+            "slide": 10
           },
           {
             "name": "Forecast benchmark",
@@ -883,7 +713,7 @@
             "method": "Train on earlier years, then test each year with and without text.",
             "data": "728,640 evaluation records over five years",
             "headline": "Error fell in 5 of 5 years, by 0.26–0.39 days",
-            "slide": "A4"
+            "slide": 11
           }
         ],
         "timeline": {
@@ -928,13 +758,12 @@
         "script": "All four analyses use the same loans. The explanatory models ask which features are linked to speed, and how sure we can be. The robustness checks rerun them with richer controls, and the equivalence test then asks which of those links are small enough to bound. [Point: Forecast benchmark] The forecast benchmark asks a different question: does text help predict funding time? Its numbers are not comparable with the others. [Point: Years each analysis uses] The strip at the bottom shows the years: the explanatory work uses all loans, the holdout tests on 2024 and 2025, and the benchmark retrains five times, each time only on loans completed before the test year. [Point: What each can claim] Each analysis supports a different kind of claim, and none of them is causal.",
         "reference": "Run provenance: explanatory models, primary saved run 2026-08-31; robustness checks, reviewed expanded-feature sensitivity; equivalence test 2026-11-08; forecast benchmark 2026-11-02. 642 programme categories from docs/2_evidence_and_corrections.md."
       },
-      "sublabel": "Four analyses",
-      "figure": "Figure A1."
+      "sublabel": "Four analyses"
     },
     {
-      "n": "A2",
+      "n": 8,
       "id": "clustering",
-      "section": "Appendix",
+      "section": "Evidence",
       "layout": "content+takeaways",
       "title": "Large row counts did not remove country-level uncertainty",
       "subtitle": "Explanatory models: HC3 versus 48-country clustered errors on 1,453,840 loans",
@@ -942,7 +771,7 @@
         {
           "marker": 1,
           "heading": "Text terms are hit hardest",
-          "text": "**42 of 56 text terms** lost significance, against 22 of 64 controls; 42 of the 56 terms that kept it are controls."
+          "text": "**42 of 56 text terms** lost significance, against 22 of 64 controls."
         },
         {
           "marker": 2,
@@ -957,7 +786,7 @@
         {
           "marker": 4,
           "heading": "Few countries dominate",
-          "text": "Ten countries hold **81% of loans**, Asia and Africa 92.8%; regional patterns rest on **two countries each**, so no regional writing rules yet."
+          "text": "Ten countries hold **81% of loans**; regional patterns rest on **two countries each**."
         }
       ],
       "notes": {
@@ -1331,7 +1160,7 @@
           }
         ],
         "top10_label": "10 countries hold 81% of loans",
-        "caption": "HC3 versus errors clustered by country (48 clusters); map and table: share of all loans and of loans funded within 24 hours.",
+        "caption": "Explanatory models, HC3 versus errors clustered by country (48 clusters).",
         "note": "Printed as 0.0000 in the saved run. Text terms include interactions of a text measure with a control.",
         "panels": [
           {
@@ -1359,14 +1188,24 @@
           "LR": "Liberia",
           "TG": "Togo"
         },
-        "figure": "Figure A2."
+        "figure": "Figure A2.",
+        "implication": {
+          "title": "(c) What it means for the solution",
+          "guide": "Country-level uncertainty shapes every step of the framework.",
+          "lines": [
+            "Report country-clustered uncertainty, never only loan-level errors.",
+            "Validate the slow-funding flag country by country before using it.",
+            "Give no country or regional writing rules from two-country regions."
+          ]
+        }
       },
-      "figure": "Figure A2."
+      "figure": "Figure 3.",
+      "solution_link": "→ Why the flag is checked country by country"
     },
     {
-      "n": "A3",
+      "n": 9,
       "id": "persist",
-      "section": "Appendix",
+      "section": "Evidence",
       "layout": "content+takeaways",
       "title": "Few narrative associations remain after programme controls",
       "subtitle": "Robustness checks: country-clustered, BH-adjusted within specification",
@@ -1425,60 +1264,166 @@
         }
       ],
       "sublabel": "Robustness checks",
-      "figure": "Figure A3."
+      "figure": "Figure 4.",
+      "solution_link": "→ Why we prioritise loans, not wording"
     },
     {
-      "n": "A4",
-      "id": "forecast",
-      "section": "Appendix",
+      "n": 10,
+      "id": "equivalence",
+      "section": "Evidence",
       "layout": "content+takeaways",
-      "title": "Adding text lowered forecast error in 5 of 5 years",
-      "subtitle": "Forecast benchmark: linear model, structure only versus structure plus text, identical evaluation rows",
+      "title": "Five framings have small links to funding time; urgency remains unknown",
+      "subtitle": "Equivalence test of the robustness-check coefficients; exploratory, bound set after the estimates",
       "exhibit": {
-        "type": "grouped_bar",
-        "unit": "MAE, days (lower is better)",
-        "axis_from_zero": true,
-        "series": [
-          "Structure only",
-          "Structure + text"
+        "type": "forest",
+        "unit": "change in log(1 + days) per extra mention per 100 words, 90% interval, expanded specification",
+        "bound_band": [
+          -0.05,
+          0.05
         ],
-        "data": [
+        "rows": [
           {
-            "year": 2021,
-            "values": [
-              8.25,
-              7.957
-            ]
+            "term": "agency",
+            "estimate": 0.0042,
+            "ci90_low": -0.0028,
+            "ci90_high": 0.0112,
+            "status_both_specs": "bounded",
+            "no_mention": 0.4587,
+            "tightest_bound": 0.02
           },
           {
-            "year": 2022,
-            "values": [
-              8.57,
-              8.197
-            ]
+            "term": "basic needs",
+            "estimate": 0.0021,
+            "ci90_low": -0.019,
+            "ci90_high": 0.0233,
+            "status_both_specs": "bounded",
+            "no_mention": 0.767,
+            "tightest_bound": 0.05
           },
           {
-            "year": 2023,
-            "values": [
-              8.185,
-              7.926
-            ]
+            "term": "business",
+            "estimate": 0.009,
+            "ci90_low": -0.0027,
+            "ci90_high": 0.0207,
+            "status_both_specs": "bounded",
+            "no_mention": 0.1497,
+            "tightest_bound": 0.05
           },
           {
-            "year": 2024,
-            "values": [
-              7.515,
-              7.126
-            ]
+            "term": "family",
+            "estimate": 0.0096,
+            "ci90_low": -0.0005,
+            "ci90_high": 0.0197,
+            "status_both_specs": "bounded",
+            "no_mention": 0.1127,
+            "tightest_bound": 0.02
           },
           {
-            "year": 2025,
-            "values": [
-              6.406,
-              6.147
-            ]
+            "term": "third person",
+            "estimate": -0.009,
+            "ci90_low": -0.013,
+            "ci90_high": -0.005,
+            "status_both_specs": "bounded",
+            "no_mention": 0.0272,
+            "tightest_bound": 0.02
+          },
+          {
+            "term": "gratitude",
+            "estimate": 0.0163,
+            "ci90_low": -0.0701,
+            "ci90_high": 0.1027,
+            "status_both_specs": "mixed",
+            "no_mention": 0.8042,
+            "tightest_bound": null
+          },
+          {
+            "term": "sentiment (+0.5 score)",
+            "estimate": 0.0272,
+            "ci90_low": 0.0026,
+            "ci90_high": 0.0519,
+            "status_both_specs": "mixed",
+            "no_mention": 0.0336,
+            "tightest_bound": 0.1
+          },
+          {
+            "term": "first person",
+            "estimate": -0.0723,
+            "ci90_low": -0.1431,
+            "ci90_high": -0.0016,
+            "status_both_specs": "unresolved",
+            "no_mention": 0.9898,
+            "tightest_bound": null
+          },
+          {
+            "term": "urgency",
+            "estimate": -0.0482,
+            "ci90_low": -0.1259,
+            "ci90_high": 0.0295,
+            "status_both_specs": "unresolved",
+            "no_mention": 0.987,
+            "tightest_bound": null
           }
         ],
+        "groups": [
+          {
+            "status": "bounded",
+            "label": "Too small to matter¹"
+          },
+          {
+            "status": "mixed",
+            "label": "Small in one model only"
+          },
+          {
+            "status": "unresolved",
+            "label": "Can't tell yet: rarely used words"
+          }
+        ],
+        "t4_tag": "All five hold under the stricter t(4)",
+        "rarity_header": "Records with no mention",
+        "caption": "Change in funding time per extra mention per 100 words, expanded model, 1,453,840 loans.",
+        "note_sup": "Within ±5% of funding time: ±0.05 on log(1 + days), BH-adjusted; bound set after the estimates."
+      },
+      "takeaways": [
+        {
+          "marker": 1,
+          "heading": "Five framings have small links",
+          "text": "Family, business, basic needs, agency and third person stay **within ±5%** in both models."
+        },
+        {
+          "marker": 2,
+          "heading": "Small means under five hours",
+          "text": "±5% is about **4.5–4.7 hours** on a typical 2.85-day loan."
+        },
+        {
+          "marker": 3,
+          "heading": "Urgency is too rare to judge",
+          "text": "Under **2% of descriptions** use urgency or first person; their ranges still allow **6–14%** either way."
+        },
+        {
+          "marker": 4,
+          "heading": "The verdicts hold under stricter tests",
+          "text": "All five pass a **stricter t(4) test**; three stay small even within **±2%**."
+        }
+      ],
+      "notes": {
+        "purpose": "Separate 'small' from 'unknown'.",
+        "script": "Answer first: five of the nine framings have small links to funding time; urgency and first person remain unknown. How to read the chart: each dot is the estimated change in funding time per extra mention per 100 words, and its line is the 90 percent range. Left of the centre line means faster funding, right means slower. The darker yellow area is within plus or minus five percent of funding time, which we treat as too small to matter; the lighter area runs from five to ten percent. A line that sits wholly inside the darker area means the link is small. [Point: Five framings have small links] Family, business, basic needs, agency and third person sit inside it in both model versions: the expanded model shown here and the programme-adjusted model. Gratitude and sentiment are small only in the programme-adjusted model. [Point: Small means under five hours] Five percent sounds abstract: on a typical loan, which takes 2.85 days to fund, it is about four and a half to four point seven hours. [Point: Urgency is too rare to judge] Urgency and first person appear in under two percent of descriptions, as the right-hand bars show, so their ranges stay wide: up to six to fourteen percent faster or slower. That is not evidence of an effect, or of none. [Point: The verdicts hold under stricter tests] Technically, the band is plus or minus 0.05 on log of one plus days, tested with two one-sided tests, BH-adjusted across nine terms, using a t reference with 47 degrees of freedom. With a stricter t(4) reference all five verdicts hold, and family, agency and third person stay small even at plus or minus two percent. We set the band after seeing the estimates, so this is exploratory.",
+        "reference": "Equivalence test run 2026-11-08. reports/equivalence_screen_reviewed/README.md; src/equivalence.py. Bands, hours and no-mention shares: src/bound_ladder.py (reports/evidence_sources/bound_ladder.json), from equivalence_screen.csv and feature_distribution.json."
+      },
+      "sublabel": "Why not rewrite stories?",
+      "figure": "Figure 5.",
+      "solution_link": "→ Why we don’t chase framing tweaks"
+    },
+    {
+      "n": 11,
+      "id": "text_adds",
+      "section": "Evidence",
+      "sublabel": "What text adds",
+      "layout": "content+takeaways",
+      "title": "Text adds a little forecast accuracy, mostly from word patterns",
+      "subtitle": "Forecast benchmark: linear model gain from adding text, five annual test years, identical rows",
+      "figure": "Figure 6.",
+      "exhibit": {
         "breakdown": [
           {
             "year": 2021,
@@ -1526,56 +1471,131 @@
             "total": 0.26
           }
         ],
-        "breakdown_title": "Where the gain comes from¹",
         "stage_labels": [
           "Text form",
           "Lexicon and sentiment",
           "Word patterns (TF-IDF)"
         ],
-        "caption": "Linear-model MAE in days (top) and its reduction by text feature group (bottom), identical evaluation rows.",
+        "linear": {
+          "2021": {
+            "gain": 0.29263292132954616,
+            "month": [
+              0.19821249028954413,
+              0.38379528837254334
+            ],
+            "country": [
+              -0.0415018778789983,
+              0.5426102587336304
+            ]
+          },
+          "2022": {
+            "gain": 0.37249962497178596,
+            "month": [
+              0.20825577440151818,
+              0.5179507474430224
+            ],
+            "country": [
+              0.10143137873640054,
+              0.8465709059507317
+            ]
+          },
+          "2023": {
+            "gain": 0.25947434649312545,
+            "month": [
+              0.08777876584363045,
+              0.40593479227433
+            ],
+            "country": [
+              -0.05559236755319213,
+              0.7255607721269023
+            ]
+          },
+          "2024": {
+            "gain": 0.38883107337292594,
+            "month": [
+              0.2871274486139258,
+              0.4995217826885441
+            ],
+            "country": [
+              -0.06148949300972169,
+              0.891502804256225
+            ]
+          },
+          "2025": {
+            "gain": 0.25971464872389366,
+            "month": [
+              0.13914941483208526,
+              0.3961788795569971
+            ],
+            "country": [
+              -0.18041335543455866,
+              0.5649489357293407
+            ]
+          }
+        },
+        "panels": [
+          {
+            "title": "(a) Where the gain comes from¹",
+            "guide": "MAE gain in days by text feature group, added in order."
+          },
+          {
+            "title": "(b) Text alone does worse than loan details alone",
+            "guide": "Extra MAE in days when text replaces loan structure; longer is worse."
+          }
+        ],
+        "caption": "Annual MAE gain in days from adding text (a), and extra error from text alone (b); linear model, identical rows.",
         "note_sup": "Groups added in order: form, then lexicon and sentiment, then TF-IDF; another order would split the gain differently.",
-        "figure": "Figure A4."
+        "text_only": [
+          [
+            2021,
+            0.846
+          ],
+          [
+            2022,
+            0.552
+          ],
+          [
+            2023,
+            0.859
+          ],
+          [
+            2024,
+            1.032
+          ],
+          [
+            2025,
+            0.146
+          ]
+        ]
       },
-      "key_figures": [
-        {
-          "value": "0.29 days",
-          "label": "median annual error reduction"
-        }
-      ],
       "takeaways": [
         {
           "marker": 1,
-          "heading": "Text carries forecast information",
-          "text": "Gains of **0.26–0.39 days** on 728,640 evaluation records."
+          "heading": "About seven hours less error",
+          "text": "Adding text lowered error in **5 of 5 years**, by 0.26–0.39 days."
         },
         {
           "marker": 2,
-          "heading": "Forecasting is not persuasion",
-          "text": "Text may encode **purpose, place or programme templates**, not only persuasion."
+          "heading": "Word patterns carry most of it",
+          "text": "TF-IDF gives the largest share in **4 of 5 years**; lexicon and sentiment add **0.003–0.055 days**."
         },
         {
           "marker": 3,
-          "heading": "No single country drives it",
-          "text": "Removing any single country **leaves the gain positive** in every year (exploratory check)."
-        },
-        {
-          "marker": 4,
-          "heading": "Word patterns carry most of it",
-          "text": "TF-IDF gives the largest share in **4 of 5 years**; lexicon and sentiment add only **0.003–0.055 days**."
+          "heading": "Text works only with loan details",
+          "text": "Text alone is worse than loan structure alone by **0.146–1.032 days**, and adds little to the flag."
         }
       ],
       "notes": {
-        "purpose": "Present the strongest new result.",
-        "script": "We trained on earlier years and tested on each of 2021 to 2025, comparing the same model with and without text on the same loans. Text reduced error every year. [Point: Word patterns carry most of it] Splitting the gain by feature group, added in a fixed order, word patterns from TF-IDF give most of it in four of five years; 2023 is the exception, where description form leads. The lexicon, specificity and sentiment measures, the ones closest to framing, add only 0.003 to 0.055 days. Text alone forecasts worse than structure alone in every year, so text adds to context rather than replacing it.",
-        "reference": "Forecast benchmark, run 2026-11-02: docs/6_matched_text_results.md; reports/text_benchmark_reviewed. Stage split: src/gain_breakdown.py from reports/text_benchmark_reviewed/benchmark.json."
+        "purpose": "Keep text in proportion: it helps forecasts a little and does not drive triage.",
+        "script": "Text does carry forecast information: added to loan structure it lowered error in every test year, by 0.26 to 0.39 days, about seven hours at the median. Most of that comes from word patterns; the lexicon and sentiment measures closest to framing add 0.003 to 0.055 days. On its own, text forecasts worse than loan structure alone, by 0.146 to 1.032 days, and adding it barely changes the slow-funding flag. That is why the flag is built on loan details. The next slide shows how fragile the gain is across countries.",
+        "reference": "reports/evidence_sources/gain_intervals.json; reports/gain_breakdown/gain_breakdown.json; reports/evidence_sources/triage_summary.json."
       },
-      "sublabel": "Forecast benchmark",
-      "figure": "Figure A4."
+      "solution_link": "→ Why we predict with loan details"
     },
     {
-      "n": "A5",
+      "n": 12,
       "id": "gain_uncertainty",
-      "section": "Appendix",
+      "section": "Evidence",
       "layout": "content+takeaways",
       "title": "The text gain holds every year but is fragile across countries",
       "subtitle": "Forecast benchmark: annual MAE gain in days, with 95% ranges from resampling months or countries",
@@ -1774,10 +1794,379 @@
         "reference": "docs/6_matched_text_results.md; reports/loss_alignment_2025/README.md; ranges from src/gain_intervals.py (reports/evidence_sources/gain_intervals.json)."
       },
       "sublabel": "Forecast benchmark",
-      "figure": "Figure A5."
+      "figure": "Figure 7.",
+      "solution_link": "→ Why the flag needs validating by country"
     },
     {
-      "n": "A6",
+      "n": 13,
+      "id": "solution",
+      "section": "Solution",
+      "layout": "three_steps",
+      "title": "Our solution: predict slow loans, prioritise support, test before advising",
+      "subtitle": "A three-step framework for Kiva and partners, built only on what the evidence supports",
+      "steps": [
+        {
+          "n": "01",
+          "name": "Predict",
+          "slide": 14,
+          "rows": [
+            [
+              "What",
+              "Score each listing’s risk of slow funding when it is posted."
+            ],
+            [
+              "How",
+              "A boosted tree on loan structure; text adds little to this score."
+            ],
+            [
+              "Evidence",
+              "Flags the slowest fifth of loans 2.6–4.0× better than chance."
+            ]
+          ]
+        },
+        {
+          "n": "02",
+          "name": "Prioritise",
+          "slide": 15,
+          "rows": [
+            [
+              "What",
+              "Send lender-side support to flagged loans."
+            ],
+            [
+              "How",
+              "Featuring, matching funds, lender alerts and partner follow-up."
+            ],
+            [
+              "Evidence",
+              "Framing links stay within ±5%, so don’t chase framing tweaks."
+            ]
+          ]
+        },
+        {
+          "n": "03",
+          "name": "Test",
+          "slide": 16,
+          "rows": [
+            [
+              "What",
+              "Earn the right to give writing advice."
+            ],
+            [
+              "How",
+              "Pass three gates before any advice."
+            ],
+            [
+              "Evidence",
+              "No edit to a description has been tested yet."
+            ]
+          ]
+        }
+      ],
+      "notes": {
+        "purpose": "Turn the evidence into a framework Kiva can act on.",
+        "script": "Three steps. Predict: at posting time, score each listing’s risk of slow funding. In a retrospective check on the November benchmark, a boosted tree using loan structure flags the slowest fifth of loans 2.6 to 4.0 times better than chance; adding text barely changes it. Prioritise: send lender-side support, such as featuring, matching funds, lender alerts and partner follow-up, to the flagged loans, and do not chase framing tweaks, because framing links stay within five percent of funding time. Test: before any writing advice, pass three gates: validate the measures, close the data gaps, and pilot one truthful clarity prompt against a control. Later, a data partnership with listing-time text and unfunded listings would let us answer for whom and when properly. If a gate fails, stop there and report the uncertainty.",
+        "reference": "reports/evidence_sources/triage_summary.json (src/triage_summary.py, from reports/triage_value/triage_value.json); docs/6_matched_text_results.md."
+      },
+      "sublabel": "Overview",
+      "stop": "Writing advice waits until a tested pilot shows it helps."
+    },
+    {
+      "n": 14,
+      "id": "triage",
+      "section": "Solution",
+      "sublabel": "Step 1: Predict",
+      "layout": "concept",
+      "title": "A slow-funding flag at listing could direct support where it is needed",
+      "subtitle": "Concept to pilot: an early-warning card built on the forecast benchmark’s retrospective predictions",
+      "exhibit": {
+        "tag": "Concept to pilot",
+        "listing": "Agriculture · US$325 · 12-month term",
+        "listing_note": "Illustrative listing, not a real borrower",
+        "flag": "Flag: likely slow to fund",
+        "same_day": "Chance of same-day funding: low",
+        "support_title": "Suggested support",
+        "support": [
+          "Feature it to lenders",
+          "Offer matching funds",
+          "Alert lenders who follow the sector",
+          "Ask the partner to review it"
+        ],
+        "headline": "2.6–4.0×",
+        "headline_label": "better than chance at catching the slowest fifth of loans, flagging the top 10% of predicted-slow loans",
+        "lift": [
+          [
+            2021,
+            2.63
+          ],
+          [
+            2022,
+            3.36
+          ],
+          [
+            2023,
+            3.48
+          ],
+          [
+            2024,
+            4.04
+          ],
+          [
+            2025,
+            3.67
+          ]
+        ],
+        "text_line": "Text adds little: the tree’s precision changes by −0.003 to +0.005.",
+        "country_line": "Uneven across countries: within the 10 largest, precision ranges 0.18–0.90.",
+        "auc_line": "The primary 24-hour model ranks same-day funding with ROC AUC 0.8997 on later loans.",
+        "caption": "Lift when flagging the top 10% of predicted-slow loans, against the slowest 20% of each test year; boosted tree, loan structure only.",
+        "scope": "Scope: tested only on loans that eventually funded; a retrospective evaluation, not a deployment test; a flag shows a loan is likely slow, not why. Probabilities need recalibration before use as thresholds."
+      },
+      "notes": {
+        "purpose": "Show what acting on the evidence could look like, without overclaiming.",
+        "script": "This is a concept to pilot, not a product. When a loan is posted, a model scores its risk of slow funding from its structure: amount, term, sector, country and timing. Flagged loans get lender-side support. In a retrospective check on 2021 to 2025, flagging the top ten percent of predicted-slow loans caught the slowest fifth 2.6 to 4.0 times better than chance with a boosted tree; adding text barely changed it. Results are uneven across countries, the check only covers loans that eventually funded, and the predicted probabilities drift in 2025, so they need recalibrating before use as thresholds. A flag says a loan is likely slow, not why.",
+        "reference": "reports/evidence_sources/triage_summary.json (src/triage_summary.py); reports/triage_value/triage_value.json (src/triage_value.py); appendix A3 for the 24-hour AUC. Listing values: slide 4 illustrative composite."
+      },
+      "figure": "Figure 8."
+    },
+    {
+      "n": 15,
+      "id": "prioritise",
+      "section": "Solution",
+      "sublabel": "Step 2: Prioritise",
+      "layout": "levers",
+      "title": "Send lender-side support to flagged loans, not story edits",
+      "subtitle": "Proposed levers for Kiva and partners; their effect on speed is to be tested, not yet measured",
+      "levers": [
+        {
+          "icon": "storefront-navy.png",
+          "name": "Feature it",
+          "text": "Show flagged loans to lenders early on the lending page."
+        },
+        {
+          "icon": "payments-navy.png",
+          "name": "Match it",
+          "text": "Offer matching funds where a loan is likely to stall."
+        },
+        {
+          "icon": "groups-navy.png",
+          "name": "Alert lenders",
+          "text": "Notify lenders who follow the loan’s sector or country."
+        },
+        {
+          "icon": "fact_check-navy.png",
+          "name": "Follow up",
+          "text": "Ask the field partner to check the listing is complete and clear."
+        }
+      ],
+      "dont": {
+        "heading": "Don’t chase framing tweaks",
+        "figure": "±5%",
+        "text": "Five framings stay within ±5% of funding time, about 4.5–4.7 hours on a typical loan, and text adds little to the flag.",
+        "slide": 10
+      },
+      "note": "Scope: the levers are proposals; our data do not measure their effect, so each needs a controlled pilot.",
+      "notes": {
+        "purpose": "What to do with a flag.",
+        "script": "A flag only helps if something happens next. We propose four lender-side levers: feature flagged loans early, offer matching funds where a loan is likely to stall, alert lenders who follow the sector or country, and ask the partner to check the listing is complete. Our data do not measure what these levers do, so each needs a pilot. What we can say is where not to spend effort: framing tweaks, because five framings stay within five percent of funding time, about four and a half hours on a typical loan.",
+        "reference": "Equivalence screen; reports/evidence_sources/bound_ladder.json. Photo: Richard Nyoni (soybean farmer) on Unsplash (Unsplash Licence)."
+      },
+      "photo": "unsplash-soybean-richard-nyoni.jpg"
+    },
+    {
+      "n": 16,
+      "id": "gates",
+      "section": "Solution",
+      "layout": "three_steps",
+      "title": "Test before advising: three gates before any writing advice",
+      "subtitle": "Proposed next research for Kiva and participating partners; each gate must pass before the next",
+      "steps": [
+        {
+          "n": "01",
+          "name": "Validate the measures",
+          "slide": 10,
+          "question": "Do our word counts capture clarity, need and agency?",
+          "do": "Build a small codebook; two people code the same narratives and resolve disagreements.",
+          "done": "Definitions are frozen before later periods are checked."
+        },
+        {
+          "n": "02",
+          "name": "Close the data gaps",
+          "slide": 17,
+          "question": "What did lenders see, and which listings never funded?",
+          "do": "Get original texts, partner identifiers, exposure data and expired listings.",
+          "done": "Unfunded listings and listing-time text are in the data."
+        },
+        {
+          "n": "03",
+          "name": "Pilot one prompt",
+          "slide": 18,
+          "question": "Does editing a description change funding speed?",
+          "do": "With partners, test one truthful clarity prompt against a control.",
+          "done": "Threshold, power and guardrails are agreed in advance."
+        }
+      ],
+      "notes": {
+        "purpose": "End on a decision path.",
+        "script": "Before anyone tells borrowers how to write, three things need to happen, in order. First, check that our word counts measure what we think. Second, get the data we are missing: what lenders saw and the listings that never funded. Third, test one truthful prompt with partners. [Point: Each gate unlocks a stronger claim] Each gate lets us say a little more, from associations today to a tested effect of editing. If a gate fails, we stop and report the uncertainty.",
+        "reference": "docs/6_matched_text_results.md, What to do next; docs/4_research_review.md."
+      },
+      "sublabel": "Step 3: Test",
+      "ladder": {
+        "title": "Each gate unlocks a stronger claim",
+        "steps": [
+          [
+            "Today",
+            "Associations and forecast information"
+          ],
+          [
+            "After gate 1",
+            "Measures that mean what we say"
+          ],
+          [
+            "After gate 2",
+            "Results for every listing, not only funded ones"
+          ],
+          [
+            "After gate 3",
+            "A tested effect of editing"
+          ]
+        ],
+        "stop": "If a gate fails, stop there: report the uncertainty and give no writing advice."
+      }
+    },
+    {
+      "n": 17,
+      "id": "supports",
+      "section": "Next steps",
+      "layout": "two_column",
+      "title": "Four guardrails keep the solution honest",
+      "subtitle": "What this evidence cannot show, and what to do about it",
+      "notes": {
+        "purpose": "Limits, each with an action.",
+        "script": "Four guardrails. One: every result is an association; nothing has been tested by editing a description or applying a lever, so each needs a controlled pilot. Two: only funded loans are in the data, so we cannot say whether a lever helps loans that would otherwise expire. Three: the flag is uneven across countries, with precision from 0.18 to 0.90 within the ten largest, and its probabilities drift in 2025, so it must be recalibrated and validated by country. Four: for whom and when is still open; regional patterns rest on two countries each, and subgroup results are pending. Funding time is also a platform measure: 96.4 percent of loans reach the borrower before listing.",
+        "reference": "claims register; reports/evidence_sources/triage_summary.json; appendix A6."
+      },
+      "sublabel": "Guardrails",
+      "blocks": [
+        {
+          "id": "causes",
+          "question": "Associations, not causes",
+          "verdict": "Limit",
+          "tone": "not_yet",
+          "figure": "0 tested edits",
+          "evidence": "Every result is observational; no edit or lever has been tested.",
+          "so_what": "Pilot each lever and prompt against a control.",
+          "slides": [
+            "16"
+          ]
+        },
+        {
+          "id": "funded",
+          "question": "Funded loans only",
+          "verdict": "Limit",
+          "tone": "not_yet",
+          "figure": "Unfunded: missing",
+          "evidence": "Listings that expired unfunded are not in the data, so reach is unknown.",
+          "so_what": "Add expired listings before judging reach.",
+          "slides": [
+            "18"
+          ]
+        },
+        {
+          "id": "countries",
+          "question": "Uneven across countries",
+          "verdict": "Check",
+          "tone": "unclear",
+          "figure": "0.18–0.90",
+          "evidence": "Flag precision within the 10 largest countries; probabilities drift in 2025.",
+          "so_what": "Recalibrate and validate the flag country by country.",
+          "slides": [
+            "14"
+          ]
+        },
+        {
+          "id": "for_whom",
+          "question": "For whom and when",
+          "verdict": "Pending",
+          "tone": "unclear",
+          "figure": "2 countries",
+          "evidence": "Regional patterns rest on two countries each; subgroup results pending.",
+          "so_what": "Use one approach everywhere until tested.",
+          "slides": [
+            "A1"
+          ]
+        }
+      ],
+      "next": {
+        "text": "Next: the roadmap from pilot to proof",
+        "slide": "18"
+      }
+    },
+    {
+      "n": 18,
+      "id": "roadmap",
+      "section": "Next steps",
+      "sublabel": "Roadmap",
+      "layout": "roadmap",
+      "title": "Start with prediction and support now; earn writing advice later",
+      "subtitle": "Proposed roadmap for Kiva and partners",
+      "columns": [
+        {
+          "stage": "Now",
+          "colour": "navy",
+          "items": [
+            "Pilot the slow-funding flag at listing",
+            "Route lender-side support to flagged loans",
+            "Stop investing in framing tweaks"
+          ]
+        },
+        {
+          "stage": "Next",
+          "colour": "violet",
+          "items": [
+            "Recalibrate and validate the flag by country",
+            "Validate the text measures with a codebook",
+            "Pilot one truthful clarity prompt against a control"
+          ]
+        },
+        {
+          "stage": "Later",
+          "colour": "yellow",
+          "items": [
+            "Data partnership: listing-time text, expired listings, partner identifiers",
+            "Answer for whom and when properly",
+            "Give writing advice only if the pilot shows it helps"
+          ]
+        }
+      ],
+      "stop": "If a step fails, stop there: report the uncertainty and give no writing advice.",
+      "notes": {
+        "purpose": "A clear path from now to later.",
+        "script": "Now: pilot the flag, route lender-side support to flagged loans, and stop investing in framing tweaks. Next: recalibrate and validate the flag by country, validate the text measures, and pilot one truthful clarity prompt. Later: a data partnership with listing-time text, expired listings and partner identifiers, so we can answer for whom and when, and only then consider writing advice.",
+        "reference": "Gates and guardrails slides."
+      }
+    },
+    {
+      "n": 19,
+      "id": "close",
+      "section": null,
+      "layout": "close",
+      "title": "Thank you",
+      "lines": [
+        "Mike Nguyen and Sophia Nguyen, Cultural Blend",
+        "Code and evidence: github.com/tuannm3812/unsw-ma-hackathon-2026"
+      ],
+      "notes": {
+        "purpose": "Close.",
+        "script": "Thank you. The code, saved results and every number on these slides are in our repository.",
+        "reference": "Photo: Ali Mkumbwa on Unsplash (Unsplash Licence)."
+      },
+      "link": "https://github.com/tuannm3812/unsw-ma-hackathon-2026",
+      "visual": "White ground; Unsplash market photo in a rounded frame with the yellow corner block"
+    },
+    {
+      "n": "A1",
       "id": "a_screen",
       "section": "Appendix",
       "layout": "content+takeaways",
@@ -1869,7 +2258,7 @@
         "strip_title": "Countries behind each region",
         "caption": "Within-region family-framing slopes, 95% ranges, explanatory models; one dot per country, Kiva regions.",
         "note_sup": "t(1) reference on the same clustered error: a heuristic screen, not a calibrated test. Axis in log points × 100.",
-        "figure": "Figure A6."
+        "figure": "Figure A1."
       },
       "takeaways": [
         {
@@ -1899,10 +2288,10 @@
         "reference": "Explanatory models, primary saved run 2026-08-31. docs/2_evidence_and_corrections.md regional table; country mix and counts: src/region_context.py (reports/evidence_sources/region_context.json)."
       },
       "sublabel": "Explanatory models",
-      "figure": "Figure A6."
+      "figure": "Figure A1."
     },
     {
-      "n": "A7",
+      "n": "A2",
       "id": "a_asof",
       "section": "Appendix",
       "title": "Each forecast trains only on loans completed before its cutoff",
@@ -1948,7 +2337,7 @@
             "137,162"
           ]
         ],
-        "figure": "Figure A7.",
+        "figure": "Figure A2.",
         "caption": "Training availability and evaluation rows by year."
       },
       "note": "A posting-only split would keep these 5,691 training records; evaluation windows still select eventual completions.",
@@ -1958,10 +2347,10 @@
         "reference": "docs/6_matched_text_results.md training availability table."
       },
       "sublabel": "Forecast benchmark",
-      "figure": "Figure A7."
+      "figure": "Figure A2."
     },
     {
-      "n": "A8",
+      "n": "A3",
       "id": "a_primary",
       "section": "Appendix",
       "title": "The primary models hold up on later, completed loans",
@@ -1996,10 +2385,10 @@
         "reference": "Primary saved run 2026-08-31: association_summary.txt; analysis_summary.json."
       },
       "sublabel": "Explanatory models",
-      "figure": "Figure A8."
+      "figure": "Figure A3."
     },
     {
-      "n": "A9",
+      "n": "A4",
       "id": "a_topics",
       "section": "Appendix",
       "title": "Story themes track loan purpose more than writing style",
@@ -2031,7 +2420,152 @@
         "reference": "notebooks/1_full_dataset_eda.py topic section; docs/4_research_review.md P2."
       },
       "sublabel": "Exploratory sample",
-      "figure": "Figure A9."
+      "figure": "Figure A4."
+    },
+    {
+      "n": "A5",
+      "id": "forecast",
+      "section": "Appendix",
+      "layout": "content+takeaways",
+      "title": "Adding text lowered forecast error in 5 of 5 years",
+      "subtitle": "Forecast benchmark: linear model, structure only versus structure plus text, identical evaluation rows",
+      "exhibit": {
+        "type": "grouped_bar",
+        "unit": "MAE, days (lower is better)",
+        "axis_from_zero": true,
+        "series": [
+          "Structure only",
+          "Structure + text"
+        ],
+        "data": [
+          {
+            "year": 2021,
+            "values": [
+              8.25,
+              7.957
+            ]
+          },
+          {
+            "year": 2022,
+            "values": [
+              8.57,
+              8.197
+            ]
+          },
+          {
+            "year": 2023,
+            "values": [
+              8.185,
+              7.926
+            ]
+          },
+          {
+            "year": 2024,
+            "values": [
+              7.515,
+              7.126
+            ]
+          },
+          {
+            "year": 2025,
+            "values": [
+              6.406,
+              6.147
+            ]
+          }
+        ],
+        "breakdown": [
+          {
+            "year": 2021,
+            "stages": [
+              0.025,
+              0.0096,
+              0.258
+            ],
+            "total": 0.293
+          },
+          {
+            "year": 2022,
+            "stages": [
+              0.0182,
+              0.018,
+              0.3363
+            ],
+            "total": 0.372
+          },
+          {
+            "year": 2023,
+            "stages": [
+              0.1156,
+              0.0549,
+              0.089
+            ],
+            "total": 0.259
+          },
+          {
+            "year": 2024,
+            "stages": [
+              0.0628,
+              0.0136,
+              0.3124
+            ],
+            "total": 0.389
+          },
+          {
+            "year": 2025,
+            "stages": [
+              0.0326,
+              0.0027,
+              0.2244
+            ],
+            "total": 0.26
+          }
+        ],
+        "breakdown_title": "Where the gain comes from¹",
+        "stage_labels": [
+          "Text form",
+          "Lexicon and sentiment",
+          "Word patterns (TF-IDF)"
+        ],
+        "caption": "Linear-model MAE in days (top) and its reduction by text feature group (bottom), identical evaluation rows.",
+        "note_sup": "Groups added in order: form, then lexicon and sentiment, then TF-IDF; another order would split the gain differently.",
+        "figure": "Figure A5."
+      },
+      "key_figures": [
+        {
+          "value": "0.29 days",
+          "label": "median annual error reduction"
+        }
+      ],
+      "takeaways": [
+        {
+          "marker": 1,
+          "heading": "Text carries forecast information",
+          "text": "Gains of **0.26–0.39 days** on 728,640 evaluation records."
+        },
+        {
+          "marker": 2,
+          "heading": "Forecasting is not persuasion",
+          "text": "Text may encode **purpose, place or programme templates**, not only persuasion."
+        },
+        {
+          "marker": 3,
+          "heading": "No single country drives it",
+          "text": "Removing any single country **leaves the gain positive** in every year (exploratory check)."
+        },
+        {
+          "marker": 4,
+          "heading": "Word patterns carry most of it",
+          "text": "TF-IDF gives the largest share in **4 of 5 years**; lexicon and sentiment add only **0.003–0.055 days**."
+        }
+      ],
+      "notes": {
+        "purpose": "Present the strongest new result.",
+        "script": "We trained on earlier years and tested on each of 2021 to 2025, comparing the same model with and without text on the same loans. Text reduced error every year. [Point: Word patterns carry most of it] Splitting the gain by feature group, added in a fixed order, word patterns from TF-IDF give most of it in four of five years; 2023 is the exception, where description form leads. The lexicon, specificity and sentiment measures, the ones closest to framing, add only 0.003 to 0.055 days. Text alone forecasts worse than structure alone in every year, so text adds to context rather than replacing it.",
+        "reference": "Forecast benchmark, run 2026-11-02: docs/6_matched_text_results.md; reports/text_benchmark_reviewed. Stage split: src/gain_breakdown.py from reports/text_benchmark_reviewed/benchmark.json."
+      },
+      "sublabel": "Forecast benchmark",
+      "figure": "Figure A5."
     }
   ]
 }

@@ -2725,3 +2725,40 @@ unseen exact template, which cannot exclude near-duplicates.
     - Fixed along the way: a constant deleted by an earlier function-range replacement (found by pyflakes and an offline dry run of every builder), the cover title overlap, slide 10's unpaired marker, and A2's two-line caption.
   - **Wording:** triage claims say boosted tree, structure only, completed loans only, retrospective, uneven across countries.
   - QA reports no automated problems; full suite 211 passed; previews, PDF and preview page refreshed; not pushed.
+- **2026-11-08, detailed solution-led structure and new photos (Mike: a detailed version, agenda back, more photos):**
+  - **Before the change:** no new owner edits. Two slides were duplicated and all 24 reordered; nothing was deleted. Forecast benchmark moved to appendix A5.
+  - **Order:**
+    1. Cover.
+    2. Summary.
+    3. Agenda, with four sections and page chips.
+    4. The wait.
+    5. Where loans and delays sit (new: country map and table plus 81%, 92.8% and 15–67%).
+    6. Key insight.
+    7. Four analyses.
+    8. Country uncertainty; panel (c) is now "What it means for the solution".
+    9. Programme controls.
+    10. Why not rewrite stories.
+    11. What text adds; panel (b) is now text alone versus loan structure, worse by 0.146–1.032 days.
+    12. Fragile across countries.
+    13. Solution overview.
+    14. Predict.
+    15. Prioritise.
+    16. Test.
+    17. Guardrails.
+    18. Roadmap.
+    19. Close.
+  - **Appendix:** A1 regional check, A2 as-of audit, A3 holdout, A4 themes, A5 forecast benchmark.
+  - Evidence slides end with a violet "→ Why …" line tying the finding to the solution.
+  - **Photos:** five new Unsplash photos, recorded in `assets/photos/PROVENANCE.md` with photographer and URL: Richard Nyoni ×2, Ali Mkumbwa ×2, Muhammad-Taha Ibrahim. Their uses:
+    - cover: woman harvesting greens;
+    - close: vendor with a phone;
+    - problem: shop owner;
+    - key insight: shop owner, Abuja;
+    - Prioritise: soybean farmer.
+    The cover keeps the market and tailor photos, no photo repeats, and the unlicensed Kiva farmer photo is no longer used.
+  - **Builder changes:**
+    - Country panel extracted to `country_panel()` with `map_frame(cy)`.
+    - The agenda reads its items from the storyline.
+    - Photos are placed by slide id.
+    - Fixed along the way: swallowed constants were restored (pyflakes clean), and slide 8's caption and line overlap.
+  - QA reports no automated problems; previews, PDF and preview page refreshed; not pushed.

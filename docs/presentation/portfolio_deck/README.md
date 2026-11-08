@@ -1,8 +1,8 @@
 # Portfolio deck (November 2026)
 
-Current Cultural Blend deck for portfolio readers, solution-led since 2026-11-08: 13 core slides and
-9 appendix slides, Problem → Solution (Predict → Prioritise → Test) → Evidence → Next steps. The
-analysis slides are the appendix proof.
+Current Cultural Blend deck for portfolio readers, detailed and solution-led since 2026-11-08: 19 core
+slides and 5 appendix slides. The problem → What drives the wait → Our solution (Predict → Prioritise →
+Test) → Safe next steps.
 
 - Content and speaker notes: [`storyline.json`](storyline.json)
 - Design: [`../DESIGN.md`](../DESIGN.md), which defers to Mike's text-to-SQL slide standard
