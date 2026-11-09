@@ -97,10 +97,24 @@ benchmark. **Equivalence** = exploratory screen of October coefficients (2026-11
 | Business, same-day funding per extra mention per 100 words (slide 11) | −0.357 pp expanded; −0.258 pp programme-adjusted ("0.26–0.36 pp lower") | same | Equivalence, exploratory |
 | Shrink under programme controls (slide 11) | third person, funding time, 10% (−0.0090 → −0.0081); business, same-day, 28% (−0.357 → −0.258 pp) | same | Equivalence, exploratory |
 | Loans with at least one mention (slide 11) | third person 97.3%; business 85.0% | same | Descriptive |
-| Subgroups bounded within ±5% (funding time), programme-adjusted model, of 10 (slide 11) | family 10; basic needs 10; business 10; agency 10; gratitude 10; urgency 1; first person 5; third person 10; sentiment 9 | same | Exploratory |
-| Subgroups bounded within ±1 pp (24-hour), programme-adjusted model, of 10 | family 9; basic needs 6; business 10; agency 9; gratitude 1; urgency 0; first person 0; third person 10; sentiment 2 | same | Exploratory |
-| Subgroups bounded (funding time), expanded model, of 10 | family 10; basic needs 5; business 10; agency 10; gratitude 1; urgency 0; first person 0; third person 10; sentiment 2 | same | Exploratory |
-| Subgroup tests and unadjusted hypotheses, programme-adjusted, funding time | 180 tests across both outcomes; agency in female +0.0108 (p 0.0027); agency in male -0.0190 (p 0.0007); urgency in Asia -0.0856 (p 0.0020); unadjusted, exploratory | same | Exploratory |
+| Subgroups bounded within ±5% (funding time), programme-adjusted model, of 10 (slide 11), t(47) reference, superseded by the subgroup bootstrap below | family 10; basic needs 10; business 10; agency 10; gratitude 10; urgency 1; first person 5; third person 10; sentiment 9 | same | Exploratory |
+| Subgroups bounded within ±1 pp (24-hour), programme-adjusted model, of 10, t(47) reference, superseded by the subgroup bootstrap below | family 9; basic needs 6; business 10; agency 9; gratitude 1; urgency 0; first person 0; third person 10; sentiment 2 | same | Exploratory |
+| Subgroups bounded (funding time), expanded model, of 10, t(47) reference, superseded by the subgroup bootstrap below | family 10; basic needs 5; business 10; agency 10; gratitude 1; urgency 0; first person 0; third person 10; sentiment 2 | same | Exploratory |
+| Subgroup tests, t(47) reference | 180 tests across both outcomes in each specification; its unadjusted p-values are retired, superseded by the subgroup bootstrap below | `reports/evidence_sources/robustness_summary.json` | Exploratory |
+
+## Subgroup bootstrap
+
+| Claim | Value | Source | Layer |
+| --- | --- | --- | --- |
+| Equivalence within subgroups (±5%, funding time, programme-adjusted), of 10 | family 10; basic needs 5; business 9; agency 9; gratitude 5; urgency 0; first person 4; third person 10; sentiment 7. Below 10 reads as can't confirm, not large | `reports/evidence_sources/robustness_summary.json` (`src/robustness_summary.py`, `reports/experiments_2026_11_08/subgroup_bootstrap.json`, commit 5ac5e4a; 9,999 draws, Webb weights) | Equivalence, exploratory |
+| Equivalence within subgroups (±1 pp, 24-hour, programme-adjusted), of 10 | family 7; basic needs 2; business 8; agency 7; gratitude 0; urgency 0; first person 0; third person 10; sentiment 1 | same | Equivalence, exploratory |
+| Equivalence within subgroups (±5%, funding time, expanded), of 10 | family 9; basic needs 2; business 9; agency 8; gratitude 0; urgency 0; first person 1; third person 9; sentiment 1 | same | Equivalence, exploratory |
+| Equivalence within subgroups (±1 pp, 24-hour, expanded), of 10 | family 8; basic needs 1; business 8; agency 7; gratitude 0; urgency 0; first person 0; third person 8; sentiment 0 | same | Equivalence, exploratory |
+| The single misses, equivalence BH p | business in Asia 0.052; agency in small loans 0.061 | same | Equivalence, exploratory |
+| Subgroup hypotheses, programme-adjusted, funding time | urgency in Asia: bootstrap p 0.107, BH 0.32; urgency post-pandemic: bootstrap p 0.042, BH 0.38; urgency in Africa: bootstrap p 0.065, BH 0.23; agency in male: bootstrap p 0.015, BH 0.13; agency in female: bootstrap p 0.091, BH 0.28 | same | Exploratory |
+| Subgroup tests passing BH for a nonzero association | 6 of 360, none urgency or agency: basic needs, 24-hour, large loans, programme-adjusted; expanded only: third person (medium, female) and sentiment (female), across outcomes | same | Exploratory |
+| Grid cells with bootstrap p below 0.05, unadjusted, programme-adjusted funding time | 11 of 90; none passes BH | same | Exploratory |
+| No group shows a confirmed large framing effect | no subgroup test passes BH with an estimate beyond its bound; urgency in Asia, 24-hour, has a normal-reference range beyond the ±1 pp bound but BH p 0.149, so it is unconfirmed | same | Exploratory |
 
 ## Prediction
 
@@ -251,6 +265,7 @@ Kernel `tuannm3812/kiva-hackathon-experiments-appendix`, commit 587d2d2 (publish
 "The story barely registers", "robust null", "won't move the needle", "myth busted",
 "third person BH p 0.012 → 0.061" and "business framing is the one term below BH 0.05 (BH p 0.006)" (retired 2026-11-08:
 superseded by the corrected wild cluster bootstrap), "no term survives" / "0 pass BH", "lowest p 0.136", bootstrap BH p third person 0.136 and 0.261, business 0.275 and 0.337, and loan amount +44.8% (retired 2026-11-09: corrected rerun),
+"six framings in all ten subgroups", "One playbook serves every group", and the urgency-in-Asia p 0.0020 and agency p 0.0027 and 0.0007 subgroup values (retired 2026-11-09: subgroup bootstrap),
 "structure beats story ~10×", LightGBM, "SHAP top 10/15 has no narrative feature",
 "sign reversal" for third-person framing, country-level A/B advice from two-country
 regions, and the 20,000-loan topic results as full-data evidence.

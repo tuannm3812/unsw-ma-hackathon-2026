@@ -2,7 +2,7 @@ import math
 
 import pytest
 
-from src.robustness_summary import ORDER, adjusted_passes, bootstrap_summary, evidence_funnel, framing_in_real_units, subgroup_summary
+from src.robustness_summary import subgroup_bootstrap_summary, subgroup_cells, ORDER, adjusted_passes, bootstrap_summary, evidence_funnel, framing_in_real_units, subgroup_summary
 def test_bootstrap_counts_changes_against_screen():
     wild = {'results': {'expanded/log_funding_speed': {'draws': 9999, 'n_clusters': 48, 'weights': 'Webb', 'rows': [
         {'feature': 'family_mentions_per_100_words', 'equivalent_wcr': True, 'wcr_p_zero_bh': 0.4},
@@ -68,3 +68,34 @@ def test_adjusted_passes_reports_each_pass_with_its_programme_adjusted_result_an
     assert out['passes'][0]['pct_change_in_1_plus_days'] == pytest.approx((math.exp(-0.009) - 1) * 100)
     assert out['passes'][0]['p_zero_bh'] == 0.008 and out['passes'][0]['programme_adjusted_p_zero_bh'] == 0.426
     assert out['passes'][0]['programme_adjusted_p_zero'] == 0.128 and out['lowest_other_p_zero_bh'] == 0.156
+
+
+def _boot_row(eq, p_zero=.5, bh=.9):
+    return {'feature': 'urgency_mentions_per_100_words', 'estimate': -.01, 'bound': .05, 'equivalent_wcr': eq, 'wcr_p_zero': p_zero,
+            'wcr_p_zero_bh': bh, 'wcr_p_tost': .02, 'wcr_p_tost_bh': .03}
+
+
+def _boot():
+    results = []
+    for spec in ('programme_adjusted', 'expanded'):
+        for outcome in ('log_funding_speed', 'funded_within_24h'):
+            for i, (group, level) in enumerate(ORDER):
+                row = _boot_row(i != 0, .04 if i == 1 else .5, .01 if (i == 2 and spec == 'expanded') else .9)
+                results.append({'specification': spec, 'outcome': outcome, 'group': group, 'level': level, 'rows': [row]})
+    return {'draws': 9, 'method': 'm', 'results': results}
+
+
+def test_subgroup_bootstrap_counts_grid_and_passes():
+    out = subgroup_bootstrap_summary(_boot())
+    grid = out['specs']['programme_adjusted']['log_funding_speed']
+    assert grid['grid']['urgency'][0] is False and grid['bounded_count']['urgency'] == len(ORDER) - 1
+    assert out['tests'] == 4 * len(ORDER)
+    assert len(out['bh_zero_passes']) == 2 and {r['specification'] for r in out['bh_zero_passes']} == {'expanded'}
+    assert len(out['unadjusted_zero_passes']) == 4
+
+
+def test_subgroup_cells_finds_one_cell_and_rejects_unknown():
+    level = ORDER[1][1]
+    assert subgroup_cells(_boot(), 'expanded', 'log_funding_speed', 'urgency', level)['p_zero'] == .04
+    with pytest.raises(KeyError):
+        subgroup_cells(_boot(), 'expanded', 'log_funding_speed', 'nothing', level)

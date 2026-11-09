@@ -562,7 +562,7 @@ def outcome(page, slide, pos):
     actor_fill = {'violet': (VIOLET, WHITE), 'navy': (NAVY, WHITE), 'yellow': (YELLOW, NAVY), 'slate': (SLATE, WHITE)}
     for i, (label, note) in enumerate(ex['steps']):
         if i < len(ex['steps']) - 1:
-            page.line(xs[i] + 18, line_y, xs[i + 1] - 18, line_y, HAIR if i != 1 else NAVY, 2 if i == 1 else 1.25)
+            page.line(xs[i] + (27 if i == 1 else 18), line_y, xs[i + 1] - (27 if i == 0 else 18), line_y, HAIR if i != 1 else NAVY, 2 if i == 1 else 1.25)
             page.ops[-1]['end_arrow'] = 'FILL_ARROW'
         page.sup(label, xs[i] - 54, 206, 108, 28, size=9, bold=True, align="center")
         if ex.get('actors'):
@@ -601,6 +601,7 @@ def outcome(page, slide, pos):
     page.caption('¹', ex['note'], 414)
     page.caption('²', ex['note2'], 428)
     page.caption('Scope:', slide['body'][0]['text'], 442)
+    page.text(slide['footer'], L, 456, R - L, 12, size=8, color=SLATE)
     page.takeaways(slide['takeaways'], pos)
 
 
@@ -942,7 +943,6 @@ def subgroups(page, slide, pos):
     page.line(count_x + 2, TOP + 15, count_x + count_w * 3 - 4, TOP + 15, HAIR, .75)
     for c, label in enumerate(ex['count_columns']):
         page.text(label, count_x + c * count_w, TOP + 18, count_w, 12, size=8, color=GREY, align='center')
-    page.marker(4, count_x + count_w * 3 - 22, TOP + 1)
     hyp = {(t, c) for t, c in ex['hypotheses']}
     for r, row in enumerate(sorted(ex['rows'], key=lambda row: MEASURE_ORDER.index(measure_key(row['term'])))):
         y = top + r * (ch + 6)
@@ -958,11 +958,11 @@ def subgroups(page, slide, pos):
             full = value == len(xs)
             page.text(str(value), count_x + c * count_w, y + 3, count_w, 14, size=9, bold=full,
                       color=NAVY if full else VIOLET, align='center')
-        if row['term'] == 'urgency':
+        if row['term'] == 'business':
             page.marker(2, L + 62, y + 4)
     ly = top + len(ex['rows']) * (ch + 6) + 6
     names = ex['legend']
-    page.legend([(names[0], small, 'RECTANGLE', 1), (names[1], unknown), (names[2], NAVY, 'ELLIPSE', 3)],
+    page.legend([(names[0], small, 'RECTANGLE', 1), (names[1], unknown, 'RECTANGLE', 3), (names[2], NAVY, 'ELLIPSE', 4)],
                 ly, x0, span=xs[-1] + cw - x0, gap=26)
     page.caption(slide['figure'], ex['caption'], ly + 18, w=R - L)
     page.caption('¹', ex['note_sup'], ly + 31, w=R - L)
@@ -2328,7 +2328,12 @@ def main() -> None:
             images.append((at['lever'], ASSETS / 'icons/description-violet.png', (L + 154, TOP + 89.4, 18, 18)))
         if 'outcome' in at:
             for x, icon in zip(JOURNEY_X, slide_by_id('outcome')['exhibit']['icons']):
-                images.append((at['outcome'], ASSETS / 'icons' / icon, (x - 15, 171, 30, 30)))
+                if icon:
+                    images.append((at['outcome'], ASSETS / 'icons' / icon, (x - 15, 171, 30, 30)))
+            # Logo file unaltered: its transparent margin is the brand's clear space, so the ink is centred on the step.
+            scale = 46 / 963
+            images.append((at['outcome'], ASSETS / 'logos/kiva-logo-classic.png',
+                           (JOURNEY_X[1] - 23 - 201 * scale, 186 - 409 / 2 * scale - 201 * scale, 1365 * scale, 811 * scale)))
             images.append((at['outcome'], ASSETS / 'icons/check_circle-navy.png', (356 + 12, 284 + 31, 18, 18)))
             images.append((at['outcome'], ASSETS / 'icons/block-slate.png', (356 + 12, 284 + 74, 18, 18)))
         if 'where' in at:

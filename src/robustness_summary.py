@@ -31,6 +31,7 @@ SCREEN = ROOT / 'reports/equivalence_screen_reviewed/equivalence_screen.csv'
 OUTPUT = ROOT / 'reports/evidence_sources/robustness_summary.json'
 DISTRIBUTION = ROOT / 'reports/equivalence_screen_reviewed/feature_distribution.json'
 MINUTES_PER_DAY = 1440
+SUBGROUP_BOOTSTRAP = ROOT / 'reports/experiments_2026_11_08/subgroup_bootstrap.json'
 ORDER = [('analysis_period', 'pre_pandemic'), ('analysis_period', 'pandemic_disruption'),
          ('analysis_period', 'post_pandemic'), ('loan_size_band', 'small'), ('loan_size_band', 'medium'),
          ('loan_size_band', 'large'), ('gender_classification', 'female'), ('gender_classification', 'male'),
@@ -137,6 +138,44 @@ def subgroup_summary(data: dict) -> dict:
     return out
 
 
+def subgroup_bootstrap_summary(data: dict) -> dict:
+    """Bootstrap equivalence grids by specification and outcome, and every unadjusted or BH-adjusted pass."""
+    out: dict[str, dict] = {}
+    passes, unadjusted = [], []
+    for spec in ('programme_adjusted', 'expanded'):
+        out[spec] = {}
+        for outcome in ('log_funding_speed', 'funded_within_24h'):
+            cells = {(r['group'], r['level']): r for r in data['results'] if r['specification'] == spec and r['outcome'] == outcome}
+            names = [term(t['feature']) for t in cells[ORDER[0]]['rows']]
+            grid = {name: [] for name in names}
+            for group, level in ORDER:
+                for t in cells[(group, level)]['rows']:
+                    grid[term(t['feature'])].append(bool(t['equivalent_wcr']))
+                    row = {'specification': spec, 'outcome': outcome, 'group': group, 'level': level, 'term': term(t['feature']),
+                           'estimate': t['estimate'], 'bound': t['bound'], 'p_zero': t['wcr_p_zero'], 'bh_zero': t['wcr_p_zero_bh'],
+                           'p_tost': t['wcr_p_tost'], 'bh_tost': t['wcr_p_tost_bh']}
+                    if t['wcr_p_zero_bh'] < 0.05:
+                        passes.append(row)
+                    if t['wcr_p_zero'] < 0.05:
+                        unadjusted.append(row)
+            out[spec][outcome] = {'subgroups': [level for _, level in ORDER], 'grid': grid,
+                                  'bounded_count': {name: sum(v) for name, v in grid.items()}}
+    named = {(r['term'], r['level']) for r in unadjusted}
+    return {'draws': data['draws'], 'method': data['method'], 'tests': sum(len(r['rows']) for r in data['results']),
+            'specs': out, 'bh_zero_passes': passes, 'unadjusted_zero_passes': unadjusted, 'unadjusted_pairs': sorted(named)}
+
+
+def subgroup_cells(data: dict, spec: str, outcome: str, term_name: str, level: str) -> dict:
+    """One framing in one subgroup, by its display name, with bootstrap p-values."""
+    for result in data['results']:
+        if (result['specification'], result['outcome'], result['level']) == (spec, outcome, level):
+            for row in result['rows']:
+                if term(row['feature']) == term_name:
+                    return {'estimate': row['estimate'], 'p_zero': row['wcr_p_zero'], 'bh_zero': row['wcr_p_zero_bh'],
+                            'p_tost': row['wcr_p_tost'], 'bh_tost': row['wcr_p_tost_bh']}
+    raise KeyError((spec, outcome, term_name, level))
+
+
 def build(kaggle: Path = KAGGLE, screen_path: Path = SCREEN) -> dict:
     with screen_path.open() as handle:
         screen = {(r['specification'], r['outcome'], r['feature']): r['equivalent'] == 'True'
@@ -148,6 +187,13 @@ def build(kaggle: Path = KAGGLE, screen_path: Path = SCREEN) -> dict:
     for spec in ('programme_adjusted', 'expanded'):
         data = json.loads((kaggle / f'subgroup_inference/subgroup_{spec}.json').read_text())
         result['subgroups'][spec] = subgroup_summary(data)
+    boot = json.loads(SUBGROUP_BOOTSTRAP.read_text())
+    summary = subgroup_bootstrap_summary(boot)
+    spec, outcome = 'programme_adjusted', 'log_funding_speed'
+    summary['named'] = {f'{name} in {level}': subgroup_cells(boot, spec, outcome, name, level)
+                        for name, level in (('urgency', 'Asia'), ('urgency', 'Africa'), ('urgency', 'post_pandemic'), ('agency', 'male'),
+                                            ('agency', 'female'), ('business', 'Asia'), ('agency', 'small'))}
+    result['subgroup_bootstrap'] = summary
     return result
 
 

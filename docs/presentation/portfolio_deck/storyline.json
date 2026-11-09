@@ -61,7 +61,7 @@
    ],
    "notes": {
     "purpose": "Problem, solution, proof and the ask in one view.",
-    "script": "Problem: the median loan funds in 2.85 days, but a quarter wait more than 15.95 days, and same-day funding fell from 46.0 to 30.3 percent. Solution: loan details predict which loans will be slow, so Kiva can send lender-side support there first: a boosted tree on loan structure catches the slowest fifth 2.6 to 4.0 times better than chance. Proof: rewriting stories is not the lever, because five framings stay within five percent of funding time. Our ask: pilot the flag with lender-side support, and test one truthful prompt before giving writing advice. For whom and when is still open: no reliable difference so far, with subgroup results pending."
+    "script": "Problem: the median loan funds in 2.85 days, but a quarter wait more than 15.95 days, and same-day funding fell from 46.0 to 30.3 percent. Solution: loan details predict which loans will be slow, so Kiva can send lender-side support there first: a boosted tree on loan structure catches the slowest fifth 2.6 to 4.0 times better than chance. Proof: rewriting stories is not the lever, because five framings stay within five percent of funding time. Our ask: pilot the flag with lender-side support, and test one truthful prompt before giving writing advice. For whom and when: no group shows a confirmed large framing effect, but only family and third person are confirmed small in all ten subgroups."
    },
    "sublabel": "All evidence layers",
    "decision": "Our ask to Kiva: pilot a slow-funding flag with lender-side support, and test one truthful prompt.",
@@ -293,14 +293,15 @@
     ],
     "icons": [
      "payments-violet.png",
-     "storefront-navy.png",
+     "",
      "groups-navy.png",
      "account_balance-violet.png",
      "check_circle-navy.png"
     ]
    },
    "solution_link": "→ Why speed is a lender-side problem",
-   "figure": "Figure 1."
+   "figure": "Figure 1.",
+   "footer": "Independent hackathon analysis; not affiliated with or endorsed by Kiva."
   },
   {
    "n": 5,
@@ -1173,7 +1174,7 @@
    ],
    "notes": {
     "purpose": "Bridge from the problem to the evidence and the solution.",
-    "script": "Three findings point the same way, and each leads to a step of the solution. First, the wait is on the lender side: 96.4 percent of loans reach the borrower before listing, a median 24.2 days earlier, so the lever is helping slow loans find lenders. Second, loan details predict who waits: a boosted tree on structure flags the slowest fifth 2.6 to 4.0 times better than chance. Third, wording makes little difference: five framings stay within five percent of funding time, and text adds little to the flag. That holds across every period, loan size, gender and region we checked, while a few rare-word patterns remain hypotheses to test. So the lever is helping slow loans find lenders, not rewriting their stories. The next slides show the evidence behind each insight.",
+    "script": "Three findings point the same way, and each leads to a step of the solution. First, the wait is on the lender side: 96.4 percent of loans reach the borrower before listing, a median 24.2 days earlier, so the lever is helping slow loans find lenders. Second, loan details predict who waits: a boosted tree on structure flags the slowest fifth 2.6 to 4.0 times better than chance. Third, wording makes little difference: five framings stay within five percent of funding time, and text adds little to the flag. No group we checked shows a confirmed large framing effect: family and third person stay small in all ten subgroups, and several others can't be confirmed in every group. So the lever is helping slow loans find lenders, not rewriting their stories. The next slides show the evidence behind each insight.",
     "reference": "docs/1_data_dictionary.md (disbursalDate); reports/evidence_sources/triage_summary.json; equivalence screen; reports/evidence_sources/robustness_summary.json."
    },
    "takeaways": [
@@ -1194,8 +1195,8 @@
     },
     {
      "marker": 4,
-     "heading": "It holds in every group",
-     "text": "Six framings stay small in **all 10 subgroups** of period, loan size, gender and region."
+     "heading": "No group stands out",
+     "text": "**No group** shows a confirmed large framing effect; family and third person stay small in **all 10 subgroups**."
     }
    ],
    "solution_link": "→ The evidence behind each insight follows"
@@ -1737,8 +1738,8 @@
    "section": "Evidence",
    "sublabel": "For whom and when",
    "layout": "content+takeaways",
-   "title": "Six framings stay small in every period, loan size, gender and region",
-   "subtitle": "Exploratory: programme-adjusted model refitted in 10 subgroups, with the same ±5% bound as the last slide",
+   "title": "Family and third person stay small in every group; most others unconfirmed",
+   "subtitle": "Exploratory: programme-adjusted model refitted in 10 subgroups, wild cluster bootstrap, same ±5% bound as the last slide",
    "exhibit": {
     "groups": [
      [
@@ -1788,8 +1789,8 @@
        true
       ],
       "count": 10,
-      "expanded": 10,
-      "same_day": 9
+      "expanded": 9,
+      "same_day": 7
      },
      {
       "term": "business",
@@ -1802,12 +1803,12 @@
        true,
        true,
        true,
-       true,
+       false,
        true
       ],
-      "count": 10,
-      "expanded": 10,
-      "same_day": 10
+      "count": 9,
+      "expanded": 9,
+      "same_day": 8
      },
      {
       "term": "agency",
@@ -1815,7 +1816,7 @@
        true,
        true,
        true,
-       true,
+       false,
        true,
        true,
        true,
@@ -1823,9 +1824,9 @@
        true,
        true
       ],
-      "count": 10,
-      "expanded": 10,
-      "same_day": 9
+      "count": 9,
+      "expanded": 8,
+      "same_day": 7
      },
      {
       "term": "third_person",
@@ -1842,26 +1843,26 @@
        true
       ],
       "count": 10,
-      "expanded": 10,
+      "expanded": 9,
       "same_day": 10
      },
      {
       "term": "basic_needs",
       "cells": [
        true,
+       false,
+       true,
+       false,
+       true,
+       false,
        true,
        true,
-       true,
-       true,
-       true,
-       true,
-       true,
-       true,
-       true
+       false,
+       false
       ],
-      "count": 10,
-      "expanded": 5,
-      "same_day": 6
+      "count": 5,
+      "expanded": 2,
+      "same_day": 2
      },
      {
       "term": "gratitude",
@@ -1869,17 +1870,17 @@
        true,
        true,
        true,
+       false,
        true,
+       false,
+       false,
        true,
-       true,
-       true,
-       true,
-       true,
-       true
+       false,
+       false
       ],
-      "count": 10,
-      "expanded": 1,
-      "same_day": 1
+      "count": 5,
+      "expanded": 0,
+      "same_day": 0
      },
      {
       "term": "sentiment",
@@ -1887,23 +1888,23 @@
        true,
        false,
        true,
+       false,
        true,
        true,
        true,
        true,
-       true,
-       true,
+       false,
        true
       ],
-      "count": 9,
-      "expanded": 2,
-      "same_day": 2
+      "count": 7,
+      "expanded": 1,
+      "same_day": 1
      },
      {
       "term": "first_person",
       "cells": [
        false,
-       true,
+       false,
        true,
        true,
        true,
@@ -1913,14 +1914,14 @@
        false,
        true
       ],
-      "count": 5,
-      "expanded": 0,
+      "count": 4,
+      "expanded": 1,
       "same_day": 0
      },
      {
       "term": "urgency",
       "cells": [
-       true,
+       false,
        false,
        false,
        false,
@@ -1931,32 +1932,64 @@
        false,
        false
       ],
-      "count": 1,
+      "count": 0,
       "expanded": 0,
       "same_day": 0
      }
     ],
     "hypotheses": [
      [
-      "urgency",
-      8
+      "third_person",
+      1
      ],
      [
-      "agency",
+      "urgency",
+      2
+     ],
+     [
+      "third_person",
+      3
+     ],
+     [
+      "basic_needs",
+      4
+     ],
+     [
+      "business",
+      4
+     ],
+     [
+      "gratitude",
+      4
+     ],
+     [
+      "basic_needs",
+      5
+     ],
+     [
+      "third_person",
       6
      ],
      [
       "agency",
       7
+     ],
+     [
+      "third_person",
+      8
+     ],
+     [
+      "business",
+      9
      ]
     ],
     "legend": [
      "Within ±5%: small",
-     "Can’t tell yet",
-     "Unadjusted pattern to test¹"
+     "Can’t confirm in this group",
+     "Bootstrap p below 0.05, unadjusted¹"
     ],
-    "caption": "Funding-time verdict by framing and subgroup, programme-adjusted model, 1,453,840 loans. Expanded: funding time. Same-day: ±1 pp.",
-    "note_sup": "Unadjusted p-values among about 180 subgroup tests; hypotheses for the Test step, not findings.",
+    "caption": "Funding-time verdict by framing and subgroup, programme-adjusted model, wild cluster bootstrap, BH within each subgroup. Expanded: funding time. Same-day: ±1 pp.",
+    "note_sup": "11 of these 90 cells; none passes BH. Hypotheses for the Test step, not findings.",
     "count_columns": [
      "Grid",
      "Expanded",
@@ -1966,30 +1999,30 @@
    "takeaways": [
     {
      "marker": 1,
-     "heading": "Small everywhere, not just on average",
-     "text": "The five framings on the last slide plus gratitude stay within ±5% in **all 10 subgroups**; no family interaction with period or loan size survives clustering."
+     "heading": "Two framings hold in every group",
+     "text": "**Family** and **third person** stay within ±5% in **all 10 subgroups**."
     },
     {
      "marker": 2,
-     "heading": "Rare words stay open in most groups",
-     "text": "Urgency is small only before the pandemic (**1 of 10**); first person in **5 of 10**."
+     "heading": "Two more miss one group",
+     "text": "**Business** misses only in Asia (BH p 0.052); **agency** only in small loans (0.061)."
     },
     {
      "marker": 3,
-     "heading": "Two patterns to test, not to act on",
-     "text": "Urgency in Asia and agency by gender stand out among about **180** unadjusted tests."
+     "heading": "The rest can’t be confirmed",
+     "text": "Basic needs, gratitude and sentiment hold in **5, 5 and 7 of 10**: unconfirmed, not large."
     },
     {
      "marker": 4,
-     "heading": "The count depends on the model",
-     "text": "In the expanded model **4** framings stay small in all 10; for same-day funding, **2**."
+     "heading": "No confirmed subgroup signal",
+     "text": "**6 of 360** tests pass BH, none of them **urgency or agency**."
     }
    ],
-   "solution_link": "→ Why one playbook serves every group",
+   "solution_link": "→ Why: no group shows a confirmed large framing effect",
    "notes": {
     "purpose": "Answer for whom and when.",
-    "script": "For whom and when: we refitted the programme-adjusted model separately in ten subgroups: three periods, three loan sizes, female and male borrowers, and Asia and Africa, and applied the same five percent equivalence test. The five framings from the last slide stay small in all ten, and gratitude joins them in this model; sentiment is small in nine. So the small result is not an average hiding a large effect in one group, and no family-framing interaction with period or loan size survives country clustering. [Point: Rare words stay open in most groups] Urgency is small in one subgroup, first person in five. [Point: Two patterns to test, not to act on] Among about 180 unadjusted tests, urgency in Asia and agency by gender stand out; they are hypotheses for the Test step, not findings. [Point: The count depends on the model] For same-day funding the pattern is weaker: business and third person are small in all ten, family and agency in nine. In the expanded model, family, business, agency and third person stay small in all ten. The bounds were set after the estimates, so this is exploratory. So the solution can use one playbook rather than group-specific story advice.",
-    "reference": "reports/evidence_sources/robustness_summary.json (src/robustness_summary.py, src/subgroup_inference.py); primary interactions: src/primary_interactions.py."
+    "script": "For whom and when: we refitted the programme-adjusted model separately in ten subgroups: three periods, three loan sizes, female and male borrowers, and Asia and Africa, then re-tested every framing with the corrected wild cluster bootstrap and the same five percent bound. [Point: Two framings hold in every group] Family and third person stay within five percent in all ten. [Point: Two more miss one group] Business holds in nine, missing only in Asia at adjusted p 0.052. Agency holds in nine, missing only in small loans at adjusted p 0.061. [Point: The rest can't be confirmed] Basic needs, gratitude and sentiment hold in five, five and seven of ten. That means we cannot confirm they are small in the other groups; it does not mean they are large. First person holds in four and urgency in none. [Point: No confirmed subgroup signal] Across 360 subgroup tests, six pass adjustment, and none is urgency or agency: basic needs for same-day funding in large loans with programme controls, and, in the expanded model only, third person and sentiment. Urgency in Asia has bootstrap p 0.107, adjusted 0.32. Agency in male borrowers has p 0.015, adjusted 0.13, and in female borrowers p 0.091, adjusted 0.28. Urgency after the pandemic has p 0.042 and in Africa p 0.065, before adjustment. The dots mark 11 unadjusted cells, and none passes adjustment. In the expanded model, family, business and third person hold in nine of ten for funding time; with programme controls, third person holds in all ten for same-day funding. No family interaction with period or loan size survives country clustering. The bounds were set after the estimates, so this is exploratory. So no group shows a confirmed large framing effect, and group-specific story advice has no support yet.",
+    "reference": "reports/evidence_sources/robustness_summary.json (src/robustness_summary.py); reports/experiments_2026_11_08/subgroup_bootstrap.json (src/subgroup_bootstrap.py); primary interactions: src/primary_interactions.py."
    },
    "figure": "Figure 8."
   },
@@ -2618,7 +2651,7 @@
      "n": "3",
      "name": "Pilot one prompt",
      "question": "Does editing a description change funding speed?",
-     "do": "With partners, test **one truthful clarity prompt** against a **control**; urgency in Asia is a candidate.",
+     "do": "With partners, test **one truthful clarity prompt** against a **control**; urgency in Asia is only a **weak signal** (p 0.107).",
      "done": "Threshold, power and guardrails are **agreed in advance**."
     }
    ],
@@ -2683,7 +2716,7 @@
    "subtitle": "What this evidence cannot show, and what to do about it",
    "notes": {
     "purpose": "Limits, each with an action.",
-    "script": "Four guardrails. [Point: Claims stay at association level] One: every result is an association; nothing has been tested by editing a description or applying a lever, so each needs a controlled pilot. [Point: Reach stays an open question] Two: only funded loans are in the data, so we cannot say whether a lever helps loans that would otherwise expire. [Point: The flag is validated by country] Three: the flag is uneven across countries, with precision from 0.18 to 0.90 within the ten largest, and its probabilities drift in 2025, so it must be recalibrated and validated by country. [Point: One passing signal is not a rule] Four: for whom and when: framings stay small across periods, loan sizes, genders and regions, regional patterns rest on two countries each, and the one framing link that passes the strictest test does so in one model only, so no writing rule follows. The strip under the rows shows where each limit gets addressed: country validation comes with the flag rollout, the data gap at gate 2, and the causal and writing questions at the gate 3 pilot. Funding time is also a platform measure: 96.4 percent of loans reach the borrower before listing.",
+    "script": "Four guardrails. [Point: Claims stay at association level] One: every result is an association; nothing has been tested by editing a description or applying a lever, so each needs a controlled pilot. [Point: Reach stays an open question] Two: only funded loans are in the data, so we cannot say whether a lever helps loans that would otherwise expire. [Point: The flag is validated by country] Three: the flag is uneven across countries, with precision from 0.18 to 0.90 within the ten largest, and its probabilities drift in 2025, so it must be recalibrated and validated by country. [Point: One passing signal is not a rule] Four: for whom and when: no group shows a confirmed large framing effect, but only family and third person are confirmed small in all ten subgroups, regional patterns rest on two countries each, and the one framing link that passes the strictest test does so in one model only, so no writing rule follows. The strip under the rows shows where each limit gets addressed: country validation comes with the flag rollout, the data gap at gate 2, and the causal and writing questions at the gate 3 pilot. Funding time is also a platform measure: 96.4 percent of loans reach the borrower before listing.",
     "reference": "claims register; reports/evidence_sources/triage_summary.json; reports/evidence_sources/robustness_summary.json; appendix A7."
    },
    "sublabel": "Guardrails",
@@ -2723,8 +2756,8 @@
      "question": "For whom and when",
      "verdict": "Checked",
      "tone": "yes",
-     "evidence": "Framings stay **small across groups**, and the one strict-test pass holds in **one model only**.",
-     "so_what": "Test **urgency in Asia** as a hypothesis.",
+     "evidence": "**No group** shows a confirmed large effect, and the one strict-test pass holds in **one model only**.",
+     "so_what": "Treat **weak signals** as hypotheses to test.",
      "icon": "groups-navy.png",
      "marker": 4
     }

@@ -3130,3 +3130,12 @@ unseen exact template, which cannot exclude near-duplicates.
 - Titles in Drive are now `Cultural Blend - Portfolio Deck` and `Cultural Blend - Deliverables`. Kebab-case stays the rule for repo files.
 - Verified: deck QA, rendered slide, full offline pytest. Nothing pushed.
 - **2026-11-09, wild bootstrap within subgroups:** the corrected bootstrap, run in the slide 13 subgroups, weakens the t(G−1) counts. Programme-adjusted, funding time, within ±5%: family and third person 10 of 10, business and agency 9, sentiment 7, basic needs and gratitude 5, first person 4, urgency 0. Details in `reports/experiments_2026_11_08/`. Not pushed.
+
+## 2026-11-09: subgroup bootstrap folded in; Kiva logo on slide 4
+
+- Live deck re-read first: no owner edits to mirror. `src/robustness_summary.py` (tested) now reads `reports/experiments_2026_11_08/subgroup_bootstrap.json`; register section added, and the t-reference subgroup rows are marked superseded.
+- Verdicts changed: only family and third person hold in all 10 subgroups (funding time, programme-adjusted). Business and agency hold in 9; basic needs, gratitude and sentiment in 5, 5 and 7, which reads as can't confirm, not large. Urgency in Asia loses significance (bootstrap p 0.107). 6 of 360 tests pass BH, none urgency or agency.
+- Slide 13 rebuilt from the bootstrap; slides 2 (notes), 8, 19 and 20 and the case study follow. Slide 12's pooled verdicts are unchanged. Slide 16 made no subgroup claim, so it is unchanged. The requested slide 13 title wrapped, so it is shortened.
+- One row needs care: urgency in Asia, 24-hour, has a normal-reference range beyond the ±1 pp bound but BH p 0.149, so "no confirmed large effect" still holds, as an unconfirmed signal.
+- Slide 4's second step now shows the unaltered Kiva logo, with the independence footer. Deliverables PDFs refreshed.
+- Verified: deck QA, rendered slides, retired-claims scan, full offline pytest. Nothing pushed. The poster spec in deck-kit still says to test urgency in Asia; left for the poster thread.

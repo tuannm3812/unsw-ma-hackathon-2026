@@ -66,9 +66,13 @@ business, agency and third-person framing are bounded in both October
 specifications. Urgency and first-person framing are not: their intervals
 still allow associations of roughly 6–14%. "Not significant" for urgency meant
 "too uncertain", not "no effect". The bound was set after seeing the
-estimates, so this is exploratory. In the programme-adjusted model, the five
-bounded framings plus gratitude stay within ±5% of funding time in all 10
-subgroups of period, loan size, gender and region.
+estimates, so this is exploratory. Within 10 subgroups of period, loan size,
+gender and region, a wild cluster bootstrap on the programme-adjusted model
+confirms family and third-person framing within ±5% of funding time in all 10.
+Business and agency each hold in 9 of 10. Basic needs, gratitude and sentiment
+hold in 5, 5 and 7 of 10, so they cannot be confirmed in every group; that does
+not make them large. Of 360 subgroup tests, 6 pass adjustment and none is urgency
+or agency, so no group shows a confirmed large framing effect.
 
 **3. Almost nothing passes the strictest test.** Nine measures, two outcomes and
 two models make 36 tests: 5 pass the country-clustered test, 4 a wild cluster
