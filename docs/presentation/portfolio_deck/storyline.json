@@ -3127,7 +3127,7 @@
    "note": "A posting-only split would keep these 5,691 training records; evaluation windows still select eventual completions.",
    "notes": {
     "purpose": "Show how training stayed honest about time.",
-    "script": "A training record only counts if it had finished funding before the cutoff, so the model never learns from outcomes that were not yet known.",
+    "script": "A training record only counts if it had finished funding before the cutoff, so the model never learns from outcomes that were not yet known. In the 2024 test year, 1,169,262 loans train the model, 5,691 that finished after the cutoff are left out, and 141,725 are tested.",
     "reference": "docs/6_matched_text_results.md training availability table."
    },
    "sublabel": "Forecast benchmark",
@@ -3148,6 +3148,11 @@
      "marker": 3,
      "heading": "Late finishers are left out",
      "text": "Loans posted before a cutoff but **finished later** do not train that year’s model."
+    },
+    {
+     "marker": 4,
+     "heading": "2024 shows the split",
+     "text": "**1,169,262** loans train the model, **5,691** are left out and **141,725** are tested."
     }
    ]
   },
@@ -4281,7 +4286,7 @@
    },
    "notes": {
     "purpose": "Show the text methods in one place.",
-    "script": "This table lists every text feature behind the deck. Description form, word-list counts and VADER sentiment are fixed rules, so nothing is learned from the outcome. TF-IDF and its compressed version are fitted on training years only. The eight framing word lists are theory-guided and not yet validated, which is why validating the measures is the first gate. The topic model is exploratory, on a 20,000-loan sample, and is not full-data evidence. We used classical NLP throughout, with no large language model or pretrained embeddings.",
+    "script": "This table lists every text feature behind the deck. Description form, word-list counts and VADER sentiment are fixed rules, so nothing is learned from the outcome. TF-IDF and its compressed version are fitted on training years only. The eight framing word lists are theory-guided and not yet validated, which is why validating the measures is the first gate. The topic model is exploratory, on a 20,000-loan sample, and is not full-data evidence. We used classical NLP throughout, with no large language model or pretrained embeddings. The NMF themes come from a 20,000-loan sample, so they are exploratory and appear only on A5.",
     "reference": "reports/evidence_sources/text_methods.json (src/text_methods.py); src/features.py; src/benchmark_models.py; src/strong_forecaster.py; notebooks/1_full_dataset_eda.py."
    },
    "layout": "content+takeaways",
@@ -4300,6 +4305,11 @@
      "marker": 3,
      "heading": "Classical NLP, not yet validated",
      "text": "No large language model; the **word lists still need validating**."
+    },
+    {
+     "marker": 4,
+     "heading": "Themes stay a sample view",
+     "text": "NMF themes come from a **20,000-loan sample**, so they appear only on A5."
     }
    ]
   },
@@ -4408,11 +4418,16 @@
      "marker": 3,
      "heading": "Tests are layered",
      "text": "Each claim passes **several checks**, from clustered errors to a text placebo."
+    },
+    {
+     "marker": 4,
+     "heading": "Photos stayed out",
+     "text": "Loan photos were **not analysed**; fetching them at scale needs Kiva’s permission."
     }
    ],
    "notes": {
     "purpose": "Show the whole flow so nothing is missed.",
-    "script": "Reading left to right: raw Kiva listings, cleaning, features, models and tests, with the slides that use each step. Loan details, form, word lists and VADER are fixed rules. TF-IDF and its compressed form are fitted on training years only. NMF topics are exploratory on a sample.",
+    "script": "Reading left to right: raw Kiva listings, cleaning, features, models and tests, with the slides that use each step. Loan details, form, word lists and VADER are fixed rules. TF-IDF and its compressed form are fitted on training years only. NMF topics are exploratory on a sample. Loan photos were not analysed, because fetching them at scale needs Kiva's permission.",
     "reference": "src/features.py; src/benchmark_models.py; src/strong_forecaster.py; src/modeling.py."
    },
    "photo_note": "Loan photos were not analysed: fetching them at scale needs Kiva’s permission."

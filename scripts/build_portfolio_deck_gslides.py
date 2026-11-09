@@ -1845,6 +1845,7 @@ def a_asof(page, slide, pos):
     cut = ex['cutoff']
     cy, ch = TOP + h + 26, 86
     panel(page, L, cy, pw, ch, cut['title'], '')
+    page.marker(4, L + pw - 22, cy + 8)
     line_x, spans = L + 280, ((L + 196, L + 280, SLATE), (L + 244, L + 318, VIOLET), (L + 286, L + 362, NAVY))
     page.text(cut['line'], line_x - 70, cy + 20, 140, 11, size=8, color=NAVY, bold=True, align='center')
     page.line(line_x, cy + 31, line_x, cy + ch - 5, NAVY, .75)
@@ -1882,6 +1883,7 @@ def a_text(page, slide, pos):
     page.marker(1, L + 144, first + 4)
     page.marker(3, L + 144, first + pitch + 4)
     page.marker(2, L + 144, first + 3 * pitch + 4)
+    page.marker(4, L + 144, first + 5 * pitch + 4)
     names = ex['legend']
     page.legend([(names[0], NAVY), (names[1], VIOLET), (names[2], SLATE)], first + 6 * pitch, L, gap=16)
     page.caption(ex['figure'], ex['caption'], first + 6 * pitch + 18, w=R - L)
@@ -2101,6 +2103,7 @@ def a_pipeline(page, slide, pos):
     page.marker(3, L + 4 * (width + gap) + width - 16, top + 6)
     page.caption(slide['figure'], slide['caption'], top + h + 24, w=R - L)
     page.text(slide['photo_note'], L, top + h + 37, R - L, 12, size=8, color=SLATE)
+    page.marker(4, L + label_width(slide['photo_note'], 8) + 6, top + h + 37)
     page.takeaways(slide['takeaways'], pos)
 
 

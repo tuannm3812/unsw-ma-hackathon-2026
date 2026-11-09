@@ -3093,3 +3093,8 @@ unseen exact template, which cannot exclude near-duplicates.
 - A1: ranges now carry direct numbers and "clears zero" or "crosses zero", so a reader need not read them off the axis. A2: chart shortened; a worked 2024 cutoff example added. A3: table grouped by model type with zebra rows; score definitions moved under the takeaways; the dot chart stays until a replacement is chosen. A4 and A5: faster values violet, slower navy, in dots, ranges and labels, with a legend. A6: the big cards are replaced by a dumbbell of linear error with gain columns (linear and larger tree) beside the gain split. A7: icons per method, key settings in bold navy. A8: dots centred on their text with the shared helper.
 - A3 chart and A8 pipeline options were mocked up outside the deck for discussion.
 - Verified: deck QA, word-box overlap check, rendered slides, full offline pytest. Nothing pushed.
+
+## 2026-11-09: fourth takeaways on A2, A7 and A8
+
+- Live deck re-read first: no owner edits to mirror. Mike noted space left in these takeaway columns, so each now has a fourth point with a marker on its exhibit and a matching line in the notes. No new numbers.
+- Verified: deck QA, rendered slides, full offline pytest. Nothing pushed.
