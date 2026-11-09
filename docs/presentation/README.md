@@ -8,9 +8,9 @@ from [`portfolio_deck/storyline.json`](portfolio_deck/storyline.json) under the
 evidence and the 8 November equivalence screen.
 
 **Historical, do not reuse without the correction notice:**
-- The submitted competition deck and its v3 exports in `output/Team-Cultural-Blend-*`.
-- The 16-slide `output/cultural-blend-beyond-a-good-story-refined.*` and the 17-slide
-  live Google deck (`17rHwKFX…`) with [`SLIDE_CONTENT_BRIEF.md`](SLIDE_CONTENT_BRIEF.md),
+- The submitted competition deck and its v3 exports in `archive/november_old_decks/output/Team-Cultural-Blend-*`.
+- The 16-slide `archive/november_old_decks/output/cultural-blend-beyond-a-good-story-refined.*` and the 17-slide
+  live Google deck (`17rHwKFX…`) with [`SLIDE_CONTENT_BRIEF.md`](archive/november_old_decks/SLIDE_CONTENT_BRIEF.md),
   built on 7–8 November by `scripts/build_presentation_deck.py`, `build_slides_v3.py`
   and `build_slide_03_*.py`. These reuse retired claims.
 - The two November research-refresh decks below, which the portfolio deck supersedes
@@ -26,9 +26,9 @@ interpretation. The earlier research-design deck remains preserved alongside
 the update. Neither artifact replaces the submitted presentation.
 
 The deck briefs, rehearsal scripts, Q&A documents, HTML mirrors, and draft
-PPTX at this directory's top level record the September 2026 preparation process. They
+PPTX in `archive/september_prep/` record the September 2026 preparation process. They
 include superseded interpretations and are retained as historical material.
-The submitted deck was a separate team export; the local `slides_draft.pptx`
+The submitted deck was a separate team export; the local `archive/september_prep/slides_draft.pptx`
 is not evidence of the exact submitted version.
 
 For current reuse, read [evidence and corrections](../2_evidence_and_corrections.md)
@@ -48,3 +48,5 @@ notes template. `scripts/render_review_pdfs.py --template PATH --output-dir DIR`
 accepts explicit locations and defaults to `docs/pdf/generated/` for outputs.
 Importing the script is inert. Existing archived PDF copies are not overwritten
 by the default command.
+
+Earlier material is in `archive/`, with original filenames kept: `september_prep/` for the final-round briefs, scripts and Q&A, and `november_old_decks/` for the 7–8 November deck exports and their brief. Final shareable files are in [`../../deliverables/`](../../deliverables/README.md).

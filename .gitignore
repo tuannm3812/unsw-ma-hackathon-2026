@@ -182,7 +182,7 @@ data/**/*.parquet
 # Virtual Environment
 .venv/
 venv/
-docs/presentation/slides_draft.pdf
+docs/presentation/archive/september_prep/slides_draft.pdf
 
 # Reviewed research snapshots: ignore generated reports by default and keep
 # only these selected aggregate artifacts. No row-level feature caches ship.

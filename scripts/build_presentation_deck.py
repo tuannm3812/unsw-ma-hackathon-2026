@@ -41,7 +41,7 @@ FONT_NAME = "Google Sans"
 FALLBACK_FONT = "Arial"
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-OUTPUT_DIR = PROJECT_ROOT / "docs" / "presentation" / "output"
+OUTPUT_DIR = PROJECT_ROOT / "docs" / "presentation" / "archive" / "november_old_decks" / "output"
 OUTPUT_PPTX = OUTPUT_DIR / "cultural-blend-beyond-a-good-story-refined.pptx"
 CHARTS_DIR = PROJECT_ROOT / "docs" / "presentation" / "charts"
 

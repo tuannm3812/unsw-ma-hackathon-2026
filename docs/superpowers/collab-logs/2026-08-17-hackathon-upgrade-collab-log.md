@@ -3105,3 +3105,11 @@ unseen exact template, which cannot exclude near-duplicates.
 - Mike reversed the earlier decision on the competition result: "Finalist" is on the cover kicker and in its notes, and the case study header is restored. The LinkedIn entry stays. The closing slide does not name the competition. DESIGN and README had no note against it.
 - The slide 13 subgroup bootstrap is with the experiments thread; no kernel was started from this thread.
 - Verified: deck QA, word-box overlap check, rendered slides, retired-claims scan, full offline pytest. Nothing pushed.
+
+## 2026-11-09: repository tidy before sharing
+
+- Naming audit: code and folders are snake_case, numbered top-level docs, kebab-case rendered files. The exceptions are historical names, which were kept for traceability, plus the poster's v2 files, which belong to the poster work.
+- Moved with `git mv`: September preparation files to `docs/presentation/archive/september_prep/`; the 7–8 November deck exports and brief to `docs/presentation/archive/november_old_decks/`. References in scripts, READMEs, the register and `.gitignore` follow. Earlier entries in this log keep the old paths, as history.
+- Added `deliverables/`: deck PDF exported from the live deck, link file, case study PDF, and a reserved poster slot.
+- Nothing was deleted; a list of retired files went to Mike for approval. `data/`, `reports/` and poster working files were not touched.
+- Verified: full offline pytest; live deck compared against the last export, no owner edits. Nothing pushed.

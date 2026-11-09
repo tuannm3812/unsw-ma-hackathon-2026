@@ -3,7 +3,7 @@
 # Authoritative Slide Content Briefing · Executive 3-Act Hybrid
 **Team Cultural Blend · UNSW Marketing Analytics Hackathon Challenge 2026**  
 *Investigation: 1,453,846 real Kiva loans (2016–2025) · 10-Minute Presentation & Q&A*  
-*Standard: Governed strictly by [`docs/presentation/DESIGN.md`](file:///Users/tuannm3812/Documents/GitHub/4.%20Training/unsw-ma-hackathon-2026/docs/presentation/DESIGN.md)*
+*Standard: Governed strictly by [`docs/presentation/DESIGN.md`](../../file:///Users/tuannm3812/Documents/GitHub/4.%20Training/unsw-ma-hackathon-2026/docs/presentation/DESIGN.md)*
 
 ---
 

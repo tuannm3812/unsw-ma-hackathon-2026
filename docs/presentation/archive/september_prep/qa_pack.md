@@ -1,4 +1,4 @@
-<!-- Markdown rendering of docs/presentation/qa_pack.html (the "Question Time" artifact).
+<!-- Markdown rendering of docs/presentation/archive/september_prep/qa_pack.html (the "Question Time" artifact).
      The HTML file is the styled original; this file is the same content for reading on GitHub. -->
 
 Final-round briefing · UNSW Marketing Analytics Hackathon 2026 · Team Cultural Blend

@@ -2,7 +2,7 @@
 """Build Team Cultural Blend - UNSW Hackathon 2026 v3 (Executive 3-Act Hybrid).
 
 Strictly controlled by:
-- docs/presentation/SLIDE_CONTENT_BRIEF.md (The single source of truth for narrative & evidence)
+- docs/presentation/archive/november_old_decks/SLIDE_CONTENT_BRIEF.md (The single source of truth for narrative & evidence)
 - docs/presentation/DESIGN.md (Visual identity, spatial grid, typography, colors)
 
 Deck Architecture (17-Slide Portfolio Master Deck):
@@ -40,7 +40,7 @@ from pptx.enum.shapes import MSO_SHAPE
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 CHART_DIR = PROJECT_ROOT / "docs" / "presentation" / "charts"
-OUTPUT_DIR = PROJECT_ROOT / "docs" / "presentation" / "output"
+OUTPUT_DIR = PROJECT_ROOT / "docs" / "presentation" / "archive" / "november_old_decks" / "output"
 OUTPUT_PPTX = OUTPUT_DIR / "Team-Cultural-Blend-UNSW-Hackathon-2026-v3.pptx"
 
 # -----------------------------------------------------------------------------
@@ -92,7 +92,7 @@ FIGS = {
          "Loan amount correlates ~7x stronger with speed than the best narrative signal (0.429 vs 0.058)."),
 }
 
-DEFAULT_SOURCE = "reports/generated_full_dataset/association_summary.txt (authoritative numbers); docs/presentation/deck_content.md"
+DEFAULT_SOURCE = "reports/generated_full_dataset/association_summary.txt (authoritative numbers); docs/presentation/archive/september_prep/deck_content.md"
 
 def build_deck(out_path):
     prs = Presentation()
@@ -1202,7 +1202,7 @@ def build_deck(out_path):
     sl13.notes_slide.notes_text_frame.text = (
         "(Both, ~20s) (Tuan) In this data, the story barely registers — the structure carries the signal. "
         "(Sophia) And testing hard enough to say, honestly, that there is no robust evidence for the story — "
-        "that's worth more to a platform than a good-sounding tip. Thank you — we're happy to take your questions.\n\n[Sources] docs/presentation/deck_content.md"
+        "that's worth more to a platform than a good-sounding tip. Thank you — we're happy to take your questions.\n\n[Sources] docs/presentation/archive/september_prep/deck_content.md"
     )
 
     # =========================================================================

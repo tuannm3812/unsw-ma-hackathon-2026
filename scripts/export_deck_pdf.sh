@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-# Render docs/presentation/slides_draft.pptx to PDF via Keynote (the one
+# Render docs/presentation/archive/september_prep/slides_draft.pptx to PDF via Keynote (the one
 # slide renderer on this machine). Run after every deck rebuild so the
 # rendered result - real fonts, real layout - can be inspected page by
-# page. Output: docs/presentation/slides_draft.pdf
+# page. Output: docs/presentation/archive/september_prep/slides_draft.pdf
 # Note: Keynote's import is an approximation of PowerPoint's rendering;
 # the submission-machine PowerPoint check still stands.
 set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-IN="${REPO_ROOT}/docs/presentation/slides_draft.pptx"
-OUT="${REPO_ROOT}/docs/presentation/slides_draft.pdf"
+IN="${REPO_ROOT}/docs/presentation/archive/september_prep/slides_draft.pptx"
+OUT="${REPO_ROOT}/docs/presentation/archive/september_prep/slides_draft.pdf"
 # Export to a temp path, validate, then atomically replace - a failed
 # import/export must never destroy the last good render. The PDF stays
 # LOCAL (gitignored): Keynote's render is an approximation of PowerPoint,

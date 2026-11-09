@@ -60,7 +60,7 @@ pip install -r requirements.txt
 
 `requirements.txt` intentionally uses lower bounds (`>=`) so installs stay possible as new versions ship - a different set of versions satisfying those same bounds can produce different numerical edge cases and warnings on identical code (this project hit exactly that during development). `pip install -r requirements-lock.txt` pins the exact core numerical/statistical package versions this project was verified against, if you ever hit different numerical/warning behavior and want to rule that out first.
 
-One optional extra outside the analysis pipeline: rebuilding the draft slide deck (`python3 scripts/build_slides_draft.py`, output `docs/presentation/slides_draft.pptx`) needs `pip install python-pptx` - deliberately not in `requirements.txt`, since no pipeline or test code imports it. The deck's typeface is DM Sans: install the fonts in `docs/presentation/fonts/` on any machine that opens the PPTX (see that folder's README), or PowerPoint silently substitutes.
+One optional extra outside the analysis pipeline: rebuilding the draft slide deck (`python3 scripts/build_slides_draft.py`, output `docs/presentation/archive/september_prep/slides_draft.pptx`) needs `pip install python-pptx` - deliberately not in `requirements.txt`, since no pipeline or test code imports it. The deck's typeface is DM Sans: install the fonts in `docs/presentation/fonts/` on any machine that opens the PPTX (see that folder's README), or PowerPoint silently substitutes.
 
 **4. Verify the setup - run the full offline test suite** (no dataset or network access required):
 
@@ -89,6 +89,7 @@ unsw-ma-hackathon-2026/
 │   ├── Kiva_Loans.pkl                # Full 1.45M-row dataset (git-ignored)
 │   ├── Kiva_Loans_Sample.pkl         # Original 100-row illustrative sample (git-ignored)
 │   └── Kiva Data Dictionary.xlsx     # Field-level schema reference (git-ignored)
+├── deliverables/                     # Final deck PDF and link, case study PDF, poster slot (copies; see its README)
 ├── docs/
 │   ├── 0_coding_standards.md          # This project's coding standards (tailored from the shared baseline)
 │   ├── 2_evidence_and_corrections.md   # Current interpretation and historical claim corrections
@@ -96,7 +97,7 @@ unsw-ma-hackathon-2026/
 │   ├── 4_research_review.md           # Research diagnosis and consulting framework
 │   ├── 5_ml_refinement_plan.md        # Approved pre-run study design
 │   ├── 6_matched_text_results.md      # Separate November predictive findings
-│   ├── presentation/                  # Historical materials and separate research-refresh decks
+│   ├── presentation/                  # Current portfolio deck, claims register, design standard; earlier material in archive/
 │   └── superpowers/                   # Design spec, plan, and full collaboration log
 ├── notebooks/
 │   ├── 0_starter_eda.ipynb/.py            # Preliminary - 100-row sample, pipeline demonstration only

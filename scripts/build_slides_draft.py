@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Regenerate docs/presentation/slides_draft.pptx from the deck brief content.
+"""Regenerate docs/presentation/archive/september_prep/slides_draft.pptx from the deck brief content.
 
 Single source of truth for the editable draft deck: slide content, big-number
 callouts, chart placeholders (named after the notebook section to screenshot)
 and the timed speaker scripts (as presenter notes). Design mirrors the deck
 brief page: warm paper ground, deep teal + amber accent, Georgia display type.
-Sync contract: docs/presentation/deck_content.md is the source of truth for
+Sync contract: docs/presentation/archive/september_prep/deck_content.md is the source of truth for
 wording; this script mirrors it (update both together). Chart assets live in
 docs/presentation/charts/ and are the source of truth for exhibits. The build
 FAILS if any required chart is missing; pass --scaffold to emit labelled
@@ -68,7 +68,7 @@ FIGS = {
          "Loan amount correlates ~7x stronger with speed than the best narrative signal (0.429 vs 0.058). EDA \u00a79 printed correlation table."),
 }
 
-DEFAULT_SOURCE = ("reports/generated_full_dataset/association_summary.txt (authoritative numbers); docs/presentation/deck_content.md SS2 numbers table")
+DEFAULT_SOURCE = ("reports/generated_full_dataset/association_summary.txt (authoritative numbers); docs/presentation/archive/september_prep/deck_content.md SS2 numbers table")
 
 CLOSING_LINES = ["\u201cThe story barely registers.", "The structure carries the signal.\u201d"]
 
@@ -345,4 +345,4 @@ if __name__ == "__main__":
         missing = [f for f in CHARTS.values() if not (Path(CHART_DIR) / f).is_file()]
         if missing:
             raise SystemExit(f"missing chart assets in {CHART_DIR}: {missing} (pass --scaffold to build placeholders)")
-    build("docs/presentation/slides_draft.pptx")
+    build("docs/presentation/archive/september_prep/slides_draft.pptx")

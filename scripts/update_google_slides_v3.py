@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Update Google Slides presentation directly via gslides CLI.
-Applies verified errata from docs/presentation/deck_edit_list.md to
+Applies verified errata from docs/presentation/archive/september_prep/deck_edit_list.md to
 the duplicated Google Slides deck.
 """
 import subprocess
