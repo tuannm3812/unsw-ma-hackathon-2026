@@ -13,12 +13,13 @@ Compute: private Kaggle CPU kernels, `kiva-hackathon-experiments-{inference,fore
 | Gap | File | Code | Result |
 | --- | --- | --- | --- |
 | A | `primary_family_interactions.json` | `src/primary_interactions.py` | No family × period or × loan-size interaction clears p < 0.05 under country clustering (clustered p 0.11–0.92). |
-| B | `subgroup_programme_adjusted.json`, `subgroup_expanded.json` | `src/subgroup_inference.py` | Programme-adjusted, duration: family, basic needs, business, agency, gratitude and third person stay within ±5% in all 10 subgroups; urgency in 1 of 10. Unadjusted across subgroups. |
+| B | `subgroup_programme_adjusted.json`, `subgroup_expanded.json` | `src/subgroup_inference.py` | Programme-adjusted, duration, t(G−1): family, basic needs, business, agency, gratitude and third person stay within ±5% in all 10 subgroups; urgency in 1 of 10. Unadjusted across subgroups; the bootstrap row below is stricter and supersedes these counts. |
 | C, G | `wild_cluster.json` | `src/wild_cluster.py` | Equivalence verdicts unchanged in 35 of 36 rows (22 of 23 bounded results hold). After BH within nine terms, one of 36 tests passes: third person, expanded, duration (BH p 0.008, −0.9% per mention); with programme controls its BH p is 0.426. |
 | D | `text_placebo.json` | `src/text_placebo.py` | Shuffling text within country × sector × month keeps 42–61% of the linear gain. |
 | E | `gain_breakdown.json` | `src/gain_breakdown.py` | TF-IDF carries most of the linear gain in 4 of 5 years. |
 | F | `strong_forecaster_large.json`, `strong_forecaster_benchmark_tree.json` | `src/strong_forecaster.py` | Larger boosted tree text gain −0.011 to 0.154 days MAE; country intervals exclude zero only in 2021. |
 | H | `triage_value.json` | `src/triage_value.py` | Structure-only boosted tree, flag top 10%: precision 0.53–0.81 for the slowest 20% (lift 2.6–4.0). Text adds about nothing on the tree. |
+| B (bootstrap) | `subgroup_bootstrap.json` | `src/subgroup_bootstrap.py` | Corrected wild bootstrap within each subgroup. Programme-adjusted, funding time, within ±5%: family and third person in all 10 subgroups; business and agency 9; sentiment 7; basic needs and gratitude 5; first person 4; urgency 0. Stricter than the t(G−1) counts in row B. |
 | Appendix | `appendix_experiments.json` | `src/appendix_experiments.py` | Tuned HistGradientBoosting and XGBoost (tuned on earlier years only), the flag on fixed and tuned models, and NMF themes. See below. |
 | I | `loan_detail_coefficients.json` | `src/loan_detail_coefficients.py` | Loan-detail coefficients from the October programme-adjusted model; see below. |
 

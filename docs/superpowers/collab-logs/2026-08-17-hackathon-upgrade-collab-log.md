@@ -3129,3 +3129,4 @@ unseen exact template, which cannot exclude near-duplicates.
 - Live deck re-read first: no owner edits to mirror. A8's connectors were 8 pt long, so the arrowhead covered the line. They are now 17 pt, with a small gap before the next column; the lane arrows lengthened too, and all stay 0.75 pt. Columns were re-spaced to make room. Deliverables PDF refreshed.
 - Titles in Drive are now `Cultural Blend - Portfolio Deck` and `Cultural Blend - Deliverables`. Kebab-case stays the rule for repo files.
 - Verified: deck QA, rendered slide, full offline pytest. Nothing pushed.
+- **2026-11-09, wild bootstrap within subgroups:** the corrected bootstrap, run in the slide 13 subgroups, weakens the t(G−1) counts. Programme-adjusted, funding time, within ±5%: family and third person 10 of 10, business and agency 9, sentiment 7, basic needs and gratitude 5, first person 4, urgency 0. Details in `reports/experiments_2026_11_08/`. Not pushed.
