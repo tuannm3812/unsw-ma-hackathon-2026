@@ -3139,3 +3139,4 @@ unseen exact template, which cannot exclude near-duplicates.
 - One row needs care: urgency in Asia, 24-hour, has a normal-reference range beyond the ±1 pp bound but BH p 0.149, so "no confirmed large effect" still holds, as an unconfirmed signal.
 - Slide 4's second step now shows the unaltered Kiva logo, with the independence footer. Deliverables PDFs refreshed.
 - Verified: deck QA, rendered slides, retired-claims scan, full offline pytest. Nothing pushed. The poster spec in deck-kit still says to test urgency in Asia; left for the poster thread.
+- **2026-11-09, appendix rerun from a clean commit:** kernel version 2 from c8df3b8 (clean tree) matches the first run on every value within 1e-9. Provenance updated in the register and `reports/experiments_2026_11_08/`. Not pushed.

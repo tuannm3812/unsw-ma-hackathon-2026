@@ -220,7 +220,7 @@ Programme-adjusted model; change in (1 + days), not days; country-clustered 95% 
 
 ## Tuned trees, flag ranges and themes (Kaggle, exploratory)
 
-Kernel `tuannm3812/kiva-hackathon-experiments-appendix`, commit 587d2d2 (published from a dirty tree; `reports/experiments_2026_11_08/kaggle_provenance_appendix.json`).
+Kernel `tuannm3812/kiva-hackathon-experiments-appendix`, commit c8df3b8, clean tree, kernel version 2 (`reports/experiments_2026_11_08/kaggle_provenance_appendix.json`). Every value matches the first run from 587d2d2, published from a dirty tree, within 1e-9.
 
 | Claim | Value | Source | Layer |
 | --- | --- | --- | --- |

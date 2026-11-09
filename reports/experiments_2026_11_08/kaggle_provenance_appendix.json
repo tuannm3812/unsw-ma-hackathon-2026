@@ -1,13 +1,13 @@
 {
  "job": "appendix",
  "code_dataset_provenance": {
-  "git_commit": "587d2d21f5e72bce779df03fdd2552fc7941707f",
-  "git_tree_dirty": true,
-  "src_tree_sha256": "cf5a4515eb58b75ca1be1dd4a4d65d33057833dd50be50d0f0a4102c1b73e4af",
-  "published_at_utc": "2026-11-08T15:28:15Z",
-  "publish_message": "Appendix experiments (587d2d2)"
+  "git_commit": "c8df3b8c0e4b290ac4ca5befbb2a7b2ed6a7b467",
+  "git_tree_dirty": false,
+  "src_tree_sha256": "bbd990e94f36c912f80413b10f3d72565115bd50276fa34729ab98e7ae7bce0e",
+  "published_at_utc": "2026-11-09T04:48:16Z",
+  "publish_message": "Appendix rerun (c8df3b8)"
  },
- "mounted_src_sha256_of_file_digests": "cf5a4515eb58b75ca1be1dd4a4d65d33057833dd50be50d0f0a4102c1b73e4af",
+ "mounted_src_sha256_of_file_digests": "bbd990e94f36c912f80413b10f3d72565115bd50276fa34729ab98e7ae7bce0e",
  "cpu_count": 4,
  "versions": {
   "python": "3.13.18",
