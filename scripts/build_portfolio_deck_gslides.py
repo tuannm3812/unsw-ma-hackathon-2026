@@ -34,7 +34,7 @@ from PIL import Image, ImageDraw
 
 ROOT = Path(__file__).resolve().parents[1]
 DECK = ROOT / 'docs/presentation/portfolio_deck'
-TITLE = 'cultural-blend-portfolio-deck'
+TITLE = 'Cultural Blend - Portfolio Deck'
 PROTECTED = {'17rHwKFXiqN4GBo8TT5xnBWk33bN7niIodw9K9APNwDk'}
 PHOTO = ROOT / 'docs/presentation/poster/assets/kiva-tatiana-farmer.jpg'
 # Official UNSW logo (competition host mark), provenance in docs/presentation/poster/README.md.
@@ -2065,13 +2065,13 @@ def a_pipeline(page, slide, pos):
     """One cleaned dataset feeding four analysis lanes, each read left to right and ending at its slides."""
     page.chrome(slide)
     src, dots = slide['source'], {'navy': NAVY, 'violet': VIOLET, 'slate': SLATE}
-    cols = [(L + 16, 80), (L + 104, 136), (L + 254, 116), (L + 384, 148), (L + 542, R - L - 546)]
+    cols = [(L + 22, 78), (L + 104, 112), (L + 240, 122), (L + 386, 138), (L + 546, R - L - 549)]
     strip = 40
     page.rect(L, TOP, R - L, strip, NAVY)
     for (name, text), x, w in ((src['raw'], L + 10, 236), (src['clean'], L + 270, 262)):
         full = f'{name}\n{text}'
         page.text(full, x, TOP, w, strip, size=8.5, color=WHITE, spacing=100, middle=True, spans=[(0, len(name), {'bold': True})])
-    page.line(L + 250, TOP + strip / 2, L + 266, TOP + strip / 2, WHITE, .75)
+    page.line(L + 248, TOP + strip / 2, L + 266, TOP + strip / 2, WHITE, .75)
     page.ops[-1]['end_arrow'] = 'FILL_ARROW'
     page.text(src['used'], cols[4][0], TOP, cols[4][1], strip, size=8, color=WHITE, bold=True, spacing=100, middle=True)
     page.marker(1, L + 228, TOP + 3)
@@ -2079,7 +2079,7 @@ def a_pipeline(page, slide, pos):
     for (x, w), label in zip(cols, slide['columns']):
         page.text(label, x, head, w, 11, size=8, color=GREY, bold=True)
     first, lane, gap = head + 15, 52, 5
-    spine = L + 6
+    spine = L + 3
     last_mid = first + (len(slide['lanes']) - 1) * (lane + gap) + lane / 2
     page.line(spine, TOP + strip, spine, last_mid, SLATE, .75)
     page.marker(3, cols[3][0] + 28, head - .5)
@@ -2087,9 +2087,9 @@ def a_pipeline(page, slide, pos):
         y = first + i * (lane + gap)
         mid = y + lane / 2
         page.rect(L + 12, y, R - L - 12, lane, PAPER)
-        page.line(spine, mid, L + 14, mid, SLATE, .75)
+        page.line(spine, mid, L + 19, mid, SLATE, .75)
         page.ops[-1]['end_arrow'] = 'FILL_ARROW'
-        page.text(item['name'], cols[0][0] + 2, y, cols[0][1] - 2, lane, size=9, bold=True, spacing=100, middle=True)
+        page.text(item['name'], cols[0][0], y, cols[0][1], lane, size=9, bold=True, spacing=100, middle=True)
         rows = item['features']
         ry = mid - 6 * len(rows)
         for k, (label, colour) in enumerate(rows):
@@ -2099,7 +2099,7 @@ def a_pipeline(page, slide, pos):
         page.text(item['tests'], cols[3][0], y, cols[3][1], lane, size=8.5, spacing=100, middle=True)
         page.text(item['used'], cols[4][0], y, cols[4][1], lane, size=8, color=VIOLET, bold=True, spacing=100, middle=True)
         for (x, _), (next_x, _) in zip(cols[1:4], cols[2:5]):
-            page.line(next_x - 11, mid, next_x - 3, mid, SLATE, .75)
+            page.line(next_x - 21, mid, next_x - 4, mid, SLATE, .75)
             page.ops[-1]['end_arrow'] = 'FILL_ARROW'
     end = first + 4 * lane + 3 * gap
     names = slide['legend']

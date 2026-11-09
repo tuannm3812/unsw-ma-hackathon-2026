@@ -3123,3 +3123,9 @@ unseen exact template, which cannot exclude near-duplicates.
 ## 2026-11-09: Google deck renamed
 
 - At Mike's request the live deck is now titled `cultural-blend-portfolio-deck`, matching its PDF, and sits in a new Drive folder, `cultural-blend-deliverables`. Its link is unchanged. The builder's title constant matches.
+
+## 2026-11-09: A8 connectors and Drive titles
+
+- Live deck re-read first: no owner edits to mirror. A8's connectors were 8 pt long, so the arrowhead covered the line. They are now 17 pt, with a small gap before the next column; the lane arrows lengthened too, and all stay 0.75 pt. Columns were re-spaced to make room. Deliverables PDF refreshed.
+- Titles in Drive are now `Cultural Blend - Portfolio Deck` and `Cultural Blend - Deliverables`. Kebab-case stays the rule for repo files.
+- Verified: deck QA, rendered slide, full offline pytest. Nothing pushed.
