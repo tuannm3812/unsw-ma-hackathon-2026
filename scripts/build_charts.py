@@ -20,7 +20,7 @@ Palette: navy ink #1C2333, viridis blue #31688E, team yellow #FFDD04
 (fills only - never text on a light ground), viridis purple #440154.
 Typeface: DM Sans (committed under docs/presentation/fonts/); a real
 GoogleSans/ProductSans TTF dropped into that folder is auto-preferred.
-Run: python3 scripts/build_charts.py && python3 scripts/build_slides_draft.py
+Run: python3 scripts/build_charts.py
 """
 import glob
 import matplotlib

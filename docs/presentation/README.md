@@ -9,10 +9,7 @@ evidence and the 8 November equivalence screen.
 
 **Historical, do not reuse without the correction notice:**
 - The submitted competition deck and its v3 exports in `archive/november_old_decks/output/Team-Cultural-Blend-*`.
-- The 16-slide `archive/november_old_decks/output/cultural-blend-beyond-a-good-story-refined.*` and the 17-slide
-  live Google deck (`17rHwKFX…`) with [`SLIDE_CONTENT_BRIEF.md`](archive/november_old_decks/SLIDE_CONTENT_BRIEF.md),
-  built on 7–8 November by `scripts/build_presentation_deck.py`, `build_slides_v3.py`
-  and `build_slide_03_*.py`. These reuse retired claims.
+- The 16-slide refined deck, the 17-slide live Google deck (`17rHwKFX…`), their brief and their build scripts reused retired claims. The local files were removed on 2026-11-09 and remain in git history; the Google deck itself was not changed.
 - The two November research-refresh decks below, which the portfolio deck supersedes
   for presentation but which remain accurate for their own scope.
 
@@ -49,4 +46,4 @@ accepts explicit locations and defaults to `docs/pdf/generated/` for outputs.
 Importing the script is inert. Existing archived PDF copies are not overwritten
 by the default command.
 
-Earlier material is in `archive/`, with original filenames kept: `september_prep/` for the final-round briefs, scripts and Q&A, and `november_old_decks/` for the 7–8 November deck exports and their brief. Final shareable files are in [`../../deliverables/`](../../deliverables/README.md).
+Earlier material is in `archive/`, with original filenames kept: `september_prep/` for the final-round briefs, scripts and Q&A, and `november_old_decks/` for the competition deck's v3 exports. Final shareable files are in [`../../deliverables/`](../../deliverables/README.md).

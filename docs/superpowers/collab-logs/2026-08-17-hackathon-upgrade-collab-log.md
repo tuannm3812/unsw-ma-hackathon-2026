@@ -3113,3 +3113,9 @@ unseen exact template, which cannot exclude near-duplicates.
 - Added `deliverables/`: deck PDF exported from the live deck, link file, case study PDF, and a reserved poster slot.
 - Nothing was deleted; a list of retired files went to Mike for approval. `data/`, `reports/` and poster working files were not touched.
 - Verified: full offline pytest; live deck compared against the last export, no owner edits. Nothing pushed.
+
+## 2026-11-09: retired files removed
+
+- On Mike's "delete as listed": removed the first October poster and its prompt, the 16-slide refined deck, a duplicate v3 PDF, the old preview images, the old brief, the old deck scripts and September draft helpers, the unused Flaticon assets, one duplicate chart and the untracked `tmp/`. Tracked files remain in git history.
+- Kept: the v2 October poster until Mike's PDF is in `deliverables/poster/`, the competition v3 PDF and PPTX, `archive/september_prep/` and `poster/assets/`. Neither deck-kit nor the poster work references the removed poster files. The `.typ` file referenced the chart that stays, so it needed no change.
+- Verified: full offline pytest. Nothing pushed.

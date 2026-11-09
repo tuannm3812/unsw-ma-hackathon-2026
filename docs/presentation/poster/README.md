@@ -4,8 +4,6 @@ Created 2026-10-24 for project portfolio and LinkedIn achievement media.
 
 - [Revised poster PNG — current version](cultural-blend-finalist-poster-v2.png)
 - [Revised generation prompt](generation-prompt-v2.txt)
-- [Poster PNG](cultural-blend-finalist-poster.png)
-- [Exact generation prompt](generation-prompt.txt)
 
 ## Revised version
 
@@ -26,9 +24,9 @@ Supporting inputs are saved in `assets/`:
   [Kiva-hosted image](https://www.kiva.org/ctfassets/images/63DJ6UGaKvQgrE6nfimWBf/5df6727fcb82492f86cb2bdf4de72321/Tatiana_Farming_Photo__3_.jpg).
 
 The generated revision was visually checked for names, research wording,
-technique labels, finalist status and layout. The original remains available.
+technique labels, finalist status and layout. The first version was removed on 2026-11-09 and remains in git history.
 
-## Original version
+## First version (removed, in git history)
 
 Generated using the built-in image-generation tool. The yellow, black and
 white palette references UNSW's visual identity; the original illustration
