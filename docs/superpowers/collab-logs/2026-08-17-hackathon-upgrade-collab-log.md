@@ -3119,3 +3119,7 @@ unseen exact template, which cannot exclude near-duplicates.
 - On Mike's "delete as listed": removed the first October poster and its prompt, the 16-slide refined deck, a duplicate v3 PDF, the old preview images, the old brief, the old deck scripts and September draft helpers, the unused Flaticon assets, one duplicate chart and the untracked `tmp/`. Tracked files remain in git history.
 - Kept: the v2 October poster until Mike's PDF is in `deliverables/poster/`, the competition v3 PDF and PPTX, `archive/september_prep/` and `poster/assets/`. Neither deck-kit nor the poster work references the removed poster files. The `.typ` file referenced the chart that stays, so it needed no change.
 - Verified: full offline pytest. Nothing pushed.
+
+## 2026-11-09: Google deck renamed
+
+- At Mike's request the live deck is now titled `cultural-blend-portfolio-deck`, matching its PDF, and sits in a new Drive folder, `cultural-blend-deliverables`. Its link is unchanged. The builder's title constant matches.

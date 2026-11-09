@@ -34,7 +34,7 @@ from PIL import Image, ImageDraw
 
 ROOT = Path(__file__).resolve().parents[1]
 DECK = ROOT / 'docs/presentation/portfolio_deck'
-TITLE = 'Cultural Blend — Beyond a good story (portfolio, Nov 2026)'
+TITLE = 'cultural-blend-portfolio-deck'
 PROTECTED = {'17rHwKFXiqN4GBo8TT5xnBWk33bN7niIodw9K9APNwDk'}
 PHOTO = ROOT / 'docs/presentation/poster/assets/kiva-tatiana-farmer.jpg'
 # Official UNSW logo (competition host mark), provenance in docs/presentation/poster/README.md.
