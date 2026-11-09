@@ -4,8 +4,11 @@ Updated 2026-11-09. One story across the competition work and the October and
 November research extensions. Every number here is traced in the
 [claims register](presentation/claims_register.md).
 
-Cultural Blend (Sophia and Tuan) carried out this work for the UNSW Marketing
-Analytics Hackathon Challenge 2026.
+**Finalist, UNSW Marketing Analytics Hackathon Challenge 2026.** Cultural
+Blend (Sophia and Tuan) was one of eight finalist teams selected from 44
+registered teams involving 133 students at 19 universities across eight
+countries. The final took place on 4 September 2026.
+[Official UNSW results](https://www.unsw.edu.au/business/our-schools/marketing/news-events/student-events/MA-hackathon).
 
 ## Bottom line
 
@@ -95,8 +98,8 @@ predicted-slow loans gives 2.63–4.04× lift on each year's slowest 20%, agains
 range of that gap is above zero in every year, with a lowest bound of +0.08 in
 2021 when resampling by country. Median within-country precision is 0.49–0.56,
 against 0.22–0.29 for the lookup. An exploratory run tuned a boosted tree and
-XGBoost on the year before each test year. Tuned trees were lowest in 3 of 5
-years, by at most 0.06 days, and fixed settings won 2021 and 2022, so tuning did
+XGBoost on the year before each test year. On loan details, tuned trees were
+lowest in 3 of 5 years, by at most 0.06 days, and fixed settings won 2021 and 2022, so tuning did
 not clearly help; XGBoost beat the tuned boosted tree in 2 of 5 years. These are
 retrospective predictions on completed loans, not deployment estimates.
 

@@ -21,13 +21,13 @@
    "visual": "White ground; three photos (Kiva farmer, Unsplash market seller and tailor) in rounded frames; one yellow block and one violet offset",
    "notes": {
     "purpose": "Introduce the question and who we are.",
-    "script": "We are Cultural Blend, from the UNSW Marketing Analytics Hackathon. We analysed 1.45 million Kiva loans to ask whether the way a borrower's story is written is linked to how fast the loan funds.",
+    "script": "We are Cultural Blend, one of eight finalist teams in the UNSW Marketing Analytics Hackathon. We analysed 1.45 million Kiva loans to ask whether the way a borrower's story is written is linked to how fast the loan funds.",
     "reference": "Photos (Unsplash Licence): cover, Richard Nyoni (woman harvesting greens); Muhammad-Taha Ibrahim (banana seller); David Geneugelijk (tailor)."
    },
    "names": "Mike Nguyen and Sophia Nguyen",
    "team": "Team Cultural Blend - University of Technology Sydney",
-   "label": "UNSW Marketing Analytics Hackathon 2026",
-   "kicker": "UNSW Marketing Analytics Hackathon 2026"
+   "label": "UNSW Marketing Analytics Hackathon 2026 · Finalist",
+   "kicker": "UNSW Marketing Analytics Hackathon 2026 · Finalist"
   },
   {
    "n": 2,
@@ -3163,10 +3163,10 @@
    "title": "Boosted trees forecast best; tuning did not clearly beat fixed settings",
    "content": "Boosted tree duration MAE 5.2031 days, R² 0.5420; classifier ROC AUC 0.8997, AP 0.8301, Brier 0.1156; 1,174,953 train, 278,887 holdout; completed loans only.",
    "subtitle": "Every forecaster on the same loans and test years; tuned rows are exploratory; August is a separate holdout",
-   "note": "Tuned: 24 settings per family on the prior year, chosen on loan details, reused with text; no same-day score. Programme text: an unvalidated proxy.",
+   "note": "Shading: gap to each year’s lowest. Tuned: 24 settings per family on the prior year, chosen on loan details, reused with text. Programme text: a proxy.",
    "notes": {
     "purpose": "Compare every model in one place and state what each score means.",
-    "script": "This slide puts every forecaster on one scale. Lower is better. The median and lookup models are simple baselines. A linear model on loan details beats the lookup in every year, and a boosted tree beats the linear model. The larger tree is better in four of five years but worse in 2021. Those settings were fixed in advance, which keeps the text comparison matched. To check that choice, an exploratory run tuned a boosted tree and XGBoost on the year before each test year, 24 settings each, chosen on loan details and reused with text. Tuning did not clearly help: tuned trees were lowest in 2023, 2024 and 2025, by at most 0.06 days, while fixed settings were lower in 2021 and 2022, by 0.54 and 0.38 days. XGBoost beat the tuned boosted tree in 2 of 5 years. The tuned models forecast days only, so they have no same-day score. The August models are a separate chronological holdout with library defaults, so do not compare those numbers with the benchmark.",
+    "script": "This slide puts every forecaster on one scale. Lower is better. The median and lookup models are simple baselines. A linear model on loan details beats the lookup in every year, and a boosted tree beats the linear model. The larger tree is better in four of five years but worse in 2021. Those settings were fixed in advance, which keeps the text comparison matched. To check that choice, an exploratory run tuned a boosted tree and XGBoost on the year before each test year, 24 settings each, chosen on loan details and reused with text. Tuning did not clearly help: on loan details alone, tuned trees were lowest in 2023, 2024 and 2025, by at most 0.06 days, while fixed settings were lower in 2021 and 2022, by 0.54 and 0.38 days. XGBoost beat the tuned boosted tree in 2 of 5 years. The tuned models forecast days only, so they have no same-day score. The August models are a separate chronological holdout with library defaults, so do not compare those numbers with the benchmark. Across all sixteen forecasters, the lowest error each year is marked in yellow: the tree with programme and text in 2021 and 2025, the larger tree with text in 2022, tuned XGBoost in 2023 and the tuned tree in 2024. Programme text is an unvalidated proxy.",
     "reference": "Primary saved run 2026-08-31: association_summary.txt; analysis_summary.json. Tuned trees: reports/evidence_sources/appendix_summary.json (src/appendix_summary.py)."
    },
    "sublabel": "Models",
@@ -3186,7 +3186,7 @@
     {
      "marker": 3,
      "heading": "Tuning did not clearly help",
-     "text": "Tuned trees were lowest in 3 of 5 years, **by at most 0.06 days**; fixed settings won 2021 and 2022."
+     "text": "On loan details, tuned trees were lowest in 3 of 5 years, **by at most 0.06 days**."
     },
     {
      "marker": 4,
@@ -3195,7 +3195,6 @@
     }
    ],
    "exhibit": {
-    "chart_title": "Forecast error (MAE, days) by test year",
     "models": [
      {
       "name": "Median only",
@@ -3497,6 +3496,11 @@
        "Tree, programme and text"
       ]
      }
+    ],
+    "heat_legend": [
+     "Lowest error that year",
+     "Close to the year’s lowest",
+     "Further from it"
     ]
    }
   },
@@ -4319,90 +4323,15 @@
    "section": "Appendix",
    "layout": "content+takeaways",
    "title": "Every result follows one path from raw loans to tested claims",
-   "subtitle": "The whole modelling flow, step by step, with where each part appears in the deck",
+   "subtitle": "One cleaned dataset feeds four analyses; each lane ends at the slides that use it",
    "sublabel": "Modelling flow",
    "figure": "Figure A8.",
-   "stages": [
-    {
-     "name": "Raw data",
-     "items": [
-      "1,453,846 loan records",
-      "Kiva listings, 2016–2025",
-      "Completed durations only"
-     ],
-     "used": "Slides 4–6"
-    },
-    {
-     "name": "Cleaning",
-     "items": [
-      "6 negative durations removed",
-      "1,453,840 eligible loans",
-      "HTML and extra spaces stripped"
-     ],
-     "used": "Slide 9"
-    },
-    {
-     "name": "Features",
-     "items": [
-      [
-       "Loan details",
-       "navy"
-      ],
-      [
-       "Description form",
-       "navy"
-      ],
-      [
-       "Word lists",
-       "navy"
-      ],
-      [
-       "VADER sentiment",
-       "navy"
-      ],
-      [
-       "TF-IDF",
-       "violet"
-      ],
-      [
-       "Compressed TF-IDF",
-       "violet"
-      ],
-      [
-       "NMF topics",
-       "slate"
-      ]
-     ],
-     "used": "Slide 7, A7"
-    },
-    {
-     "name": "Models",
-     "items": [
-      "Explanatory regressions",
-      "Linear forecasts",
-      "Boosted trees",
-      "Historical lookup"
-     ],
-     "used": "Slides 10–17, A3"
-    },
-    {
-     "name": "Tests",
-     "items": [
-      "HC3 and country-clustered errors",
-      "Wild cluster bootstrap",
-      "±5% equivalence test",
-      "Month and country resampling",
-      "Text placebo"
-     ],
-     "used": "Slides 10–15"
-    }
-   ],
    "legend": [
     "Fixed rules",
     "Fitted on training years only",
     "Exploratory, sample only"
    ],
-   "caption": "Later checks use the same eligible loans unless their slide says otherwise. Models trained on earlier years are tested on later ones.",
+   "caption": "Features: slide 7 and A7. Later checks use the same eligible loans unless their slide says otherwise. Models train on earlier years and test on later ones.",
    "takeaways": [
     {
      "marker": 1,
@@ -4430,7 +4359,95 @@
     "script": "Reading left to right: raw Kiva listings, cleaning, features, models and tests, with the slides that use each step. Loan details, form, word lists and VADER are fixed rules. TF-IDF and its compressed form are fitted on training years only. NMF topics are exploratory on a sample. Loan photos were not analysed, because fetching them at scale needs Kiva's permission.",
     "reference": "src/features.py; src/benchmark_models.py; src/strong_forecaster.py; src/modeling.py."
    },
-   "photo_note": "Loan photos were not analysed: fetching them at scale needs Kiva’s permission."
+   "photo_note": "Loan photos were not analysed: fetching them at scale needs Kiva’s permission.",
+   "source": {
+    "raw": [
+     "Raw data",
+     "1,453,846 loan records, Kiva listings 2016–2025, completed durations only"
+    ],
+    "clean": [
+     "Cleaning",
+     "6 negative durations removed, HTML and extra spaces stripped: 1,453,840 eligible loans"
+    ],
+    "used": "Slides 4–6, 9"
+   },
+   "columns": [
+    "Analysis",
+    "Features",
+    "Models",
+    "Tests",
+    "In the deck"
+   ],
+   "lanes": [
+    {
+     "name": "Explanatory models",
+     "features": [
+      [
+       "Loan details",
+       "navy"
+      ],
+      [
+       "Description form",
+       "navy"
+      ],
+      [
+       "Word lists",
+       "navy"
+      ],
+      [
+       "VADER sentiment",
+       "navy"
+      ]
+     ],
+     "models": "Regressions on all eligible loans",
+     "tests": "HC3 and country-clustered errors; wild cluster bootstrap; ±5% equivalence test",
+     "used": "Slides 10–13, A1"
+    },
+    {
+     "name": "Forecast benchmark",
+     "features": [
+      [
+       "The features above",
+       "navy"
+      ],
+      [
+       "TF-IDF",
+       "violet"
+      ],
+      [
+       "Compressed TF-IDF",
+       "violet"
+      ]
+     ],
+     "models": "Linear forecasts, boosted trees, tuned trees",
+     "tests": "Month and country resampling; text placebo",
+     "used": "Slides 14–15, A3, A6"
+    },
+    {
+     "name": "Slow-funding flag",
+     "features": [
+      [
+       "Loan details only",
+       "navy"
+      ]
+     ],
+     "models": "Boosted tree against a historical lookup",
+     "tests": "Lift, within-country precision, ranges for its margin",
+     "used": "Slide 17"
+    },
+    {
+     "name": "Exploratory themes",
+     "features": [
+      [
+       "NMF topics, sample only",
+       "slate"
+      ]
+     ],
+     "models": "Adjusted contrasts by theme",
+     "tests": "Country-clustered 95% ranges",
+     "used": "A5"
+    }
+   ]
   }
  ]
 }

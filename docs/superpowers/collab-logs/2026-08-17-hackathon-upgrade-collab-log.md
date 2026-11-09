@@ -3098,3 +3098,10 @@ unseen exact template, which cannot exclude near-duplicates.
 
 - Live deck re-read first: no owner edits to mirror. Mike noted space left in these takeaway columns, so each now has a fourth point with a marker on its exhibit and a matching line in the notes. No new numbers.
 - Verified: deck QA, rendered slides, full offline pytest. Nothing pushed.
+
+## 2026-11-09: heat table, swimlane and Finalist restored
+
+- Live deck re-read first: no owner edits to mirror. Mike chose the A3 heat table and the A8 swimlane from the mockups; both are built. A3's chart and table are now one exhibit, with the lowest error each year marked. Its tuning takeaway now says "on loan details", because across all 16 forecasters the yearly lowest includes programme-text rows; register row added and the case study matches.
+- Mike reversed the earlier decision on the competition result: "Finalist" is on the cover kicker and in its notes, and the case study header is restored. The LinkedIn entry stays. The closing slide does not name the competition. DESIGN and README had no note against it.
+- The slide 13 subgroup bootstrap is with the experiments thread; no kernel was started from this thread.
+- Verified: deck QA, word-box overlap check, rendered slides, retired-claims scan, full offline pytest. Nothing pushed.
