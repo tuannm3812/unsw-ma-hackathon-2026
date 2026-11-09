@@ -9,6 +9,8 @@ script and differ only in that line.
   inference  gap C/G (wild cluster bootstrap, both October specifications)
              and gap B (subgroup refits, programme-adjusted then expanded),
              from a fresh October inference frame.
+  subgroup_bootstrap  the corrected wild cluster bootstrap inside each subgroup,
+             from a fresh inference frame.
   appendix   tuning of HistGradientBoosting and XGBoost, the flag on fixed and
              tuned models with block intervals, and the NMF theme table.
   review_fix  rerun of the wild cluster bootstrap and loan-detail fits after
@@ -115,6 +117,13 @@ def main():
                 subgroup_inference.main(["--frame", str(frame), "--spec", spec,
                                          "--output", str(OUT / "subgroup_inference")])
                 stamp(f"subgroups {spec} done", t0)
+        elif JOB == "subgroup_bootstrap":
+            from src import inference_cache, subgroup_bootstrap
+            frame = PRIVATE / "review_frame.pkl"
+            inference_cache.main(["--data", str(data), "--output", str(frame)])
+            stamp("inference frame built", t0)
+            subgroup_bootstrap.main(["--frame", str(frame), "--output", str(OUT / "subgroup_bootstrap")])
+            stamp("subgroup bootstrap done", t0)
         elif JOB == "appendix":
             from src.benchmark_cache import load_features
             from src import appendix_experiments
