@@ -3140,3 +3140,4 @@ unseen exact template, which cannot exclude near-duplicates.
 - Slide 4's second step now shows the unaltered Kiva logo, with the independence footer. Deliverables PDFs refreshed.
 - Verified: deck QA, rendered slides, retired-claims scan, full offline pytest. Nothing pushed. The poster spec in deck-kit still says to test urgency in Asia; left for the poster thread.
 - **2026-11-09, appendix rerun from a clean commit:** kernel version 2 from c8df3b8 (clean tree) matches the first run on every value within 1e-9. Provenance updated in the register and `reports/experiments_2026_11_08/`. Not pushed.
+- **2026-11-10, second Codex review (tuning, flag, themes, subgroup bootstrap):** no error found in those results. Three smaller fixes: triage month-interval tie order (intervals move by at most 0.0003, no verdict changes), the README's ±5% now states the log(1 + days) scale, and the tuned-tree text range names its arms. Not pushed.

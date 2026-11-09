@@ -72,6 +72,14 @@ def calibration_deciles(y, p) -> list[dict]:
              "observed": float(y[codes == i].mean())} for i in range(10)]
 
 
+def priority_ranks(score: np.ndarray) -> np.ndarray:
+    """Unique ranks, higher = flagged first, with ties in `flag_top`'s array order."""
+    order = np.argsort(-score, kind="stable")
+    ranks = np.empty(len(score))
+    ranks[order] = np.arange(len(score), 0, -1)
+    return ranks
+
+
 def month_bootstrap(base, text, days, months, share=0.10, draws=1000, seed=42):
     """Interval for text-minus-structure precision, reselecting within each draw.
 
@@ -79,6 +87,9 @@ def month_bootstrap(base, text, days, months, share=0.10, draws=1000, seed=42):
     resampled cohort, and flags the top `share` afresh, so capacity stays fixed.
     """
     groups = [np.flatnonzero(months == m) for m in np.unique(months)]
+    # Fix tie priorities first: `flag_top` breaks ties by array order, and
+    # concatenating resampled months would otherwise change that order.
+    base, text = priority_ranks(base), priority_ranks(text)
     rng = np.random.default_rng(seed)
     differences = np.empty(draws)
     for i, picks in enumerate(rng.integers(0, len(groups), size=(draws, len(groups)))):

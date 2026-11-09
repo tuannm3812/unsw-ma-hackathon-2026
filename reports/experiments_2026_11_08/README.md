@@ -5,7 +5,7 @@ exploratory and chosen after earlier results were known. One independent code
 review (Codex, 2026-11-08) is recorded below. Population: 1,453,840 eligible completed durations unless
 stated. Unfunded or expired listings are not in the data. Everything is an
 association. Nothing here replaces the August primary, October reviewed or
-November benchmark results. JSON files hold aggregates only.
+November benchmark results. "Within ±5%" means ±0.05 on log(1 + days), about −4.9% to +5.1% of (1 + days), not of days. JSON files hold aggregates only.
 
 Compute: private Kaggle CPU kernels, `kiva-hackathon-experiments-{inference,forecast,loan-details,review-fix}`
 (`notebooks/kernels/experiments_*`), recorded in `kaggle_provenance_*.json`. A, E and H were computed locally from saved files.
@@ -52,4 +52,8 @@ A read-only Codex review of the code and aggregates found three problems, all fi
 
 ## Appendix experiments
 
-Tuning selected settings on the year before each test year, on the structure-only arm. Validation uses only loans completed before the test cutoff, so it favours faster loans. Tuning did not reliably lower error against the fixed trees; the lowest-error model changes by year. Text gain on tuned trees ranges from −0.039 to 0.220 days, below the linear model's 0.26–0.39 in every year. Themes are sample results on the EDA 20,000 descriptions. The saved run is from clean commit c8df3b8 (`kaggle_provenance_appendix.json`). It matches the first run, whose code dataset also held an unrelated uncommitted file, within 1e-9 on every value.
+Tuning selected settings on the year before each test year, on the structure-only arm. Validation uses only loans completed before the test cutoff, so it favours faster loans. Tuning did not reliably lower error against the fixed trees; the lowest-error model changes by year. Text gain on tuned trees ranges from −0.039 to 0.220 days with the full text block (S+M+L+D), and −0.047 to 0.220 across both text arms, below the linear model's 0.26–0.39 in every year. Themes are sample results on the EDA 20,000 descriptions. The saved run is from clean commit c8df3b8 (`kaggle_provenance_appendix.json`). It matches the first run, whose code dataset also held an unrelated uncommitted file, within 1e-9 on every value.
+
+## Second independent review, 2026-11-10
+
+A read-only Codex review of the tuning, flag, theme and subgroup bootstrap code found no error in those results. It found three smaller problems, all addressed: tie order changed across resampled months in the triage interval (fixed; `triage_value.json` recomputed); this README called the bound ±5% without giving its log(1 + days) scale; and the tuned-tree text range omitted one text arm.

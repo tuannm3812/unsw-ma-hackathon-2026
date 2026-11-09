@@ -24,3 +24,11 @@ def test_month_bootstrap_reselects_capacity_each_draw():
     months = np.array(["a", "b"] * 100)
     low, high = month_bootstrap(days, days, days, months, draws=50)
     assert low == 0.0 and high == 0.0
+
+
+def test_month_bootstrap_keeps_tie_priorities_across_resampled_months():
+    from src.triage_value import month_bootstrap
+    days = np.arange(1200, 0, -1, dtype=float)
+    months = np.repeat([f"m{i:02d}" for i in range(12)], 100)
+    low, high = month_bootstrap(np.zeros(1200), days, days, months, draws=30)
+    assert low == 0.0 and high == 0.0
