@@ -61,7 +61,7 @@
    ],
    "notes": {
     "purpose": "Problem, solution, proof and the ask in one view.",
-    "script": "Problem: the median loan funds in 2.85 days, but a quarter wait more than 15.95 days, and same-day funding fell from 46.0 to 30.3 percent. Solution: loan details predict which loans will be slow, so Kiva can send lender-side support there first: a boosted tree on loan structure catches the slowest fifth 2.6 to 4.0 times better than chance. Proof: rewriting stories is not the lever, because five framings stay within five percent of funding time. Our ask: pilot the flag with lender-side support, and test one truthful prompt before giving writing advice. For whom and when: no group shows a confirmed large framing effect, but only family and third person are confirmed small in all ten subgroups."
+    "script": "Problem: the median loan funds in 2.85 days, but a quarter wait more than 15.95 days, and same-day funding fell from 46.0 to 30.3 percent. Solution: loan details predict which loans will be slow, so Kiva can send lender-side support there first: a boosted tree on loan structure catches the slowest fifth 2.6 to 4.0 times better than chance. Proof: rewriting stories is not the lever, because five framings stay within five percent of funding time (plus or minus 0.05 on log of one plus days, about 4.5 to 4.7 hours at the 2.85-day median). Our ask: pilot the flag with lender-side support, and test one truthful prompt before giving writing advice. For whom and when: no group shows a confirmed large framing effect, but only family and third person are confirmed small in all ten subgroups."
    },
    "sublabel": "All evidence layers",
    "decision": "Our ask to Kiva: pilot a slow-funding flag with lender-side support, and test one truthful prompt.",
@@ -70,7 +70,7 @@
     "Prioritise",
     "Test"
    ],
-   "pending": "For whom and when: no period, loan size, gender or region shows a large framing effect; a few rare-word patterns are hypotheses to test."
+   "pending": "For whom and when: no group shows a confirmed large framing effect. ±5% of funding time: ±0.05 on log(1 + days), about 4.5–4.7 hours at the 2.85-day median."
   },
   {
    "n": 3,
@@ -1174,7 +1174,7 @@
    ],
    "notes": {
     "purpose": "Bridge from the problem to the evidence and the solution.",
-    "script": "Three findings point the same way, and each leads to a step of the solution. First, the wait is on the lender side: 96.4 percent of loans reach the borrower before listing, a median 24.2 days earlier, so the lever is helping slow loans find lenders. Second, loan details predict who waits: a boosted tree on structure flags the slowest fifth 2.6 to 4.0 times better than chance. Third, wording makes little difference: five framings stay within five percent of funding time, and text adds little to the flag. No group we checked shows a confirmed large framing effect: family and third person stay small in all ten subgroups, and several others can't be confirmed in every group. So the lever is helping slow loans find lenders, not rewriting their stories. The next slides show the evidence behind each insight.",
+    "script": "Three findings point the same way, and each leads to a step of the solution. First, the wait is on the lender side: 96.4 percent of loans reach the borrower before listing, a median 24.2 days earlier, so the lever is helping slow loans find lenders. Second, loan details predict who waits: a boosted tree on structure flags the slowest fifth 2.6 to 4.0 times better than chance. Third, wording makes little difference: five framings stay within five percent of funding time (plus or minus 0.05 on log of one plus days, about 4.5 to 4.7 hours at the 2.85-day median), and text adds little to the flag. No group we checked shows a confirmed large framing effect: family and third person stay small in all ten subgroups, and several others can't be confirmed in every group. So the lever is helping slow loans find lenders, not rewriting their stories. The next slides show the evidence behind each insight.",
     "reference": "docs/1_data_dictionary.md (disbursalDate); reports/evidence_sources/triage_summary.json; equivalence screen; reports/evidence_sources/robustness_summary.json."
    },
    "takeaways": [
@@ -1199,7 +1199,8 @@
      "text": "**No group** shows a confirmed large framing effect; family and third person stay small in **all 10 subgroups**."
     }
    ],
-   "solution_link": "→ The evidence behind each insight follows"
+   "solution_link": "→ The evidence behind each insight follows",
+   "bound_note": "±5% of funding time: ±0.05 on log(1 + days), about 4.5–4.7 hours at the 2.85-day median."
   },
   {
    "n": 9,
@@ -1234,7 +1235,7 @@
       "name": "Equivalence test",
       "icon": "target-navy.png",
       "question": "Which links are small enough to rule out a large effect?",
-      "method": "Is each 90% interval inside ±5% of funding time?",
+      "method": "Is each 90% interval inside ±5% of funding time (±0.05 on log(1 + days))?",
       "data": "Robustness-check estimates for 9 terms",
       "headline": "Five framings small; urgency unresolved",
       "feeds": "Prioritise"
@@ -1725,7 +1726,7 @@
    ],
    "notes": {
     "purpose": "Separate 'small' from 'unknown'.",
-    "script": "Answer first: five of the nine framings have small links to funding time; urgency and first person remain unknown. How to read the chart: each dot is the estimated change in funding time per extra mention per 100 words, or per half a point of sentiment score, and its line is the 90 percent range. Left of the centre line means faster funding, right means slower. The darker yellow area is within plus or minus five percent of funding time, which we treat as too small to matter; the lighter area runs from five to ten percent. A line that sits wholly inside the darker area means the link is small. [Point: Five framings have small links] Family, business, basic needs, agency and third person sit inside it in both model versions: the expanded model shown here and the programme-adjusted model. Gratitude and sentiment are small only in the programme-adjusted model. [Point: Small means under five hours] Five percent sounds abstract: on a typical loan, which takes 2.85 days to fund, it is about four and a half to four point seven hours. [Point: Urgency is too rare to judge] Urgency and first person appear in under two percent of descriptions, as the right-hand bars show, so their ranges stay wide, reaching six to fourteen percent across the two models. That is not evidence of an effect, or of none. [Point: The verdicts hold under stricter tests] Technically, the band is plus or minus 0.05 on log of one plus days, tested with two one-sided tests, BH-adjusted across nine terms, using a t reference with 47 degrees of freedom. With a stricter t(4) reference all five verdicts hold, and family, agency and third person stay small even at plus or minus two percent. We set the band after seeing the estimates, so this is exploratory. A wild cluster bootstrap across 48 countries, with 9,999 draws, confirms the screen: 35 of 36 verdicts are unchanged and 22 of 23 bounded results survive; the one loss is basic needs for same-day funding in the programme-adjusted model.",
+    "script": "Answer first: five of the nine framings have small links to funding time; urgency and first person remain unknown. How to read the chart: each dot is the estimated change in funding time per extra mention per 100 words, or per half a point of sentiment score, and its line is the 90 percent range. Left of the centre line means faster funding, right means slower. The darker yellow area is within plus or minus five percent of funding time (plus or minus 0.05 on log of one plus days, about 4.5 to 4.7 hours at the 2.85-day median), which we treat as too small to matter; the lighter area runs from five to ten percent. A line that sits wholly inside the darker area means the link is small. [Point: Five framings have small links] Family, business, basic needs, agency and third person sit inside it in both model versions: the expanded model shown here and the programme-adjusted model. Gratitude and sentiment are small only in the programme-adjusted model. [Point: Small means under five hours] Five percent sounds abstract: on a typical loan, which takes 2.85 days to fund, it is about four and a half to four point seven hours. [Point: Urgency is too rare to judge] Urgency and first person appear in under two percent of descriptions, as the right-hand bars show, so their ranges stay wide, reaching six to fourteen percent across the two models. That is not evidence of an effect, or of none. [Point: The verdicts hold under stricter tests] Technically, the band is plus or minus 0.05 on log of one plus days, tested with two one-sided tests, BH-adjusted across nine terms, using a t reference with 47 degrees of freedom. With a stricter t(4) reference all five verdicts hold, and family, agency and third person stay small even at plus or minus two percent. We set the band after seeing the estimates, so this is exploratory. A wild cluster bootstrap across 48 countries, with 9,999 draws, confirms the screen: 35 of 36 verdicts are unchanged and 22 of 23 bounded results survive; the one loss is basic needs for same-day funding in the programme-adjusted model.",
     "reference": "Equivalence test run 2026-11-08. reports/equivalence_screen_reviewed/README.md; src/equivalence.py. Bands, hours and no-mention shares: src/bound_ladder.py (reports/evidence_sources/bound_ladder.json), from equivalence_screen.csv and feature_distribution.json."
    },
    "sublabel": "Why not rewrite stories?",
@@ -1989,7 +1990,7 @@
      "Bootstrap p below 0.05, unadjusted¹"
     ],
     "caption": "Funding-time verdict by framing and subgroup; programme-adjusted model, wild cluster bootstrap. Expanded: funding time. Same-day: ±1 pp.",
-    "note_sup": "11 of these 90 cells; none passes BH. Hypotheses for the Test step, not findings.",
+    "note_sup": "11 of these 90 cells; none passes BH. Hypotheses for the Test step, not findings. ±5% is ±0.05 on log(1 + days).",
     "count_columns": [
      "Grid",
      "Expanded",
@@ -2021,7 +2022,7 @@
    "solution_link": "→ Why: no group shows a confirmed large framing effect",
    "notes": {
     "purpose": "Answer for whom and when.",
-    "script": "For whom and when: we refitted the programme-adjusted model separately in ten subgroups: three periods, three loan sizes, female and male borrowers, and Asia and Africa, then re-tested every framing with the corrected wild cluster bootstrap and the same five percent bound. [Point: Two framings hold in every group] Family and third person stay within five percent in all ten. [Point: Two more miss one group] Business holds in nine, missing only in Asia at adjusted p 0.052. Agency holds in nine, missing only in small loans at adjusted p 0.061. [Point: The rest can't be confirmed] Basic needs, gratitude and sentiment hold in five, five and seven of ten. That means we cannot confirm they are small in the other groups; it does not mean they are large. First person holds in four and urgency in none. [Point: No confirmed subgroup signal] Across 360 subgroup tests, six pass adjustment, and none is urgency or agency: basic needs for same-day funding in large loans with programme controls, and, in the expanded model only, third person and sentiment. Urgency in Asia has bootstrap p 0.107, adjusted 0.32. Agency in male borrowers has p 0.015, adjusted 0.13, and in female borrowers p 0.091, adjusted 0.28. Urgency after the pandemic has p 0.042 and in Africa p 0.065, before adjustment. The dots mark 11 unadjusted cells, and none passes adjustment. In the expanded model, family, business and third person hold in nine of ten for funding time; with programme controls, third person holds in all ten for same-day funding. No family interaction with period or loan size survives country clustering. The bounds were set after the estimates, so this is exploratory. So no group shows a confirmed large framing effect, and group-specific story advice has no support yet.",
+    "script": "For whom and when: we refitted the programme-adjusted model separately in ten subgroups: three periods, three loan sizes, female and male borrowers, and Asia and Africa, then re-tested every framing with the corrected wild cluster bootstrap and the same five percent bound (plus or minus 0.05 on log of one plus days, about 4.5 to 4.7 hours at the 2.85-day median). [Point: Two framings hold in every group] Family and third person stay within five percent in all ten. [Point: Two more miss one group] Business holds in nine, missing only in Asia at adjusted p 0.052. Agency holds in nine, missing only in small loans at adjusted p 0.061. [Point: The rest can't be confirmed] Basic needs, gratitude and sentiment hold in five, five and seven of ten. That means we cannot confirm they are small in the other groups; it does not mean they are large. First person holds in four and urgency in none. [Point: No confirmed subgroup signal] Across 360 subgroup tests, six pass adjustment, and none is urgency or agency: basic needs for same-day funding in large loans with programme controls, and, in the expanded model only, third person and sentiment. Urgency in Asia has bootstrap p 0.107, adjusted 0.32. Agency in male borrowers has p 0.015, adjusted 0.13, and in female borrowers p 0.091, adjusted 0.28. Urgency after the pandemic has p 0.042 and in Africa p 0.065, before adjustment. The dots mark 11 unadjusted cells, and none passes adjustment. In the expanded model, family, business and third person hold in nine of ten for funding time; with programme controls, third person holds in all ten for same-day funding. No family interaction with period or loan size survives country clustering. The bounds were set after the estimates, so this is exploratory. So no group shows a confirmed large framing effect, and group-specific story advice has no support yet.",
     "reference": "reports/evidence_sources/robustness_summary.json (src/robustness_summary.py); reports/experiments_2026_11_08/subgroup_bootstrap.json (src/subgroup_bootstrap.py); primary interactions: src/primary_interactions.py."
    },
    "figure": "Figure 8."
@@ -2390,7 +2391,7 @@
    ],
    "notes": {
     "purpose": "Turn the evidence into a framework Kiva can act on.",
-    "script": "Three steps. Predict: at posting time, score each listing’s risk of slow funding. In a retrospective check on the November benchmark, a boosted tree using loan structure flags the slowest fifth of loans 2.6 to 4.0 times better than chance; adding text barely changes it. Prioritise: send lender-side support, such as featuring, matching funds, lender alerts and partner follow-up, to the flagged loans, and do not chase framing tweaks, because five framings stay within five percent of funding time; urgency and first person are still unknown. Test: before any writing advice, pass three gates: validate the measures, close the data gaps, and pilot one truthful clarity prompt against a control. Later, a data partnership with listing-time text and unfunded listings would let us answer for whom and when properly. If a gate fails, stop there and report the uncertainty. [Point: Nothing is deployed yet] The flag has only been checked on past loans, and the support levers still need a controlled pilot.",
+    "script": "Three steps. Predict: at posting time, score each listing’s risk of slow funding. In a retrospective check on the November benchmark, a boosted tree using loan structure flags the slowest fifth of loans 2.6 to 4.0 times better than chance; adding text barely changes it. Prioritise: send lender-side support, such as featuring, matching funds, lender alerts and partner follow-up, to the flagged loans, and do not chase framing tweaks, because five framings stay within five percent of funding time (plus or minus 0.05 on log of one plus days, about 4.5 to 4.7 hours at the 2.85-day median); urgency and first person are still unknown. Test: before any writing advice, pass three gates: validate the measures, close the data gaps, and pilot one truthful clarity prompt against a control. Later, a data partnership with listing-time text and unfunded listings would let us answer for whom and when properly. If a gate fails, stop there and report the uncertainty. [Point: Nothing is deployed yet] The flag has only been checked on past loans, and the support levers still need a controlled pilot.",
     "reference": "reports/evidence_sources/triage_summary.json (src/triage_summary.py, from reports/triage_value/triage_value.json); docs/6_matched_text_results.md."
    },
    "sublabel": "Overview",
@@ -2595,7 +2596,7 @@
    "note": "Scope: the levers are proposals; our data do not measure their effect.",
    "notes": {
     "purpose": "What to do with a flag.",
-    "script": "A flag only helps if something happens next. We propose four lender-side levers: feature flagged loans early, offer matching funds where a loan is likely to stall, alert lenders who follow the sector or country, and ask the partner to check the listing is complete. Our data do not measure what these levers do, so each needs a pilot. What we can say is where not to spend effort: framing tweaks, because five framings stay within five percent of funding time, about four and a half hours on a typical loan.",
+    "script": "A flag only helps if something happens next. We propose four lender-side levers: feature flagged loans early, offer matching funds where a loan is likely to stall, alert lenders who follow the sector or country, and ask the partner to check the listing is complete. Our data do not measure what these levers do, so each needs a pilot. What we can say is where not to spend effort: framing tweaks, because five framings stay within five percent of funding time, that is plus or minus 0.05 on log of one plus days, about four and a half hours on a typical loan.",
     "reference": "Equivalence screen; reports/evidence_sources/bound_ladder.json. Photo: Richard Nyoni (soybean farmer) on Unsplash (Unsplash Licence). Photo: Muhammad-Taha Ibrahim (shop owner, Abuja) on Unsplash (Unsplash Licence)."
    },
    "photo": "unsplash-soybean-richard-nyoni.jpg",
@@ -4433,7 +4434,7 @@
       ]
      ],
      "models": "Regressions on all eligible loans",
-     "tests": "HC3 and country-clustered errors; wild cluster bootstrap; ±5% equivalence test",
+     "tests": "HC3 and country-clustered errors; wild cluster bootstrap; ±5% equivalence test (±0.05 on log(1 + days))",
      "used": "Slides 10–13, A1"
     },
     {

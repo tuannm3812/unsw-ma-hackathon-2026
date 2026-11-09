@@ -60,7 +60,8 @@ regional family-framing patterns each rest on two countries, so their wider
 heuristic intervals cross zero.
 
 **2. Most framing associations are small, and two are unresolved.** With a
-practical bound of about ±5% of funding time and ±1 percentage point of
+practical bound of about ±5% of funding time (±0.05 on log(1 + days), about
+4.5–4.7 hours at the 2.85-day median) and ±1 percentage point of
 same-day completion per extra mention per 100 words, family, basic-needs,
 business, agency and third-person framing are bounded in both October
 specifications. Urgency and first-person framing are not: their intervals
@@ -68,7 +69,8 @@ still allow associations of roughly 6–14%. "Not significant" for urgency meant
 "too uncertain", not "no effect". The bound was set after seeing the
 estimates, so this is exploratory. Within 10 subgroups of period, loan size,
 gender and region, a wild cluster bootstrap on the programme-adjusted model
-confirms family and third-person framing within ±5% of funding time in all 10.
+confirms family and third-person framing within ±5% of funding time
+(±0.05 on log(1 + days)) in all 10.
 Business and agency each hold in 9 of 10. Basic needs, gratitude and sentiment
 hold in 5, 5 and 7 of 10, so they cannot be confirmed in every group; that does
 not make them large. Of 360 subgroup tests, 6 pass adjustment and none is urgency

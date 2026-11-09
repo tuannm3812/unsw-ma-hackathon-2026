@@ -1633,6 +1633,7 @@ def insight(page, slide, urls, pos):
         page.text(step['sub'], bx, y + 26, bw, 12, size=8, color=ink, align='center')
         page.text(step['label'], bx, y + 40, bw, 22, size=12, color=ink, bold=True, align='center',
                   spans=[(0, len(step['label']), {'link': urls[step['slide']], 'color': ink})])
+    page.text(slide['bound_note'], L, 450, R - L, 12, size=8, color=GREY)
     page.takeaways(slide['takeaways'], pos)
 
 

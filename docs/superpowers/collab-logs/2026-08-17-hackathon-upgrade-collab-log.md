@@ -3141,3 +3141,9 @@ unseen exact template, which cannot exclude near-duplicates.
 - Verified: deck QA, rendered slides, retired-claims scan, full offline pytest. Nothing pushed. The poster spec in deck-kit still says to test urgency in Asia; left for the poster thread.
 - **2026-11-09, appendix rerun from a clean commit:** kernel version 2 from c8df3b8 (clean tree) matches the first run on every value within 1e-9. Provenance updated in the register and `reports/experiments_2026_11_08/`. Not pushed.
 - **2026-11-10, second Codex review (tuning, flag, themes, subgroup bootstrap):** no error found in those results. Three smaller fixes: triage month-interval tie order (intervals move by at most 0.0003, no verdict changes), the README's ±5% now states the log(1 + days) scale, and the tuned-tree text range names its arms. Not pushed.
+
+## 2026-11-10: the ±5% bound stated precisely
+
+- Live deck re-read first: no owner edits to mirror. After the independent review, every visible statement of ±5% now carries or sits next to "±0.05 on log(1 + days)": slides 2, 8, 13, A8 and the case study; speaker notes on 2, 8, 12, 13, 16 and 18. Slide 12 already had it. Slide 2's small line also now says "confirmed large", which the subgroup update had missed.
+- Poster gap, for the poster work: its "Band: ±5%." caption has no footnote.
+- Verified: deck QA, word-box overlap check, rendered slides, full offline pytest. Nothing pushed.
