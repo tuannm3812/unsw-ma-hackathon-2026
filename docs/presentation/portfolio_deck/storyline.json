@@ -1988,7 +1988,7 @@
      "Can’t confirm in this group",
      "Bootstrap p below 0.05, unadjusted¹"
     ],
-    "caption": "Funding-time verdict by framing and subgroup, programme-adjusted model, wild cluster bootstrap, BH within each subgroup. Expanded: funding time. Same-day: ±1 pp.",
+    "caption": "Funding-time verdict by framing and subgroup; programme-adjusted model, wild cluster bootstrap. Expanded: funding time. Same-day: ±1 pp.",
     "note_sup": "11 of these 90 cells; none passes BH. Hypotheses for the Test step, not findings.",
     "count_columns": [
      "Grid",
