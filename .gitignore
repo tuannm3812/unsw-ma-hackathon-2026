@@ -279,3 +279,11 @@ docs/presentation/research_refresh/.build/
 # 2026-11-08 exploratory experiments: aggregate JSON and README only
 !reports/experiments_2026_11_08/README.md
 !reports/experiments_2026_11_08/*.json
+
+# Poster deliverables: only the two PDF exports are public. Event photos (UNSW's, with other
+# people in them), image renders and the LinkedIn draft stay local.
+deliverables/poster/*.jpg
+deliverables/poster/*.jpeg
+deliverables/poster/*.png
+deliverables/poster/linkedin-post.md
+.DS_Store
