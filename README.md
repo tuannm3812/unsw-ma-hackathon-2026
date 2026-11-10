@@ -4,6 +4,32 @@ Team repository for the **UNSW Marketing Analytics Hackathon Challenge 2026**, u
 
 New to this project? Read this file top to bottom once - it's written to get you from a fresh clone to a green test suite, then to understanding the whole pipeline and where things stand.
 
+## Start Here
+
+The finished work, as files you can open directly:
+
+| Deliverable | What it is |
+| --- | --- |
+| [Portfolio deck (PDF)](deliverables/deck/cultural-blend-portfolio-deck.pdf) | 30 slides: 22 main and 8 appendix. [Live Google Slides link](deliverables/deck/google-slides-link.md) |
+| [Case study (PDF)](deliverables/report/cultural-blend-case-study.pdf) | The written story; source in [docs/3_portfolio_case_study.md](docs/3_portfolio_case_study.md) |
+| [A1 poster, portrait (PDF)](deliverables/poster/cultural-blend-poster-a1-portrait.pdf) | One-page summary, 594 × 841 mm |
+| [A1 poster, landscape (PDF)](deliverables/poster/cultural-blend-poster-a1-landscape.pdf) | The same content, 841 × 594 mm |
+| [Claims register](docs/presentation/claims_register.md) | Every number the deck, posters and case study quote, with its source file |
+
+**What we found, in brief.** All results are associations on loans that eventually funded.
+
+- **Waits got longer after 2019.** Same-day funding fell from 42.5% in 2019 to 32.3% in 2020, and
+  393,847 of 1,453,840 loans (27.1%) waited more than two weeks.
+- **Slow funding is mostly a lender-side delay.** 96.4% of loans reached the borrower before
+  listing, so funding time mainly reflects a partner replenishing capital.
+- **Loan details predict who waits; wording adds little.** Five framing measures stay within ±5% of
+  funding time (±0.05 on log(1 + days)), while a doubled loan amount goes with +44.6%.
+- **A flag at listing beats a simple lookup.** In a retrospective check, a boosted tree on loan
+  details catches the slowest fifth of loans 2.63–4.04 times better than chance, against
+  1.97–2.74 for a historical lookup, in every test year.
+- **Our recommendation:** predict slow loans, prioritise lender-side support for them, and test
+  before giving any writing advice. No description edit or support lever has been tested yet.
+
 ## Project Status
 
 **Complete — Cultural Blend was one of 8 finalist teams.** The final took
@@ -12,7 +38,8 @@ place on 4 September 2026. The competition attracted 44 registered teams,
 finalist in the [official UNSW results](https://www.unsw.edu.au/business/our-schools/marketing/news-events/student-events/MA-hackathon)
 (reviewed 2026-10-24).
 
-Current work is research maintenance and portfolio presentation. The primary
+The portfolio deliverables above were completed on 10 November 2026; ongoing
+work is research maintenance. The primary
 full-data results are a verified **saved run**, generated on 2026-08-31, not a
 fresh rerun. Start with the [portfolio case study](docs/3_portfolio_case_study.md)
 and [current evidence and corrections](docs/2_evidence_and_corrections.md).
@@ -56,11 +83,11 @@ source .venv/bin/activate          # macOS/Linux
 pip install -r requirements.txt
 ```
 
-`requirements.txt` covers everything needed to run the pipeline, notebooks, and test suite: `pandas`, `numpy`, `scikit-learn`, `matplotlib`, `seaborn`, `openpyxl`, `statsmodels`, `patsy`, `scipy`, `nltk`, `ipykernel`, `notebook`, `pytest`. There is no `xgboost` or `lightgbm` dependency anywhere in the codebase - the nonlinear benchmark uses scikit-learn's built-in `HistGradientBoostingRegressor` instead. Sentiment scoring (VADER, via `nltk`) works out of the box with no separate download step: the lexicon is vendored directly in `resources/nltk_data/` (see that directory's README for its license/provenance) instead of relying on `nltk.download(...)`, which this project's tests/CLI must never call (no network access during import or feature extraction).
+`requirements.txt` covers everything needed to run the pipeline, notebooks, and test suite: `pandas`, `numpy`, `scikit-learn`, `matplotlib`, `seaborn`, `openpyxl`, `statsmodels`, `patsy`, `scipy`, `nltk`, `ipykernel`, `notebook`, `pytest`. There is no `xgboost` or `lightgbm` dependency in `requirements.txt` - the nonlinear benchmark uses scikit-learn's built-in `HistGradientBoostingRegressor` instead. The one exploratory tuned-XGBoost comparison in the deck's appendix ran on Kaggle; its aggregate results are in `reports/experiments_2026_11_08/`. Sentiment scoring (VADER, via `nltk`) works out of the box with no separate download step: the lexicon is vendored directly in `resources/nltk_data/` (see that directory's README for its license/provenance) instead of relying on `nltk.download(...)`, which this project's tests/CLI must never call (no network access during import or feature extraction).
 
 `requirements.txt` intentionally uses lower bounds (`>=`) so installs stay possible as new versions ship - a different set of versions satisfying those same bounds can produce different numerical edge cases and warnings on identical code (this project hit exactly that during development). `pip install -r requirements-lock.txt` pins the exact core numerical/statistical package versions this project was verified against, if you ever hit different numerical/warning behavior and want to rule that out first.
 
-The deck's typeface is DM Sans: install the fonts in `docs/presentation/fonts/` on any machine that opens the PPTX (see that folder's README), or PowerPoint silently substitutes.
+The current deck and posters use Google Sans and live in Google Slides. The archived September PPTX uses DM Sans: install the fonts in `docs/presentation/fonts/` on any machine that opens it (see that folder's README), or PowerPoint silently substitutes.
 
 **4. Verify the setup - run the full offline test suite** (no dataset or network access required):
 
@@ -89,7 +116,7 @@ unsw-ma-hackathon-2026/
 │   ├── Kiva_Loans.pkl                # Full 1.45M-row dataset (git-ignored)
 │   ├── Kiva_Loans_Sample.pkl         # Original 100-row illustrative sample (git-ignored)
 │   └── Kiva Data Dictionary.xlsx     # Field-level schema reference (git-ignored)
-├── deliverables/                     # Final deck PDF and link, case study PDF, poster slot (copies; see its README)
+├── deliverables/                     # Final deck PDF and link, case study PDF, A1 poster PDFs (copies; see its README)
 ├── docs/
 │   ├── 0_coding_standards.md          # This project's coding standards (tailored from the shared baseline)
 │   ├── 2_evidence_and_corrections.md   # Current interpretation and historical claim corrections
@@ -98,6 +125,8 @@ unsw-ma-hackathon-2026/
 │   ├── 5_ml_refinement_plan.md        # Approved pre-run study design
 │   ├── 6_matched_text_results.md      # Separate November predictive findings
 │   ├── presentation/                  # Current portfolio deck, claims register, design standard; earlier material in archive/
+│   │   ├── claims_register.md         # Every number the deck, posters and case study quote, with its source
+│   │   └── portfolio_deck/            # Deck storyline, assets and rendered slides
 │   └── superpowers/                   # Design spec, plan, and full collaboration log
 ├── notebooks/
 │   ├── 0_starter_eda.ipynb/.py            # Preliminary - 100-row sample, pipeline demonstration only
@@ -116,6 +145,11 @@ unsw-ma-hackathon-2026/
 │   ├── expanded_feature_sensitivity_reviewed/  # Corrected inference and programme controls
 │   ├── text_benchmark_reviewed/       # Separate matched predictive benchmark and technical review
 │   ├── programme_proxy_audit/         # Aggregate full-data coverage and nesting audit
+│   ├── equivalence_screen_reviewed/   # Exploratory screen of which framing links are small enough to bound
+│   ├── evidence_sources/              # Aggregate summaries the deck and claims register cite
+│   ├── experiments_2026_11_08/        # Exploratory subgroup, bootstrap, placebo, forecaster and flag checks
+│   ├── loss_alignment_2025/           # Loss-alignment extension of the matched benchmark
+│   ├── period_trend/                  # Yearly same-day and long-wait shares
 │   └── README.md                     # Evidence boundaries and snapshot guidance
 ├── resources/nltk_data/sentiment/     # Vendored VADER lexicon + its upstream MIT license/provenance
 ├── scripts/
